@@ -143,9 +143,24 @@ define([
                 e.stopPropagation();
 
                 if (me._wasDragged) {
-                    var pos = Math.max(0, Math.min(100, (Math.round((
-                        me.direction === 'vertical' ? (e.pageY*Common.Utils.zoom() - Common.Utils.getOffset(me.cmpEl).top) : (e.pageX*Common.Utils.zoom() - Common.Utils.getOffset(me.cmpEl).left) - me._dragstart
-                    ) / me.width * 100))));
+                    var rawCoordinate = (me.direction === 'vertical'
+                        ? e.pageY*Common.Utils.zoom() - Common.Utils.getOffset(me.cmpEl).top
+                        : e.pageX*Common.Utils.zoom() - Common.Utils.getOffset(me.cmpEl).left
+                    ) - me._dragstart;
+
+                    var pos = 0;
+                    var minDistance = Infinity;
+
+                    for (let i = 0; i <= 100; i++) {
+                        var expectedOffset = i / 100 * me.width + me.thumbRange[i];
+                        var distance = Math.abs(rawCoordinate - expectedOffset);
+
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            pos = i;
+                        }
+                    }
+
                     me.setThumbPosition(pos);
 
                     me.lastValue = me.value;
@@ -169,9 +184,24 @@ define([
 
                 me._wasDragged = true;
 
-                var pos = Math.max(0, Math.min(100, (Math.round((
-                    me.direction === 'vertical' ? (e.pageY*Common.Utils.zoom() - Common.Utils.getOffset(me.cmpEl).top) : (e.pageX*Common.Utils.zoom() - Common.Utils.getOffset(me.cmpEl).left) - me._dragstart
-                ) / me.width * 100))));
+                var rawCoordinate = (me.direction === 'vertical'
+                    ? e.pageY*Common.Utils.zoom() - Common.Utils.getOffset(me.cmpEl).top
+                    : e.pageX*Common.Utils.zoom() - Common.Utils.getOffset(me.cmpEl).left
+                ) - me._dragstart;
+
+                var pos = 0;
+                var minDistance = Infinity;
+
+                for (let i = 0; i <= 100; i++) {
+                    var expectedOffset = i / 100 * me.width + me.thumbRange[i];
+                    var distance = Math.abs(rawCoordinate - expectedOffset);
+
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        pos = i;
+                    }
+                }
+
                 me.setThumbPosition(pos);
 
                 me.lastValue = me.value;
@@ -183,7 +213,9 @@ define([
 
             var onMouseDown = function (e) {
                 if ( me.disabled ) return;
-                me._dragstart = me.direction === 'vertical' ? (e.pageY*Common.Utils.zoom() - Common.Utils.getOffset(me.thumb).top) : (e.pageX*Common.Utils.zoom() - Common.Utils.getOffset(me.thumb).left) - 6;
+                me._dragstart = me.direction === 'vertical'
+                    ? (e.pageY * Common.Utils.zoom() - Common.Utils.getOffset(me.thumb).top - me.thumbSize)
+                    : (e.pageX * Common.Utils.zoom() - Common.Utils.getOffset(me.thumb).left - me.thumbSize);
                 me._wasDragged = false;
 
                 me.thumb.addClass('active');
@@ -253,11 +285,11 @@ define([
                 }
             }
 
-            const thumbWidth = this.thumb.width() / 2;
-            const delta = -thumbWidth * 2;
+            this.thumbSize = (this.direction === 'vertical' ? this.thumb.outerHeight() : this.thumb.outerWidth()) / 2;
+            const delta = -this.thumbSize * 2;
             this.thumbRange = new Float32Array(101);
             for (let i = 0; i < 101; i++) {
-                this.thumbRange[i] = thumbWidth + delta * (i / 100);
+                this.thumbRange[i] = this.thumbSize + delta * (i / 100);
             }
 
             this.setThumbPosition(me.options.value);
@@ -272,10 +304,11 @@ define([
                 pos = 0;
             }
 
-            const offset = pos / 100 * this.width + this.thumbRange[pos];
-
-            this.track.css('--slider-unfill-percent', 100 - pos + '%');
-            this.thumb.css(this.direction === 'vertical' ? 'top' : 'left', offset + 'px');
+            requestAnimationFrame(() => {
+                const offset = pos / 100 * this.width + this.thumbRange[pos];
+                this.track.css('--slider-unfill-percent', 100 - pos + '%');
+                this.thumb.css(this.direction === 'vertical' ? 'top' : 'left', offset + 'px');
+            });
         },
 
         setValue: function(value) {
