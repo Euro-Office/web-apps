@@ -226,9 +226,6 @@ define([
                         Common.NotificationCenter.on('uitheme:countchanged', _fill_themes.bind(me));
                         _fill_themes.call(me);
 
-                        me.view.btnInterfaceTheme.menu && me.view.btnInterfaceTheme.menu.on('show:after', function() {
-                            Common.UI.TooltipManager.closeTip('grayTheme');
-                        });
                         if (me.view.btnInterfaceTheme.menu.getItemsLength(true)) {
                             // me.view.btnInterfaceTheme.setMenu(new Common.UI.Menu({items: menuItems}));
                             me.view.btnInterfaceTheme.menu.on('item:click', _.bind(function (menu, item) {
@@ -243,6 +240,9 @@ define([
                             }, 0);
                         }
                     }
+
+                    if (Common.Utils.InternalSettings.get('toolbar-active-tab')==='view')
+                        Common.NotificationCenter.trigger('tab:set-active', 'view');
                 });
             }
         },
@@ -329,7 +329,7 @@ define([
         },
 
         onThemeChanged: function () {
-            if (this.view && Common.UI.Themes.available()) {
+            if (this.view && Common.UI.Themes.available() && this.view.btnInterfaceTheme.menu && (typeof (this.view.btnInterfaceTheme.menu) === 'object')) {
                 var current_theme = Common.UI.Themes.currentThemeId() || Common.UI.Themes.defaultThemeId(),
                     menu_item = _.findWhere(this.view.btnInterfaceTheme.menu.getItems(true), {value: current_theme});
                 if ( menu_item ) {
@@ -353,7 +353,16 @@ define([
         },
 
         applyEditorMode: function(config) {
-            this.view && this.view.chRightMenu && this.view.chRightMenu.setVisible((config || this.mode)['isPDFEdit']);
+            if (this.view && this.view.chRightMenu) {
+                var isVisible = (config || this.mode)['isPDFEdit'];
+                isVisible && this.view.chRightMenu.$el.closest('.elset').addClass('transparent');
+                this.view.chRightMenu.setVisible(isVisible);
+                if (this.toolbar && this.toolbar.toolbar) {
+                    this.toolbar.toolbar.moveAllFromMoreButton('view');
+                    this.toolbar.toolbar.processPanelVisible(null, true, true);
+                }
+                this.view.chRightMenu.$el.closest('.elset').removeClass('transparent');
+            }
         }
 
     }, PDFE.Controllers.ViewTab || {}));

@@ -67,6 +67,9 @@ define([
 
             initialize: function (options) {
                 _.extend(this, options);
+                Common.NotificationCenter.on('uitheme:changed', _.bind(function() {
+                    this.setMode();
+                }, this));
             },
 
             render: function () {
@@ -84,7 +87,7 @@ define([
                 this.editMode = false;
                 this.rangeSelectionMode = Asc.c_oAscSelectionDialogType.None;
                 this.isRtlSheet = false;
-                this.tabBarDefPosition = 129;
+                this.tabBarDefPosition = 141;
 
                 this.btnZoomDown = new Common.UI.Button({
                     el: $('#status-btn-zoomdown',this.el),
@@ -119,8 +122,9 @@ define([
                     hintAnchor: 'top'
                 });
 
+                var cnttablist = $('.cnt-tabslist', this.el);
                 this.cntSheetList = new Common.UI.Button({
-                    el: $('.cnt-tabslist', this.el),
+                    el: cnttablist,
                     hint: this.tipListOfSheets,
                     hintAnchor: 'top'
                 });
@@ -128,6 +132,7 @@ define([
                 this.sheetListMenu = new Common.UI.Menu({
                     style: 'margin-top:-3px;',
                     menuAlign: 'bl-tl',
+                    search: true,
                     maxHeight: 300
                 });
                 this.sheetListMenu.on('item:click', function(obj,item) {
@@ -145,8 +150,11 @@ define([
                         }, 100);
                     }
                 });
-                this.sheetListMenu.render($('.cnt-tabslist',this.el));
+                this.sheetListMenu.render(cnttablist);
                 this.sheetListMenu.cmpEl.attr({tabindex: -1});
+                cnttablist.on('app:scaling', function () {
+                    me.setMode();
+                });
 
                 this.cntZoom = new Common.UI.Button({
                     el: $('.cnt-zoom',this.el),
@@ -412,9 +420,10 @@ define([
 //                this.$el.find('.el-edit')[mode.isEdit?'show':'hide']();
                 //this.btnAddWorksheet.setVisible(this.mode.isEdit);
                 $('#status-addtabs-box')[(this.mode.isEdit) ? 'show' : 'hide']();
-                this.tabBarDefPosition = this.mode.isEdit ? 129 : 66;
-                this.btnAddWorksheet.setDisabled(this.mode.isDisconnected || this.api && (this.api.asc_isWorkbookLocked() || this.api.isCellEdited) || this.rangeSelectionMode!=Asc.c_oAscSelectionDialogType.None);
-                if (this.mode.isEditOle) { // change hints order
+                this.tabBarDefPosition = parseInt($('#status-tabs-scroll').css('width')) + parseInt(this.cntStatusbar.css('padding-left'));
+                this.tabBarDefPosition += this.mode.isEdit ? parseFloat($('#status-addtabs-box').css('width')) : 0;
+                this.btnAddWorksheet.setDisabled(this.mode.isDisconnected || this.api && (this.api.asc_isWorkbookLocked() || this.api.isCellEdited) || this.rangeSelectionMode!=Asc.c_oAscSelectionDialogType.None || !!this.mode.isExternalChart);
+                if (this.mode.isEditOle || this.mode.isEditDiagram) { // change hints order
                     this.btnAddWorksheet.$el.find('button').addBack().filter('button').attr('data-hint', '1');
                     this.btnScrollBack.$el.find('button').addBack().filter('button').attr('data-hint', '1');
                     this.btnScrollNext.$el.find('button').addBack().filter('button').attr('data-hint', '1');
@@ -435,26 +444,28 @@ define([
 
             update: function() {
                 var me = this;
-
+                var renamingWorksheet = this.controller && this.controller.renamingWorksheet;
                 this.tabbar.empty(true);
                 this.tabMenu.items[5].menu.removeAll();
                 this.tabMenu.items[5].hide();
                 this.btnAddWorksheet.setDisabled(true);
                 this.sheetListMenu.removeAll();
-
                 if (this.api) {
                     var wc = this.api.asc_getWorksheetsCount(), i = -1;
                     var hidentems = [], items = [], allItems = [], tab, locked, name;
                     var sindex = this.api.asc_getActiveWorksheetIndex();
                     var wbprotected = this.api.asc_isProtectedWorkbook();
+                    var sid = me.api.asc_getActiveWorksheetId();
 
                     while (++i < wc) {
                         locked = me.api.asc_isWorksheetLockedOrDeleted(i);
                         name = me.api.asc_getActiveNamedSheetView ? me.api.asc_getActiveNamedSheetView(i) || '' : '';
+                        var sheetid = me.api.asc_getWorksheetId(i)
                         tab = {
                             sheetindex    : i,
+                            sheetid       : sheetid,
                             index         : items.length,
-                            active        : sindex == i,
+                            active        : renamingWorksheet ? renamingWorksheet === sheetid : sid === sheetid,
                             label         : me.api.asc_getWorksheetName(i),
 //                          reorderable   : !locked,
                             cls           : locked ? 'coauth-locked':'',
@@ -466,7 +477,6 @@ define([
                         this.api.asc_isWorksheetHidden(i)? hidentems.push(tab) : items.push(tab);
                         allItems.push(tab);
                     }
-
                     if (hidentems.length) {
                         hidentems.forEach(function(item){
                             me.tabMenu.items[5].menu.addItem(new Common.UI.MenuItem({
@@ -480,12 +490,27 @@ define([
 
                     this.tabbar.add(items);
 
+                    if (renamingWorksheet) {
+                        const tab = _.findWhere(this.tabbar.tabs, { sheetid: renamingWorksheet });
+                        if (tab) {
+                            setTimeout(() => {
+                                me.onSheetChanged(0, tab.index, tab);
+                                this.controller.renameWorksheet(renamingWorksheet, true);
+                            }, 50);
+                        } else {
+                            setTimeout(() => {
+                                this.tabbar.setActive(sindex)
+                            }, 50)
+                        }
+                    }
+
                     allItems.forEach(function(item){
                         var hidden = me.api.asc_isWorksheetHidden(item.sheetindex);
                         me.sheetListMenu.addItem(new Common.UI.MenuItem({
                             style: 'white-space: pre',
                             caption: Common.Utils.String.htmlEncode(item.label),
                             value: item.sheetindex,
+                            sheetid: item.sheetid,
                             checkable: true,
                             checked: item.active,
                             hidden: hidden,
@@ -505,21 +530,19 @@ define([
                         this.tabbar.$bar.scrollLeft(this.tabBarScroll.scrollLeft);
                         this.tabBarScroll = undefined;
                     }
-                    if (!this.tabbar.isTabVisible(sindex))
-                        this.tabbar.setTabVisible(sindex);
 
-                    this.btnAddWorksheet.setDisabled(me.mode.isDisconnected || me.api.asc_isWorkbookLocked() || wbprotected || me.api.isCellEdited);
+                    this.updateRtlSheet(true);
+
+                    this.btnAddWorksheet.setDisabled(me.mode.isDisconnected || me.api.asc_isWorkbookLocked() || wbprotected || me.api.isCellEdited ||  !!me.mode.isExternalChart);
                     if (this.mode.isEdit) {
                         this.tabbar.addDataHint(_.findIndex(items, function (item) {
                             return item.sheetindex === sindex;
-                        }), this.mode.isEditOle ? '1' : '0');
+                        }), this.mode.isEditOle || this.mode.isEditDiagram ? '1' : '0');
                     }
 
-                    $('#status-label-zoom').text(Common.Utils.String.format(this.zoomText, Math.floor((this.api.asc_getZoom() +.005)*100)));
+                    this.labelZoom.text(Common.Utils.String.format(this.zoomText, Math.floor((this.api.asc_getZoom() +.005)*100)));
 
-                    this.updateRtlSheet();
                     this.updateNumberOfSheet(sindex, wc);
-                    this.updateTabbarBorders();
 
                     me.fireEvent('sheet:changed', [me, sindex]);
                     me.fireEvent('sheet:updateColors', [true]);
@@ -528,21 +551,28 @@ define([
             },
 
             onUpdateSheetViewSettings: function() {
-                var oldRtl = this.isRtlSheet;
                 this.updateRtlSheet();
-                (oldRtl !== this.isRtlSheet) && this.updateTabbarBorders();
             },
 
-            updateRtlSheet: function() {
+            updateRtlSheet: function(force) {
+                var oldRtl = this.isRtlSheet;
                 this.isRtlSheet = this.api ? !!this.api.asc_getSheetViewSettings().asc_getRightToLeft() : false;
                 this.cntStatusbar.toggleClass('rtl-sheet', this.isRtlSheet);
                 this.cntStatusbar.attr({dir: this.isRtlSheet ? 'rtl' : 'ltr'});
                 this.tabbar.setDirection(this.isRtlSheet);
                 var dir = (this.isCompact ? this.isRtlSheet : Common.UI.isRTL()) ? 'rtl' : 'ltr';
                 this.boxZoom.attr({dir: dir});
+                this.labelZoom.attr({dir: Common.UI.isRTL() ? 'rtl' : 'ltr'});
                 this.boxMath.attr({dir: dir});
                 this.boxFiltered.attr({dir: dir});
                 this.sheetListMenu.menuAlign = this.isRtlSheet ? 'br-tr' : 'bl-tl';
+
+                if (oldRtl !== this.isRtlSheet || force)
+                    this.updateTabbarBorders();
+
+                var index = this.api ? this.api.asc_getActiveWorksheetIndex() : 0;
+                var tab = _.findWhere(this.tabbar.tabs, {sheetindex: index});
+                tab && !this.tabbar.isTabVisible(tab.index) && this.tabbar.setTabVisible(tab.index);
             },
 
             setMathInfo: function(info) {
@@ -612,19 +642,13 @@ define([
 
             onSheetChanged: function(o, index, tab) {
                 this.api.asc_showWorksheet(tab.sheetindex);
-
                 this.updateNumberOfSheet(tab.sheetindex, this.api.asc_getWorksheetsCount());
-
-                if (this.hasTabInvisible && !this.tabbar.isTabVisible(index)) {
-                    this.tabbar.setTabVisible(index);
-                }
+                this.updateRtlSheet(true);
 
                 if (this.mode.isEdit) {
-                    this.tabbar.addDataHint(index, this.mode.isEditOle ? '1' : '0');
+                    this.tabbar.addDataHint(index, this.mode.isEditOle || this.mode.isEditDiagram ? '1' : '0');
                 }
 
-                this.updateRtlSheet();
-                this.updateTabbarBorders();
                 this.fireEvent('sheet:changed', [this, tab.sheetindex]);
                 this.fireEvent('sheet:updateColors', [true]);
 
@@ -636,7 +660,7 @@ define([
                 if (this.mode.isEdit  && !this.isEditFormula && (this.rangeSelectionMode !== Asc.c_oAscSelectionDialogType.Chart) &&
                                                                (this.rangeSelectionMode !== Asc.c_oAscSelectionDialogType.FormatTable) &&
                                                                (this.rangeSelectionMode !== Asc.c_oAscSelectionDialogType.PrintTitles) &&
-                    !this.mode.isDisconnected ) {
+                    !this.mode.isDisconnected && !this.mode.isExternalChart) {
                     if (tab && tab.sheetindex >= 0) {
                         if (!tab.isActive()) this.tabbar.setActive(tab);
 
@@ -663,7 +687,7 @@ define([
                         this.tabMenu.items[6].setDisabled(select.length>1);
                         this.tabMenu.items[7].setDisabled(issheetlocked || isdocprotected);
 
-                        this.tabMenu.items[6].setVisible(!this.mode.isEditOle && this.mode.canProtect);
+                        this.tabMenu.items[6].setVisible(!this.mode.isEditOle && !this.mode.isEditDiagram && this.mode.canProtect);
                         this.tabMenu.items[6].setCaption(this.api.asc_isProtectedSheet() ? this.itemUnProtect : this.itemProtect);
 
                         if (select.length === 1) {
@@ -680,8 +704,11 @@ define([
 
                         var tabEl = tab.$el;
                         this.tabMenu.atposition = function () {
+                            var parentEl = tabEl.parent();
+                            if (parentEl.length<1) return;
+
                             var rect = Common.Utils.getBoundingClientRect(tabEl.get(0)),
-                                parentPos = Common.Utils.getOffset(tabEl.parent());
+                                parentPos = Common.Utils.getOffset(parentEl);
                             return {
                                 top : rect.top,
                                 left: rect.left - parentPos.left - 2,
@@ -702,7 +729,7 @@ define([
             onTabMenuAfterShow: function (obj) {
                 if (obj.atposition) {
                     var pos = this.tabMenu.atposition();
-                    obj.setOffset(Common.UI.isRTL() ? (pos.right - $(obj.el).width()) : pos.left);
+                    pos && obj.setOffset(Common.UI.isRTL() ? (pos.right - $(obj.el).width()) : pos.left);
                 }
 
                 this.enableKeyEvents = true;
@@ -929,8 +956,7 @@ define([
                     this.boxNumberSheets.show();
                     //this.boxAction.show();
                 }
-                this.updateRtlSheet();
-                this.updateTabbarBorders();
+                this.updateRtlSheet(true);
                 (this.tabbar.getCount()>0) && this.onTabInvisible(undefined, this.tabbar.checkInvisible(true));
             },
 

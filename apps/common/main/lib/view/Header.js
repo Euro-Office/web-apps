@@ -53,7 +53,9 @@ define([
         var _tabStyle = 'fill', _logoImage = '';
         var isPDFEditor = !!window.PDFE,
             isDocEditor = !!window.DE,
-            isSSEEditor = !!window.SSE;
+            isSSEEditor = !!window.SSE,
+            isPEEditor  = !!window.PE,
+            isVisioEditor = !!window.VE;
 
         var templateUserItem =
                 '<li id="<%= user.get("iid") %>" class="<% if (!user.get("online")) { %> offline <% } if (user.get("view")) {%> viewmode <% } %>">' +
@@ -87,6 +89,7 @@ define([
                                 '<div class="hedset">' +
                                     '<div class="btn-slot margin-right-2" id="slot-btn-header-form-submit"></div>' +
                                     '<div class="btn-slot margin-right-2" id="slot-btn-start-fill"></div>' +
+                                    '<div class="btn-slot margin-right-2 margin-left-5" id="slot-btn-fill-status"></div>' +
                                 '</div>' +
                                 '<div class="hedset">' +
                                     '<div class="btn-slot" id="slot-hbtn-edit"></div>' +
@@ -122,7 +125,7 @@ define([
                                     '<div class="btn-slot" id="slot-btn-search"></div>' +
                                 '</div>' +
                                 '<div class="hedset">' +
-                                    '<div class="btn-slot">' +
+                                    '<div class="btn-slot" data-layout-name="header-user">' +
                                         '<button type="button" class="btn btn-header slot-btn-user-name hidden">' +
                                             '<div class="color-user-name"></div>' +
                                         '</button>' +
@@ -148,14 +151,15 @@ define([
                                     '<div class="btn-slot" id="slot-btn-dt-print-quick"></div>' +
                                     '<div class="btn-slot" id="slot-btn-dt-undo"></div>' +
                                     '<div class="btn-slot" id="slot-btn-dt-redo"></div>' +
+                                    '<div class="btn-slot" id="slot-btn-dt-start-over"></div>' +    
                                     '<div class="btn-slot" id="slot-btn-dt-quick-access"></div>' +
                                 '</div>' +
                                 '<div class="lr-separator" id="id-box-doc-name">' +
                                     // '<label id="title-doc-name" /></label>' +
-                                    '<input id="title-doc-name" autofill="off" autocomplete="off"/></input>' +
+                                    '<input id="title-doc-name" autofill="off" autocomplete="off" spellcheck="false"/></input>' +
                                 '</div>' +
                                 '<div class="hedset">' +
-                                    '<div class="btn-slot">' +
+                                    '<div class="btn-slot" data-layout-name="header-user">' +
                                         '<button type="button" class="btn btn-header slot-btn-user-name hidden">' +
                                             '<div class="color-user-name"></div>' +
                                         '</button>' +
@@ -204,10 +208,8 @@ define([
             if ( has_edit_users ) {
                 $panelUsers['show']();
                 $btnUsers.find('.caption').html(originalCount);
-                isPDFEditor && appConfig && (appConfig.isPDFEdit || appConfig.isPDFAnnotate || appConfig.isPDFFill) && Common.UI.TooltipManager.showTip('pdfCoedit')
             } else {
                 $panelUsers['hide']();
-                isPDFEditor && appConfig && (appConfig.isPDFEdit || appConfig.isPDFAnnotate || appConfig.isPDFFill) && Common.UI.TooltipManager.closeTip('pdfCoedit')
             }
             updateDocNamePosition();
         }
@@ -226,7 +228,6 @@ define([
 
                 usertip.hide();
             }
-            isPDFEditor && appConfig && (appConfig.isPDFEdit || appConfig.isPDFAnnotate || appConfig.isPDFFill) && Common.UI.TooltipManager.closeTip('pdfCoedit')
         }
 
         function updateDocNamePosition(config) {
@@ -356,6 +357,10 @@ define([
                 this.btnRedo[props.redo ? 'show' : 'hide']();
                 Common.localStorage.setBool(this.appPrefix + 'quick-access-redo', props.redo);
             }
+            if (props.startOver !== undefined) {
+                this.btnStartOver[props.startOver ? 'show' : 'hide']();
+                Common.localStorage.setBool(this.appPrefix + 'quick-access-start-over', props.startOver);
+            }
             Common.NotificationCenter.trigger('edit:complete');
 
             if ( caller && caller == 'header' )
@@ -396,13 +401,15 @@ define([
                 updateDocNamePosition();
             }
 
-            if (me.btnStartFill) {
-                Common.Gateway.on('startfilling', function() {
-                    me.btnStartFill.setVisible(false);
-                    updateDocNamePosition();
-                });
-                me.btnStartFill.on('click', function (e) {
-                    Common.Gateway.requestStartFilling();
+            me.btnStartFill && me.btnStartFill.on('click', function (e) {
+                Common.NotificationCenter.trigger('forms:request-fill');
+            });
+
+            if (me.btnFillStatus) {
+                me.btnFillStatus.updateHint(me.tipFillStatus);
+                me.btnFillStatus && me.btnFillStatus.on('click', function (e) {
+                    Common.UI.TooltipManager.closeTip('showFillStatus');
+                    Common.Gateway.requestFillingStatus(appConfig.user.roles && appConfig.user.roles.length>0 ? appConfig.user.roles[0] : undefined);
                 });
             }
 
@@ -446,7 +453,6 @@ define([
             }
 
             if ( me.btnPrint ) {
-                me.btnPrint.updateHint(me.tipPrint + Common.Utils.String.platformKey('Ctrl+P'));
                 me.btnPrint.on('click', function (e) {
                     me.fireEvent('print', me);
                 });
@@ -460,30 +466,33 @@ define([
             }
 
             if ( me.btnSave ) {
-                me.btnSave.updateHint(appConfig.canSaveToFile || appConfig.isDesktopApp && appConfig.isOffline ? me.tipSave + (isPDFEditor ? '' : Common.Utils.String.platformKey('Ctrl+S')) : me.tipDownload);
                 me.btnSave.on('click', function (e) {
                     me.fireEvent('save', me);
                 });
             }
 
             if ( me.btnUndo ) {
-                me.btnUndo.updateHint(me.tipUndo + Common.Utils.String.platformKey('Ctrl+Z'));
                 me.btnUndo.on('click', function (e) {
                     me.fireEvent('undo', me);
                 });
             }
 
             if ( me.btnRedo ) {
-                me.btnRedo.updateHint(me.tipRedo + Common.Utils.String.platformKey('Ctrl+Y'));
                 me.btnRedo.on('click', function (e) {
                     me.fireEvent('redo', me);
+                });
+            }
+
+            if (me.btnStartOver) {
+                me.btnStartOver.on('click', function (e) {
+                    me.fireEvent('startover', me);
                 });
             }
 
             if (me.btnQuickAccess) {
                 me.btnQuickAccess.updateHint(me.tipCustomizeQuickAccessToolbar);
                 var arr = [];
-                if (me.btnSave) {
+                if (me.btnSave && Common.UI.LayoutManager.isElementVisible('header-save')) {
                     arr.push({
                         caption: appConfig.canSaveToFile || appConfig.isDesktopApp && appConfig.isOffline ? me.tipSave : me.textDownload,
                         value: 'save',
@@ -518,6 +527,13 @@ define([
                         checkable: true
                     });
                 }
+                if (me.btnStartOver) {
+                    arr.push({
+                        caption: me.textStartOver,
+                        value: 'startover',
+                        checkable: true
+                    });
+                }
                 me.btnQuickAccess.setMenu(new Common.UI.Menu({
                     cls: 'ppm-toolbar',
                     style: 'min-width: 110px;',
@@ -536,6 +552,9 @@ define([
                             item.setChecked(Common.localStorage.getBool(me.appPrefix + 'quick-access-undo', true), true);
                         } else if (item.value === 'redo') {
                             item.setChecked(Common.localStorage.getBool(me.appPrefix + 'quick-access-redo', true), true);
+                        }
+                        if (item.value === 'startover') {
+                            item.setChecked(Common.localStorage.getBool(me.appPrefix + 'quick-access-start-over', true), true);
                         }
                     });
                 });
@@ -557,6 +576,9 @@ define([
                         case 'redo':
                             props.redo = item.checked;
                             break;
+                        case 'startover':
+                            props.startOver = item.checked;
+                            break;        
                     }
                     onChangeQuickAccess.call(me, 'header', props);
                 });
@@ -579,8 +601,6 @@ define([
                 });
             }
 
-            if (me.btnSearch)
-                me.btnSearch.updateHint(me.tipSearch +  Common.Utils.String.platformKey('Ctrl+F'));
 
             var menuTemplate = _.template('<a id="<%= id %>" tabindex="-1" type="menuitem" class="menu-item"><div>' +
                                             '<% if (!_.isEmpty(iconCls)) { %>' +
@@ -684,6 +704,11 @@ define([
             }
             if (appConfig.twoLevelHeader && !appConfig.compactHeader)
                 Common.NotificationCenter.on('window:resize', onResize);
+
+            const app = (window.DE || window.PE || window.SSE || window.PDFE || window.VE);
+            if(app && app.getController('Common.Controllers.Shortcuts')) {
+                app.getController('Common.Controllers.Shortcuts').updateShortcutHints(this.shortcutHints);
+            }
         }
 
         function onFocusDocName(e){
@@ -769,6 +794,8 @@ define([
                 var filter = Common.localStorage.getKeysFilter();
                 this.appPrefix = (filter && filter.length) ? filter.split(',')[0] : '';
 
+                this.shortcutHints = {};
+
                 me.btnGoBack = new Common.UI.Button({
                     id: 'btn-go-back',
                     cls: 'btn-header',
@@ -793,6 +820,10 @@ define([
                     dataHintDirection: 'bottom',
                     dataHintOffset: 'big'
                 });
+                this.shortcutHints.OpenFindDialog = {
+                    btn: me.btnSearch,
+                    label: me.tipSearch
+                };
 
                 me.btnFavorite = new Common.UI.Button({
                     id: 'id-btn-favorite',
@@ -809,11 +840,10 @@ define([
                     'tab:visible': function() {Common.Utils.asyncCall(updateDocNamePosition, me);},
                     'collaboration:sharingdeny': function(mode) {Common.Utils.asyncCall(onLostEditRights, me, mode);}
                 });
-                Common.NotificationCenter.on('uitheme:changed', this.changeLogo.bind(this));
+                Common.NotificationCenter.on('uitheme:changed', this.onThemeChanged.bind(this));
                 Common.NotificationCenter.on('mentions:setusers', this.avatarsUpdate.bind(this));
                 Common.NotificationCenter.on('tabstyle:changed', this.changeLogo.bind(this));
                 Common.NotificationCenter.on('tabbackground:changed', this.changeLogo.bind(this));
-
             },
 
             render: function (el, role) {
@@ -850,7 +880,7 @@ define([
                             this.logo.addClass('hidden');
                         } else if (this.branding.logo.image || this.branding.logo.imageDark || this.branding.logo.imageLight) {
                             _logoImage = logo.image;
-                            this.logo.html('<img src="' + _logoImage + '" style="max-width:100px; max-height:20px; margin: 0;"/>');
+                            this.logo.html('<img src="' + _logoImage + '" style="max-width:300px; max-height:20px; margin: 0;"/>');
                             this.logo.css({'background-image': 'none', width: 'auto'});
                             (this.branding.logo.url || this.branding.logo.url===undefined) && this.logo.addClass('link');
                         }
@@ -893,8 +923,13 @@ define([
                         if ( (config.canDownload || config.canDownloadOrigin) && !config.isOffline  )
                             this.btnDownload = createTitleButton('toolbar__icon icon--inverse btn-download', $html.findById('#slot-hbtn-download'), undefined, 'bottom', 'big');
 
-                        if ( config.canPrint )
+                        if ( config.canPrint ) {
                             this.btnPrint = createTitleButton('toolbar__icon icon--inverse btn-print', $html.findById('#slot-hbtn-print'), undefined, 'bottom', 'big', 'P');
+                            this.shortcutHints.PrintPreviewAndPrint = {
+                                btn: me.btnPrint,
+                                label: me.tipPrint + (!!window.VE ? (Common.Utils.String.platformKey('Ctrl+P')) : '')
+                            };
+                        }
 
                         if ( config.canQuickPrint )
                             this.btnPrintQuick = createTitleButton('toolbar__icon icon--inverse btn-quick-print', $html.findById('#slot-hbtn-print-quick'), undefined, 'bottom', 'big', 'Q');
@@ -978,7 +1013,7 @@ define([
                     if (config.canStartFilling) {
                         me.btnStartFill = new Common.UI.Button({
                             cls: 'btn-text-default auto yellow',
-                            caption: me.textStartFill,
+                            caption: config.customization && config.customization.startFillingForm && config.customization.startFillingForm.text ? config.customization.startFillingForm.text : me.textStartFill,
                             dataHint: '0',
                             dataHintDirection: 'bottom',
                             dataHintOffset: 'big'
@@ -986,6 +1021,14 @@ define([
                         me.btnStartFill.render($html.find('#slot-btn-start-fill'));
                     } else {
                         $html.find('#slot-btn-start-fill').hide();
+                    }
+
+                    if (config.isPDFForm && config.canRequestFillingStatus) {
+                        me.btnFillStatus = new Common.UI.Button({
+                            cls: 'btn-header',
+                            iconCls: 'toolbar__icon icon--inverse  btn-filling-status',
+                        });
+                        me.btnFillStatus.render($html.find('#slot-btn-fill-status'));
                     }
 
                     $userList = $html.find('.cousers-list');
@@ -1026,6 +1069,10 @@ define([
 
                     if ( config.canPrint && config.twoLevelHeader ) {
                         me.btnPrint = createTitleButton('toolbar__icon icon--inverse btn-print', $html.findById('#slot-btn-dt-print'), true, undefined, undefined, 'P');
+                        me.shortcutHints.PrintPreviewAndPrint = {
+                            btn: me.btnPrint,
+                            label: me.tipPrint
+                        };
                         !Common.localStorage.getBool(me.appPrefix + 'quick-access-print', true) && me.btnPrint.hide();
                     }
                     if ( config.canQuickPrint && config.twoLevelHeader ) {
@@ -1036,13 +1083,41 @@ define([
                         let save_icon = config.canSaveToFile || config.isDesktopApp && config.isOffline ? 'btn-save' : 'btn-download';
                         me.btnSave = createTitleButton('toolbar__icon icon--inverse ' + save_icon, $html.findById('#slot-btn-dt-save'), true, undefined, undefined, 'S');
                         !Common.localStorage.getBool(me.appPrefix + 'quick-access-save', true) && me.btnSave.hide();
+                        
+                        // Set hint text based on save availability and editor type
+                        if (appConfig.canSaveToFile || appConfig.isDesktopApp && appConfig.isOffline) {
+                            me.shortcutHints.Save = {
+                                btn: me.btnSave,
+                                label: me.tipSave
+                            };
+                        } else {
+                            me.btnSave.updateHint(me.tipDownload);
+                        }
                     }
-                    me.btnUndo = createTitleButton('toolbar__icon icon--inverse btn-undo', $html.findById('#slot-btn-dt-undo'), true, undefined, undefined, 'Z',
-                                                    [Common.enumLock.undoLock, Common.enumLock.fileMenuOpened]);
+                    me.btnUndo = createTitleButton('toolbar__icon icon--inverse btn-undo icon-rtl', $html.findById('#slot-btn-dt-undo'), true, undefined, undefined, 'Z',
+                                                    [Common.enumLock.undoLock, Common.enumLock.fileMenuOpened, Common.enumLock.lostConnect]);
                     !Common.localStorage.getBool(me.appPrefix + 'quick-access-undo', true) && me.btnUndo.hide();
-                    me.btnRedo = createTitleButton('toolbar__icon icon--inverse btn-redo', $html.findById('#slot-btn-dt-redo'), true, undefined, undefined, 'Y',
-                                                    [Common.enumLock.redoLock, Common.enumLock.fileMenuOpened]);
+                    me.shortcutHints.EditUndo = {
+                        btn: me.btnUndo,
+                        label: me.tipUndo
+                    };
+                    
+                    me.btnRedo = createTitleButton('toolbar__icon icon--inverse btn-redo icon-rtl', $html.findById('#slot-btn-dt-redo'), true, undefined, undefined, 'Y',
+                                                    [Common.enumLock.redoLock, Common.enumLock.fileMenuOpened, Common.enumLock.lostConnect]);
                     !Common.localStorage.getBool(me.appPrefix + 'quick-access-redo', true) && me.btnRedo.hide();
+                    me.shortcutHints.EditRedo = {
+                        btn: me.btnRedo,
+                        label: me.tipRedo
+                    };
+
+                    if (isPEEditor) {
+                        me.btnStartOver= createTitleButton('toolbar__icon icon--inverse btn-preview', $html.findById('#slot-btn-dt-start-over'), true, undefined, undefined, 'O');
+                        !Common.localStorage.getBool(me.appPrefix + 'quick-access-start-over', true) && me.btnStartOver.hide();
+                        me.shortcutHints.DemonstrationStartPresentation = {
+                            btn: me.btnStartOver,
+                            label: me.tipStartOver
+                        };
+                    }
                     me.btnQuickAccess = new Common.UI.Button({
                         cls: 'btn-header no-caret',
                         iconCls: 'toolbar__icon icon--inverse btn-more',
@@ -1073,7 +1148,7 @@ define([
                         element.addClass('hidden');
                     } else if (value.logo.image || value.logo.imageDark || value.logo.imageLight) {
                         _logoImage = logo.image;
-                        element.html('<img src="' + _logoImage + '" style="max-width:100px; max-height:20px; margin: 0;"/>');
+                        element.html('<img src="' + _logoImage + '" style="max-width:300px; max-height:20px; margin: 0;"/>');
                         element.css({'background-image': 'none', width: 'auto'});
                         (value.logo.url || value.logo.url===undefined) && element.addClass('link');
                     }
@@ -1088,7 +1163,8 @@ define([
                 tabBackground = tabBackground || Common.Utils.InternalSettings.get("settings-tab-background") || 'header';
                 if (!Common.Utils.isIE) {
                     var header_color = Common.UI.Themes.currentThemeColor(isDocEditor && config.isPDFForm || isPDFEditor ? '--toolbar-header-pdf' :
-                                                                            isDocEditor ? '--toolbar-header-document' : isSSEEditor ? '--toolbar-header-spreadsheet' : '--toolbar-header-presentation'),
+                                                                            isDocEditor ? '--toolbar-header-document' : isSSEEditor ? '--toolbar-header-spreadsheet' :
+                                                                            isVisioEditor ? '--toolbar-header-visio' : '--toolbar-header-presentation'),
                         toolbar_color = Common.UI.Themes.currentThemeColor('--background-toolbar'),
                         logo_type = (!config.twoLevelHeader || config.compactHeader) && (tabBackground==='toolbar') ? toolbar_color : header_color;
                     isDark = (new Common.Utils.RGBColor(logo_type)).isDark();
@@ -1222,6 +1298,7 @@ define([
             },
 
             setDocTitle: function(name){
+                if (!$labelDocName) return;
                 var width = this.getTextWidth(name || $labelDocName.val());
                 (width>=0) && $labelDocName.width(width);
                 name && (width>=0) && $labelDocName.val(name);
@@ -1275,7 +1352,10 @@ define([
 
             updateAvatarEl: function(){
                 if(this.options.userAvatar){
-                    $btnUserName.css({'background-image': 'url('+ this.options.userAvatar +')'});
+                    $btnUserName.css({
+                        'background-image': 'url('+ this.options.userAvatar +')',
+                        'background-color': 'transparent'
+                    });
                     $btnUserName.text('');
                 } else {
                     $btnUserName.text(Common.Utils.getUserInitials(this.options.userName));
@@ -1317,6 +1397,8 @@ define([
                     if (me.btnSearch) {
                         me.btnSearch.setDisabled(lock);
                     }
+                } else if ( alias == 'startfill' ) {
+                    me.btnStartFill && me.btnStartFill.setDisabled(lock);
                 } else {
                     var _lockButton = function (btn) {
                         btn && Common.Utils.lockControls(cause, lock, {array: [btn]});
@@ -1333,6 +1415,18 @@ define([
             setDocumentReadOnly: function (readonly) {
                 this.readOnly = readonly;
                 this.setDocumentCaption(this.documentCaption);
+            },
+
+            onStartFilling: function() {
+                this.btnStartFill && this.btnStartFill.setVisible(false);
+                updateDocNamePosition();
+            },
+
+            onThemeChanged: function() {
+                this.changeLogo();
+                if (this._testCanvas)
+                    this._testCanvas = undefined;
+                this.setDocTitle();
             },
 
             textBack: 'Go to Documents',
@@ -1392,7 +1486,8 @@ define([
             helpQuickAccessHeader: 'Customize Quick Access',
             ariaQuickAccessToolbar: 'Quick access toolbar',
             textAnnotateDesc: 'Fill forms or annotate',
-            textDownload: 'Download'
+            textDownload: 'Download',
+            tipFillStatus: 'Filling status'
         }
     }(), Common.Views.Header || {}))
 });

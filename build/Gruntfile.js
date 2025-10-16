@@ -110,6 +110,9 @@ module.exports = function(grunt) {
                 }, {
                     from: /\{\{DEFAULT_LANG\}\}/g,
                     to: _encode(process.env.DEFAULT_LANG) || 'en'
+                }, {
+                    from: /\{\{SUGGEST_URL\}\}/g,
+                    to: _encode(process.env.SUGGEST_URL) || 'https://feedback.onlyoffice.com/forums/966080-your-voice-matters?category_id=519084'
                 }];
 
     var helpreplacements = [
@@ -286,6 +289,24 @@ module.exports = function(grunt) {
             }
         }
     });
+
+    const svgmin_opts = {
+            plugins: [{
+                name: 'preset-default',
+                params: {
+                    overrides: {
+                        cleanupIds: false,
+                        removeHiddenElems: false,   // plugin ver 3.2.0 deletes <symbol> as non rendering element
+                    }
+                },
+            }, {
+                name: 'convertPathData',
+                params: {
+                    floatPrecision: 4
+                }
+            }]
+    };
+
     doRegisterTask('apps-common', (defaultConfig, packageFile) => {
         return {
             imagemin: {
@@ -297,23 +318,7 @@ module.exports = function(grunt) {
                 }
             },
             svgmin: {
-                options: {
-                    plugins: [{
-                        name: 'preset-default',
-                        params: {
-                            overrides: {
-                                cleanupIds: false,
-                                removeHiddenElems: false,   // plugin ver 3.2.0 deletes <symbol> as non rendering element
-                            }
-                        },
-                    },
-                    {
-                        name: 'convertPathData',
-                        params: {
-                            floatPrecision: 4
-                        }
-                    }]
-                },
+                options: {...svgmin_opts},
                 dist: {
                     files: packageFile['apps-common'].svgicons.common
                 }
@@ -321,7 +326,10 @@ module.exports = function(grunt) {
             inline: {
                 dist: {
                     src: packageFile['apps-common'].copy.indexhtml.dest + '/*.html'
-                }
+                },
+                cachescripts: {
+                    src: packageFile['api'].copy.script.dest + 'documents/*.html',
+                },
             }
         }
     });
@@ -336,6 +344,7 @@ module.exports = function(grunt) {
     doRegisterTask('fetch');
     doRegisterTask('es6-promise');
     doRegisterTask('common-embed');
+    doRegisterTask('monaco');
     doRegisterTask('requirejs', function(defaultConfig, packageFile) {
         return {
             terser: {
@@ -407,7 +416,8 @@ module.exports = function(grunt) {
 
             replace: {
                 writeVersion: {
-                    src: ['<%= pkg.main.js.requirejs.options.out %>','<%= pkg.main.js.postload.options.out %>'],
+                    src: ['<%= pkg.main.js.requirejs.options.out %>', '<%= pkg.main.js.postload.options.out %>',
+                                packageFile.main.js.babel.files[0].dest],
                     overwrite: true,
                     replacements: [{
                         from: /\{\{PRODUCT_VERSION\}\}/g,
@@ -453,9 +463,9 @@ module.exports = function(grunt) {
                 localization: {
                     files: packageFile['main']['copy']['localization']
                 },
-                // help: {
-                //     files: packageFile['main']['copy']['help']
-                // },
+                help: {
+                    files: packageFile['main']['copy']['help']
+                },
                 indexhtml: {
                     files: packageFile['main']['copy']['indexhtml']
                 }
@@ -471,23 +481,7 @@ module.exports = function(grunt) {
             },
 
             svgmin: {
-                options: {
-                    plugins: [{
-                        name: 'preset-default',
-                        params: {
-                            overrides: {
-                                cleanupIds: false,
-                                removeHiddenElems: false,   // plugin ver 3.2.0 deletes <symbol> as non rendering element
-                            }
-                        },
-                    },
-                    {
-                        name: 'convertPathData',
-                        params: {
-                            floatPrecision: 4
-                        }
-                    }]
-                },
+                options: {...svgmin_opts},
                 dist: {
                     files: packageFile.main.svgicons.common
                 }
@@ -525,7 +519,7 @@ module.exports = function(grunt) {
             babel: {
                 options: {
                     sourceMap: false,
-                    presets: ['@babel/preset-env']
+                    presets: [['@babel/preset-env', {modules: false}]]
                 },
                 dist: {
                     files: packageFile.main.js.babel.files
@@ -554,11 +548,19 @@ module.exports = function(grunt) {
                     dest: packageFile.main.reporter.uglify.dest
                 },
             },
+            inline: {
+                options: {
+                    uglify: true
+                },
+                dist: {
+                    src: '<%= Object.keys(pkg.main.reporter.copy)[0] %>'
+                }
+            },
             copy: packageFile.main.reporter.copy
         });
 
 
-        grunt.task.run(['terser', 'copy']);
+        grunt.task.run(['terser', 'copy', 'inline']);
     });
 
     grunt.registerTask('mobile-app-init', function() {
@@ -667,7 +669,8 @@ module.exports = function(grunt) {
                     },
                     cmd: function() {
                         const editor = packageFile.name == 'presentationeditor' ? 'slide' :
-                                        packageFile.name == 'spreadsheeteditor' ? 'cell' : 'word';
+                                        packageFile.name == 'spreadsheeteditor' ? 'cell' :
+                                        packageFile.name == 'visioeditor' ? 'visio' : 'word';
                         return `npm run deploy-${editor}`;
 
                         // const addon_path = `${packageFile.mobile.js.reactjs && !!packageFile.mobile.js.reactjs.features ? `ADDON_ENV=${packageFile.mobile.js.reactjs.features}` : ''}`;
@@ -819,6 +822,7 @@ module.exports = function(grunt) {
     grunt.registerTask('deploy-bootstrap',              ['bootstrap-init', 'clean', 'copy']);
     grunt.registerTask('deploy-requirejs',              ['requirejs-init', 'clean', 'terser']);
     grunt.registerTask('deploy-es6-promise',            ['es6-promise-init', 'clean', 'copy']);
+    grunt.registerTask('deploy-monaco',                 ['monaco-init', 'clean', 'copy']);
     grunt.registerTask('deploy-common-embed',           ['common-embed-init', 'clean', 'copy']);
 
     grunt.registerTask('deploy-app-main',               ['prebuild-icons-sprite', 'main-app-init', 'clean:prebuild', 'imagemin', 'less',
@@ -839,6 +843,7 @@ module.exports = function(grunt) {
     doRegisterInitializeAppTask('spreadsheeteditor',    'SpreadsheetEditor',    'spreadsheeteditor.json');
     doRegisterInitializeAppTask('presentationeditor',   'PresentationEditor',   'presentationeditor.json');
     doRegisterInitializeAppTask('pdfeditor',            'PDFEditor',            'pdfeditor.json');
+    doRegisterInitializeAppTask('visioeditor',          'VisioEditor',          'visioeditor.json');
 
     doRegisterInitializeAppTask('testdocumenteditor',    'TestDocumentEditor',           'testdocumenteditor.json');
     doRegisterInitializeAppTask('testpresentationeditor', 'TestPresentationEditor',      'testpresentationeditor.json');
@@ -860,6 +865,7 @@ module.exports = function(grunt) {
     grunt.registerTask('deploy-spreadsheeteditor-component',  ['init-build-spreadsheeteditor', 'deploy-app']);
     grunt.registerTask('deploy-presentationeditor-component', ['init-build-presentationeditor', 'deploy-app']);
     grunt.registerTask('deploy-pdfeditor-component',          ['init-build-pdfeditor', 'deploy-app']);
+    grunt.registerTask('deploy-visioeditor-component',        ['init-build-visioeditor', 'deploy-app']);
     // This task is called from the Makefile, don't delete it.
     grunt.registerTask('deploy-documents-component',          ['deploy-common-component']);   
 
@@ -867,6 +873,7 @@ module.exports = function(grunt) {
     grunt.registerTask('deploy-spreadsheeteditor',  ['deploy-common-component', 'deploy-spreadsheeteditor-component']);
     grunt.registerTask('deploy-presentationeditor', ['deploy-common-component', 'deploy-presentationeditor-component']);
     grunt.registerTask('deploy-pdfeditor',          ['deploy-common-component', 'deploy-pdfeditor-component']);
+    grunt.registerTask('deploy-visioeditor',        ['deploy-common-component', 'deploy-visioeditor-component']);
 
     grunt.registerTask('deploy-testdocumenteditor', ['init-build-testdocumenteditor', 'deploy-app']);
     grunt.registerTask('deploy-testpresentationeditor', ['init-build-testpresentationeditor', 'deploy-app']);
@@ -876,5 +883,6 @@ module.exports = function(grunt) {
                                    'deploy-documenteditor-component',
                                    'deploy-spreadsheeteditor-component',
                                    'deploy-presentationeditor-component',
-                                   'deploy-pdfeditor-component']);
+                                   'deploy-pdfeditor-component',
+                                   'deploy-visioeditor-component']);
 };

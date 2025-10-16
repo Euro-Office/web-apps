@@ -114,12 +114,12 @@ define([
                 config && !!config.feedback && !!config.feedback.url ?
                     window.open(config.feedback.url) :
                     window.open('{{SUPPORT_URL}}');
+                Common.NotificationCenter.trigger('edit:complete', this);
             }, this));
 
             /** coauthoring begin **/
             this.btnComments = new Common.UI.Button({
                 el: $markup.elementById('#left-btn-comments'),
-                hint: this.tipComments + Common.Utils.String.platformKey('Ctrl+Shift+H'),
                 enableToggle: true,
                 disabled: true,
                 iconCls: 'btn-menu-comments',
@@ -127,16 +127,27 @@ define([
             });
             this.btnComments.on('click',        this.onBtnMenuClick.bind(this));
             this.btnComments.on('toggle',       this.onBtnCommentsToggle.bind(this));
+            DE.getController('Common.Controllers.Shortcuts').updateShortcutHints({
+                OpenCommentsPanel: {
+                    btn: this.btnComments,
+                    label: this.tipComments
+                }
+            });
 
             this.btnChat = new Common.UI.Button({
                 el: $markup.elementById('#left-btn-chat'),
-                hint: this.tipChat + Common.Utils.String.platformKey('Alt+Q', ' (' + (Common.Utils.isMac ? Common.Utils.String.textCtrl + '+' : '') + '{0})'),
                 enableToggle: true,
                 disabled: true,
                 iconCls: 'btn-menu-chat',
                 toggleGroup: 'leftMenuGroup'
             });
             this.btnChat.on('click',            this.onBtnMenuClick.bind(this));
+            DE.getController('Common.Controllers.Shortcuts').updateShortcutHints({
+                OpenChatPanel: {
+                    btn: this.btnChat,
+                    label: this.tipChat
+                }
+            });
 
             this.btnComments.hide();
             this.btnChat.hide();
@@ -168,7 +179,6 @@ define([
             this.btnThumbnails.on('click', this.onBtnMenuClick.bind(this));
 
             this.$el.html($markup);
-
             return this;
         },
 
@@ -207,6 +217,7 @@ define([
             this.supressEvents = false;
 
             this.onCoauthOptions();
+            btn.options.type !== 'plugin' && $('.left-panel .plugin-panel').toggleClass('active', false);
             Common.NotificationCenter.trigger('layout:changed', 'leftmenu');
         },
 
@@ -418,7 +429,6 @@ define([
             this._state.pluginIsRunning = false;
             this.panelHistory.show();
             this.panelHistory.$el.width((parseInt(Common.localStorage.getItem('de-mainmenu-width')) || MENU_SCALE_PART) - SCALE_MIN);
-            Common.UI.TooltipManager.showTip('textDeleted');
             Common.NotificationCenter.trigger('layout:changed', 'history');
         },
 

@@ -42,7 +42,8 @@ define([
     'backbone',
     'common/main/lib/component/BaseView',
     'presentationeditor/main/app/model/Pages',
-    'common/main/lib/component/InputField'
+    'common/main/lib/component/InputField',
+    'common/main/lib/component/ColorPaletteExt',
 ], function () {
     'use strict';
 
@@ -71,12 +72,12 @@ define([
 
             this.template = [
                 '<div id="presentation-preview" style="width:100%; height:100%"></div>',
-                '<div id="preview-controls-panel" class="preview-controls"">',
+                '<div id="preview-controls-panel" class="preview-controls">',
                     '<div class="preview-group" style="">',
-                        !Common.UI.isRTL() ? '<button id="btn-preview-prev" type="button" class="btn small btn-toolbar"><i class="icon toolbar__icon btn-previtem">&nbsp;</i></button>' : '<button id="btn-preview-next" type="button" class="btn small btn-toolbar"><span class="icon toolbar__icon btn-nextitem">&nbsp;</span></button>',
+                        '<button id="btn-preview-prev" type="button" class="btn small btn-toolbar"><i class="icon toolbar__icon btn-previtem icon-rtl">&nbsp;</i></button>',
                         '<button id="btn-preview-play" type="button" class="btn small btn-toolbar"><i class="icon toolbar__icon btn-play">&nbsp;</i></button>',
-                        !Common.UI.isRTL() ? '<button id="btn-preview-next" type="button" class="btn small btn-toolbar"><i class="icon toolbar__icon btn-nextitem">&nbsp;</i></button>' : '<button id="btn-preview-prev" type="button" class="btn small btn-toolbar"><span class="icon toolbar__icon btn-previtem">&nbsp;</span></button>',
-                    '<div class="separator"></div>',
+                        '<button id="btn-preview-next" type="button" class="btn small btn-toolbar"><i class="icon toolbar__icon btn-nextitem icon-rtl">&nbsp;</i></button>',
+                        '<div class="separator"></div>',
                     '</div>',
                     '<div class="preview-group dropup">',
                         '<label id="preview-label-slides" class="status-label dropdown-toggle" data-toggle="dropdown">Slide 1 of 1</label>',
@@ -84,6 +85,10 @@ define([
                             '<label class="float-left margin-right-10">' + this.goToSlideText + '</label>',
                             '<div id="preview-goto-page" style="display:inline-block;"></div>',
                         '</div>',
+                    '</div>',
+                    '<div id="preview-group-draw" class="preview-group">',
+                        '<div class="separator"></div>',
+                        '<div id="btn-preview-draw" style="display: inline-block;"></div>',
                     '</div>',
                     '<div class="preview-group" style="">',
                         '<div class="separator"></div>',
@@ -96,6 +101,29 @@ define([
 
             this.pages = new PE.Models.Pages({current:1, count:1, start:1});
             this.pages.on('change', _.bind(_updatePagesCaption,this));
+            this.currentDrawColor = 'E81416';
+            this.drawTool = {
+                pen: () => {
+                    Common.NotificationCenter.trigger('draw-tool:pen', { index: 0, color: this.currentDrawColor, size: 1, opacity: 100 });
+                    this.editComplete();
+                },
+                highlighter: () => {
+                    Common.NotificationCenter.trigger('draw-tool:pen', { index: 1, color: this.currentDrawColor, size: 6, opacity: 50 });
+                    this.editComplete();
+                },
+                eraser: () => {
+                    Common.NotificationCenter.trigger('draw-tool:eraser');
+                    this.editComplete();
+                },
+                eraseAll: () => {
+                    Common.NotificationCenter.trigger('draw-tool:erase-all');
+                    this.editComplete();
+                },
+                select: () => {
+                    Common.NotificationCenter.trigger('draw-tool:select');
+                    this.editComplete();
+                }
+            };
         },
 
         render: function () {
@@ -105,14 +133,120 @@ define([
                 scope: this
             }));
 
+            if (Common.Utils.isIE) {
+                document.getElementById('preview-group-draw').style.display = 'none';
+            } else {
+                this.btnDraw = new Common.UI.Button({
+                    parentEl: $('#btn-preview-draw', this.el),
+                    cls: 'btn-toolbar small',
+                    iconCls: 'toolbar__icon btn-pen-tool',
+                    onlyIcon: true,
+                    stopPropagation: true,
+                    hint: this.txtDraw,
+                    hintAnchor: 'top',
+                    hintContainer: '#pe-preview',
+                    menu: new Common.UI.Menu({
+                        menuAlign: 'tl-tr',
+                        cls: "shifted-right",
+                        style: 'min-width: 120px; height: auto; min-height: fit-content;',
+                        additionalAlign: function (root) {
+                            var parent = root.parent();
+                            var parentOffset = Common.Utils.getOffset(parent);
+                            root.css({
+                                left: parentOffset.left + (parent.outerWidth() - root.outerWidth()) / 2,
+                                top: parentOffset.top - root.outerHeight() - 8
+                            });
+                        },
+                        items: [
+                            new Common.UI.MenuItem({
+                                caption: this.txtPen,
+                                value: 'pen',
+                                iconCls: 'menu__icon btn-pen-tool',
+                                checkable: true,
+                                toggleGroup: 'preview-draw-tool'
+                            }),
+                            new Common.UI.MenuItem({
+                                caption: this.txtHighlighter,
+                                value: 'highlighter',
+                                iconCls: 'menu__icon btn-highlighter-tool',
+                                checkable: true,
+                                toggleGroup: 'preview-draw-tool'
+                            }),
+                            { caption: '--' },
+                            {
+                                caption: this.txtInkColor,
+                                menu: new Common.UI.Menu({
+                                    menuAlign: 'tl-tr',
+                                    cls: "preview-draw-color-picker-menu",
+                                    style: 'min-width: 140px; padding: 0px; height: auto; min-height: fit-content;',
+                                })
+                            },
+                            { caption: '--' },
+                            new Common.UI.MenuItem({
+                                caption: this.txtEraser,
+                                value: 'eraser',
+                                iconCls: 'menu__icon btn-clearstyle',
+                                checkable: true,
+                                toggleGroup: 'preview-draw-tool'
+                            }),
+                            { caption: this.txtEraseScreen, value: 'eraseAll', iconCls: 'menu__icon btn-clear-all' },
+                        ]
+                    }),
+                });
+
+                this.drawColorPicker = new Common.UI.ColorPaletteExt({
+                    el: $('.preview-draw-color-picker-menu'),
+                    colors: ["FFFFFF","000000","E81416","FFA500","FAEB36","79C314","487DE7","4B369D","70369D"],
+                    value: 'E81416'
+                });
+                this.drawColorPicker.on('select', (_picker, color) => {
+                    this.currentDrawColor = color;
+                    const currentTool = this.btnDraw.menu.getChecked();
+
+                    if (!currentTool) {
+                        this.btnDraw.toggle(true);
+                        this.btnDraw.menu.items[0].setChecked(true);
+                        this.drawTool['pen']();
+                        return;
+                    }
+
+                    if (currentTool.value === 'pen' || currentTool.value === 'highlighter') {
+                        this.drawTool[currentTool.value]();
+                    } else {
+                        this.btnDraw.menu.items[this.btnDraw.menu.items.indexOf(currentTool)].setChecked(false);
+                        this.btnDraw.menu.items[0].setChecked(true);
+                        this.drawTool['pen']();
+                    }
+                });
+
+                this.btnDraw.menu.on('item:click', (_, item) => {
+                    if (this.currentDrawTool === item.value) {
+                        item.setChecked(false);
+                        this.drawTool['select']();
+                        this.btnDraw.toggle(false);
+                        this.currentDrawTool = undefined;
+                        return;
+                    }
+
+                    if (item.value !== 'eraseAll') {
+                        this.btnDraw.toggle(true);
+                        this.currentDrawTool = item.value;
+                    }
+
+                    this.drawTool[item.value]();
+                });
+            }
+
             this.btnPrev = new Common.UI.Button({
                 el: $('#btn-preview-prev',this.el),
                 hint: this.txtPrev,
                 hintAnchor: 'top',
                 hintContainer: '#pe-preview'
             });
-            this.btnPrev.on('click', _.bind(function() {
+            this.btnPrev.on('click', _.bind(function(btn) {
                 if (this.api) this.api.DemonstrationPrevSlide();
+                btn.cmpEl && btn.cmpEl.blur();
+                this.editComplete();
             }, this));
 
             this.btnNext = new Common.UI.Button({
@@ -121,8 +255,10 @@ define([
                 hintAnchor: 'top',
                 hintContainer: '#pe-preview'
             });
-            this.btnNext.on('click', _.bind(function() {
+            this.btnNext.on('click', _.bind(function(btn) {
                 if (this.api) this.api.DemonstrationNextSlide();
+                btn.cmpEl && btn.cmpEl.blur();
+                this.editComplete();
             }, this));
 
             this.btnPlay = new Common.UI.Button({
@@ -144,6 +280,8 @@ define([
                     if (this.api)
                         this.api.DemonstrationPlay ();
                 }
+                btn.cmpEl && btn.cmpEl.blur();
+                this.editComplete();
             }, this));
 
             this.btnClose = new Common.UI.Button({
@@ -164,6 +302,7 @@ define([
             });
             this.btnFullScreen.on('click', _.bind(function(btn) {
                 this.toggleFullScreen();
+                this.editComplete();
             }, this));
 
             this.txtGoToPage = new Common.UI.InputField({
@@ -243,6 +382,9 @@ define([
                     me.btnFullScreen.changeIcon({curr: 'btn-fullscreen', next: 'btn-preview-exit-fullscreen'});
                 } else {
                     me.btnFullScreen.changeIcon({curr: 'btn-preview-exit-fullscreen', next: 'btn-fullscreen'});
+                    if (me.btnDraw) {
+                        me.btnDraw.menu.hide();
+                    }
                 }
 
                 setTimeout( function() {
@@ -258,6 +400,7 @@ define([
                     me.btnClose.updateHint( fselem ? '' : me.txtClose);
                 } else
                     me.btnFullScreen.updateHint( fselem ? me.txtExitFullScreen: me.txtFullScreen);
+                me.editComplete();
             });
 
             if (Common.Utils.isIE) {
@@ -333,6 +476,7 @@ define([
             this.$el.off('mousemove');
             this.fireEvent('editcomplete', this);
             Common.NotificationCenter.trigger('preview:hide');
+            Common.NotificationCenter.trigger('draw-tool:select');
         },
 
         setApi: function(o) {
@@ -379,6 +523,11 @@ define([
         },
 
         onEndDemonstration: function( ) {
+            if (this.btnDraw) {
+                this.btnDraw.menu.clearAll();
+                this.btnDraw.toggle(false);
+                this.currentDrawTool = undefined;
+            }
             this.hide();
             Common.Utils.cancelFullscreen();
         },
@@ -405,6 +554,17 @@ define([
             }
         },
 
+        editComplete: function() {
+            this.api && this.api.asc_enableKeyEvents(true);
+        },
+
+        txtDraw: 'Draw',
+        txtPen: 'Pen',
+        txtHighlighter: 'Highlighter',
+        txtEraser: 'Eraser',
+        txtEraseScreen: 'Erase screen',
+        txtInkColor: 'Ink color',
+        txtPointer: 'Laser pointer',
         txtPrev: 'Previous Slide',
         txtNext: 'Next Slide',
         txtClose: 'Close Slideshow',

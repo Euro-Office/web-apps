@@ -109,7 +109,7 @@ define([
             _options.tpl = _.template(this.template)(_options);
 
             this.arrow = {margin: 20, width: 10, height: 30};
-            this.sdkBounds = {width: 0, height: 0, padding: 10, paddingTop: 20};
+            this.sdkBounds = {width: 0, height: 0, outerWidth: 0, outerHeight: 0, padding: 10, paddingTop: 20};
 
             Common.UI.Window.prototype.initialize.call(this, _options);
 
@@ -293,7 +293,7 @@ define([
                         btns.each(function (idx, item) {
                             arr.push($(item).data('bs.tooltip').tip());
                         });
-                        btns = $(view.el).find('.btn-edit');
+                        btns = $(view.el).find('.btn-edit-common');
                         btns.tooltip({title: me.txtEditTip, placement: 'cursor'});
                         btns.each(function (idx, item) {
                             arr.push($(item).data('bs.tooltip').tip());
@@ -345,7 +345,7 @@ define([
                                     return;
                             }
 
-                            if (btn.hasClass('btn-edit')) {
+                            if (btn.hasClass('btn-edit-common')) {
                                 var tip = btn.data('bs.tooltip');
                                 if (tip) tip.dontShow = true;
 
@@ -768,12 +768,13 @@ define([
             if (commentsView && arrowView && editorView && editorView.get(0)) {
                 editorBounds = Common.Utils.getBoundingClientRect(editorView.get(0));
                 if (editorBounds) {
+                    editorBounds.height = Math.min(editorBounds.height, Math.max(300, editorBounds.height * 0.75));
                     sdkBoundsHeight = editorBounds.height - this.sdkBounds.padding * 2;
 
                     this.$window.css({maxHeight: sdkBoundsHeight + 'px'});
 
-                    this.sdkBounds.width = editorBounds.width;
-                    this.sdkBounds.height = editorBounds.height;
+                    this.sdkBounds.width = this.sdkBounds.outerWidth = editorBounds.width;
+                    this.sdkBounds.height = this.sdkBounds.outerHeight = editorBounds.height;
 
                     // LEFT CORNER
 
@@ -861,10 +862,14 @@ define([
                         topPos = Math.min(sdkBoundsTop + sdkBoundsHeight - outerHeight, this.arrowPosY + sdkBoundsTop - this.arrow.height);
                         topPos = Math.max(topPos, sdkBoundsTopPos);
 
-                        if (parseInt(arrowView.css('top')) + this.arrow.height > outerHeight) {
-                            arrowView.css({top: (outerHeight-this.arrow.height) + 'px'});
+                        var arrowPosY = 0;
+                        if (Math.ceil(sdkBoundsHeight) <= Math.ceil(outerHeight))
+                            arrowPosY = Math.min(arrowPosY, sdkBoundsHeight - (sdkPanelHeight + this.arrow.margin + this.arrow.height));
+                        else {
+                            arrowPosY = Math.max(this.arrow.margin, this.arrowPosY - (sdkBoundsHeight - outerHeight) - this.arrow.height);
+                            arrowPosY = Math.min(arrowPosY, outerHeight - this.arrow.margin - this.arrow.height);
                         }
-
+                        arrowView.css({top: arrowPosY + 'px'});
                         this.$window.css('top', topPos + 'px');
                     }
                 }
@@ -906,6 +911,7 @@ define([
                     if (editorView && editorView.get(0)) {
                         editorBounds = Common.Utils.getBoundingClientRect(editorView.get(0));
                         if (editorBounds) {
+                            editorBounds.height = Math.min(editorBounds.height, Math.max(300, editorBounds.height * 0.75));
                             sdkBoundsHeight = editorBounds.height - this.sdkBounds.padding * 2;
                             sdkBoundsTopPos = sdkBoundsTop;
                             windowHeight = this.$window.outerHeight();
@@ -1119,6 +1125,8 @@ define([
                     me.e = event;
                 });
                 textBox && textBox.on('input', function (event) {
+                    clearTimeout(me._state.timerEmailList);
+
                     var $this = $(this),
                         start = this.selectionStart,
                         val = $this.val(),
@@ -1137,7 +1145,9 @@ define([
                         res = str.match(/^(?:[@]|[+](?!1))(\S*)/);
                     if (res && res.length>1) {
                         str = res[1]; // send to show email menu
-                        me.onEmailListMenu(str, left, right);
+                        me._state.timerEmailList = setTimeout(function () {
+                            me.onEmailListMenu(str, left, right);
+                        }, 300);
                     } else
                         me.onEmailListMenu(); // hide email menu
                 });
@@ -1206,29 +1216,46 @@ define([
         },
 
         onEmailListMenu: function(str, left, right) {
+            clearTimeout(this._state.timerEmailList);
             if (typeof str == 'string') {
                 this._state.emailSearch = {
                     str: str,
                     left: left,
-                    right: right
+                    right: right,
+                    from: 0,
+                    count: 100,
+                    isPaginated: undefined,
+                    requestNext: undefined
                 };
-                Common.UI.ExternalUsers.get('mention');
+                var data = this._state.emailSearch;
+                Common.UI.ExternalUsers.get('mention', undefined, data.from, data.count, data.str);
             } else {
                 this._state.emailSearch = null;
                 this.emailMenu.rendered && this.emailMenu.cmpEl.css('display', 'none');
             }
         },
 
-        onEmailListMenuCallback: function(type, users) {
-            if (!this._state.emailSearch || users.length<1 || type && type!=='mention') return;
+        onEmailListMenuNext: function() {
+            var data = this._state.emailSearch;
+            if (data && data.isPaginated!==undefined) {
+                data.from += data.count;
+                Common.UI.ExternalUsers.get('mention', undefined, data.from, data.count, data.str);
+            }
+        },
+
+        onEmailListMenuCallback: function(type, users, isPaginated) {
+            if (!this._state.emailSearch || type && type!=='mention') return;
 
             var me   = this,
                 menu = me.emailMenu,
                 str = this._state.emailSearch.str,
                 left = this._state.emailSearch.left,
-                right = this._state.emailSearch.right;
+                right = this._state.emailSearch.right,
+                from = this._state.emailSearch.from,
+                isClientSearch = isPaginated===undefined;
 
-            this._state.emailSearch = null;
+            this._state.emailSearch.isPaginated = isPaginated;
+            isClientSearch && (this._state.emailSearch = null);
 
             var menuContainer = me.$window.find(Common.Utils.String.format('#menu-container-{0}', menu.id)),
                 textbox = this.commentsView.getTextBox(),
@@ -1251,19 +1278,39 @@ define([
                         tb && tb.focus();
                     }, 10);
                 });
+                !isClientSearch && menu.scroller.cmpEl.on('scroll', function (event) {
+                    if (me._state.emailSearch && me._state.emailSearch.requestNext>0 && me._state.emailSearch.requestNext < $(event.target).scrollTop()) {
+                        me._state.emailSearch.requestNext = -1; // wait for response
+                        me.onEmailListMenuNext();
+                    }
+                });
             }
 
-            for (var i = 0; i < menu.items.length; i++) {
-                menu.removeItem(menu.items[i]);
-                i--;
+            if (isClientSearch || from===0) {
+                for (var i = 0; i < menu.items.length; i++) {
+                    menu.removeItem(menu.items[i]);
+                    i--;
+                }
             }
 
-            if (users.length>0) {
-                str = str.toLowerCase();
-                if (str.length>0) {
-                    users = _.filter(users, function(item) {
-                        return (item.email && 0 === item.email.toLowerCase().indexOf(str) || item.name && 0 === item.name.toLowerCase().indexOf(str))
-                    });
+            if (users && users.length>0) {
+                if (isClientSearch) {
+                    str = str.toLowerCase();
+                    if (str.length>0) {
+                        users = _.filter(users, function(item) {
+                            if (item.email && 0 === item.email.toLowerCase().indexOf(str)) return true;
+
+                            let arr = item.name ? item.name.toLowerCase().split(' ') : [],
+                                inName = false;
+                            for (let i=0; i<arr.length; i++) {
+                                if (0 === arr[i].indexOf(str)) {
+                                    inName = true;
+                                    break;
+                                }
+                            }
+                            return inName;
+                        });
+                    }
                 }
                 var tpl = _.template('<a id="<%= id %>" tabindex="-1" type="menuitem">' +
                                         '<div style="overflow: hidden; text-overflow: ellipsis; max-width: 195px;"><%= Common.Utils.String.htmlEncode(caption) %></div>' +
@@ -1298,6 +1345,10 @@ define([
                 menu.cmpEl.css('display', '');
                 menu.alignPosition('bl-tl', -5);
                 menu.scroller.update({alwaysVisibleY: true});
+                if (!isClientSearch) {
+                    (from===0) && menu.scroller.scrollTop(0);
+                    me._state.emailSearch.requestNext = users && users.length>0 ? (1 - 10/menu.items.length) * menu.cmpEl.get(0).scrollHeight : -1;
+                }
             } else {
                 menu.rendered && menu.cmpEl.css('display', 'none');
             }
