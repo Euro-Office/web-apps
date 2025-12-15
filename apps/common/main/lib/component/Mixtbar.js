@@ -1045,6 +1045,16 @@ define([
                     top = showxy.top - parentxy.top + target.height() + 10;
 
                 var styles = Common.UI.isRTL() ? {left: '6px', right: 'auto', top : top, 'max-width': Common.Utils.innerWidth() + 'px'} : {right: right, left: 'auto', top : top, 'max-width': Common.Utils.innerWidth() + 'px'}
+
+                var firstElement = this.$moreBar.find('.group');
+                
+                if (firstElement.length) {
+                    var currentPadding = parseInt(firstElement.css('padding-left')) || 0;
+                    if (currentPadding === 0) {
+                        styles['padding-left'] = '6px'; 
+                    }
+                }
+
                 moreContainer.css(styles);
                 moreContainer.show();
             },
