@@ -417,11 +417,11 @@
         background-color: @background-toolbar-ie;
         background-color: @background-toolbar;
         min-width:auto;
-        padding: 12px 10px 7px 0;
+        padding: 12px 10px 7px 6px;
         border-radius: 0;
         z-index:999;
         .rtl & {
-            padding: 12px 0 7px 10px;
+            padding: 12px 6px 7px 10px;
         }
         .compactwidth:not(.emptycaption), .nocaption {
             .btn-group, .btn-toolbar {
@@ -458,6 +458,16 @@
             .separator {
                 margin-top: 4px;
                 margin-bottom: 4px;
+            }
+        }
+        div .group {
+            .padding-left(0);
+
+            &.small {
+                .padding-left(4);
+                &.padding-right-10 {
+                    .padding-right(4);
+                }
             }
         }
     }
