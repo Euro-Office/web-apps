@@ -460,13 +460,23 @@
                 margin-bottom: 4px;
             }
         }
-        div .group {
+        div .group:first-child {
             .padding-left(0);
 
             &.small {
-                .padding-left(4);
+                .padding-left(4px);
                 &.padding-right-10 {
-                    .padding-right(4);
+                    .padding-right(4px);
+                }
+            }
+        }
+        div .separator:first-child + .group {
+            .padding-left(0);
+
+            &.small {
+                .padding-left(4px);
+                &.padding-right-10 {
+                    .padding-right(4px);
                 }
             }
         }
