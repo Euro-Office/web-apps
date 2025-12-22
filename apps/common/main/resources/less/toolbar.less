@@ -460,24 +460,31 @@
                 margin-bottom: 4px;
             }
         }
-
         &[data-tab=plugins] {
             padding: 12px 10px 7px 6px;
             .rtl & {
                 padding: 12px 6px 7px 10px;
             }
-            div .invisible:first-child + .group,
+            div .separator:first-child + .group {
+                .padding-left(0);
+                 
+                &.small {
+                    .padding-left(4px);
+                    &.padding-right-10 {
+                    .padding-right(4px);
+                    }
+                }
+            }
             div .group:first-child {
                 .padding-left(0);
                  
                 &.small {
-                    .padding-left(4);
+                    .padding-left(4px);
                     &.padding-right-10 {
-                    .padding-right(4);
+                    .padding-right(4px);
                     }
                 }
             }
-            
         }
     }
 
