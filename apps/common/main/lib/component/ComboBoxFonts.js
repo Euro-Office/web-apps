@@ -401,6 +401,7 @@ define([
 
             onInputKeyUp: function(e) {
                 if (!this._isKeyDown) return;
+                     
                 if (e.keyCode != Common.UI.Keys.RETURN && e.keyCode !== Common.UI.Keys.SHIFT &&
                     e.keyCode !== Common.UI.Keys.CTRL && e.keyCode !== Common.UI.Keys.ALT &&
                     e.keyCode !== Common.UI.Keys.LEFT && e.keyCode !== Common.UI.Keys.RIGHT &&
@@ -408,7 +409,12 @@ define([
                     e.keyCode !== Common.UI.Keys.ESC &&
                     e.keyCode !== Common.UI.Keys.INSERT && e.keyCode !== Common.UI.Keys.TAB){
                     e.stopPropagation();
-                    this.selectCandidate(e.keyCode == Common.UI.Keys.DELETE || e.keyCode == Common.UI.Keys.BACKSPACE);
+                    if (e.keyCode == Common.UI.Keys.SPACE && this._input.val().trim() == "") {
+                        this._input.val("");
+                    } else {
+                        this.selectCandidate(e.keyCode == Common.UI.Keys.DELETE || e.keyCode == Common.UI.Keys.BACKSPACE);
+                    }
+                    
                     if (this._selectedItem && !this._isComposition) {
                         var me = this;
                         if (me._timerSelection===undefined)
