@@ -363,7 +363,7 @@ const Statusbar = inject('storeWorksheets', 'storeAppOptions', 'users', 'storeSp
                 }
                 break;
             case 'unhide':
-                f7.popover.open('#idx-hidden-sheets-popover', '.active');
+                f7.sheet.open('.hidden-sheet');
                 break;
             case 'showMore':
                 f7.actions.open('#idx-tab-menu-actions');

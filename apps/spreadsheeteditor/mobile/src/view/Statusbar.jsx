@@ -45,6 +45,33 @@ const PageListMove = props => {
     )
 };
 
+const PageListHidden = props => {
+    const { t } = useTranslation();
+    const { sheets, onTabMenu } = props;
+    const allSheets = sheets.sheets;
+
+    return (
+        <View style={!Device.phone ? {height: '420px'} : null}>
+            <Page>
+                <Navbar title={t('Statusbar.textMoveBefore')}/>
+                <List>
+                    <ListGroup style={Device.phone ? { paddingBottom: '44px' } : undefined}>
+                        { allSheets.map((sheet, index) => 
+                            sheet.hidden ? 
+                            <ListItem 
+                            key={sheet.name} 
+                            data-event={`reveal:${index}`} 
+                            title={sheet.name} 
+                            onClick={() => onTabMenu(`reveal:${index}`)} />
+                            : null 
+                        )}
+                    </ListGroup>
+                </List>
+            </Page>
+        </View>
+    )
+};
+
 const PageAllList = observer((props) => {
     const { t } = useTranslation();
     const { sheets, onTabListClick } = props;
@@ -340,21 +367,15 @@ const StatusbarView = inject('storeAppOptions', 'storeWorksheets', 'users', 'sto
                 </Popover>
             }
             {hiddenSheets.length ? (
-                <Popover id="idx-hidden-sheets-popover"
-                    className="document-menu"
-                    backdrop={false}
-                    closeByBackdropClick={false}
-                    closeByOutsideClick={false}
+                <Sheet style={{height: '48%'}}
+                    swipeToClose={true}
+                    className="hidden-sheet"
                 >
-                    <List className="list-block">
-                        {hiddenSheets.map(sheet => {
-                            return (
-                                <ListButton key={sheet.index} data-event={`reveal:${sheet.index}`} title={sheet.name} 
-                                    onClick={() => props.onTabMenu(`reveal:${sheet.index}`)} />
-                            )
-                        })}
-                    </List>
-                </Popover>
+                    <div className='swipe-container'>
+                        <Icon icon='icon-swipe'/>
+                    </div>
+                    <PageListHidden sheets={storeWorksheets} onTabMenu={props.onTabMenu}/>
+                </Sheet>
             ) : null}
         </Fragment>
     )
