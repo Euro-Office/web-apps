@@ -330,7 +330,6 @@ const Statusbar = inject('storeWorksheets', 'storeAppOptions', 'users', 'storeSp
                 f7.dialog.alert(_t.textErrorLastSheet, _t.notcriticalErrorTitle) :
                 api['asc_hideWorksheet']([index]);
         } else {
-            f7.popover.close('#idx-hidden-sheets-popover');
             api['asc_showWorksheet'](index);
         }
     };
@@ -370,6 +369,7 @@ const Statusbar = inject('storeWorksheets', 'storeAppOptions', 'users', 'storeSp
                 break;
             default:
                 let _re = /reveal\:(\d+)/.exec(event);
+                f7.sheet.close('.hidden-sheet');
                 if (_re && !!_re[1]) {
                     hideWorksheet(false, parseInt(_re[1]));
                 }
