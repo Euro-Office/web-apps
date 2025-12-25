@@ -46,13 +46,26 @@ const PageListMove = props => {
 };
 
 const PageListHidden = props => {
+    const { t } = useTranslation();
+    const _t = t('View.Edit', {returnObjects: true});
     const { sheets, onTabMenu } = props;
     const allSheets = sheets.sheets;
 
     return (
         <View style={!Device.phone ? {height: '420px'} : null}>
             <Page>
-                <Navbar title={'Unhide sheets'}/>
+                <Navbar title="Unhide sheets">
+                    {Device.phone &&
+                        <NavRight>
+                            <Link sheetClose>
+                                {Device.ios ? 
+                                    <SvgIcon symbolId={IconExpandDownIos.id} className={'icon icon-svg'} /> :
+                                    <SvgIcon symbolId={IconExpandDownAndroid.id} className={'icon icon-svg'} />
+                                }
+                            </Link>
+                        </NavRight>
+                    }
+                </Navbar>
                 <List>
                     <ListGroup style={Device.phone ? { paddingBottom: '44px' } : undefined}>
                         { allSheets.map((sheet, index) => 
@@ -365,17 +378,17 @@ const StatusbarView = inject('storeAppOptions', 'storeWorksheets', 'users', 'sto
                     </View>
                 </Popover>
             }
-            {
-                <Sheet style={{height: '48%'}}
-                    swipeToClose={true}
-                    className="hidden-sheet"
-                    backdrop={false}>
-                    <div className='swipe-container'>
-                        <Icon icon='icon-swipe'/>
-                    </div>
-                <PageListHidden sheets={storeWorksheets} onTabMenu={props.onTabMenu}/>
+            { isPhone ?
+                <Sheet style={{height: '48%'}} swipeToClose={true} className="hidden-sheet">
+                    <PageListHidden sheets={storeWorksheets} onTabMenu={props.onTabMenu}/>
                 </Sheet>
-            }      
+                :
+                <Popover className="hidden-sheet"
+                >
+                   <PageListHidden sheets={storeWorksheets} onTabMenu={props.onTabMenu}/>
+                </Popover>
+
+            }
         </Fragment>
     )
 }));

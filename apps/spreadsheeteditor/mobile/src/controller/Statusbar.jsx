@@ -362,7 +362,7 @@ const Statusbar = inject('storeWorksheets', 'storeAppOptions', 'users', 'storeSp
                 }
                 break;
             case 'unhide':
-                f7.sheet.open('.hidden-sheet');
+                Device.phone ? f7.sheet.open('.hidden-sheet') : f7.popover.open('.hidden-sheet', targetRef.current); 
                 break;
             case 'showMore':
                 f7.actions.open('#idx-tab-menu-actions');
