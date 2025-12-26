@@ -379,11 +379,11 @@ const StatusbarView = inject('storeAppOptions', 'storeWorksheets', 'users', 'sto
                 </Popover>
             }
             { isPhone ?
-                <Sheet style={{height: '48%'}} swipeToClose={true} className="hidden-sheet">
+                <Sheet style={{height: '48%'}} swipeToClose={true} closeByOutsideClick={true} className="hidden-sheet">
                     <PageListHidden sheets={storeWorksheets} onTabMenu={props.onTabMenu}/>
                 </Sheet>
                 :
-                <Popover className="hidden-sheet"
+                <Popover className="hidden-sheet" closeByOutsideClick={true}
                 >
                    <PageListHidden sheets={storeWorksheets} onTabMenu={props.onTabMenu}/>
                 </Popover>
