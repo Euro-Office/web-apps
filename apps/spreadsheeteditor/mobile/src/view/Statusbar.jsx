@@ -47,14 +47,13 @@ const PageListMove = props => {
 
 const PageListHidden = props => {
     const { t } = useTranslation();
-    const _t = t('View.Edit', {returnObjects: true});
     const { sheets, onTabMenu } = props;
     const allSheets = sheets.sheets;
 
     return (
         <View style={!Device.phone ? {height: '420px'} : null}>
             <Page>
-                <Navbar title="Unhide sheets">
+                <Navbar title={t('Statusbar.textUnhideSheets')}>
                     {Device.phone &&
                         <NavRight>
                             <Link sheetClose>
