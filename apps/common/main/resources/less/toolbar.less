@@ -465,14 +465,11 @@
             .rtl & {
                 padding: 12px 6px 7px 10px;
             }
-            div .group {
+            div .group:first-child {
                 .padding-left(0);
             }
-            div .separator {
-                margin-right: 6px;
-                .rtl & {
-                    margin-left: 6px;
-                }
+            div .separator:first-child + .group {
+                .padding-left(0);
             }
         }
     }
