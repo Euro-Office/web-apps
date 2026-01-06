@@ -810,9 +810,10 @@ module.exports = function(grunt) {
 
     //quick workaround for build desktop version
     var copyTask = grunt.option('desktop')? "copy": "copy:script";
+    var imageminTask = grunt.option('skip-imagemin') ? [] : ['imagemin'];
 
     grunt.registerTask('deploy-api',                    ['api-init', 'clean', copyTask, 'replace:writeVersion']);
-    grunt.registerTask('deploy-apps-common',            ['apps-common-init', 'clean', 'copy', 'inline', 'imagemin', 'svgmin']);
+    grunt.registerTask('deploy-apps-common',            ['apps-common-init', 'clean', 'copy', 'inline', ...imageminTask, 'svgmin']);
     grunt.registerTask('deploy-sdk',                    ['sdk-init', 'clean', copyTask]);
 
     grunt.registerTask('deploy-socketio',               ['socketio-init', 'clean', 'copy']);
@@ -828,7 +829,7 @@ module.exports = function(grunt) {
     grunt.registerTask('deploy-monaco',                 ['monaco-init', 'clean', 'copy']);
     grunt.registerTask('deploy-common-embed',           ['common-embed-init', 'clean', 'copy']);
 
-    grunt.registerTask('deploy-app-main',               ['prebuild-icons-sprite', 'main-app-init', 'clean:prebuild', 'imagemin', 'less',
+    grunt.registerTask('deploy-app-main',               ['prebuild-icons-sprite', 'main-app-init', 'clean:prebuild', ...imageminTask, 'less',
                                                             'requirejs', 'babel', 'terser', 'concat', 'copy', 'svgmin', 'inline', 'json-minify',
                                                             'replace:writeVersion', 'replace:prepareHelp', 'clean:postbuild']);
 
