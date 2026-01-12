@@ -320,6 +320,11 @@ module.exports = function(grunt) {
                     files: packageFile['apps-common']['imagemin']['images-common']
                 }
             },
+            copy: {
+                'images-app': {
+                    files: packageFile['apps-common']['imagemin']['images-common']
+                }
+            },
             svgmin: {
                 options: {...svgmin_opts},
                 dist: {
@@ -471,6 +476,9 @@ module.exports = function(grunt) {
                 },
                 indexhtml: {
                     files: packageFile['main']['copy']['indexhtml']
+                },
+                'images-app': {
+                    files: packageFile['main']['imagemin']['images-app']
                 }
             },
 
@@ -810,7 +818,7 @@ module.exports = function(grunt) {
 
     //quick workaround for build desktop version
     var copyTask = grunt.option('desktop')? "copy": "copy:script";
-    var imageminTask = grunt.option('skip-imagemin') ? [] : ['imagemin'];
+    var imageminTask = grunt.option('skip-imagemin') ? ['copy:images-app'] : ['imagemin'];
 
     grunt.registerTask('deploy-api',                    ['api-init', 'clean', copyTask, 'replace:writeVersion']);
     grunt.registerTask('deploy-apps-common',            ['apps-common-init', 'clean', 'copy', 'inline', ...imageminTask, 'svgmin']);
