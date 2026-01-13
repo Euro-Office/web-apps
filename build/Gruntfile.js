@@ -135,6 +135,27 @@ module.exports = function(grunt) {
     addons.forEach((element,index,self) => self[index] = path.join('../..', element, '/build'));
     addons = addons.filter(element => grunt.file.isDir(element));
 
+    // Theme support - load theme files from themes directory
+    const theme = process.env.THEME || 'default';
+    const themePath = path.join('../apps/common/main/resources/less/themes', theme);
+    let themeFiles = [];
+    if (grunt.file.isDir(themePath)) {
+        themeFiles = grunt.file.expand({ cwd: '.' }, path.join(themePath, '*.less'));
+        grunt.log.writeln('Theme: ' + theme.green + ' (' + themeFiles.length + ' files)');
+    } else if (theme !== 'default') {
+        grunt.log.warn('Theme directory not found: ' + themePath);
+    }
+
+    // Helper to append theme files to a LESS source array
+    global.appendThemeFiles = function(src) {
+        // Handle both string and array sources
+        let srcArray = Array.isArray(src) ? src : [src];
+        if (themeFiles.length > 0) {
+            return srcArray.concat(themeFiles);
+        }
+        return srcArray;
+    };
+
     require('./appforms')(grunt);
 
     grunt.loadNpmTasks('grunt-contrib-clean');
@@ -405,7 +426,7 @@ module.exports = function(grunt) {
                         ]
                     },
                     files: {
-                        "<%= pkg.main.less.files.dest %>": packageFile['main']['less']['files']['src']
+                        "<%= pkg.main.less.files.dest %>": global.appendThemeFiles(packageFile['main']['less']['files']['src'])
                     }
                 }
             },
