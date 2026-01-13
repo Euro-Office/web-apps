@@ -891,6 +891,16 @@ module.exports = function(grunt) {
     grunt.registerTask('deploy-testpresentationeditor', ['init-build-testpresentationeditor', 'deploy-app']);
     grunt.registerTask('deploy-testspreadsheeteditor', ['init-build-testspreadsheeteditor', 'deploy-app']);
 
+    // Build LESS only for all editors
+    grunt.registerTask('less-all', [
+        'init-build-common', 'main-app-init', 'less',
+        'init-build-documenteditor', 'main-app-init', 'less',
+        'init-build-spreadsheeteditor', 'main-app-init', 'less',
+        'init-build-presentationeditor', 'main-app-init', 'less',
+        'init-build-pdfeditor', 'main-app-init', 'less',
+        'init-build-visioeditor', 'main-app-init', 'less'
+    ]);
+
     grunt.registerTask('default', ['deploy-common-component',
                                    'deploy-documenteditor-component',
                                    'deploy-spreadsheeteditor-component',
