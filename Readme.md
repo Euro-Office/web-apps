@@ -74,7 +74,7 @@ We want to make upstream updates as painless as possible. From the perspective o
 
 ### Building using a theme
 
-You can do this one of two ways:
+You need to use a env variable.
 
 #### Set ENV var
 
@@ -87,6 +87,8 @@ THEME=nextcloud grunt less-all
 ```
 > If you do this, you need to restart the docker eo, as the css files are cache busted
 > `docker compose exec eo bash`
+
+> If you add images, these need to be copied, to do that, you need to run `grunt` with no params (or on AMR64, with --skip-imagemin)
 
 #### Setting up a theme
 
