@@ -22,6 +22,72 @@ If you have any problems with or questions about [ONLYOFFICE Document Server][2]
   [2]: https://github.com/ONLYOFFICE/DocumentServer
   [3]: http://stackoverflow.com/questions/tagged/onlyoffice
 
+## Styling
+
+Styling is accomplished via LESS, there is the content set by ONLYOFFICE. Before you do anything, please read the section under this about modifications.
+
+There are several hundred LESS files, organised in several folders:
+
+Common (shared)
+apps/common/embed/resources/less/
+apps/common/forms/resources/less/
+apps/common/main/resources/less/
+apps/common/main/resources/mods/less/
+apps/common/mobile/resources/less/
+
+Common is the most important and many of the others just import common.
+
+They use variables:
+
+apps/common/main/resources/less/variables.less <- majority seem to be shared from there.
+
+The variables seem to be a bit haphazard in approach. There is some structure, but not uniformly adhered to. The variables are used in other files, so the lack of structure is not so much an issue.
+
+Importing is via relative paths.
+
+Document Editor
+apps/documenteditor/embed/resources/less/
+apps/documenteditor/forms/resources/less/
+apps/documenteditor/main/resources/less/
+apps/documenteditor/mobile/src/less/
+
+Spreadsheet Editor
+apps/spreadsheeteditor/main/resources/less/
+apps/spreadsheeteditor/mobile/src/less/
+
+Presentation Editor
+apps/presentationeditor/embed/resources/less/
+apps/presentationeditor/main/resources/less/
+apps/presentationeditor/mobile/src/less/
+
+PDF Editor
+apps/pdfeditor/main/resources/less/
+
+Visio Editor
+apps/visioeditor/main/resources/less/
+
+Each directory has a range of LESS files broken down by area, eg slider, search, buttons etc - too many to list here, but should be helpful in finding the correct place to make style changes
+
+## Style modifications
+
+We want to make upstream updates as painless as possible. From the perspective of making modifications we have added theming capability to the office package.
+
+### Building using a theme
+
+You will probably want to do this. You can do this one of two ways:
+
+#### Set ENV var
+
+```shell
+THEME=[your theme]
+```
+eg
+```shell
+THEME=nextcloud
+```
+
+
+
 ## License
 
 web-apps is released under an GNU AGPL v3.0 license. See the LICENSE file for more information.
