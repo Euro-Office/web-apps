@@ -108,6 +108,10 @@ if (window.Common === undefined) {
                 $me.trigger('insertimage', data);
             },
 
+            'insertLink': function(data) {
+                $me.trigger('insertlink', data);
+            },
+
             'setMailMergeRecipients': function(data) {
                 $me.trigger('setmailmergerecipients', data);
             },
@@ -438,6 +442,10 @@ if (window.Common === undefined) {
 
             submitForm: function() {
                 _postMessage({event: 'onSubmit'});
+            },
+
+            requestSmartPicker: function() {
+                _postMessage({event: 'onRequestSmartPicker'});
             },
 
             on: function(event, handler){
