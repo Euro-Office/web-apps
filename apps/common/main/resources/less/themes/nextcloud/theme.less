@@ -2,7 +2,10 @@
 // This file is loaded AFTER the main LESS files, so it can override any variables.
 // As a little aside, please override using variables, this avoids creating duplicate CSS
 // in the final output.
-// If you need new rules, make them in the appropriate place, with fallbacks.
+// If you need new rules, make them in the overrides file.
+// For the overrides file, please use this as an index.less file and create an appropriate
+// dir structure in your theme, following the main app structure
+// will help with sanity later
 //
 // Build with: THEME=nextcloud grunt less-all
 //
@@ -29,4 +32,4 @@
 // For rules that cannot be changed via variables, we override them here.
 // Keep overrides minimal - prefer variable changes above.
 
-@import "overrides.less";
+@import "overrides";
