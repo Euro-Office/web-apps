@@ -1996,6 +1996,7 @@ define([
             props.put_Bookmark(null);
             props.put_Text(data);
             this.api.add_Hyperlink(props);
+            this.api.PastePlainText("This is an example text that should be pasted")
             
             Common.NotificationCenter.trigger('storage:link-insert', data);
         },
