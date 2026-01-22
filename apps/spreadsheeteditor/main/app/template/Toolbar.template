@@ -163,6 +163,7 @@
                 <div class="group">
                     <span class="btn-slot text x-huge slot-comment"></span>
                     <span class="btn-slot text x-huge" id="slot-btn-inshyperlink"></span>
+                    <span class="btn-slot text x-huge" id="slot-btn-smartpicker"></span>
                 </div>
                 <div class="separator long"></div>
                 <div class="group">
