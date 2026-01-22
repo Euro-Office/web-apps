@@ -383,6 +383,7 @@ define([
             toolbar.btnShapesMerge.menu.on('item:click',                _.bind(this.onClickMenuShapesMerge, this));
             toolbar.btnShapesMerge.menu.on('show:before',               _.bind(this.onBeforeShapesMerge, this));
             toolbar.btnInsertHyperlink.on('click',                      _.bind(this.onHyperlinkClick, this));
+            toolbar.btnSmartPicker.on('click',                          _.bind(this.onBtnSmartPickerClick, this));
             toolbar.mnuTablePicker.on('select',                         _.bind(this.onTablePickerSelect, this));
             toolbar.btnInsertTable.menu.on('item:click',                _.bind(this.onInsertTableClick, this));
             toolbar.btnClearStyle.on('click',                           _.bind(this.onClearStyleClick, this));
@@ -398,6 +399,8 @@ define([
             toolbar.btnInsDateTime.on('click',                          _.bind(this.onEditHeaderClick, this, 'datetime'));
             toolbar.btnInsSlideNum.on('click',                          _.bind(this.onEditHeaderClick, this, 'slidenum'));
             Common.Gateway.on('insertimage',                            _.bind(this.insertImage, this));
+            Common.Gateway.on('insertlink',                             _.bind(this.insertLink, this));
+            Common.Gateway.on('insertplaintext',                        _.bind(this.insertPlainText, this));
             toolbar.btnInsAudio && toolbar.btnInsAudio.on('click',      _.bind(this.onAddAudio, this));
             toolbar.btnInsVideo && toolbar.btnInsVideo.on('click',      _.bind(this.onAddVideo, this));
 
@@ -1843,6 +1846,13 @@ define([
             Common.component.Analytics.trackEvent('ToolBar', 'Add Hyperlink');
         },
 
+        onBtnSmartPickerClick: function(btn) {
+            Common.Gateway.requestSmartPicker()
+
+            Common.NotificationCenter.trigger('edit:complete', this.toolbar);
+            Common.component.Analytics.trackEvent('ToolBar', 'Smart Picker');
+        },
+
         onTablePickerSelect: function(picker, columns, rows, e) {
             if (this.api) {
                 this.toolbar.fireEvent('inserttable', this.toolbar);
@@ -1951,6 +1961,23 @@ define([
                 data._urls = arr;
             }
             Common.NotificationCenter.trigger('storage:image-insert', data);
+        },
+
+        insertLink: function(data) { // gateway
+            
+            var props   = new Asc.CHyperlinkProperty();
+            props.put_Value(data);
+            props.put_Bookmark(null);
+            props.put_Text(data);
+            this.api.add_Hyperlink(props);
+            
+            Common.NotificationCenter.trigger('storage:link-insert', data);
+        },
+
+        insertPlainText: function(data) {
+
+            this.api.PastePlainText(data)
+            Common.NotificationCenter.trigger('storage:plain-text-insert', data);
         },
 
         onBtnInsertTextClick: function(btn, e) {

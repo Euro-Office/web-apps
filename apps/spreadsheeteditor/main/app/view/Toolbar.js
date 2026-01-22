@@ -1381,6 +1381,21 @@ define([
                     label: me.tipInsertHyperlink
                 };
 
+                me.btnSmartPicker = new Common.UI.Button({
+                    id          : 'tlbtn-smartpicker',
+                    cls         : 'btn-toolbar x-huge icon-top',
+                    iconCls     : 'toolbar__icon btn-big-inserthyperlink',
+                    caption     : me.capBtnSmartPicker,
+                    lock        : [_set.editCell, _set.selChart, _set.selChartText, _set.selImage, _set.selShape, _set.cantHyperlink, _set.selSlicer, _set.multiselect, _set.lostConnect, _set.coAuth, _set.editPivot, _set['InsertHyperlinks'], _set.userProtected],
+                    dataHint    : '1',
+                    dataHintDirection: 'bottom',
+                    dataHintOffset: 'small'
+                });
+                me.shortcutHints.SmartPicker = {
+                    btn: me.btnSmartPicker,
+                    label: me.tipSmartPicker
+                };
+
                 me.btnInsertChart = new Common.UI.Button({
                     id          : 'tlbtn-insertchart',
                     cls         : 'btn-toolbar x-huge icon-top',
@@ -2625,6 +2640,7 @@ define([
             _injectComponent('#slot-btn-insimage',       this.btnInsertImage);
             _injectComponent('#slot-btn-instable',       this.btnInsertTable);
             _injectComponent('#slot-btn-inshyperlink',   this.btnInsertHyperlink);
+            _injectComponent('#slot-btn-smartpicker',    this.btnSmartPicker);
             _injectComponent('#slot-btn-insshape',       this.btnInsertShape);
             _injectComponent('#slot-btn-instext',        this.btnInsertText);
             _injectComponent('#slot-btn-instextart',     this.btnInsertTextArt);
