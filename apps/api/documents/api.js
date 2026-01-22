@@ -781,6 +781,13 @@
             });
         };
 
+        var _insertPlainText = function(data) {
+            _sendCommand({
+                command: 'insertPlainText',
+                data: data
+            });
+        };
+
         var _setMailMergeRecipients = function(data) {
             _sendCommand({
                 command: 'setMailMergeRecipients',
@@ -918,6 +925,7 @@
             setSharingSettings  : _setSharingSettings,
             insertImage         : _insertImage,
             insertLink          : _insertLink,
+            insertPlainText          : _insertPlainText,
             setMailMergeRecipients: _setMailMergeRecipients,
             setRevisedFile      : _setRevisedFile,
             setFavorite         : _setFavorite,

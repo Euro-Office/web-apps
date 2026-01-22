@@ -112,6 +112,10 @@ if (window.Common === undefined) {
                 $me.trigger('insertlink', data);
             },
 
+            'insertPlainText': function(data) {
+                $me.trigger('insertplaintext', data);
+            },
+
             'setMailMergeRecipients': function(data) {
                 $me.trigger('setmailmergerecipients', data);
             },
