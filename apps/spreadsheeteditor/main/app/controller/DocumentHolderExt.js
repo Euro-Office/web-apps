@@ -3585,7 +3585,7 @@ define([], function () {
                     }
                     break;
                 case 'bShowDepthAxisTitle':
-                    chartProps.setDisplayAxes((HorAxis && HorAxis.getLabel() === 1), (SecHorAxis && SecHorAxis.getLabel() === 1), (VertAxis && VertAxis.getLabel() === 1), (SecVertAxis && SecVertAxis.getLabel() === 1), item.checked);
+                    chartProps.setDisplayAxisTitles((HorAxis && HorAxis.getLabel() === 1), (SecHorAxis && SecHorAxis.getLabel() === 1), (VertAxis && VertAxis.getLabel() === 1), (SecVertAxis && SecVertAxis.getLabel() === 1), item.checked);
                     break;
                 case 'bShowChartTitleNone':
                     chartProps.setDisplayChartTitle(false, false); 

@@ -818,8 +818,36 @@ define([], function () {
                 [_set.unknown]:                ['axes', 'axisTitles', 'chartTitle', 'dataLabels', 'dataTable', 'errorBars', 'gridLines', 'legend', 'trendLines', 'upDownBars']
             };
 
-         dh.onChartElement = function(menu, item) {
+        dh.onChartElement = function(menu, item) {
+            if (!this.chartElementsState) {
+                this.chartElementsState = {
+                    horLabel: null,
+                    vertLabel: null,
+                    secHorLabel: null,
+                    secVertLabel: null,
+                    depthLabel: null,
+                    horShow: null,
+                    vertShow: null,
+                    secHorShow: null,
+                    secVertShow: null,
+                    depthShow: null,
+                    horMajorGrid: null,
+                    horMinorGrid: null,
+                    vertMajorGrid: null,
+                    vertMinorGrid: null
+                };
+            }
+
+            const getAxisValue = (elementKey, value) => {
+                return this.chartElementsState[elementKey] !== null 
+                    ? this.chartElementsState[elementKey] 
+                    : value;
+            };
+
             var chartProps = this.chartProps,
+                horShow, vertShow, secHorShow, secVertShow, depthShow,
+                horLabel, vertLabel, secHorLabel, secVertLabel, depthLabel,
+                horMajor, vertMajor, horMinor, vertMinor,
                 HorAxis = chartProps.getHorAxesProps && chartProps.getHorAxesProps()[0],
                 SecHorAxis = chartProps.getHorAxesProps && chartProps.getHorAxesProps()[1],
                 VertAxis = chartProps.getVertAxesProps && chartProps.getVertAxesProps()[0],
@@ -836,85 +864,138 @@ define([], function () {
                 hBarChart = [_set.hBarNormal, _set.hBarStacked, _set.hBarStackedPer, _set.hBarNormal3d, _set.hBarStacked3d, _set.hBarStackedPer3d].includes(type),
                 scatterChart = [_set.scatter, _set.scatterLine, _set.scatterLineMarker, _set.scatterMarker, _set.scatterNone, _set.scatterSmooth, _set.scatterSmoothMarker, _set.surfaceNormal].includes(type),
                 comboCustom = [_set.comboCustom].includes(type);
+
+            const getAxisValues = () => {
+                horShow = getAxisValue('horShow', HorAxis && HorAxis.getShow());
+                vertShow = getAxisValue('vertShow', VertAxis && VertAxis.getShow());
+                secHorShow = getAxisValue('secHorShow', SecHorAxis && SecHorAxis.getShow());
+                secVertShow = getAxisValue('secVertShow', SecVertAxis && SecVertAxis.getShow());
+                depthShow = getAxisValue('depthShow', DepthAxis && DepthAxis.getShow());
+            };
+
+            const getAxisLabels = () => {
+                horLabel = getAxisValue('horLabel', HorAxis && HorAxis.getLabel());
+                vertLabel = getAxisValue('vertLabel', VertAxis && VertAxis.getLabel());
+                secHorLabel = getAxisValue('secHorLabel', SecHorAxis && SecHorAxis.getLabel());
+                secVertLabel = getAxisValue('secVertLabel', SecVertAxis && SecVertAxis.getLabel());
+                depthLabel = getAxisValue('depthLabel', DepthAxis && DepthAxis.getLabel());
+            };
+
+            const getGridValues = () => {
+                horMajor = getAxisValue('horMajorGrid', HorMajorGridlines);
+                vertMajor = getAxisValue('vertMajorGrid', VertMajorGridlines);
+                horMinor = getAxisValue('horMinorGrid', HorMinorGridlines);
+                vertMinor = getAxisValue('vertMinorGrid', VertMinorGridlines);
+            };
             
             switch (value) {
                 case 'bShowHorAxis':
+                    this.chartElementsState.horShow = item.checked;
+                    getAxisValues();
+
                     if (hBarChart) {
-                        chartProps.setDisplayAxes(VertAxis && VertAxis.getShow(), SecVertAxis && SecVertAxis.getShow(), item.checked, SecHorAxis && SecHorAxis.getShow(), DepthAxis && DepthAxis.getShow());
+                        chartProps.setDisplayAxes(vertShow, secVertShow, item.checked, secHorShow, depthShow);
                     } else if (scatterChart) {
-                        chartProps.setDisplayAxes(SecVertAxis && SecVertAxis.getShow(), SecHorAxis && SecHorAxis.getShow(), item.checked, VertAxis && VertAxis.getShow(), DepthAxis && DepthAxis.getShow());
+                        chartProps.setDisplayAxes(secVertShow, secHorShow, item.checked, vertShow, depthShow);
                     } else if (comboCustom) {
-                        chartProps.setDisplayAxes(item.checked, SecVertAxis && SecVertAxis.getShow(), VertAxis && VertAxis.getShow(), SecHorAxis && SecHorAxis.getShow(), DepthAxis && DepthAxis.getShow());
+                        chartProps.setDisplayAxes(item.checked, secVertShow, vertShow, secHorShow, depthShow);
                     } else {
-                        chartProps.setDisplayAxes(item.checked, SecHorAxis && SecHorAxis.getShow(), VertAxis && VertAxis.getShow(), SecVertAxis && SecVertAxis.getShow(), DepthAxis && DepthAxis.getShow());
+                        chartProps.setDisplayAxes(item.checked, secHorShow, vertShow, secVertShow, depthShow);
                     }
-                    break;                
+                    break;
                 case 'bShowVertAxis':
+                    this.chartElementsState.vertShow = item.checked;
+                    getAxisValues();
+
                     if (hBarChart) {
-                        chartProps.setDisplayAxes(item.checked, SecVertAxis && SecVertAxis.getShow(), HorAxis && HorAxis.getShow(), SecHorAxis && SecHorAxis.getShow(), DepthAxis && DepthAxis.getShow());
+                        chartProps.setDisplayAxes(item.checked, secVertShow, horShow, secHorShow, depthShow);
                     } else if (scatterChart) {
-                        chartProps.setDisplayAxes(SecVertAxis && SecVertAxis.getShow(), SecHorAxis && SecHorAxis.getShow(), HorAxis && HorAxis.getShow(), item.checked, DepthAxis && DepthAxis.getShow());
+                        chartProps.setDisplayAxes(secVertShow, secHorShow, horShow, item.checked, depthShow);
                     } else if (comboCustom) {
-                        chartProps.setDisplayAxes(HorAxis && HorAxis.getShow(), SecVertAxis && SecVertAxis.getShow(), item.checked, SecHorAxis && SecHorAxis.getShow(), DepthAxis && DepthAxis.getShow());
+                        chartProps.setDisplayAxes(horShow, secVertShow, item.checked, secHorShow, depthShow);
                     } else {
-                        chartProps.setDisplayAxes(HorAxis && HorAxis.getShow(), SecHorAxis && SecHorAxis.getShow(), item.checked, SecVertAxis && SecVertAxis.getShow(), DepthAxis && DepthAxis.getShow());
+                        chartProps.setDisplayAxes(horShow, secHorShow, item.checked, secVertShow, depthShow);
                     }
                     break;
                 case 'bShowHorAxSec':
+                    this.chartElementsState.secHorShow = item.checked;
+                    getAxisValues();
+
                     if (comboCustom) {
-                        chartProps.setDisplayAxes(HorAxis && HorAxis.getShow(), SecVertAxis && SecVertAxis.getShow(), VertAxis && VertAxis.getShow(), item.checked, DepthAxis && DepthAxis.getShow());
+                        chartProps.setDisplayAxes(horShow, secVertShow, vertShow, item.checked, depthShow);
                     } else {
-                        chartProps.setDisplayAxes(HorAxis && HorAxis.getShow(), item.checked, VertAxis && VertAxis.getShow(), SecVertAxis && SecVertAxis.getShow(), DepthAxis && DepthAxis.getShow());
+                        chartProps.setDisplayAxes(horShow, item.checked, vertShow, secVertShow, depthShow);
                     }
-                    break;          
+                    break;
                 case 'bShowVertAxSec':
+                    this.chartElementsState.secVertShow = item.checked;
+                    getAxisValues();
+
                     if (comboCustom) {
-                        chartProps.setDisplayAxes(HorAxis && HorAxis.getShow(), item.checked, VertAxis && VertAxis.getShow(), SecHorAxis && SecHorAxis.getShow(), DepthAxis && DepthAxis.getShow());
+                        chartProps.setDisplayAxes(horShow, item.checked, vertShow, secHorShow, depthShow);
                     } else {
-                        chartProps.setDisplayAxes(HorAxis && HorAxis.getShow(), SecHorAxis && SecHorAxis.getShow(), VertAxis && VertAxis.getShow(), item.checked, DepthAxis && DepthAxis.getShow());
+                        chartProps.setDisplayAxes(horShow, secHorShow, vertShow, item.checked, depthShow);
                     }
-                    break; 
+                    break;
                 case 'bShowDepthAxes':
-                    chartProps.setDisplayAxes(HorAxis && HorAxis.getShow(), SecHorAxis && SecHorAxis.getShow(), VertAxis && VertAxis.getShow(), SecVertAxis && SecVertAxis.getShow(), item.checked);
+                    this.chartElementsState.depthShow = item.checked;
+                    getAxisValues();
+
+                    chartProps.setDisplayAxes(horShow, secHorShow, vertShow, secVertShow, item.checked);
                     break;
                 case 'bShowHorAxTitle':
+                    this.chartElementsState.horLabel = item.checked ? 1 : 0;
+                    getAxisLabels();
+
                     if (hBarChart) {
-                        chartProps.setDisplayAxisTitles((VertAxis && VertAxis.getLabel() === 1), (SecVertAxis && SecVertAxis.getLabel() === 1), item.checked,  (SecHorAxis && SecHorAxis.getLabel() === 1), (DepthAxis && DepthAxis.getLabel() === 1));
+                        chartProps.setDisplayAxisTitles(vertLabel === 1, secVertLabel === 1, horLabel === 1, secHorLabel === 1, depthLabel === 1);
                     } else if (scatterChart) {
-                        chartProps.setDisplayAxisTitles((SecHorAxis && SecHorAxis.getLabel() === 1), (SecVertAxis && SecVertAxis.getLabel() === 1), item.checked, (VertAxis && VertAxis.getLabel() === 1), (DepthAxis && DepthAxis.getLabel() === 1));
+                        chartProps.setDisplayAxisTitles(secHorLabel === 1, secVertLabel === 1, horLabel === 1, vertLabel === 1, depthLabel === 1);
                     } else if (comboCustom) {
-                        chartProps.setDisplayAxisTitles(item.checked, (SecVertAxis && SecVertAxis.getLabel() === 1), (VertAxis && VertAxis.getLabel() === 1), (SecHorAxis && SecHorAxis.getLabel() === 1), (DepthAxis && DepthAxis.getLabel() === 1));
+                        chartProps.setDisplayAxisTitles(horLabel === 1, secVertLabel === 1, vertLabel === 1, secHorLabel === 1, depthLabel === 1);
                     } else {
-                        chartProps.setDisplayAxisTitles(item.checked, (SecHorAxis && SecHorAxis.getLabel() === 1), (VertAxis && VertAxis.getLabel() === 1), (SecVertAxis && SecVertAxis.getLabel() === 1), (DepthAxis && DepthAxis.getLabel() === 1));
+                        chartProps.setDisplayAxisTitles(horLabel === 1, secHorLabel === 1, vertLabel === 1, secVertLabel === 1, depthLabel === 1);
                     }
                     break;
                 case 'bShowVertAxTitle':
+                    this.chartElementsState.vertLabel = item.checked ? 1 : 0;
+                    getAxisLabels();
+
                     if (hBarChart) {
-                        chartProps.setDisplayAxisTitles(item.checked, (SecVertAxis && SecVertAxis.getLabel() === 1), (HorAxis && HorAxis.getLabel() === 1), (SecHorAxis && SecHorAxis.getLabel() === 1), (DepthAxis && DepthAxis.getLabel() === 1));
+                        chartProps.setDisplayAxisTitles(vertLabel === 1, secVertLabel === 1, horLabel === 1, secHorLabel === 1, depthLabel === 1);
                     } else if (scatterChart) {
-                        chartProps.setDisplayAxisTitles((SecHorAxis && SecHorAxis.getLabel() === 1), (SecVertAxis && SecVertAxis.getLabel() === 1), (HorAxis && HorAxis.getLabel() === 1), item.checked, (DepthAxis && DepthAxis.getLabel() === 1));
+                        chartProps.setDisplayAxisTitles(secHorLabel === 1, secVertLabel === 1, horLabel === 1, vertLabel === 1, depthLabel === 1);
                     } else if (comboCustom) {
-                        chartProps.setDisplayAxisTitles((HorAxis && HorAxis.getLabel() === 1), (SecVertAxis && SecVertAxis.getLabel() === 1), item.checked, (SecHorAxis && SecHorAxis.getLabel() === 1), (DepthAxis && DepthAxis.getLabel() === 1));
+                        chartProps.setDisplayAxisTitles(horLabel === 1, secVertLabel === 1, vertLabel === 1, secHorLabel === 1, depthLabel === 1);
                     } else {
-                        chartProps.setDisplayAxisTitles((HorAxis && HorAxis.getLabel() === 1), (SecHorAxis && SecHorAxis.getLabel() === 1), item.checked, (SecVertAxis && SecVertAxis.getLabel() === 1), (DepthAxis && DepthAxis.getLabel() === 1));
+                        chartProps.setDisplayAxisTitles(horLabel === 1, secHorLabel === 1, vertLabel === 1, secVertLabel === 1, depthLabel === 1);
                     }
                     break;
                 case 'bShowHorAxTitleSec':
+                    this.chartElementsState.secHorLabel = item.checked ? 1 : 0;
+                    getAxisLabels();
+
                     if (comboCustom) {
-                        chartProps.setDisplayAxisTitles((HorAxis && HorAxis.getLabel() === 1), (SecVertAxis && SecVertAxis.getLabel() === 1), (VertAxis && VertAxis.getLabel() === 1), item.checked, (DepthAxis && DepthAxis.getLabel() === 1));
+                        chartProps.setDisplayAxisTitles(horLabel === 1, secVertLabel === 1, vertLabel === 1, secHorLabel === 1, depthLabel === 1);
                     } else {
-                        chartProps.setDisplayAxisTitles((HorAxis && HorAxis.getLabel() === 1), item.checked, (VertAxis && VertAxis.getLabel() === 1), (SecVertAxis && SecVertAxis.getLabel() === 1), (DepthAxis && DepthAxis.getLabel() === 1));
+                        chartProps.setDisplayAxisTitles(horLabel === 1, secHorLabel === 1, vertLabel === 1, secVertLabel === 1, depthLabel === 1);
                     }
                     break;
                 case 'bShowVertAxisTitleSec':
+                    this.chartElementsState.secVertLabel = item.checked ? 1 : 0;
+                    getAxisLabels();
+
                     if (comboCustom) {
-                        chartProps.setDisplayAxisTitles((HorAxis && HorAxis.getLabel() === 1), item.checked, (VertAxis && VertAxis.getLabel() === 1), (SecHorAxis && SecHorAxis.getLabel() === 1), (DepthAxis && DepthAxis.getLabel() === 1));
-                    } else { 
-                        chartProps.setDisplayAxisTitles((HorAxis && HorAxis.getLabel() === 1), (SecHorAxis && SecHorAxis.getLabel() === 1), (VertAxis && VertAxis.getLabel() === 1), item.checked, (DepthAxis && DepthAxis.getLabel() === 1));
+                        chartProps.setDisplayAxisTitles(horLabel === 1, secVertLabel === 1, vertLabel === 1, secHorLabel === 1, depthLabel === 1);
+                    } else {
+                        chartProps.setDisplayAxisTitles(horLabel === 1, secHorLabel === 1, vertLabel === 1, secVertLabel === 1, depthLabel === 1);
                     }
                     break;
                 case 'bShowDepthAxisTitle':
-                    chartProps.setDisplayAxes((HorAxis && HorAxis.getLabel() === 1), (SecHorAxis && SecHorAxis.getLabel() === 1), (VertAxis && VertAxis.getLabel() === 1), (SecVertAxis && SecVertAxis.getLabel() === 1), item.checked);
+                    this.chartElementsState.depthLabel = item.checked ? 1 : 0;
+                    getAxisLabels();
+                    
+                    chartProps.setDisplayAxisTitles(horLabel === 1, secHorLabel === 1, vertLabel === 1, secVertLabel === 1, depthLabel === 1);
                     break;
                 case 'bShowChartTitleNone':
                     chartProps.setDisplayChartTitle(false, false); 
@@ -976,29 +1057,45 @@ define([], function () {
                 case 'standardDeviation':
                     chartProps.setDisplayErrorBars(true, 3);
                     break;       
-               case 'bShowHorMajor':
+                case 'bShowHorMajor':
+                    this.chartElementsState.vertMajorGrid = item.checked;
+                    getGridValues();
+
                     if (hBarChart) {
-                        chartProps.setDisplayGridlines(HorMajorGridlines, item.checked, HorMinorGridlines, VertMinorGridlines);
-                    } else 
-                       chartProps.setDisplayGridlines(item.checked, HorMajorGridlines, VertMinorGridlines, HorMinorGridlines);
+                        chartProps.setDisplayGridlines(horMajor, item.checked, horMinor, vertMinor);
+                    } else {
+                        chartProps.setDisplayGridlines(item.checked, horMajor, vertMinor, horMinor);
+                    }
                     break;
                 case 'bShowVerMajor':
+                    this.chartElementsState.horMajorGrid = item.checked;
+                    getGridValues();
+
                     if (hBarChart || RadarChart) {
-                        chartProps.setDisplayGridlines(item.checked, VertMajorGridlines, HorMinorGridlines, VertMinorGridlines);
-                    } else 
-                        chartProps.setDisplayGridlines(VertMajorGridlines, item.checked, VertMinorGridlines, HorMinorGridlines);
+                        chartProps.setDisplayGridlines(item.checked, vertMajor, horMinor, vertMinor);
+                    } else {
+                        chartProps.setDisplayGridlines(vertMajor, item.checked, vertMinor, horMinor);
+                    }
                     break;
                 case 'bShowHorMinor':
+                    this.chartElementsState.vertMinorGrid = item.checked;
+                    getGridValues();
+
                     if (hBarChart) {
-                        chartProps.setDisplayGridlines(HorMajorGridlines, VertMajorGridlines, HorMinorGridlines, item.checked);
-                    } else 
-                        chartProps.setDisplayGridlines(VertMajorGridlines, HorMajorGridlines, item.checked, HorMinorGridlines);
-                    break; 
+                        chartProps.setDisplayGridlines(horMajor, vertMajor, horMinor, item.checked);
+                    } else {
+                        chartProps.setDisplayGridlines(vertMajor, horMajor, item.checked, horMinor);
+                    }
+                    break;
                 case 'bShowVerMinor':
+                    this.chartElementsState.horMinorGrid = item.checked;
+                    getGridValues();
+
                     if (hBarChart || RadarChart) {
-                        chartProps.setDisplayGridlines(HorMajorGridlines, VertMajorGridlines, item.checked, VertMinorGridlines);
-                    }else 
-                        chartProps.setDisplayGridlines(VertMajorGridlines, HorMajorGridlines, VertMinorGridlines, item.checked);
+                        chartProps.setDisplayGridlines(horMajor, vertMajor, item.checked, vertMinor);
+                    } else {
+                        chartProps.setDisplayGridlines(vertMajor, horMajor, vertMinor, item.checked);
+                    }
                     break;
                 case 'NoneLegend':
                         chartProps.setDisplayLegend(false, Asc.c_oAscChartLegendShowSettings.none);
@@ -1176,12 +1273,13 @@ define([], function () {
             me.getCurrentChartProps = function () {
                 var selectedElements = me.api.getSelectedElements();
                 if (selectedElements && selectedElements.length > 0) {
-                    var elType;
+                    var elType, elValue;
                     for (var i = selectedElements.length - 1; i >= 0; i--) {
                         elType = selectedElements[i].get_ObjectType();
+                        elValue = selectedElements[i].get_ObjectValue();
 
                         if (elType === Asc.c_oAscTypeSelectElement.Chart) {
-                            return me.api.asc_getChartSettings();
+                            return elValue.get_ChartProperties(); 
                         }
                     }
                 }
@@ -1210,6 +1308,7 @@ define([], function () {
         
                     me.btnChartElement.on('click', function() {
                         me.chartProps = me.getCurrentChartProps();
+                        me.chartElementsState = undefined;
                         if (me.chartProps) {
                             me.updateChartElementMenu(me.documentHolder.menuChartElement.menu, me.chartProps);
                         }
