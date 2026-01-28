@@ -156,8 +156,10 @@ module.exports = function(grunt) {
         }
         return srcArray;
     };
+    
+    const DEPLOY_ROOT = path.relative(__dirname, path.resolve(process.env.DEPLOY_ROOT)) || path.join('..', 'deploy');
 
-    const DEPLOY_ROOT = process.env.DEPLOY_ROOT || path.resolve(__dirname, '../deploy');
+    console.log("deploypath: " + DEPLOY_ROOT)
 
     function replaceDeployPaths(obj) {
         const deployRoot = DEPLOY_ROOT.replace(/\\/g, '/');
