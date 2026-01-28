@@ -157,7 +157,30 @@ module.exports = function(grunt) {
         return srcArray;
     };
 
-    require('./appforms')(grunt);
+    const DEPLOY_ROOT = process.env.DEPLOY_ROOT || path.resolve(__dirname, '../deploy');
+
+    function replaceDeployPaths(obj) {
+        const deployRoot = DEPLOY_ROOT.replace(/\\/g, '/');
+
+        if (typeof obj === 'string') {
+            return obj.replace(/\$DEPLOY_ROOT/g, deployRoot);
+        }
+        if (Array.isArray(obj)) {
+            return obj.map(replaceDeployPaths);
+        }
+        if (typeof obj === 'object' && obj !== null) {
+            const out = {};
+            for (const k in obj) {
+                const newKey = k.replace(/\$DEPLOY_ROOT/g, deployRoot);
+                out[newKey] = replaceDeployPaths(obj[k]);
+            }
+            return out;
+        }
+        return obj;
+    }
+
+    require('./appforms')(grunt, replaceDeployPaths);
+
 
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
@@ -243,7 +266,7 @@ module.exports = function(grunt) {
             packageFile = require('./' + defaultConfig);
 
             packageFile.version = (process.env['PRODUCT_VERSION'] || packageFile.version);
-
+            packageFile = replaceDeployPaths(packageFile);
 
             if (packageFile) {
                 grunt.log.ok(appName + ' config loaded successfully'.green);
@@ -871,7 +894,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('deploy-app-embed',              ['embed-app-init', 'clean:prebuild', 'terser', 'less', 'copy', 'inline', 'clean:postbuild']);
     grunt.registerTask('deploy-app-test',               ['test-app-init', 'clean:prebuild', 'terser', 'less', 'copy']);
-
+    
     doRegisterInitializeAppTask('common',               'Common',               'common.json');
     doRegisterInitializeAppTask('documenteditor',       'DocumentEditor',       'documenteditor.json');
     doRegisterInitializeAppTask('spreadsheeteditor',    'SpreadsheetEditor',    'spreadsheeteditor.json');

@@ -7,7 +7,7 @@
     "test": {
         "clean": {
             "prebuild": [
-                "../deploy/web-apps/test/documenteditor/main"
+                "$DEPLOY_ROOT/web-apps/test/documenteditor/main"
             ]
         },
         "js": {
@@ -18,17 +18,17 @@
                 "../test/documenteditor/main/js/ApplicationController.js",
                 "../test/documenteditor/main/js/application.js"
             ],
-            "dist": "../deploy/web-apps/test/documenteditor/main/app-all.js"
+            "dist": "$DEPLOY_ROOT/web-apps/test/documenteditor/main/app-all.js"
         },
         "less": {
             "files": {
                 "src": "../test/documenteditor/main/resources/less/application.less",
-                "dist": "../deploy/web-apps/test/documenteditor/main/resources/css/app-all.css"
+                "dist": "$DEPLOY_ROOT/web-apps/test/documenteditor/main/resources/css/app-all.css"
             }
         },
         "copy": {
             "index-page": {
-                "../deploy/web-apps/test/documenteditor/main/index.html": "../test/documenteditor/main/index.html.deploy"
+                "$DEPLOY_ROOT/web-apps/test/documenteditor/main/index.html": "../test/documenteditor/main/index.html.deploy"
             }
         }
     },

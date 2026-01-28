@@ -30,15 +30,16 @@
  *
  */
 
-module.exports = (grunt) => {
+module.exports = (grunt, replaceDeployPaths) => {
     grunt.registerTask('forms-app-init', function() {
         const packageFile = global.packageFile;
         if ( !global.packageFile )
             grunt.log.ok('no package file'.red);
         else {
-            const config = require('./appforms.json');
+            config = require('./appforms.json');
             if ( config ) {
                 //packageFile.tasks.deploy.push(...config.tasks.deploy);
+                config = replaceDeployPaths(config)
                 packageFile.forms = config.forms;
             }
         }
