@@ -157,15 +157,19 @@ module.exports = function(grunt) {
         return srcArray;
     };
     
-    const DEPLOY_ROOT = path.relative(__dirname, path.resolve(process.env.DEPLOY_ROOT)) || path.join('..', 'deploy');
+    const BUILD_ROOT = path.resolve(process.env.BUILD_ROOT || path.join('..', 'deploy'));
 
-    console.log("deploypath: " + DEPLOY_ROOT)
+    console.log("build root path in env: " + process.env.BUILD_ROOT )
+
+    console.log("build root path: " + BUILD_ROOT)
+
+    const SRC_ROOT = path.resolve(__dirname, "..")
 
     function replaceDeployPaths(obj) {
-        const deployRoot = DEPLOY_ROOT.replace(/\\/g, '/');
+        const deployRoot = BUILD_ROOT.replace(/\\/g, '/');
 
         if (typeof obj === 'string') {
-            return obj.replace(/\$DEPLOY_ROOT/g, deployRoot);
+            return obj.replace(/\$BUILD_ROOT/g, deployRoot);
         }
         if (Array.isArray(obj)) {
             return obj.map(replaceDeployPaths);
@@ -173,7 +177,7 @@ module.exports = function(grunt) {
         if (typeof obj === 'object' && obj !== null) {
             const out = {};
             for (const k in obj) {
-                const newKey = k.replace(/\$DEPLOY_ROOT/g, deployRoot);
+                const newKey = k.replace(/\$BUILD_ROOT/g, deployRoot);
                 out[newKey] = replaceDeployPaths(obj[k]);
             }
             return out;
@@ -378,6 +382,24 @@ module.exports = function(grunt) {
                     files: packageFile['apps-common'].svgicons.common
                 }
             },
+            replace: {
+                dist: {
+                    src: packageFile['apps-common'].copy.indexhtml.dest + '/*.html',
+                    overwrite: true,
+                    replacements: [{
+                        from: /\@\@SRC_ROOT\@\@/g,
+                        to: SRC_ROOT
+                    }]
+                },
+                cachescripts: {
+                    src: packageFile['api'].copy.script.dest + 'documents/*.html',
+                    overwrite: true,
+                    replacements: [{
+                        from: /\@\@SRC_ROOT\@\@/g,
+                        to: SRC_ROOT
+                    }]
+                }
+            },
             inline: {
                 dist: {
                     src: packageFile['apps-common'].copy.indexhtml.dest + '/*.html'
@@ -483,6 +505,14 @@ module.exports = function(grunt) {
                     src: ['<%= pkg.main.copy.help[0].dest %>/ru/**/*.htm*'],
                     overwrite: true,
                     replacements: [...helpreplacements]
+                },
+                indexhtml: {
+                    src: ['<%= pkg.main.copy.indexhtml[0].dest %>/*.html'],
+                    overwrite: true,
+                    replacements: [{
+                        from: /\@\@SRC_ROOT\@\@/g,
+                        to: SRC_ROOT
+                    }]
                 }
             },
 
@@ -799,6 +829,17 @@ module.exports = function(grunt) {
                 }
             },
 
+            replace: {
+                indexhtml: {
+                    src: ['<%= pkg.embed.copy.indexhtml[0].dest %>/*.html'],
+                    overwrite: true,
+                    replacements: [{
+                        from: /\@\@SRC_ROOT\@\@/g,
+                        to: SRC_ROOT
+                    }]
+                }
+            },
+
             inline: {
                 options:{
                     uglify: true,
@@ -868,7 +909,7 @@ module.exports = function(grunt) {
     var imageminTask = grunt.option('skip-imagemin') ? ['copy:images-app'] : ['imagemin'];
 
     grunt.registerTask('deploy-api',                    ['api-init', 'clean', copyTask, 'replace:writeVersion']);
-    grunt.registerTask('deploy-apps-common',            ['apps-common-init', 'clean', 'copy', 'inline', ...imageminTask, 'svgmin']);
+    grunt.registerTask('deploy-apps-common',            ['apps-common-init', 'clean', 'copy', 'replace', 'inline', ...imageminTask, 'svgmin']);
     grunt.registerTask('deploy-sdk',                    ['sdk-init', 'clean', copyTask]);
 
     grunt.registerTask('deploy-socketio',               ['socketio-init', 'clean', 'copy']);
@@ -885,7 +926,7 @@ module.exports = function(grunt) {
     grunt.registerTask('deploy-common-embed',           ['common-embed-init', 'clean', 'copy']);
 
     grunt.registerTask('deploy-app-main',               ['prebuild-icons-sprite', 'main-app-init', 'clean:prebuild', ...imageminTask, 'less',
-                                                            'requirejs', 'babel', 'terser', 'concat', 'copy', 'svgmin', 'inline', 'json-minify',
+                                                            'requirejs', 'babel', 'terser', 'concat', 'copy', 'replace:indexhtml', 'svgmin', 'inline', 'json-minify',
                                                             'replace:writeVersion', 'replace:prepareHelp', 'clean:postbuild']);
 
     grunt.registerTask('deploy-app-mobile',             ['mobile-app-init', 'clean:deploy', /*'cssmin',*/ /*'copy:template-backup',*/
@@ -894,7 +935,7 @@ module.exports = function(grunt) {
                                                             'copy:images-app', 'copy:webpack-dist', 'concat', 'json-minify'/*,*/
                                                             /*'replace:writeVersion', 'replace:fixResourceUrl'*/]);
 
-    grunt.registerTask('deploy-app-embed',              ['embed-app-init', 'clean:prebuild', 'terser', 'less', 'copy', 'inline', 'clean:postbuild']);
+    grunt.registerTask('deploy-app-embed',              ['embed-app-init', 'clean:prebuild', 'terser', 'less', 'copy', 'replace:indexhtml', 'inline', 'clean:postbuild']);
     grunt.registerTask('deploy-app-test',               ['test-app-init', 'clean:prebuild', 'terser', 'less', 'copy']);
     
     doRegisterInitializeAppTask('common',               'Common',               'common.json');

@@ -20,17 +20,17 @@
                 "../test/spreadsheeteditor/main/js/ApplicationController.js",
                 "../test/spreadsheeteditor/main/js/application.js"
             ],
-            "dist": "$DEPLOY_ROOT/web-apps/test/spreadsheeteditor/main/app-all.js"
+            "dist": "$BUILD_ROOT/web-apps/test/spreadsheeteditor/main/app-all.js"
         },
         "less": {
             "files": {
                 "src": "../test/spreadsheeteditor/main/resources/less/application.less",
-                "dist": "$DEPLOY_ROOT/web-apps/test/spreadsheeteditor/main/resources/css/app-all.css"
+                "dist": "$BUILD_ROOT/web-apps/test/spreadsheeteditor/main/resources/css/app-all.css"
             }
         },
         "copy": {
             "index-page": {
-                "$DEPLOY_ROOT/web-apps/test/spreadsheeteditor/main/index.html": "../test/spreadsheeteditor/main/index.html.deploy"
+                "$BUILD_ROOT/web-apps/test/spreadsheeteditor/main/index.html": "../test/spreadsheeteditor/main/index.html.deploy"
             }
         }
     },

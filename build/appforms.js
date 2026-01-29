@@ -44,6 +44,9 @@ module.exports = (grunt, replaceDeployPaths) => {
             }
         }
 
+        let path = require('path');
+        const SRC_ROOT = path.resolve(__dirname, "..")
+
         grunt.initConfig({
             pkg: packageFile,
 
@@ -112,6 +115,14 @@ module.exports = (grunt, replaceDeployPaths) => {
                         to: packageFile.version
                     }, ...global.jsreplacements]
                 },
+                indexhtml: {
+                    src: packageFile.forms.copy.indexhtml[0].dest + '/*.html',
+                    overwrite: true,
+                    replacements: [{
+                        from: /\@\@SRC_ROOT\@\@/g,
+                        to: SRC_ROOT
+                    }]
+                }
             },
 
             inline: {
@@ -161,6 +172,6 @@ module.exports = (grunt, replaceDeployPaths) => {
     });
 
     grunt.registerTask('deploy-app-forms', ['forms-app-init', 'clean:prebuild', /*'imagemin',*/ 'less',
-                                                            'requirejs', 'babel', 'terser', 'concat', 'copy', 'inline', /*'json-minify',*/
+                                                            'requirejs', 'babel', 'terser', 'concat', 'copy','replace:indexhtml', 'inline', /*'json-minify',*/
                                                             'replace:varsEnviroment', /*'replace:prepareHelp',*/ 'clean:postbuild']);
 }

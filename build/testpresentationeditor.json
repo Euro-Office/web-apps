@@ -7,7 +7,7 @@
     "test": {
         "clean": {
             "prebuild": [
-                "$DEPLOY_ROOT/web-apps/test/presentationeditor/main"
+                "$BUILD_ROOT/web-apps/test/presentationeditor/main"
             ]
         },
         "js": {
@@ -18,17 +18,17 @@
                 "../test/presentationeditor/main/js/ApplicationController.js",
                 "../test/presentationeditor/main/js/application.js"
             ],
-            "dist": "$DEPLOY_ROOT/web-apps/test/presentationeditor/main/app-all.js"
+            "dist": "$BUILD_ROOT/web-apps/test/presentationeditor/main/app-all.js"
         },
         "less": {
             "files": {
                 "src": "../test/presentationeditor/main/resources/less/application.less",
-                "dist": "$DEPLOY_ROOT/web-apps/test/presentationeditor/main/resources/css/app-all.css"
+                "dist": "$BUILD_ROOT/web-apps/test/presentationeditor/main/resources/css/app-all.css"
             }
         },
         "copy": {
             "index-page": {
-                "$DEPLOY_ROOT/web-apps/test/presentationeditor/main/index.html": "../test/presentationeditor/main/index.html.deploy"
+                "$BUILD_ROOT/web-apps/test/presentationeditor/main/index.html": "../test/presentationeditor/main/index.html.deploy"
             }
         }
     },
