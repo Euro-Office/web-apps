@@ -159,10 +159,6 @@ module.exports = function(grunt) {
     
     const BUILD_ROOT = path.resolve(process.env.BUILD_ROOT || path.join('..', 'deploy'));
 
-    console.log("build root path in env: " + process.env.BUILD_ROOT )
-
-    console.log("build root path: " + BUILD_ROOT)
-
     const SRC_ROOT = path.resolve(__dirname, "..")
 
     function replaceDeployPaths(obj) {
