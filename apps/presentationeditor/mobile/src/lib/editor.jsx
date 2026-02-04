@@ -318,49 +318,28 @@ export const ContextMenu = {
     handleMenuItemClick(controller, action) {
         const api = Common.EditorApi.get();
 
-        switch (action) {
-            case 'cut':
-                return api.Cut();
-            case 'paste':
-                return api.Paste();
-            case 'addcomment':
-                Common.Notifications.trigger('addcomment');
-                break;
-            case 'merge':
-                api.MergeCells();
-                break;
-            case 'delete':
-                api.asc_Remove();
-                break;
-            case 'deletetable':
-                api.remTable();
-                break;
-            case 'split':
-                controller.showSplitModal();
-                break;
-            case 'edit':
-                setTimeout(() => { controller.props.openOptions('edit'); }, 400);
-                break;
-            case 'addlink':
-                setTimeout(() => { controller.props.openOptions('add-link'); }, 400);
-                break;
-            case 'editlink':
-                setTimeout(() => { controller.props.openOptions('edit-link'); }, 400);
-                break;
-            case 'openlink':
-                let linkValue;
-                api.getSelectedElements().forEach((item) => {
-                    if (item.get_ObjectType() === Asc.c_oAscTypeSelectElement.Hyperlink) {
-                        linkValue = item.get_ObjectValue().get_Value();
-                    }
-                });
-                if (linkValue) {
-                    controller.openLink(linkValue);
-                }
-                break;
-            default:
-                return false;
-        }
+        const actionHandlers = {
+            cut: () => api.Cut(),
+            paste: () => api.Paste(),
+            addcomment: () => Common.Notifications.trigger('addcomment'),
+            merge: () => api.MergeCells(),
+            delete: () => api.asc_Remove(),
+            deletetable: () => api.remTable(),
+            split: () => controller.showSplitModal(),
+            edit: () => setTimeout(() => controller.props.openOptions('edit'), 400),
+            addlink: () => setTimeout(() => controller.props.openOptions('add-link'), 400),
+            editlink: () => setTimeout(() => controller.props.openOptions('edit-link'), 400),
+            openlink: () => {
+                const link = api.getSelectedElements().find(
+                    item => item.get_ObjectType() === Asc.c_oAscTypeSelectElement.Hyperlink
+                );
+                if (link) controller.openLink(link.get_ObjectValue().get_Value());
+            },
+        };
+
+        const handler = actionHandlers[action];
+        if (!handler) return false;
+        handler();
         return true;
     }
 };

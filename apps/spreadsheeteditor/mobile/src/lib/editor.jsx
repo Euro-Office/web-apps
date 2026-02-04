@@ -338,66 +338,35 @@ export const ContextMenu = {
 
     handleMenuItemClick(controller, action) {
         const api = Common.EditorApi.get();
-        let cellInfo = api.asc_getCellInfo();
+        const cellInfo = api.asc_getCellInfo();
+        const isRow = cellInfo.asc_getSelectionType() === Asc.c_oAscSelectionType.RangeRow;
 
-        switch (action) {
-            case 'cut':
-                return api.asc_Cut();
-            case 'paste':
-                return api.asc_Paste();
-            case 'addcomment':
-                Common.Notifications.trigger('addcomment');
-                break;
-            case 'del':
-                if (api) {
-                    switch (api.asc_getCellInfo().asc_getSelectionType()) {
-                        case Asc.c_oAscSelectionType.RangeRow:
-                            api.asc_deleteCells(Asc.c_oAscDeleteOptions.DeleteRows);
-                            break;
-                        case Asc.c_oAscSelectionType.RangeCol:
-                            api.asc_deleteCells(Asc.c_oAscDeleteOptions.DeleteColumns);
-                            break;
-                        default:
-                            api.asc_emptyCells(Asc.c_oAscCleanOptions.All);
-                    }
-                }
-                break;
-            case 'wrap':
-                api.asc_setCellTextWrap(true);
-                break;
-            case 'unwrap':
-                api.asc_setCellTextWrap(false);
-                break;
-            case 'edit':
-                setTimeout(() => { controller.props.openOptions('edit'); }, 400);
-                break;
-            case 'merge':
-                controller.onMergeCells();
-                break;
-            case 'unmerge':
-                api.asc_mergeCells(Asc.c_oAscMergeOptions.None);
-                break;
-            case 'hide':
-                api[cellInfo.asc_getSelectionType() == Asc.c_oAscSelectionType.RangeRow ? 'asc_hideRows' : 'asc_hideColumns']();
-                break;
-            case 'show':
-                api[cellInfo.asc_getSelectionType() == Asc.c_oAscSelectionType.RangeRow ? 'asc_showRows' : 'asc_showColumns']();
-                break;
-            case 'addlink':
-                setTimeout(() => { controller.props.openOptions('add-link'); }, 400);
-                break;
-            case 'editlink':
-                setTimeout(() => { controller.props.openOptions('edit-link'); }, 400);
-                break;
-            case 'freezePanes':
-                api.asc_freezePane();
-                break;
-            case 'autofillCells':
-                api.asc_fillHandleDone();
-                break;
-            default:
-                return false;
-        }
+        const deleteActions = {
+            [Asc.c_oAscSelectionType.RangeRow]: () => api.asc_deleteCells(Asc.c_oAscDeleteOptions.DeleteRows),
+            [Asc.c_oAscSelectionType.RangeCol]: () => api.asc_deleteCells(Asc.c_oAscDeleteOptions.DeleteColumns),
+        };
+
+        const actionHandlers = {
+            cut: () => api.asc_Cut(),
+            paste: () => api.asc_Paste(),
+            addcomment: () => Common.Notifications.trigger('addcomment'),
+            del: () => (deleteActions[cellInfo.asc_getSelectionType()] || (() => api.asc_emptyCells(Asc.c_oAscCleanOptions.All)))(),
+            wrap: () => api.asc_setCellTextWrap(true),
+            unwrap: () => api.asc_setCellTextWrap(false),
+            edit: () => setTimeout(() => controller.props.openOptions('edit'), 400),
+            merge: () => controller.onMergeCells(),
+            unmerge: () => api.asc_mergeCells(Asc.c_oAscMergeOptions.None),
+            hide: () => api[isRow ? 'asc_hideRows' : 'asc_hideColumns'](),
+            show: () => api[isRow ? 'asc_showRows' : 'asc_showColumns'](),
+            addlink: () => setTimeout(() => controller.props.openOptions('add-link'), 400),
+            editlink: () => setTimeout(() => controller.props.openOptions('edit-link'), 400),
+            freezePanes: () => api.asc_freezePane(),
+            autofillCells: () => api.asc_fillHandleDone(),
+        };
+
+        const handler = actionHandlers[action];
+        if (!handler) return false;
+        handler();
         return true;
     }
 };
