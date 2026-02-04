@@ -101,13 +101,18 @@ export const initCellInfo = (props) => {
 
         ({ isCell, isRow, isCol, isAll, isChart, isImage, isShape, isShapeText, isChartText } = flags);
 
-        if (isImage || isShape || isChart) {
-            isImage = isShape = isChart = false;
+        // Determine graphic object types
+        if (isImage || isShape || isChart || isShapeText || isChartText) {
             const graphicObjects = Common.EditorApi.get().asc_getGraphicObjectProps();
-            for (let i = 0; i < graphicObjects.length; i++) {
-                if (graphicObjects[i].asc_getObjectType() == Asc.c_oAscTypeSelectElement.Image) {
-                    const val = graphicObjects[i].asc_getObjectValue();
+            if (isImage || isShape || isChart) {
+                isImage = isShape = isChart = false;
+            }
+            graphicObjects
+                .filter(obj => obj.asc_getObjectType() === Asc.c_oAscTypeSelectElement.Image)
+                .forEach(obj => {
+                    const val = obj.asc_getObjectValue();
                     locked = locked || val.asc_getLocked();
+                    if (isShapeText || isChartText) return; // Only need locked state
                     const shapeProps = val.asc_getShapeProperties();
                     if (shapeProps) {
                         shapeProps.asc_getFromChart() ? isChart = true : isShape = true;
@@ -116,19 +121,10 @@ export const initCellInfo = (props) => {
                     } else {
                         isImage = true;
                     }
-                }
-            }
-        } else if (isShapeText || isChartText) {
-            const graphicObjects = Common.EditorApi.get().asc_getGraphicObjectProps();
-            for (let i = 0; i < graphicObjects.length; i++) {
-                const objType = graphicObjects[i].asc_getObjectType();
-                if (objType == Asc.c_oAscTypeSelectElement.Image) {
-                    const val = graphicObjects[i].asc_getObjectValue();
-                    locked = locked || val.asc_getLocked();
-                }
-            }
+                });
         }
 
+        // Build selections array based on detected types
         if (isChart || isChartText) {
             selections.push('chart');
             if (isChartText) selections.push('text');

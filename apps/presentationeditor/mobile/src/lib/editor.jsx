@@ -198,37 +198,24 @@ export const ContextMenu = {
         let itemsIcon = [];
         let itemsText = [];
 
-        let isText = false,
-            isTable = false,
-            isImage = false,
-            isChart = false,
-            isShape = false,
-            isLink = false,
-            isSlide = false,
-            isObject = false;
+        const typeFlags = {
+            [Asc.c_oAscTypeSelectElement.Paragraph]: 'isText',
+            [Asc.c_oAscTypeSelectElement.Image]: 'isImage',
+            [Asc.c_oAscTypeSelectElement.Chart]: 'isChart',
+            [Asc.c_oAscTypeSelectElement.Shape]: 'isShape',
+            [Asc.c_oAscTypeSelectElement.Table]: 'isTable',
+            [Asc.c_oAscTypeSelectElement.Hyperlink]: 'isLink',
+            [Asc.c_oAscTypeSelectElement.Slide]: 'isSlide',
+        };
 
+        const flags = { isText: false, isTable: false, isImage: false, isChart: false, isShape: false, isLink: false, isSlide: false };
         stack.forEach((item) => {
-            const type = item.get_ObjectType();
-            item.get_ObjectValue();
-
-            if (type === Asc.c_oAscTypeSelectElement.Paragraph) {
-                isText = true;
-            } else if (type === Asc.c_oAscTypeSelectElement.Image) {
-                isImage = true;
-            } else if (type === Asc.c_oAscTypeSelectElement.Chart) {
-                isChart = true;
-            } else if (type === Asc.c_oAscTypeSelectElement.Shape) {
-                isShape = true;
-            } else if (type === Asc.c_oAscTypeSelectElement.Table) {
-                isTable = true;
-            } else if (type === Asc.c_oAscTypeSelectElement.Hyperlink) {
-                isLink = true;
-            } else if (type === Asc.c_oAscTypeSelectElement.Slide) {
-                isSlide = true;
-            }
+            const flag = typeFlags[item.get_ObjectType()];
+            if (flag) flags[flag] = true;
         });
 
-        isObject = isText || isImage || isChart || isShape || isTable;
+        const { isText, isTable, isImage, isChart, isShape, isLink } = flags;
+        const isObject = isText || isImage || isChart || isShape || isTable;
 
         if (canCopy && isObject) {
             itemsIcon.push({ event: 'copy', icon: 'icon-copy' });
