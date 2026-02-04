@@ -8,6 +8,6 @@ EditorUIController.initThemeColors = Editor.initThemeColors;
 EditorUIController.initCellInfo = Editor.initCellInfo;
 EditorUIController.initEditorStyles = Editor.initEditorStyles;
 EditorUIController.initFonts = Editor.initFonts;
-EditorUIController.ContextMenu = Editor.ContextMenu;
+// EditorUIController.ContextMenu = Editor.ContextMenu; // Disabled for EE parity
 
 export default EditorUIController;
