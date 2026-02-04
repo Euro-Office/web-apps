@@ -258,7 +258,7 @@ class ContextMenuController extends Component {
                                        onMenuItemClick={this.onMenuItemClick}
                                        opened={this.state.openedMore}
                                        onActionClosed={this.onActionClosed}/>
-            </div> 
+            </div>
         )
     }
 }
