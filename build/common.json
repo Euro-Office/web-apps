@@ -1,12 +1,12 @@
 {
     "name": "common",
     "version": "4.3.0",
-    "build": 77,
+    "build": 82,
     "homepage": "http://www.onlyoffice.com",
     "private": true,
     "sdk": {
         "clean": [
-            "$BUILD_ROOT/sdkjs"
+            "$BUILD_ROOT/sdkjs-assets"
         ],
         "copy": {
             "script": {
@@ -22,40 +22,40 @@
                             "libfont/js/fonts.*",
                             "libfont/wasm/fonts.*"
                         ],
-                        "dest": "$BUILD_ROOT/sdkjs/common/"
+                        "dest": "$BUILD_ROOT/sdkjs-assets/common/"
                     },
                     {
                         "expand": true,
                         "src": "../../sdkjs/word/sdk-*.js",
-                        "dest": "$BUILD_ROOT/sdkjs/word/"
+                        "dest": "$BUILD_ROOT/sdkjs-assets/word/"
                     },
                     {
                         "expand": true,
                         "cwd": "../../sdkjs/cell/css/",
                         "src": "*.css",
-                        "dest": "$BUILD_ROOT/sdkjs/cell/css/"
+                        "dest": "$BUILD_ROOT/sdkjs-assets/cell/css/"
                     },
                     {
                         "expand": true,
                         "src": "../../sdkjs/cell/sdk-*.js",
-                        "dest": "$BUILD_ROOT/sdkjs/cell/"
+                        "dest": "$BUILD_ROOT/sdkjs-assets/cell/"
                     },
                     {
                         "expand": true,
                         "cwd": "../../sdkjs/slide/themes/",
                         "src": "**/*.*",
-                        "dest": "$BUILD_ROOT/sdkjs/slide/themes/"
+                        "dest": "$BUILD_ROOT/sdkjs-assets/slide/themes/"
                     },
                     {
                         "expand": true,
                         "src": "../../sdkjs/slide/sdk-*.js",
-                        "dest": "$BUILD_ROOT/sdkjs/slide/"
+                        "dest": "$BUILD_ROOT/sdkjs-assets/slide/"
                     }
                 ]
             },
             "desktop": {
                 "src": "../../sdkjs/common/HtmlFileInternal/AllFonts.js",
-                "dest": "$BUILD_ROOT/sdkjs/common/AllFonts.js"
+                "dest": "$BUILD_ROOT/sdkjs-assets/common/AllFonts.js"
             }
         }
     },
