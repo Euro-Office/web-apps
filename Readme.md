@@ -88,6 +88,36 @@ apps/visioeditor/main/resources/less/
 
 Each directory has a range of LESS files broken down by area, eg slider, search, buttons etc - too many to list here, but should be helpful in finding the correct place to make style changes
 
+## Building
+
+**Important:** Do NOT run `npm install`, `npm run`, or other npm/node commands directly on the host machine. The host is ARM64 but the project contains x64 dependencies. Always run build commands inside the Docker container.
+
+### Full Build
+
+Run `docker compose` from the `euro-office/fork/build` directory:
+
+```bash
+# From euro-office/fork/build, enter the container:
+docker compose exec eo bash
+
+# Then inside the container:
+export BUILD_NUMBER=0 THEME=nextcloud && cd /var/www/onlyoffice/web-apps-develop/build && grunt --skip-imagemin --skip-babel
+```
+
+### Build Flags
+
+| Flag | Description |
+|------|-------------|
+| `--skip-imagemin` | Skip image optimization (faster builds) |
+| `--skip-babel` | Skip ES5 transpilation for IE compatibility (modern browsers only, no `ie/` directory created) |
+
+### Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `THEME` | Theme name to use (e.g., `nextcloud`, `default`) |
+| `BUILD_NUMBER` | Build number for versioning |
+
 ## Style modifications
 
 We want to make upstream updates as painless as possible. From the perspective of making modifications we have added theming capability to the office package.
