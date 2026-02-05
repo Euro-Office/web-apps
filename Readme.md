@@ -90,8 +90,6 @@ Each directory has a range of LESS files broken down by area, eg slider, search,
 
 ## Building
 
-**Important:** Do NOT run `npm install`, `npm run`, or other npm/node commands directly on the host machine. The host is ARM64 but the project contains x64 dependencies. Always run build commands inside the Docker container.
-
 ### Full Build
 
 Run `docker compose` from the `euro-office/fork/build` directory:
