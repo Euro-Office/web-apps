@@ -52,7 +52,11 @@ export const toolbarOptions = {
     )
 };
 
-/** Re-export of common theme colors initialization */
+/**
+ * Re-export of common theme colors initialization.
+ * Provides consistent API where each editor exports all its dependencies.
+ * TODO: Revisit as PoC matures - consumers could import directly from common.
+ */
 export const initThemeColors = commonInitThemeColors;
 
 /**
