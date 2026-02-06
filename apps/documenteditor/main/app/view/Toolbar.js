@@ -1040,6 +1040,22 @@ define([
                     });
                     this.paragraphControls.push(this.btnInsField);
 
+                    this.btnSmartPicker = new Common.UI.Button({
+                        id: 'id-toolbar-btn-smartpicker',
+                        cls: 'btn-toolbar x-huge icon-top',
+                        iconCls: 'toolbar__icon btn-big-inserthyperlink',
+                        lock: [_set.paragraphLock, _set.headerLock, _set.hyperlinkLock, _set.previewReviewMode, _set.viewFormMode, _set.lostConnect, _set.disableOnStart, _set.docLockViewIns, _set.docLockForms, _set.docLockCommentsIns, _set.viewMode],
+                        caption: me.capBtnSmartPicker,
+                        dataHint: '1',
+                        dataHintDirection: 'bottom',
+                        dataHintOffset: 'small'
+                    });
+                    this.paragraphControls.push(this.btnSmartPicker);
+                    this.shortcutHints.SmartPicker = {
+                        btn: this.btnSmartPicker,
+                        label: this.tipSmartPicker
+                    };
+
                     this.btnBlankPage = new Common.UI.Button({
                         id: 'id-toolbar-btn-blankpage',
                         cls: 'btn-toolbar x-huge icon-top',
@@ -2288,6 +2304,7 @@ define([
                 _injectComponent('#slot-btn-datetime', this.btnInsDateTime);
                 _injectComponent('#slot-btn-insfield', this.btnInsField);
                 _injectComponent('#slot-btn-blankpage', this.btnBlankPage);
+                _injectComponent('#slot-btn-smartpicker', this.btnSmartPicker);
                 _injectComponent('#slot-btn-insshape', this.btnInsertShape);
                 _injectComponent('#slot-btn-inssmartart', this.btnInsertSmartArt);
                 _injectComponent('#slot-btn-insequation', this.btnInsertEquation);
@@ -3601,7 +3618,7 @@ define([
                     '<span class="color" style="background: <%= color %>;"></span>',
                     '<% }) %>',
                     '</span>',
-                    '<span class="text"><%= caption %></span>',
+                    '<span class="text"><%- caption %></span>',
                     '</a>'
                 ].join(''));
 

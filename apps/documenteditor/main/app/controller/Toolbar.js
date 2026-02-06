@@ -305,6 +305,8 @@ define([
             this.onBtnChangeState('redo:disabled', toolbar.btnRedo, toolbar.btnRedo.isDisabled());
             this.onBtnChangeState('save:disabled', toolbar.btnSave, toolbar.btnSave.isDisabled());
             Common.Gateway.on('insertimage',                      _.bind(this.insertImage, this));
+            Common.Gateway.on('insertlink',                      _.bind(this.insertLink, this));
+            Common.Gateway.on('insertplaintext',                      _.bind(this.insertPlainText, this));
         },
 
         attachUIEvents: function(toolbar) {
@@ -424,6 +426,7 @@ define([
             toolbar.mnuPageNumCurrentPos.on('click',                    _.bind(this.onPageNumCurrentPosClick, this));
             toolbar.mnuInsertPageCount.on('click',                      _.bind(this.onInsertPageCountClick, this));
             toolbar.btnBlankPage.on('click',                            _.bind(this.onBtnBlankPageClick, this));
+            toolbar.btnSmartPicker.on('click',                          _.bind(this.onBtnSmartPickerClick, this));
             toolbar.listStyles.on('click',                              _.bind(this.onListStyleSelect, this));
             toolbar.listStyles.on('contextmenu',                        _.bind(this.onListStyleContextMenu, this));
             toolbar.styleMenu.on('hide:before',                         _.bind(this.onListStyleBeforeHide, this));
@@ -437,6 +440,8 @@ define([
             toolbar.btnHyphenation.menu.on('item:click',                _.bind(this.onHyphenationSelect, this));
             toolbar.btnHyphenation.menu.on('show:after',                _.bind(this.onHyphenationShow, this));
             Common.Gateway.on('insertimage',                      _.bind(this.insertImage, this));
+            Common.Gateway.on('insertlink',                      _.bind(this.insertLink, this));
+            Common.Gateway.on('insertplaintext',                      _.bind(this.insertPlainText, this));
             Common.Gateway.on('setmailmergerecipients',           _.bind(this.setMailMergeRecipients, this));
             Common.Gateway.on('setrequestedspreadsheet',          _.bind(this.setRequestedSpreadsheet, this));
             Common.NotificationCenter.on('storage:spreadsheet-load',    _.bind(this.openSpreadsheetFromStorage, this));
@@ -2027,6 +2032,23 @@ define([
             Common.NotificationCenter.trigger('storage:image-insert', data);
         },
 
+        insertLink: function(data) { // gateway
+            
+            var props   = new Asc.CHyperlinkProperty();
+            props.put_Value(data);
+            props.put_Bookmark(null);
+            props.put_Text(data);
+            this.api.add_Hyperlink(props);
+            
+            Common.NotificationCenter.trigger('storage:link-insert', data);
+        },
+
+        insertPlainText: function(data) {
+
+            this.api.PastePlainText(data)
+            Common.NotificationCenter.trigger('storage:plain-text-insert', data);
+        },
+
         onBtnInsertTextClick: function(btn, e) {
             btn.menu.getItems(true).forEach(function(item) {
                 if(item.value == btn.options.textboxType) 
@@ -2679,6 +2701,13 @@ define([
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
             Common.component.Analytics.trackEvent('ToolBar', 'Blank Page');
+        },
+
+        onBtnSmartPickerClick: function(btn) {
+            Common.Gateway.requestSmartPicker()
+
+            Common.NotificationCenter.trigger('edit:complete', this.toolbar);
+            Common.component.Analytics.trackEvent('ToolBar', 'Smart Picker');
         },
 
         onWatermarkSelect: function(menu, item) {
