@@ -1,7 +1,7 @@
 {
     "name": "common",
     "version": "4.3.0",
-    "build": 71,
+    "build": 72,
     "homepage": "http://www.onlyoffice.com",
     "private": true,
     "sdk": {
@@ -140,17 +140,6 @@
                         "!toolbar/**/*x/**/*"
                     ],
                     "dest": "../deploy/web-apps/apps/common/main/resources/img"
-                }
-            ],
-            "toolbar-icons-flat": [
-                {
-                    "expand": true,
-                    "flatten": true,
-                    "cwd": "../apps",
-                    "src": [
-                        "**/resources/img/toolbar/**/*.svg"
-                    ],
-                    "dest": "../deploy/web-apps/apps/common/main/resources/img/icons"
                 }
             ]
         }
