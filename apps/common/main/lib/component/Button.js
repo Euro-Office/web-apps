@@ -180,16 +180,15 @@ define([
         return _out_array;
     };
 
-    var svgSpritePath = '../../common/main/resources/img/toolbar/icons.svg';
-
     // SVG sprite approach - uses <svg><use href="#id"> for dark mode support
+    // Sprite is injected into DOM via svg-injector, so we use fragment-only references
     var templateBtnIcon =
             '<% if ( iconImg ) { %>' +
                 '<img src="<%= iconImg %>">' +
             '<% } else { %>' +
                 '<% var iconMatch = /btn-[^\\s]+/.exec(iconCls); ' +
                 'if (iconMatch) {' +
-                    'print(\'<svg class=\"icon\"><use href=\"' + svgSpritePath + '#\' + iconMatch[0] + \'\"></use></svg>\');' +
+                    'print(\'<svg class=\"icon uni-scale\"><use href=\"#\' + iconMatch[0] + \'\"></use></svg>\');' +
                 '} else ' +
                     'print(\'<i class=\"icon \' + iconCls + \'\">&nbsp;</i>\'); %>' +
             '<% } %>';
@@ -293,7 +292,7 @@ define([
                 '<% if (iconCls != "") { ' +
                     'var iconMatch = /btn-[^\\s]+/.exec(iconCls); ' +
                     'if (iconMatch) {' +
-                        'print(\'<svg class=\"icon\"><use href=\"' + svgSpritePath + '#\' + iconMatch[0] + \'\"></use></svg>\');' +
+                        'print(\'<svg class=\"icon uni-scale\"><use href=\"#\' + iconMatch[0] + \'\"></use></svg>\');' +
                     '} else ' +
                         'print(\'<i class=\"icon \' + iconCls + \'\">&nbsp;</i>\'); ' +
                 '}} %>',
@@ -1015,7 +1014,7 @@ define([
                         const re_icon_name = /btn-[^\s]+/.exec(iconCls);
                         const icon_name = re_icon_name ? re_icon_name[0] : "null";
                         const rtlCls = (iconCls ? iconCls.indexOf('icon-rtl') : -1) > -1 ? 'icon-rtl' : '';
-                        const svg_icon = '<svg class="icon %rtlCls"><use class="zoom-int" href="#%iconname"></use></svg>'.replace('%iconname', icon_name).replace('%rtlCls', rtlCls);
+                        const svg_icon = '<svg class="icon uni-scale %rtlCls"><use href="#%iconname"></use></svg>'.replace('%iconname', icon_name).replace('%rtlCls', rtlCls);
                         $el.find('i.icon').after(svg_icon);
                     }
                 } else {

@@ -398,10 +398,10 @@ module.exports = function(grunt) {
         }
     });
 
-    // grunt.registerTask('prebuild-icons-sprite', function() {
-    //     require('./sprites/Gruntfile.js')(grunt, '../');
-    //     grunt.task.run('all-icons-sprite');
-    // });
+    grunt.registerTask('prebuild-svg-sprites', function() {
+        require('./sprites/Gruntfile.js')(grunt, '../');
+        grunt.task.run('all-svg');
+    });
 
     grunt.registerTask('main-app-init', function() {
         grunt.initConfig({
@@ -844,6 +844,7 @@ module.exports = function(grunt) {
     //quick workaround for build desktop version
     var copyTask = grunt.option('desktop')? "copy": "copy:script";
     var imageminTask = grunt.option('skip-imagemin') ? ['copy:images-app'] : ['imagemin'];
+    var spritesTask = grunt.option('skip-sprites') ? [] : ['prebuild-svg-sprites'];
 
     grunt.registerTask('deploy-api',                    ['api-init', 'clean', copyTask, 'replace:writeVersion']);
     grunt.registerTask('deploy-apps-common',            ['apps-common-init', 'clean', 'copy', 'inline', ...imageminTask, 'svgmin']);
@@ -862,7 +863,7 @@ module.exports = function(grunt) {
     grunt.registerTask('deploy-monaco',                 ['monaco-init', 'clean', 'copy']);
     grunt.registerTask('deploy-common-embed',           ['common-embed-init', 'clean', 'copy']);
 
-    grunt.registerTask('deploy-app-main',               [/*'prebuild-icons-sprite',*/ 'main-app-init', 'clean:prebuild', ...imageminTask, 'less',
+    grunt.registerTask('deploy-app-main',               [...spritesTask, 'main-app-init', 'clean:prebuild', ...imageminTask, 'less',
                                                             'requirejs', 'babel', 'terser', 'concat', 'copy', 'svgmin', 'inline', 'json-minify',
                                                             'replace:writeVersion', 'replace:prepareHelp', 'clean:postbuild']);
 

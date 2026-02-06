@@ -116,23 +116,64 @@ module.exports = function (grunt, rootpathprefix) {
         return out
     }
 
-    // Single global SVG sprite with all icons from all editors
+    // Single global SVG sprite with all icons from all editors (deprecated, kept for reference)
     const generate_svg_sprite_task = function() {
         return {
             toolbar: {
                 src: [
-                    `${_prefix}apps/common/main/resources/img/toolbar/2.5x/*.svg`,
-                    `${_prefix}apps/common/main/resources/img/toolbar/2.5x/big/*.svg`,
-                    `${_prefix}apps/common/main/resources/img/toolbar/2.5x/huge/*.svg`,
-                    `${_prefix}apps/*/main/resources/img/toolbar/2.5x/*.svg`,
-                    `${_prefix}apps/*/main/resources/img/toolbar/2.5x/big/*.svg`,
-                    `${_prefix}apps/*/main/resources/img/toolbar/2.5x/huge/*.svg`,
+                    `${_prefix}apps/common/main/resources/img/toolbar/v2/2.5x/*.svg`,
+                    `${_prefix}apps/common/main/resources/img/toolbar/v2/2.5x/big/*.svg`,
+                    `${_prefix}apps/common/main/resources/img/toolbar/v2/2.5x/huge/*.svg`,
+                    `${_prefix}apps/*/main/resources/img/toolbar/v2/2.5x/*.svg`,
+                    `${_prefix}apps/*/main/resources/img/toolbar/v2/2.5x/big/*.svg`,
+                    `${_prefix}apps/*/main/resources/img/toolbar/v2/2.5x/huge/*.svg`,
                 ],
                 dest: `${_prefix}apps/common/main/resources/img/toolbar/`,
                 options: {
                     mode: {
                         symbol: {
-                            inline: true,
+                            inline: true,  // true = inline sprite (injected into DOM, referenced via <use href="#id">)
+                            dest: './',
+                            sprite: `icons.svg`,
+                        },
+                    },
+                }
+            }
+        };
+    }
+
+    // Per-editor SVG sprite generation (analogous to PNG sprite generation)
+    // Each editor gets common icons + editor-specific icons combined into one sprite
+    const generate_svg_sprite_tasks = function(editor) {
+        const alias = {
+            "word": "documenteditor",
+            "cell": "spreadsheeteditor",
+            "slide": "presentationeditor",
+            "pdf": "pdfeditor",
+            "draw": "visioeditor"
+        };
+
+        const editorPath = alias[editor];
+        const _editor_res_root = `${_prefix}apps/${editorPath}/main/resources`;
+        const _common_res_root = `${_prefix}apps/common/main/resources`;
+
+        return {
+            [`${editor}-icons`]: {
+                src: [
+                    // Common icons (small, big, huge) - v2 icons for theming support
+                    `${_common_res_root}/img/toolbar/v2/2.5x/*.svg`,
+                    `${_common_res_root}/img/toolbar/v2/2.5x/big/*.svg`,
+                    `${_common_res_root}/img/toolbar/v2/2.5x/huge/*.svg`,
+                    // Editor-specific icons (small, big, huge)
+                    `${_editor_res_root}/img/toolbar/v2/2.5x/*.svg`,
+                    `${_editor_res_root}/img/toolbar/v2/2.5x/big/*.svg`,
+                    `${_editor_res_root}/img/toolbar/v2/2.5x/huge/*.svg`,
+                ],
+                dest: `${_editor_res_root}/img/toolbar/`,
+                options: {
+                    mode: {
+                        symbol: {
+                            inline: true,  // true = inline sprite (injected into DOM, referenced via <use href="#id">)
                             dest: './',
                             sprite: `icons.svg`,
                         },
@@ -172,12 +213,7 @@ module.exports = function (grunt, rootpathprefix) {
                         svgo: {
                             plugins: [
                                 'removeXMLNS',
-                                {
-                                    name: "removeAttrs",
-                                    params: {
-                                      attrs: "(fill|stroke)"
-                                    }
-                                },
+                                // Note: removed removeAttrs for fill/stroke - v2 icons need these for theming
                             ]
                         },
                     }]
@@ -187,7 +223,13 @@ module.exports = function (grunt, rootpathprefix) {
                     },
                 },
             },
-            // Single sprite with all toolbar icons
+            // Per-editor SVG sprites (common + editor-specific icons)
+            ...generate_svg_sprite_tasks('word'),
+            ...generate_svg_sprite_tasks('cell'),
+            ...generate_svg_sprite_tasks('slide'),
+            ...generate_svg_sprite_tasks('pdf'),
+            ...generate_svg_sprite_tasks('draw'),
+            // Single global sprite with all icons (kept for backwards compatibility)
             ...generate_svg_sprite_task(),
 
             docformats: {
@@ -238,6 +280,20 @@ module.exports = function (grunt, rootpathprefix) {
     // grunt.registerTask('pdf-icons', ['sprite:pdf-1x', ...]);
     // grunt.registerTask('draw-icons', ['sprite:draw-1x', ...]);
     // grunt.registerTask('png_sprite', ['sprite']);
+
+    // SVG sprite tasks - generates per-editor icons.svg with common + editor-specific icons
+    grunt.registerTask('word-svg', ['svg_sprite:word-icons']);
+    grunt.registerTask('cell-svg', ['svg_sprite:cell-icons']);
+    grunt.registerTask('slide-svg', ['svg_sprite:slide-icons']);
+    grunt.registerTask('pdf-svg', ['svg_sprite:pdf-icons']);
+    grunt.registerTask('draw-svg', ['svg_sprite:draw-icons']);
+    grunt.registerTask('all-svg', [
+        'svg_sprite:word-icons',
+        'svg_sprite:cell-icons',
+        'svg_sprite:slide-icons',
+        'svg_sprite:pdf-icons',
+        'svg_sprite:draw-icons'
+    ]);
 
     grunt.registerTask('default', ['svg_sprite']);
 };

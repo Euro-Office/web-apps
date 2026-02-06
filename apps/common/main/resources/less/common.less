@@ -716,9 +716,10 @@ body {
 }
 
 // SVG icon default colors
+// v2 icons use stroke="currentColor", so we set color for inheritance
 svg.icon {
-    fill: var(--icon-gray-primary, #383838);
-    stroke: var(--icon-gray-primary, #383838);
+    color: var(--icon-gray-primary, #383838);
+    fill: none;  // v2 icons use stroke, not fill
 }
 
 // for colored svg icons
