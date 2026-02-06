@@ -88,11 +88,58 @@ apps/visioeditor/main/resources/less/
 
 Each directory has a range of LESS files broken down by area, eg slider, search, buttons etc - too many to list here, but should be helpful in finding the correct place to make style changes
 
-## Style modifications
+## Building
 
-We want to make upstream updates as painless as possible. From the perspective of making modifications we have added theming capability to the office package.
+To build this project execute the following commands
+
+```shell
+cd build
+npm install
+grunt [optional grunt command]
+```
+
+### Building to specified directory
+
+A build directory can be specified by using an env variable
+
+```shell
+BUILD_ROOT=/path/to/build grunt [optional grunt command]
+```
+
+
+
+Two new build-time variables were introduced to the code to remove hard-coded paths and make the build configuration more flexible:
+
+```shell
+BUILD_ROOT
+SRC_ROOT
+```
+
+#### `BUILD_ROOT`
+
+Several JSON files define build instructions and previously contained hard-coded relative paths, for example:
+
+```shell
+build/common.json
+build/presentationeditor.json
+build/documenteditor.json
+...
+```
+
+
+These paths have been replaced with the `$BUILD_ROOT` variable. During the build process, `$BUILD_ROOT` is resolved to the actual build root directory, allowing the same configuration to work regardless of where the project is built or deployed.
+
+ #### `SRC_ROOT`
+
+Some HTML files include inline script replacements during the build (for example, `apps/api/documents/cache-scripts.html`). The referenced JavaScript paths were previously in `SRC_ROOT` relative to the file location in `BUILD_ROOT`.
+
+These paths have been updated to use the `@@SRC_ROOT@@` placeholder instead. At build time, this placeholder is replaced with the absolute source directory, ensuring that script references resolve correctly in all environments.
+
+
 
 ### Building using a theme
+
+We want to make upstream updates as painless as possible. From the perspective of making modifications we have added theming capability to the office package.
 
 You need to use a env variable.
 

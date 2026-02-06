@@ -1,13 +1,13 @@
 {
     "name": "documenteditor",
     "version": "4.3.0",
-    "build": 1150,
+    "build": 1188,
     "homepage": "http://www.onlyoffice.com",
     "private": true,
     "main": {
         "clean": {
             "prebuild": [
-                "../deploy/web-apps/apps/documenteditor/main"
+                "$BUILD_ROOT/web-apps/apps/documenteditor/main"
             ],
             "postbuild": []
         },
@@ -15,7 +15,7 @@
             "requirejs": {
                 "options": {
                     "name": "../apps/documenteditor/main/app.js",
-                    "out": "../deploy/web-apps/apps/documenteditor/main/app.js",
+                    "out": "$BUILD_ROOT/web-apps/apps/documenteditor/main/app.js",
                     "baseUrl": "../apps/",
                     "inlineText": true,
                     "findNestedDependencies": true,
@@ -94,11 +94,11 @@
                 }
             },
             "postload": {
-                "options":{
+                "options": {
                     "baseUrl": "../apps/",
                     "optimize": "none",
                     "name": "../apps/documenteditor/main/app_pack.js",
-                    "out": "../deploy/web-apps/apps/documenteditor/main/code.js",
+                    "out": "$BUILD_ROOT/web-apps/apps/documenteditor/main/code.js",
                     "inlineText": true,
                     "findNestedDependencies": false,
                     "optimizeAllPluginResources": false,
@@ -111,9 +111,9 @@
                 "files": [
                     {
                         "expand": true,
-                        "cwd": "../deploy/web-apps/apps/documenteditor/main/",
+                        "cwd": "$BUILD_ROOT/web-apps/apps/documenteditor/main/",
                         "src": "*.js",
-                        "dest": "../deploy/web-apps/apps/documenteditor/main/ie"
+                        "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/main/ie"
                     }
                 ]
             }
@@ -121,13 +121,13 @@
         "less": {
             "files": {
                 "src": "../apps/documenteditor/main/resources/less/app.less",
-                "dest": "../deploy/web-apps/apps/documenteditor/main/resources/css/app.css"
+                "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/main/resources/css/app.css"
             },
             "vars": {
                 "app-image-const-path": "'../img'",
                 "common-image-const-path": "'../../../../common/main/resources/img'",
-                "app-image-path": "'../../../../../deploy/web-apps/apps/documenteditor/main/resources/img'",
-                "common-image-path": "'../../../../../deploy/web-apps/apps/documenteditor/main/resources/img'"
+                "app-image-path": "'$BUILD_ROOT/web-apps/apps/documenteditor/main/resources/img'",
+                "common-image-path": "'$BUILD_ROOT/web-apps/apps/documenteditor/main/resources/img'"
             }
         },
         "imagemin": {
@@ -139,7 +139,7 @@
                         "**/*.{png,jpg,gif,ico}",
                         "!toolbar/**/*x/**/*"
                     ],
-                    "dest": "../deploy/web-apps/apps/documenteditor/main/resources/img/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/main/resources/img/"
                 }
             ],
             "images-common": [
@@ -150,12 +150,12 @@
                         "**/*.{png,jpg,gif}",
                         "!toolbar/**/*x/**/*"
                     ],
-                    "dest": "../deploy/web-apps/apps/documenteditor/main/resources/img/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/main/resources/img/"
                 }
             ]
         },
         "jsonmin": {
-            "files": "../deploy/web-apps/apps/documenteditor/main/**/*.json"
+            "files": "$BUILD_ROOT/web-apps/apps/documenteditor/main/**/*.json"
         },
         "copy": {
             "localization": [
@@ -163,25 +163,25 @@
                     "expand": true,
                     "cwd": "../apps/documenteditor/main/locale/",
                     "src": "*",
-                    "dest": "../deploy/web-apps/apps/documenteditor/main/locale/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/main/locale/"
                 },
                 {
                     "expand": true,
                     "cwd": "../apps/documenteditor/main/resources/watermark",
                     "src": "*",
-                    "dest": "../deploy/web-apps/apps/documenteditor/main/resources/watermark"
+                    "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/main/resources/watermark"
                 },
                 {
                     "expand": true,
                     "cwd": "../apps/documenteditor/main/resources/numbering",
                     "src": "*",
-                    "dest": "../deploy/web-apps/apps/documenteditor/main/resources/numbering"
+                    "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/main/resources/numbering"
                 },
                 {
                     "expand": true,
                     "cwd": "../apps/common/main/resources/symboltable",
                     "src": "*",
-                    "dest": "../deploy/web-apps/apps/documenteditor/main/resources/symboltable"
+                    "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/main/resources/symboltable"
                 }
             ],
             "help": [
@@ -193,7 +193,7 @@
                         "!*_/**",
                         "!**/src/**"
                     ],
-                    "dest": "../deploy/web-apps/apps/documenteditor/main/resources/help/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/main/resources/help/"
                 }
             ],
             "indexhtml": [
@@ -204,7 +204,7 @@
                         "*.html.deploy"
                     ],
                     "ext": ".html",
-                    "dest": "../deploy/web-apps/apps/documenteditor/main"
+                    "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/main"
                 }
             ]
         },
@@ -217,19 +217,19 @@
                         "**/*.svg",
                         "!toolbar/**/*x/**/*"
                     ],
-                    "dest": "../deploy/web-apps/apps/documenteditor/main/resources/img"
+                    "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/main/resources/img"
                 }
             ],
             "clean": [
-                "../deploy/web-apps/apps/documenteditor/main/resources/img/**/*.svg",
-                "!../deploy/web-apps/apps/documenteditor/main/resources/img/**/*_s.svg"
+                "$BUILD_ROOT/web-apps/apps/documenteditor/main/resources/img/**/*.svg",
+                "!$BUILD_ROOT/web-apps/apps/documenteditor/main/resources/img/**/*_s.svg"
             ]
         }
     },
     "mobile": {
         "clean": {
             "deploy": [
-                "../deploy/web-apps/apps/documenteditor/mobile"
+                "$BUILD_ROOT/web-apps/apps/documenteditor/mobile"
             ],
             "template-backup": [
                 "../apps/documenteditor/mobile/app/template/backup"
@@ -237,20 +237,20 @@
         },
         "js": {
             "src": "../apps/documenteditor/mobile/dist/js/app.js",
-            "dest": "../deploy/web-apps/apps/documenteditor/mobile/dist/js/app.js"
+            "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/mobile/dist/js/app.js"
         },
         "css": {
             "ios": {
                 "src": [
                     "../apps/documenteditor/mobile/resources/css/app-ios.css"
                 ],
-                "dist": "../deploy/web-apps/apps/documenteditor/mobile/resources/css/app-ios.css"
+                "dist": "$BUILD_ROOT/web-apps/apps/documenteditor/mobile/resources/css/app-ios.css"
             },
             "material": {
                 "src": [
                     "../apps/documenteditor/mobile/resources/css/app-material.css"
                 ],
-                "dist": "../deploy/web-apps/apps/documenteditor/mobile/resources/css/app-material.css"
+                "dist": "$BUILD_ROOT/web-apps/apps/documenteditor/mobile/resources/css/app-material.css"
             }
         },
         "htmlmin": {
@@ -264,7 +264,7 @@
             ]
         },
         "jsonmin": {
-            "files": "../deploy/web-apps/apps/documenteditor/mobile/**/*.json"
+            "files": "$BUILD_ROOT/web-apps/apps/documenteditor/mobile/**/*.json"
         },
         "copy": {
             "template-backup": [
@@ -286,15 +286,15 @@
                 }
             ],
             "index-page": {
-                "../deploy/web-apps/apps/documenteditor/mobile/index.html": "../apps/documenteditor/mobile/index.html",
-                "../deploy/web-apps/apps/documenteditor/mobile/index_loader.html": "../apps/documenteditor/mobile/index.html"
+                "$BUILD_ROOT/web-apps/apps/documenteditor/mobile/index.html": "../apps/documenteditor/mobile/index.html",
+                "$BUILD_ROOT/web-apps/apps/documenteditor/mobile/index_loader.html": "../apps/documenteditor/mobile/index.html"
             },
             "localization": [
                 {
                     "expand": true,
                     "cwd": "../apps/documenteditor/mobile/locale/",
                     "src": "*",
-                    "dest": "../deploy/web-apps/apps/documenteditor/mobile/locale/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/mobile/locale/"
                 }
             ],
             "images-app": [
@@ -302,7 +302,7 @@
                     "expand": true,
                     "cwd": "../apps/documenteditor/mobile/resources/img/",
                     "src": "**/*.{png,svg}",
-                    "dest": "../deploy/web-apps/apps/documenteditor/mobile/resources/img/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/mobile/resources/img/"
                 }
             ],
             "images-common": [
@@ -310,13 +310,13 @@
                     "expand": true,
                     "cwd": "../apps/common/mobile/resources/img/",
                     "src": "**",
-                    "dest": "../deploy/web-apps/apps/documenteditor/mobile/resources/img/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/mobile/resources/img/"
                 },
                 {
                     "expand": true,
                     "cwd": "../apps/common/main/resources/img/about",
                     "src": "**",
-                    "dest": "../deploy/web-apps/apps/documenteditor/mobile/resources/img/about"
+                    "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/mobile/resources/img/about"
                 }
             ],
             "assets": [
@@ -324,13 +324,13 @@
                     "expand": true,
                     "cwd": "../apps/documenteditor/mobile/css",
                     "src": "*.css",
-                    "dest": "../deploy/web-apps/apps/documenteditor/mobile/css"
+                    "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/mobile/css"
                 },
                 {
                     "expand": true,
                     "cwd": "../apps/documenteditor/mobile/dist",
                     "src": "**",
-                    "dest": "../deploy/web-apps/apps/documenteditor/mobile/dist"
+                    "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/mobile/dist"
                 }
             ]
         }
@@ -338,10 +338,10 @@
     "embed": {
         "clean": {
             "prebuild": [
-                "../deploy/web-apps/apps/documenteditor/embed"
+                "$BUILD_ROOT/web-apps/apps/documenteditor/embed"
             ],
             "postbuild": [
-                "../deploy/web-apps/apps/documenteditor/embed/resources/img"
+                "$BUILD_ROOT/web-apps/apps/documenteditor/embed/resources/img"
             ]
         },
         "js": {
@@ -364,12 +364,12 @@
                 "../apps/documenteditor/embed/js/ApplicationController.js",
                 "../apps/documenteditor/embed/js/application.js"
             ],
-            "dist": "../deploy/web-apps/apps/documenteditor/embed/app-all.js"
+            "dist": "$BUILD_ROOT/web-apps/apps/documenteditor/embed/app-all.js"
         },
         "less": {
             "files": {
                 "src": "../apps/documenteditor/embed/resources/less/application.less",
-                "dist": "../deploy/web-apps/apps/documenteditor/embed/resources/css/app-all.css"
+                "dist": "$BUILD_ROOT/web-apps/apps/documenteditor/embed/resources/css/app-all.css"
             }
         },
         "copy": {
@@ -378,7 +378,7 @@
                     "expand": true,
                     "cwd": "../apps/documenteditor/embed/locale/",
                     "src": "*",
-                    "dest": "../deploy/web-apps/apps/documenteditor/embed/locale/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/embed/locale/"
                 }
             ],
             "indexhtml": [
@@ -389,7 +389,7 @@
                         "*.html.deploy"
                     ],
                     "ext": ".html",
-                    "dest": "../deploy/web-apps/apps/documenteditor/embed"
+                    "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/embed"
                 }
             ],
             "images-app": [
@@ -397,7 +397,7 @@
                     "expand": true,
                     "cwd": "../apps/common/embed/resources/img/",
                     "src": "**",
-                    "dest": "../deploy/web-apps/apps/documenteditor/embed/resources/img/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/documenteditor/embed/resources/img/"
                 }
             ]
         }
