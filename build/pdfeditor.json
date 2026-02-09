@@ -1,13 +1,13 @@
 {
     "name": "pdfeditor",
     "version": "4.3.0",
-    "build": 1179,
+    "build": 1152,
     "homepage": "http://www.onlyoffice.com",
     "private": true,
     "main": {
         "clean": {
             "prebuild": [
-                "../deploy/web-apps/apps/pdfeditor/main"
+                "$BUILD_ROOT/web-apps/apps/pdfeditor/main"
             ],
             "postbuild": []
         },
@@ -15,7 +15,7 @@
             "requirejs": {
                 "options": {
                     "name": "../apps/pdfeditor/main/app.js",
-                    "out": "../deploy/web-apps/apps/pdfeditor/main/app.js",
+                    "out": "$BUILD_ROOT/web-apps/apps/pdfeditor/main/app.js",
                     "baseUrl": "../apps/",
                     "inlineText": true,
                     "findNestedDependencies": true,
@@ -104,7 +104,7 @@
                     "baseUrl": "../apps/",
                     "optimize": "none",
                     "name": "../apps/pdfeditor/main/app_pack.js",
-                    "out": "../deploy/web-apps/apps/pdfeditor/main/code.js",
+                    "out": "$BUILD_ROOT/web-apps/apps/pdfeditor/main/code.js",
                     "inlineText": true,
                     "findNestedDependencies": false,
                     "optimizeAllPluginResources": false,
@@ -117,9 +117,9 @@
                 "files": [
                     {
                         "expand": true,
-                        "cwd": "../deploy/web-apps/apps/pdfeditor/main/",
+                        "cwd": "$BUILD_ROOT/web-apps/apps/pdfeditor/main/",
                         "src": "*.js",
-                        "dest": "../deploy/web-apps/apps/pdfeditor/main/ie"
+                        "dest": "$BUILD_ROOT/web-apps/apps/pdfeditor/main/ie"
                     }
                 ]
             }
@@ -127,13 +127,13 @@
         "less": {
             "files": {
                 "src": "../apps/pdfeditor/main/resources/less/app.less",
-                "dest": "../deploy/web-apps/apps/pdfeditor/main/resources/css/app.css"
+                "dest": "$BUILD_ROOT/web-apps/apps/pdfeditor/main/resources/css/app.css"
             },
             "vars": {
                 "app-image-const-path": "'../img'",
                 "common-image-const-path": "'../../../../common/main/resources/img'",
-                "app-image-path": "'../../../../../deploy/web-apps/apps/pdfeditor/main/resources/img'",
-                "common-image-path": "'../../../../../deploy/web-apps/apps/pdfeditor/main/resources/img'"
+                "app-image-path": "'$BUILD_ROOT/web-apps/apps/pdfeditor/main/resources/img'",
+                "common-image-path": "'$BUILD_ROOT/web-apps/apps/pdfeditor/main/resources/img'"
             }
         },
         "imagemin": {
@@ -145,7 +145,7 @@
                         "**/*.{png,jpg,gif,ico}",
                         "!toolbar/**/*x/**/*"
                     ],
-                    "dest": "../deploy/web-apps/apps/pdfeditor/main/resources/img/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/pdfeditor/main/resources/img/"
                 }
             ],
             "images-common": [
@@ -156,12 +156,12 @@
                         "**/*.{png,jpg,gif}",
                         "!toolbar/**/*x/**/*"
                     ],
-                    "dest": "../deploy/web-apps/apps/pdfeditor/main/resources/img/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/pdfeditor/main/resources/img/"
                 }
             ]
         },
         "jsonmin": {
-            "files": "../deploy/web-apps/apps/pdfeditor/main/**/*.json"
+            "files": "$BUILD_ROOT/web-apps/apps/pdfeditor/main/**/*.json"
         },
         "copy": {
             "localization": [
@@ -169,7 +169,7 @@
                     "expand": true,
                     "cwd": "../apps/pdfeditor/main/locale/",
                     "src": "*",
-                    "dest": "../deploy/web-apps/apps/pdfeditor/main/locale/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/pdfeditor/main/locale/"
                 }
             ],
             "help": [
@@ -181,7 +181,7 @@
                         "!*_/**",
                         "!**/src/**"
                     ],
-                    "dest": "../deploy/web-apps/apps/pdfeditor/main/resources/help/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/pdfeditor/main/resources/help/"
                 }
             ],
             "indexhtml": [
@@ -192,7 +192,7 @@
                         "*.html.deploy"
                     ],
                     "ext": ".html",
-                    "dest": "../deploy/web-apps/apps/pdfeditor/main"
+                    "dest": "$BUILD_ROOT/web-apps/apps/pdfeditor/main"
                 }
             ]
         },
@@ -205,12 +205,12 @@
                         "**/*.svg",
                         "!toolbar/**/*x/**/*"
                     ],
-                    "dest": "../deploy/web-apps/apps/pdfeditor/main/resources/img"
+                    "dest": "$BUILD_ROOT/web-apps/apps/pdfeditor/main/resources/img"
                 }
             ],
             "clean": [
-                "../deploy/web-apps/apps/pdfeditor/main/resources/img/**/*.svg",
-                "!../deploy/web-apps/apps/pdfeditor/main/resources/img/**/*_s.svg"
+                "$BUILD_ROOT/web-apps/apps/pdfeditor/main/resources/img/**/*.svg",
+                "!$BUILD_ROOT/web-apps/apps/pdfeditor/main/resources/img/**/*_s.svg"
             ]
         }
     },

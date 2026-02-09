@@ -310,13 +310,13 @@
         window.isPDFForm = isForm;
     </script>
 
-    <script src="../../../../../apps/common/main/lib/util/desktopinit.js?__inline=true"></script>
-    <script src="../../../../../apps/common/main/lib/util/themeinit.js?__inline=true"></script>
+    <script src="@@SRC_ROOT@@/apps/common/main/lib/util/desktopinit.js?__inline=true"></script>
+    <script src="@@SRC_ROOT@@/apps/common/main/lib/util/themeinit.js?__inline=true"></script>
 </head>
 <body role="application">
     <div class="inlined-svg"></div>
-    <script src="../../../../../apps/common/main/lib/util/htmlutils.js?__inline=true"></script>
-    <script src="../../../../../apps/common/main/lib/util/docserviceworker.js?__inline=true"></script>
+    <script src="@@SRC_ROOT@@/apps/common/main/lib/util/htmlutils.js?__inline=true"></script>
+    <script src="@@SRC_ROOT@@/apps/common/main/lib/util/docserviceworker.js?__inline=true"></script>
 
     <div id="loading-mask" class="loadmask"><div class="brendpanel" style="display: none;"><div><div class="spacer"></div></div><div><span class="rect"></span><span class="rect"></span><span class="rect"></span><span class="rect"></span><span class="rect"></span><span class="rect"></span></div></div>
     <div id="sktoolbar" class="sktoolbar" style="display: none;"><section class="box-controls"><ul><li class="compact" style="width: 30px;display: none;"></li><li class="compact space" style="display: none;"></li><li class="compact" style="width: 90px;display: none;"></li><li class="not-compact" style="width: 63px;"></li><li class="space"></li><li style="width: 234px;"></li><li class="space"></li><li style="width: 189px;"></li><li class="fat"></li></ul><ul><li class="compact" style="width: 30px;display: none;"></li><li class="compact space" style="display: none;"></li><li class="compact" style="width: 90px;display: none;"></li><li class="not-compact" style="width: 63px;"></li><li class="space"></li><li style="width: 234px;"></li><li class="space"></li><li style="width: 189px;"></li></ul></section></div>

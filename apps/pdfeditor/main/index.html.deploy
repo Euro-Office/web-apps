@@ -295,13 +295,13 @@
         window.parentOrigin = params["parentOrigin"];
     </script>
 
-    <script src="../../../../../apps/common/main/lib/util/desktopinit.js?__inline=true"></script>
-    <script src="../../../../../apps/common/main/lib/util/themeinit.js?__inline=true"></script>
+    <script src="@@SRC_ROOT@@/apps/common/main/lib/util/desktopinit.js?__inline=true"></script>
+    <script src="@@SRC_ROOT@@/apps/common/main/lib/util/themeinit.js?__inline=true"></script>
 </head>
 <body role="application">
     <div class="inlined-svg"></div>
-    <script src="../../../../../apps/common/main/lib/util/htmlutils.js?__inline=true"></script>
-    <script src="../../../../../apps/common/main/lib/util/docserviceworker.js?__inline=true"></script>
+    <script src="@@SRC_ROOT@@/apps/common/main/lib/util/htmlutils.js?__inline=true"></script>
+    <script src="@@SRC_ROOT@@/apps/common/main/lib/util/docserviceworker.js?__inline=true"></script>
 
     <div id="loading-mask" class="loadmask"><div class="brendpanel" style="display: none;"><div><div class="spacer"></div></div><div><span class="rect"></span><span class="rect"></span><span class="rect"></span><span class="rect"></span><span class="rect"></span><span class="rect"></span></div></div><div class="sktoolbar" style="display: none;"><section class="box-controls"><ul><li class="compact" style="width: 30px;display: none;"></li><li class="compact space" style="display: none;"></li><li class="compact" style="width: 90px;display: none;"></li><li class="not-compact" style="width: 63px;"></li><li class="space" style="width: 144px;"></li><li style="width: 105px;"></li><li class="space"></li><li style="width: 160px;"></li></ul><ul><li class="compact" style="width: 30px;display: none;"></li><li class="compact space" style="display: none;"></li><li class="compact" style="width: 90px;display: none;"></li><li class="not-compact" style="width: 63px;"></li><li class="space"></li><li class="big"/><li class="big"/><li class="big"/><li class="space"></li><li style="width: 105px;"></li><li class="space"></li><li style="width: 160px;"></li></ul></section></div><div class="placeholder" style="display: none;"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div></div>
     <div id="viewport" role="main"></div>
@@ -393,7 +393,7 @@
     <inline src="../../common/main/resources/img/right-panels/arrows.svg" />
     <inline src="../../common/main/resources/img/combo-border-size/BorderSize.svg" />
     <script src="../../../../../../sdkjs/common/device_scale.js?__inline=true"></script>
-    <script src="../../../../../apps/common/checkExtendedPDF.js?__inline=true"></script>
+    <script src="@@SRC_ROOT@@/apps/common/checkExtendedPDF.js?__inline=true"></script>
     <script>
         function startApp() {
             var script = document.createElement("script");

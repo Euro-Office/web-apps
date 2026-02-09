@@ -1,12 +1,12 @@
 {
     "name": "common",
     "version": "4.3.0",
-    "build": 72,
+    "build": 39,
     "homepage": "http://www.onlyoffice.com",
     "private": true,
     "sdk": {
         "clean": [
-            "../deploy/sdkjs"
+            "$BUILD_ROOT/sdkjs-assets"
         ],
         "copy": {
             "script": {
@@ -17,51 +17,51 @@
                         "src": [
                             "Images/*",
                             "Images/placeholders/*",
-                            "Images/content_controls/*",
+							"Images/content_controls/*",
                             "Native/*.js",
                             "libfont/js/fonts.*",
                             "libfont/wasm/fonts.*"
                         ],
-                        "dest": "../deploy/sdkjs/common/"
+                        "dest": "$BUILD_ROOT/sdkjs-assets/common/"
                     },
                     {
                         "expand": true,
                         "src": "../../sdkjs/word/sdk-*.js",
-                        "dest": "../deploy/sdkjs/word/"
+                        "dest": "$BUILD_ROOT/sdkjs-assets/word/"
                     },
                     {
                         "expand": true,
                         "cwd": "../../sdkjs/cell/css/",
                         "src": "*.css",
-                        "dest": "../deploy/sdkjs/cell/css/"
+                        "dest": "$BUILD_ROOT/sdkjs-assets/cell/css/"
                     },
                     {
                         "expand": true,
                         "src": "../../sdkjs/cell/sdk-*.js",
-                        "dest": "../deploy/sdkjs/cell/"
+                        "dest": "$BUILD_ROOT/sdkjs-assets/cell/"
                     },
                     {
                         "expand": true,
                         "cwd": "../../sdkjs/slide/themes/",
                         "src": "**/*.*",
-                        "dest": "../deploy/sdkjs/slide/themes/"
+                        "dest": "$BUILD_ROOT/sdkjs-assets/slide/themes/"
                     },
                     {
                         "expand": true,
                         "src": "../../sdkjs/slide/sdk-*.js",
-                        "dest": "../deploy/sdkjs/slide/"
+                        "dest": "$BUILD_ROOT/sdkjs-assets/slide/"
                     }
                 ]
             },
             "desktop": {
                 "src": "../../sdkjs/common/HtmlFileInternal/AllFonts.js",
-                "dest": "../deploy/sdkjs/common/AllFonts.js"
+                "dest": "$BUILD_ROOT/sdkjs-assets/common/AllFonts.js"
             }
         }
     },
     "api": {
         "clean": [
-            "../deploy/web-apps/apps/api"
+            "$BUILD_ROOT/web-apps/apps/api"
         ],
         "copy": {
             "script": {
@@ -71,32 +71,32 @@
                     "**",
                     "!**/*.desktop"
                 ],
-                "dest": "../deploy/web-apps/apps/api/"
+                "dest": "$BUILD_ROOT/web-apps/apps/api/"
             },
             "desktop": {
                 "src": "../apps/api/documents/index.html.desktop",
-                "dest": "../deploy/web-apps/apps/api/documents/index.html"
+                "dest": "$BUILD_ROOT/web-apps/apps/api/documents/index.html"
             }
         }
     },
     "apps-common": {
         "clean": [
-            "../deploy/web-apps/apps/common"
+            "$BUILD_ROOT/web-apps/apps/common"
         ],
         "copy": {
             "alphabetletters": {
                 "expand": true,
                 "cwd": "../apps/common/main/resources/alphabetletters",
                 "src": "*.json",
-                "dest": "../deploy/web-apps/apps/common/main/resources/alphabetletters"
+                "dest": "$BUILD_ROOT/web-apps/apps/common/main/resources/alphabetletters"
             },
             "themes": {
                 "src": "../apps/common/main/resources/themes/themes.json",
-                "dest": "../deploy/web-apps/apps/common/main/resources/themes/themes.json"
+                "dest": "$BUILD_ROOT/web-apps/apps/common/main/resources/themes/themes.json"
             },
             "iecompat": {
                 "src": "../apps/common/main/lib/util/fix-ie-compat.js",
-                "dest": "../deploy/web-apps/apps/common/main/lib/util/fix-ie-compat.js"
+                "dest": "$BUILD_ROOT/web-apps/apps/common/main/lib/util/fix-ie-compat.js"
             },
             "help": {
                 "expand": true,
@@ -107,14 +107,14 @@
                     "!**/src/**",
                     "search/js/**/*.js"
                 ],
-                "dest": "../deploy/web-apps/apps/common/main/resources/help/"
+                "dest": "$BUILD_ROOT/web-apps/apps/common/main/resources/help/"
             },
             "indexhtml": {
                 "expand": true,
                 "cwd": "../apps/common",
                 "src": "*.html.deploy",
                 "ext": ".html",
-                "dest": "../deploy/web-apps/apps/common"
+                "dest": "$BUILD_ROOT/web-apps/apps/common"
             }
         },
         "imagemin": {
@@ -126,7 +126,7 @@
                         "**/*.{png,jpg,gif}",
                         "!toolbar/**/*x/**/*"
                     ],
-                    "dest": "../deploy/web-apps/apps/common/main/resources/img/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/common/main/resources/img/"
                 }
             ]
         },
@@ -139,25 +139,25 @@
                         "**/*.svg",
                         "!toolbar/**/*x/**/*"
                     ],
-                    "dest": "../deploy/web-apps/apps/common/main/resources/img"
+                    "dest": "$BUILD_ROOT/web-apps/apps/common/main/resources/img"
                 }
             ]
         }
     },
     "jquery": {
         "clean": [
-            "../deploy/web-apps/vendor/jquery"
+            "$BUILD_ROOT/web-apps/vendor/jquery"
         ],
         "copy": {
             "script": {
                 "files": [
                     {
                         "src": "../vendor/jquery/jquery.min.js",
-                        "dest": "../deploy/web-apps/vendor/jquery/jquery.min.js"
+                        "dest": "$BUILD_ROOT/web-apps/vendor/jquery/jquery.min.js"
                     },
                     {
                         "src": "../vendor/jquery.browser/dist/jquery.browser.min.js",
-                        "dest": "../deploy/web-apps/vendor/jquery/jquery.browser.min.js"
+                        "dest": "$BUILD_ROOT/web-apps/vendor/jquery/jquery.browser.min.js"
                     }
                 ]
             }
@@ -165,111 +165,111 @@
     },
     "megapixel": {
         "clean": [
-            "../deploy/web-apps/vendor/megapixel"
+            "$BUILD_ROOT/web-apps/vendor/megapixel"
         ],
         "copy": {
             "script": {
                 "src": "../vendor/megapixel/megapix-image-min.js",
-                "dest": "../deploy/web-apps/vendor/megapixel/megapix-image-min.js"
+                "dest": "$BUILD_ROOT/web-apps/vendor/megapixel/megapix-image-min.js"
             }
         }
     },
     "socketio": {
         "clean": [
-            "../deploy/web-apps/vendor/socketio"
+            "$BUILD_ROOT/web-apps/vendor/socketio"
         ],
         "copy": {
             "script": {
                 "src": "../vendor/socketio/socket.io.min.js",
-                "dest": "../deploy/web-apps/vendor/socketio/socket.io.min.js"
+                "dest": "$BUILD_ROOT/web-apps/vendor/socketio/socket.io.min.js"
             }
         }
     },
     "xregexp": {
         "clean": [
-            "../deploy/web-apps/vendor/xregexp"
+            "$BUILD_ROOT/web-apps/vendor/xregexp"
         ],
         "copy": {
             "script": {
                 "src": "../vendor/xregexp/xregexp-all-min.js",
-                "dest": "../deploy/web-apps/vendor/xregexp/xregexp-all-min.js"
+                "dest": "$BUILD_ROOT/web-apps/vendor/xregexp/xregexp-all-min.js"
             }
         }
     },
     "underscore": {
         "clean": [
-            "../deploy/web-apps/vendor/underscore"
+            "$BUILD_ROOT/web-apps/vendor/underscore"
         ],
         "copy": {
             "script": {
                 "src": "../vendor/underscore/underscore-min.js",
-                "dest": "../deploy/web-apps/vendor/underscore/underscore-min.js"
+                "dest": "$BUILD_ROOT/web-apps/vendor/underscore/underscore-min.js"
             }
         }
     },
     "iscroll": {
         "clean": [
-            "../deploy/web-apps/vendor/iscroll"
+            "$BUILD_ROOT/web-apps/vendor/iscroll"
         ],
         "copy": {
             "script": {
                 "src": "../vendor/iscroll/iscroll.min.js",
-                "dest": "../deploy/web-apps/vendor/iscroll/iscroll.min.js"
+                "dest": "$BUILD_ROOT/web-apps/vendor/iscroll/iscroll.min.js"
             }
         }
     },
     "fetch": {
         "clean": [
-            "../deploy/web-apps/vendor/fetch"
+            "$BUILD_ROOT/web-apps/vendor/fetch"
         ],
         "copy": {
             "script": {
                 "src": "../vendor/fetch/fetch.umd.js",
-                "dest": "../deploy/web-apps/vendor/fetch/fetch.umd.js"
+                "dest": "$BUILD_ROOT/web-apps/vendor/fetch/fetch.umd.js"
             }
         }
     },
     "es6-promise": {
         "clean": [
-            "../deploy/web-apps/vendor/es6-promise"
+            "$BUILD_ROOT/web-apps/vendor/es6-promise"
         ],
         "copy": {
             "script": {
                 "src": "../vendor/es6-promise/es6-promise.auto.min.js",
-                "dest": "../deploy/web-apps/vendor/es6-promise/es6-promise.auto.min.js"
+                "dest": "$BUILD_ROOT/web-apps/vendor/es6-promise/es6-promise.auto.min.js"
             }
         }
     },
     "requirejs": {
         "clean": [
-            "../deploy/web-apps/vendor/requirejs"
+            "$BUILD_ROOT/web-apps/vendor/requirejs"
         ],
         "min": {
             "src": "../vendor/requirejs/require.js",
-            "dest": "../deploy/web-apps/vendor/requirejs/require.js"
+            "dest": "$BUILD_ROOT/web-apps/vendor/requirejs/require.js"
         }
     },
     "common-embed": {
         "clean": [
-            "../deploy/web-apps/apps/common/embed"
+            "$BUILD_ROOT/web-apps/apps/common/embed"
         ],
         "copy": {
             "app-logo": {
-                "dest": "../deploy/web-apps/apps/common/embed/resources/img/logo.svg",
+                "dest": "$BUILD_ROOT/web-apps/apps/common/embed/resources/img/logo.svg",
                 "src": "../apps/common/embed/resources/img/logo.svg"
             }
         }
     },
     "monaco": {
         "clean": [
-            "../deploy/web-apps/vendor/monaco"
+            "$BUILD_ROOT/web-apps/vendor/monaco"
         ],
         "copy": {
             "script": {
                 "expand": true,
                 "cwd": "../vendor/monaco",
                 "src": "**",
-                "dest": "../deploy/web-apps/vendor/monaco"
+                "dest": "$BUILD_ROOT/web-apps/vendor/monaco"
             }
         }
     },
