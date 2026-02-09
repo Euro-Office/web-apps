@@ -1,13 +1,13 @@
 {
     "name": "spreadsheeteditor",
     "version": "4.3.0",
-    "build": 903,
+    "build": 940,
     "homepage": "http://www.onlyoffice.com",
     "private": true,
     "main": {
         "clean": {
             "prebuild": [
-                "../deploy/web-apps/apps/spreadsheeteditor/main"
+                "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/main"
             ],
             "postbuild": []
         },
@@ -15,7 +15,7 @@
             "requirejs": {
                 "options": {
                     "name": "../apps/spreadsheeteditor/main/app.js",
-                    "out": "../deploy/web-apps/apps/spreadsheeteditor/main/app.js",
+                    "out": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/main/app.js",
                     "baseUrl": "../apps/",
                     "inlineText": true,
                     "findNestedDependencies": true,
@@ -94,11 +94,11 @@
                 }
             },
             "postload": {
-                "options":{
+                "options": {
                     "baseUrl": "../apps/",
                     "optimize": "none",
                     "name": "../apps/spreadsheeteditor/main/app_pack.js",
-                    "out": "../deploy/web-apps/apps/spreadsheeteditor/main/code.js",
+                    "out": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/main/code.js",
                     "inlineText": true,
                     "findNestedDependencies": false,
                     "optimizeAllPluginResources": false,
@@ -111,9 +111,9 @@
                 "files": [
                     {
                         "expand": true,
-                        "cwd": "../deploy/web-apps/apps/spreadsheeteditor/main/",
+                        "cwd": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/main/",
                         "src": "*.js",
-                        "dest": "../deploy/web-apps/apps/spreadsheeteditor/main/ie"
+                        "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/main/ie"
                     }
                 ]
             }
@@ -121,13 +121,13 @@
         "less": {
             "files": {
                 "src": "../apps/spreadsheeteditor/main/resources/less/app.less",
-                "dest": "../deploy/web-apps/apps/spreadsheeteditor/main/resources/css/app.css"
+                "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/main/resources/css/app.css"
             },
             "vars": {
                 "app-image-const-path": "'../img'",
                 "common-image-const-path": "'../../../../common/main/resources/img'",
-                "app-image-path": "'../../../../../deploy/web-apps/apps/spreadsheeteditor/main/resources/img'",
-                "common-image-path": "'../../../../../deploy/web-apps/apps/spreadsheeteditor/main/resources/img'"
+                "app-image-path": "'$BUILD_ROOT/web-apps/apps/spreadsheeteditor/main/resources/img'",
+                "common-image-path": "'$BUILD_ROOT/web-apps/apps/spreadsheeteditor/main/resources/img'"
             }
         },
         "imagemin": {
@@ -139,7 +139,7 @@
                         "**/*.{png,jpg,gif,ico}",
                         "!toolbar/**/*x/**/*"
                     ],
-                    "dest": "../deploy/web-apps/apps/spreadsheeteditor/main/resources/img/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/main/resources/img/"
                 }
             ],
             "images-common": [
@@ -149,7 +149,7 @@
                     "src": [
                         "**/*.cur"
                     ],
-                    "dest": "../deploy/web-apps/apps/spreadsheeteditor/main/Images/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/main/Images/"
                 },
                 {
                     "expand": true,
@@ -158,12 +158,12 @@
                         "**/*.{png,jpg,gif}",
                         "!toolbar/**/*x/**/*"
                     ],
-                    "dest": "../deploy/web-apps/apps/spreadsheeteditor/main/resources/img/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/main/resources/img/"
                 }
             ]
         },
         "jsonmin": {
-            "files": "../deploy/web-apps/apps/spreadsheeteditor/main/**/*.json"
+            "files": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/main/**/*.json"
         },
         "copy": {
             "localization": [
@@ -171,19 +171,19 @@
                     "expand": true,
                     "cwd": "../apps/spreadsheeteditor/main/locale/",
                     "src": "*",
-                    "dest": "../deploy/web-apps/apps/spreadsheeteditor/main/locale/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/main/locale/"
                 },
                 {
                     "expand": true,
                     "cwd": "../apps/spreadsheeteditor/main/resources/formula-lang",
                     "src": "*",
-                    "dest": "../deploy/web-apps/apps/spreadsheeteditor/main/resources/formula-lang"
+                    "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/main/resources/formula-lang"
                 },
                 {
                     "expand": true,
                     "cwd": "../apps/common/main/resources/symboltable",
                     "src": "*",
-                    "dest": "../deploy/web-apps/apps/spreadsheeteditor/main/resources/symboltable"
+                    "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/main/resources/symboltable"
                 }
             ],
             "help": [
@@ -195,7 +195,7 @@
                         "!*_/**",
                         "!**/src/**"
                     ],
-                    "dest": "../deploy/web-apps/apps/spreadsheeteditor/main/resources/help/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/main/resources/help/"
                 }
             ],
             "indexhtml": [
@@ -206,7 +206,7 @@
                         "*.html.deploy"
                     ],
                     "ext": ".html",
-                    "dest": "../deploy/web-apps/apps/spreadsheeteditor/main"
+                    "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/main"
                 }
             ]
         },
@@ -219,37 +219,37 @@
                         "**/*.svg",
                         "!toolbar/**/*x/**/*"
                     ],
-                    "dest": "../deploy/web-apps/apps/spreadsheeteditor/main/resources/img"
+                    "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/main/resources/img"
                 }
             ],
             "clean": [
-                "../deploy/web-apps/apps/spreadsheeteditor/main/resources/img/**/*.svg",
-                "!../deploy/web-apps/apps/spreadsheeteditor/main/resources/img/**/*_s.svg"
+                "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/main/resources/img/**/*.svg",
+                "!$BUILD_ROOT/web-apps/apps/spreadsheeteditor/main/resources/img/**/*_s.svg"
             ]
         }
     },
     "mobile": {
         "clean": {
             "deploy": [
-                "../deploy/web-apps/apps/spreadsheeteditor/mobile"
+                "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/mobile"
             ]
         },
         "js": {
             "src": "../apps/spreadsheeteditor/mobile/dist/js/app.js",
-            "dest": "../deploy/web-apps/apps/spreadsheeteditor/mobile/dist/js/app.js"
+            "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/mobile/dist/js/app.js"
         },
         "css": {
             "ios": {
                 "src": [
                     "../apps/spreadsheeteditor/mobile/resources/css/app-ios.css"
                 ],
-                "dist": "../deploy/web-apps/apps/spreadsheeteditor/mobile/resources/css/app-ios.css"
+                "dist": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/mobile/resources/css/app-ios.css"
             },
             "material": {
                 "src": [
                     "../apps/spreadsheeteditor/mobile/resources/css/app-material.css"
                 ],
-                "dist": "../deploy/web-apps/apps/spreadsheeteditor/mobile/resources/css/app-material.css"
+                "dist": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/mobile/resources/css/app-material.css"
             }
         },
         "htmlmin": {
@@ -263,7 +263,7 @@
             ]
         },
         "jsonmin": {
-            "files": "../deploy/web-apps/apps/spreadsheeteditor/mobile/**/*.json"
+            "files": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/mobile/**/*.json"
         },
         "copy": {
             "assets": [
@@ -271,13 +271,13 @@
                     "expand": true,
                     "cwd": "../apps/spreadsheeteditor/mobile/css",
                     "src": "*.css",
-                    "dest": "../deploy/web-apps/apps/spreadsheeteditor/mobile/css"
+                    "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/mobile/css"
                 },
                 {
                     "expand": true,
                     "cwd": "../apps/spreadsheeteditor/mobile/dist",
                     "src": "**",
-                    "dest": "../deploy/web-apps/apps/spreadsheeteditor/mobile/dist"
+                    "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/mobile/dist"
                 }
             ],
             "template-backup": [
@@ -299,21 +299,21 @@
                 }
             ],
             "index-page": {
-                "../deploy/web-apps/apps/spreadsheeteditor/mobile/index.html": "../apps/spreadsheeteditor/mobile/index.html",
-                "../deploy/web-apps/apps/spreadsheeteditor/mobile/index_loader.html": "../apps/spreadsheeteditor/mobile/index.html"
+                "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/mobile/index.html": "../apps/spreadsheeteditor/mobile/index.html",
+                "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/mobile/index_loader.html": "../apps/spreadsheeteditor/mobile/index.html"
             },
             "localization": [
                 {
                     "expand": true,
                     "cwd": "../apps/spreadsheeteditor/mobile/locale/",
                     "src": "**/*",
-                    "dest": "../deploy/web-apps/apps/spreadsheeteditor/mobile/locale/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/mobile/locale/"
                 },
                 {
                     "expand": true,
                     "cwd": "../apps/spreadsheeteditor/mobile/resources/l10n/functions",
                     "src": "*",
-                    "dest": "../deploy/web-apps/apps/spreadsheeteditor/mobile/resources/l10n/functions"
+                    "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/mobile/resources/l10n/functions"
                 }
             ],
             "images-app": [
@@ -321,13 +321,13 @@
                     "expand": true,
                     "cwd": "../apps/spreadsheeteditor/mobile/resources/img/",
                     "src": "**/*.{png,svg}",
-                    "dest": "../deploy/web-apps/apps/spreadsheeteditor/mobile/resources/img/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/mobile/resources/img/"
                 },
                 {
                     "expand": true,
                     "cwd": "../apps/common/mobile/resources/img/",
                     "src": "**",
-                    "dest": "../deploy/web-apps/apps/spreadsheeteditor/mobile/resources/img/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/mobile/resources/img/"
                 }
             ],
             "images-common": [
@@ -335,13 +335,13 @@
                     "expand": true,
                     "cwd": "../apps/common/mobile/resources/img/",
                     "src": "**",
-                    "dest": "../deploy/web-apps/apps/spreadsheeteditor/mobile/resources/img/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/mobile/resources/img/"
                 },
                 {
                     "expand": true,
                     "cwd": "../apps/common/main/resources/img/about",
                     "src": "**",
-                    "dest": "../deploy/web-apps/apps/spreadsheeteditor/mobile/resources/img/about"
+                    "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/mobile/resources/img/about"
                 }
             ]
         }
@@ -349,10 +349,10 @@
     "embed": {
         "clean": {
             "prebuild": [
-                "../deploy/web-apps/apps/spreadsheeteditor/embed"
+                "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/embed"
             ],
             "postbuild": [
-                "../deploy/web-apps/apps/spreadsheeteditor/embed/resources/img"
+                "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/embed/resources/img"
             ]
         },
         "js": {
@@ -376,12 +376,12 @@
                 "../apps/spreadsheeteditor/embed/js/ApplicationController.js",
                 "../apps/spreadsheeteditor/embed/js/application.js"
             ],
-            "dist": "../deploy/web-apps/apps/spreadsheeteditor/embed/app-all.js"
+            "dist": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/embed/app-all.js"
         },
         "less": {
             "files": {
                 "src": "../apps/spreadsheeteditor/embed/resources/less/application.less",
-                "dist": "../deploy/web-apps/apps/spreadsheeteditor/embed/resources/css/app-all.css"
+                "dist": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/embed/resources/css/app-all.css"
             }
         },
         "copy": {
@@ -390,7 +390,7 @@
                     "expand": true,
                     "cwd": "../apps/spreadsheeteditor/embed/locale/",
                     "src": "*",
-                    "dest": "../deploy/web-apps/apps/spreadsheeteditor/embed/locale/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/embed/locale/"
                 }
             ],
             "indexhtml": [
@@ -401,7 +401,7 @@
                         "*.html.deploy"
                     ],
                     "ext": ".html",
-                    "dest": "../deploy/web-apps/apps/spreadsheeteditor/embed"
+                    "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/embed"
                 }
             ],
             "images-app": [
@@ -409,7 +409,7 @@
                     "expand": true,
                     "cwd": "../apps/common/embed/resources/img/",
                     "src": "**",
-                    "dest": "../deploy/web-apps/apps/spreadsheeteditor/embed/resources/img/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/spreadsheeteditor/embed/resources/img/"
                 }
             ]
         }

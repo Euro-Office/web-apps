@@ -1,13 +1,13 @@
 {
     "name": "presentationeditor",
     "version": "4.3.0",
-    "build": 790,
+    "build": 826,
     "homepage": "http://www.onlyoffice.com",
     "private": true,
     "main": {
         "clean": {
             "prebuild": [
-                "../deploy/web-apps/apps/presentationeditor/main"
+                "$BUILD_ROOT/web-apps/apps/presentationeditor/main"
             ],
             "postbuild": []
         },
@@ -15,7 +15,7 @@
             "requirejs": {
                 "options": {
                     "name": "../apps/presentationeditor/main/app.js",
-                    "out": "../deploy/web-apps/apps/presentationeditor/main/app.js",
+                    "out": "$BUILD_ROOT/web-apps/apps/presentationeditor/main/app.js",
                     "baseUrl": "../apps/",
                     "inlineText": true,
                     "findNestedDependencies": true,
@@ -98,7 +98,7 @@
                     "baseUrl": "../apps/",
                     "optimize": "none",
                     "name": "../apps/presentationeditor/main/app_pack.js",
-                    "out": "../deploy/web-apps/apps/presentationeditor/main/code.js",
+                    "out": "$BUILD_ROOT/web-apps/apps/presentationeditor/main/code.js",
                     "inlineText": true,
                     "findNestedDependencies": false,
                     "optimizeAllPluginResources": false,
@@ -111,9 +111,9 @@
                 "files": [
                     {
                         "expand": true,
-                        "cwd": "../deploy/web-apps/apps/presentationeditor/main/",
+                        "cwd": "$BUILD_ROOT/web-apps/apps/presentationeditor/main/",
                         "src": "*.js",
-                        "dest": "../deploy/web-apps/apps/presentationeditor/main/ie"
+                        "dest": "$BUILD_ROOT/web-apps/apps/presentationeditor/main/ie"
                     }
                 ]
             }
@@ -121,13 +121,13 @@
         "less": {
             "files": {
                 "src": "../apps/presentationeditor/main/resources/less/app.less",
-                "dest": "../deploy/web-apps/apps/presentationeditor/main/resources/css/app.css"
+                "dest": "$BUILD_ROOT/web-apps/apps/presentationeditor/main/resources/css/app.css"
             },
             "vars": {
                 "app-image-const-path": "'../img'",
                 "common-image-const-path": "'../../../../common/main/resources/img'",
-                "app-image-path": "'../../../../../deploy/web-apps/apps/presentationeditor/main/resources/img'",
-                "common-image-path": "'../../../../../deploy/web-apps/apps/presentationeditor/main/resources/img'"
+                "app-image-path": "'$BUILD_ROOT/web-apps/apps/presentationeditor/main/resources/img'",
+                "common-image-path": "'$BUILD_ROOT/web-apps/apps/presentationeditor/main/resources/img'"
             }
         },
         "imagemin": {
@@ -139,7 +139,7 @@
                         "**/*.{png,jpg,gif,ico}",
                         "!toolbar/**/*x/**/*"
                     ],
-                    "dest": "../deploy/web-apps/apps/presentationeditor/main/resources/img/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/presentationeditor/main/resources/img/"
                 }
             ],
             "images-common": [
@@ -150,12 +150,12 @@
                         "**/*.{png,jpg,gif}",
                         "!toolbar/**/*x/**/*"
                     ],
-                    "dest": "../deploy/web-apps/apps/presentationeditor/main/resources/img/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/presentationeditor/main/resources/img/"
                 }
             ]
         },
         "jsonmin": {
-            "files": "../deploy/web-apps/apps/presentationeditor/main/**/*.json"
+            "files": "$BUILD_ROOT/web-apps/apps/presentationeditor/main/**/*.json"
         },
         "copy": {
             "localization": [
@@ -163,13 +163,13 @@
                     "expand": true,
                     "cwd": "../apps/presentationeditor/main/locale/",
                     "src": "*",
-                    "dest": "../deploy/web-apps/apps/presentationeditor/main/locale/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/presentationeditor/main/locale/"
                 },
                 {
                     "expand": true,
                     "cwd": "../apps/common/main/resources/symboltable",
                     "src": "*",
-                    "dest": "../deploy/web-apps/apps/presentationeditor/main/resources/symboltable"
+                    "dest": "$BUILD_ROOT/web-apps/apps/presentationeditor/main/resources/symboltable"
                 }
             ],
             "help": [
@@ -181,7 +181,7 @@
                         "!*_/**",
                         "!**/src/**"
                     ],
-                    "dest": "../deploy/web-apps/apps/presentationeditor/main/resources/help/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/presentationeditor/main/resources/help/"
                 }
             ],
             "indexhtml": [
@@ -193,7 +193,7 @@
                         "!*.reporter.html.deploy"
                     ],
                     "ext": ".html",
-                    "dest": "../deploy/web-apps/apps/presentationeditor/main/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/presentationeditor/main/"
                 }
             ]
         },
@@ -206,28 +206,28 @@
                         "**/*.svg",
                         "!toolbar/**/*x/**/*"
                     ],
-                    "dest": "../deploy/web-apps/apps/presentationeditor/main/resources/img"
+                    "dest": "$BUILD_ROOT/web-apps/apps/presentationeditor/main/resources/img"
                 }
             ],
             "clean": [
-                "../deploy/web-apps/apps/presentationeditor/main/resources/img/**/*.svg",
-                "!../deploy/web-apps/apps/presentationeditor/main/resources/img/**/*_s.svg"
+                "$BUILD_ROOT/web-apps/apps/presentationeditor/main/resources/img/**/*.svg",
+                "!$BUILD_ROOT/web-apps/apps/presentationeditor/main/resources/img/**/*_s.svg"
             ]
         },
         "reporter": {
             "uglify": {
                 "src": "../apps/presentationeditor/main/app.reporter.js",
-                "dest": "../deploy/web-apps/apps/presentationeditor/main/app.reporter.js"
+                "dest": "$BUILD_ROOT/web-apps/apps/presentationeditor/main/app.reporter.js"
             },
             "copy": {
-                "../deploy/web-apps/apps/presentationeditor/main/index.reporter.html": "../apps/presentationeditor/main/index.reporter.html.deploy"
+                "$BUILD_ROOT/web-apps/apps/presentationeditor/main/index.reporter.html": "../apps/presentationeditor/main/index.reporter.html.deploy"
             }
         }
     },
     "mobile": {
         "clean": {
             "deploy": [
-                "../deploy/web-apps/apps/presentationeditor/mobile"
+                "$BUILD_ROOT/web-apps/apps/presentationeditor/mobile"
             ],
             "template-backup": [
                 "../apps/presentationeditor/mobile/app/template/backup"
@@ -235,20 +235,20 @@
         },
         "js": {
             "src": "../apps/presentationeditor/mobile/dist/js/app.js",
-            "dest": "../deploy/web-apps/apps/presentationeditor/mobile/dist/js/app.js"
+            "dest": "$BUILD_ROOT/web-apps/apps/presentationeditor/mobile/dist/js/app.js"
         },
         "css": {
             "ios": {
                 "src": [
                     "../apps/presentationeditor/mobile/resources/css/app-ios.css"
                 ],
-                "dist": "../deploy/web-apps/apps/presentationeditor/mobile/resources/css/app-ios.css"
+                "dist": "$BUILD_ROOT/web-apps/apps/presentationeditor/mobile/resources/css/app-ios.css"
             },
             "material": {
                 "src": [
                     "../apps/presentationeditor/mobile/resources/css/app-material.css"
                 ],
-                "dist": "../deploy/web-apps/apps/presentationeditor/mobile/resources/css/app-material.css"
+                "dist": "$BUILD_ROOT/web-apps/apps/presentationeditor/mobile/resources/css/app-material.css"
             }
         },
         "htmlmin": {
@@ -262,7 +262,7 @@
             ]
         },
         "jsonmin": {
-            "files": "../deploy/web-apps/apps/presentationeditor/mobile/**/*.json"
+            "files": "$BUILD_ROOT/web-apps/apps/presentationeditor/mobile/**/*.json"
         },
         "copy": {
             "assets": [
@@ -270,13 +270,13 @@
                     "expand": true,
                     "cwd": "../apps/presentationeditor/mobile/css",
                     "src": "*.css",
-                    "dest": "../deploy/web-apps/apps/presentationeditor/mobile/css"
+                    "dest": "$BUILD_ROOT/web-apps/apps/presentationeditor/mobile/css"
                 },
                 {
                     "expand": true,
                     "cwd": "../apps/presentationeditor/mobile/dist",
                     "src": "**",
-                    "dest": "../deploy/web-apps/apps/presentationeditor/mobile/dist"
+                    "dest": "$BUILD_ROOT/web-apps/apps/presentationeditor/mobile/dist"
                 }
             ],
             "template-backup": [
@@ -298,15 +298,15 @@
                 }
             ],
             "index-page": {
-                "../deploy/web-apps/apps/presentationeditor/mobile/index.html": "../apps/presentationeditor/mobile/index.html",
-                "../deploy/web-apps/apps/presentationeditor/mobile/index_loader.html": "../apps/presentationeditor/mobile/index.html"
+                "$BUILD_ROOT/web-apps/apps/presentationeditor/mobile/index.html": "../apps/presentationeditor/mobile/index.html",
+                "$BUILD_ROOT/web-apps/apps/presentationeditor/mobile/index_loader.html": "../apps/presentationeditor/mobile/index.html"
             },
             "localization": [
                 {
                     "expand": true,
                     "cwd": "../apps/presentationeditor/mobile/locale/",
                     "src": "*",
-                    "dest": "../deploy/web-apps/apps/presentationeditor/mobile/locale/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/presentationeditor/mobile/locale/"
                 }
             ],
             "images-app": [
@@ -314,7 +314,7 @@
                     "expand": true,
                     "cwd": "../apps/presentationeditor/mobile/resources/img/",
                     "src": "**/*.{png,svg}",
-                    "dest": "../deploy/web-apps/apps/presentationeditor/mobile/resources/img/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/presentationeditor/mobile/resources/img/"
                 }
             ],
             "images-common": [
@@ -322,13 +322,13 @@
                     "expand": true,
                     "cwd": "../apps/common/mobile/resources/img/",
                     "src": "**",
-                    "dest": "../deploy/web-apps/apps/presentationeditor/mobile/resources/img/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/presentationeditor/mobile/resources/img/"
                 },
                 {
                     "expand": true,
                     "cwd": "../apps/common/main/resources/img/about",
                     "src": "**",
-                    "dest": "../deploy/web-apps/apps/presentationeditor/mobile/resources/img/about"
+                    "dest": "$BUILD_ROOT/web-apps/apps/presentationeditor/mobile/resources/img/about"
                 }
             ]
         }
@@ -336,10 +336,10 @@
     "embed": {
         "clean": {
             "prebuild": [
-                "../deploy/web-apps/apps/presentationeditor/embed"
+                "$BUILD_ROOT/web-apps/apps/presentationeditor/embed"
             ],
             "postbuild": [
-                "../deploy/web-apps/apps/presentationeditor/embed/resources/img"
+                "$BUILD_ROOT/web-apps/apps/presentationeditor/embed/resources/img"
             ]
         },
         "js": {
@@ -362,12 +362,12 @@
                 "../apps/presentationeditor/embed/js/ApplicationController.js",
                 "../apps/presentationeditor/embed/js/application.js"
             ],
-            "dist": "../deploy/web-apps/apps/presentationeditor/embed/app-all.js"
+            "dist": "$BUILD_ROOT/web-apps/apps/presentationeditor/embed/app-all.js"
         },
         "less": {
             "files": {
                 "src": "../apps/presentationeditor/embed/resources/less/application.less",
-                "dist": "../deploy/web-apps/apps/presentationeditor/embed/resources/css/app-all.css"
+                "dist": "$BUILD_ROOT/web-apps/apps/presentationeditor/embed/resources/css/app-all.css"
             }
         },
         "copy": {
@@ -376,7 +376,7 @@
                     "expand": true,
                     "cwd": "../apps/presentationeditor/embed/locale/",
                     "src": "*",
-                    "dest": "../deploy/web-apps/apps/presentationeditor/embed/locale/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/presentationeditor/embed/locale/"
                 }
             ],
             "indexhtml": [
@@ -387,7 +387,7 @@
                         "*.html.deploy"
                     ],
                     "ext": ".html",
-                    "dest": "../deploy/web-apps/apps/presentationeditor/embed"
+                    "dest": "$BUILD_ROOT/web-apps/apps/presentationeditor/embed"
                 }
             ],
             "images-app": [
@@ -395,7 +395,7 @@
                     "expand": true,
                     "cwd": "../apps/common/embed/resources/img/",
                     "src": "**",
-                    "dest": "../deploy/web-apps/apps/presentationeditor/embed/resources/img/"
+                    "dest": "$BUILD_ROOT/web-apps/apps/presentationeditor/embed/resources/img/"
                 }
             ]
         }

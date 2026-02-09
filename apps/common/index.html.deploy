@@ -46,11 +46,11 @@
           window.frameEditorId = params["frameEditorId"];
           window.parentOrigin = params["parentOrigin"];
       </script>
-      <script src="../../../../apps/common/main/lib/util/themeinit.js?__inline=true"></script>
+      <script src="@@SRC_ROOT@@/apps/common/main/lib/util/themeinit.js?__inline=true"></script>
   </head>
   <body>
-      <script src="../../../../apps/common/main/lib/util/htmlutils.js?__inline=true"></script>
-      <script src="../../../../apps/common/checkExtendedPDF.js?__inline=true"></script>
+      <script src="@@SRC_ROOT@@/apps/common/main/lib/util/htmlutils.js?__inline=true"></script>
+      <script src="@@SRC_ROOT@@/apps/common/checkExtendedPDF.js?__inline=true"></script>
       <div id="loading-mask" class="loadmask"></div>
       <script>
           listenApiMsg(function (isform) {

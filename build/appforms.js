@@ -30,18 +30,22 @@
  *
  */
 
-module.exports = (grunt) => {
+module.exports = (grunt, replaceDeployPaths) => {
     grunt.registerTask('forms-app-init', function() {
         const packageFile = global.packageFile;
         if ( !global.packageFile )
             grunt.log.ok('no package file'.red);
         else {
-            const config = require('./appforms.json');
+            config = require('./appforms.json');
             if ( config ) {
                 //packageFile.tasks.deploy.push(...config.tasks.deploy);
+                config = replaceDeployPaths(config)
                 packageFile.forms = config.forms;
             }
         }
+
+        let path = require('path');
+        const SRC_ROOT = path.resolve(__dirname, "..")
 
         grunt.initConfig({
             pkg: packageFile,
@@ -111,6 +115,14 @@ module.exports = (grunt) => {
                         to: packageFile.version
                     }, ...global.jsreplacements]
                 },
+                indexhtml: {
+                    src: packageFile.forms.copy.indexhtml[0].dest + '/*.html',
+                    overwrite: true,
+                    replacements: [{
+                        from: /\@\@SRC_ROOT\@\@/g,
+                        to: SRC_ROOT
+                    }]
+                }
             },
 
             inline: {
@@ -160,6 +172,6 @@ module.exports = (grunt) => {
     });
 
     grunt.registerTask('deploy-app-forms', ['forms-app-init', 'clean:prebuild', /*'imagemin',*/ 'less',
-                                                            'requirejs', 'babel', 'terser', 'concat', 'copy', 'inline', /*'json-minify',*/
+                                                            'requirejs', 'babel', 'terser', 'concat', 'copy','replace:indexhtml', 'inline', /*'json-minify',*/
                                                             'replace:varsEnviroment', /*'replace:prepareHelp',*/ 'clean:postbuild']);
 }
