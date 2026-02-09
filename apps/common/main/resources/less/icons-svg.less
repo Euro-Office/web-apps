@@ -1,0 +1,155 @@
+// ==========================================================================
+// SVG Icon System
+// ==========================================================================
+// Modern SVG sprite-based icons that scale perfectly and support theming
+// via CSS color properties.
+//
+// Usage:
+//   <svg class="svg-icon"><use href="path/to/icons.svg#icon-name"></use></svg>
+//
+// Icons inherit color from their parent via currentColor, so they
+// automatically adapt to theme colors.
+// ==========================================================================
+
+// Base icon styles
+.svg-icon {
+    display: inline-block;
+    vertical-align: middle;
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    stroke: currentColor;
+    pointer-events: none;  // Allow clicks to pass through to parent button
+
+    // Default to no fill for stroke-based icons
+    &.stroke-icon {
+        fill: none;
+    }
+}
+
+// Size variants matching existing icon sizes
+.svg-icon-small,
+.svg-icon.icon-small {
+    width: 20px;
+    width: var(--x-small-btn-icon-size, 20px);
+    height: 20px;
+    height: var(--x-small-btn-icon-size, 20px);
+}
+
+.svg-icon-big,
+.svg-icon.icon-big {
+    width: 28px;
+    width: var(--x-huge-btn-icon-size, 28px);
+    height: 28px;
+    height: var(--x-huge-btn-icon-size, 28px);
+}
+
+.svg-icon-huge,
+.svg-icon.icon-huge {
+    width: 32px;
+    height: 32px;
+}
+
+// Color classes for explicit coloring
+.svg-icon {
+    // Gray icons (default toolbar icons)
+    &.icon-gray {
+        color: @icon-normal-ie;
+        color: @icon-normal;
+    }
+
+    // Primary colored icons
+    &.icon-primary {
+        color: @brand-primary;
+    }
+
+    // Success/warning/danger states
+    &.icon-success { color: @brand-success; }
+    &.icon-warning { color: @brand-warning; }
+    &.icon-danger { color: @brand-danger; }
+}
+
+// ==========================================================================
+// Toolbar integration
+// ==========================================================================
+
+// Toolbar icons (standard buttons)
+.btn-toolbar .svg-icon {
+    color: @icon-normal-ie;
+    color: @icon-normal;
+}
+
+.btn-toolbar:hover:not(.disabled) .svg-icon {
+    opacity: var(--component-hover-icon-opacity, 0.8);
+}
+
+.btn-toolbar.active:not(.disabled) .svg-icon,
+.btn-toolbar:active:not(.disabled) .svg-icon {
+    color: @icon-normal-pressed-ie;
+    color: @icon-normal-pressed;
+}
+
+.btn-toolbar.disabled .svg-icon,
+.btn-toolbar[disabled] .svg-icon {
+    opacity: var(--component-disabled-opacity, 0.4);
+}
+
+// Header toolbar icons (white on colored background)
+.toolbar .extra .svg-icon,
+.btn-header .svg-icon,
+#box-document-title .svg-icon {
+    color: @icon-toolbar-header-ie;
+    color: @icon-toolbar-header;
+}
+
+// Large toolbar buttons (x-huge)
+.btn-toolbar.x-huge .svg-icon,
+.btn-group.x-huge .svg-icon {
+    width: 28px;
+    width: var(--x-huge-btn-icon-size, 28px);
+    height: 28px;
+    height: var(--x-huge-btn-icon-size, 28px);
+}
+
+// ==========================================================================
+// Menu integration
+// ==========================================================================
+
+.dropdown-menu .svg-icon,
+.menu__icon.svg-icon {
+    color: @icon-normal-ie;
+    color: @icon-normal;
+    margin-right: 8px;
+}
+
+.dropdown-menu li:hover .svg-icon {
+    color: @icon-normal-pressed-ie;
+    color: @icon-normal-pressed;
+}
+
+// ==========================================================================
+// State modifiers
+// ==========================================================================
+
+// Active state
+.btn.active .svg-icon,
+.btn:active .svg-icon {
+    color: @icon-normal-pressed-ie;
+    color: @icon-normal-pressed;
+}
+
+// Disabled state
+.btn.disabled .svg-icon,
+.btn[disabled] .svg-icon {
+    opacity: var(--component-disabled-opacity, 0.4);
+}
+
+// ==========================================================================
+// RTL Support
+// ==========================================================================
+
+.rtl {
+    .svg-icon.icon-rtl-flip {
+        transform: scaleX(-1);
+    }
+}
