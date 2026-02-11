@@ -36,7 +36,8 @@ define([
     'common/main/lib/util/utils',
     'common/main/lib/component/InputField',
     'common/main/lib/component/Button',
-    'common/main/lib/component/Menu'
+    'common/main/lib/component/Menu',
+    'common/main/lib/component/ComboBox',
 ], function ($, _, Backbone) {
     'use strict';
 
@@ -83,9 +84,9 @@ define([
                                             'data-stopPropagation="true"',
                                             '<% } %>', '>',
                                             '<label class="title">' + this.textZoom + '</label>',
-                                            '<button id="id-menu-zoom-in" type="button" style="float:right; margin: 2px 5px 0 0;" class="btn btn-toolbar"><i class="mi-icon svg-icon zoom-in">&nbsp;</i></button>',
-                                            '<label class="zoom"><%= options.value %>%</label>',
-                                            '<button id="id-menu-zoom-out" type="button" style="float:right; margin-top: 2px;" class="btn btn-toolbar"><i class="mi-icon svg-icon zoom-out">&nbsp;</i></button>',
+                                            '<div class="elset" style="display: flex;">',
+                                                '<span class="btn-slot slot-field-zoom" style="flex-grow: 1;"></span>',
+                                            '</div>',
                                             '</div>'
                                         ].join('')),
                                         stopPropagation: true,
@@ -106,6 +107,29 @@ define([
             this.btnOptions.render($('#box-tools'));
             this.btnOptions.menu.items[2].cmpEl.addClass('small-resolution');
             this.btnOptions.menu.items[4].cmpEl.addClass('small-resolution');
+
+            this.cmbZoom = new Common.UI.ComboBox({
+                cls: 'input-group-nr',
+                menuStyle: 'min-width: 55px;',
+                editable: true,
+                data: [
+                    { displayValue: "50%", value: 50 },
+                    { displayValue: "75%", value: 75 },
+                    { displayValue: "100%", value: 100 },
+                    { displayValue: "125%", value: 125 },
+                    { displayValue: "150%", value: 150 },
+                    { displayValue: "175%", value: 175 },
+                    { displayValue: "200%", value: 200 },
+                    { displayValue: "300%", value: 300 },
+                    { displayValue: "400%", value: 400 },
+                    { displayValue: "500%", value: 500 }
+                ],
+                dataHint    : '1',
+                dataHintDirection: 'top',
+                dataHintOffset: 'small'
+            });
+            this.cmbZoom.setValue(100);
+            this.cmbZoom.render($('.slot-field-zoom'));
 
             this.btnClear = new Common.UI.Button({
                 cls: 'btn-toolbar',
@@ -215,6 +239,31 @@ define([
                     { caption: this.textPaste, value: 'paste', iconCls: 'mi-icon svg-icon paste' }
                 ]
             });
+        },
+
+        getZoomCombo: function() {
+            var combo = new Common.UI.ComboBox({
+                cls: 'input-group-nr',
+                menuStyle: 'min-width: 55px;',
+                editable: true,
+                data: [
+                    { displayValue: "50%", value: 50 },
+                    { displayValue: "75%", value: 75 },
+                    { displayValue: "100%", value: 100 },
+                    { displayValue: "125%", value: 125 },
+                    { displayValue: "150%", value: 150 },
+                    { displayValue: "175%", value: 175 },
+                    { displayValue: "200%", value: 200 },
+                    { displayValue: "300%", value: 300 },
+                    { displayValue: "400%", value: 400 },
+                    { displayValue: "500%", value: 500 }
+                ],
+                dataHint    : '1',
+                dataHintDirection: 'top',
+                dataHintOffset: 'small'
+            });
+            combo.setValue(100);
+            return combo;
         },
 
         txtDownload: 'Download',

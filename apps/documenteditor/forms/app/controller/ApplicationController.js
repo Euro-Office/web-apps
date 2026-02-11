@@ -1732,6 +1732,8 @@ define([
             this.view.mnuZoom.items[1].setChecked(type == 1, true);
             this.view.mnuZoom.options.value = percent;
 
+            this.setZoomValue(percent);
+
             if ( this.view.mnuZoom.$el )
                 $('.menu-zoom label.zoom', this.view.mnuZoom.$el).html(percent + '%');
         },
@@ -1937,6 +1939,13 @@ define([
             $('#id-menu-zoom-out').on('click', _.bind(this.onBtnZoom, this,'down'));
             this.view.btnOptions.menu.on('item:click', _.bind(this.onOptionsClick, this));
             this.view.mnuZoom.on('item:click', _.bind(this.onMenuZoomClick, this));
+            this.view.cmbZoom
+                .on('combo:focusin', _.bind(me.onComboOpen, this, false))
+                .on('show:after', _.bind(me.onComboOpen, this, true))
+                .on('selected', _.bind(me.onSelectedZoomValue, me))
+                .on('changed:before',_.bind(me.onZoomChanged, me, true))
+                .on('changed:after', _.bind(me.onZoomChanged, me, false))
+                .on('combo:blur',    _.bind(me.onComboBlur, me, false));
 
 
             // pages
@@ -1996,6 +2005,52 @@ define([
                     }, 2000);
                 }
             });
+        },
+
+        onComboOpen: function(needfocus, combo, e, params) {
+            if (params && params.fromKeyDown) return;
+            _.delay(function() {
+                var input = $('input', combo.cmpEl).select();
+                if (needfocus) input.focus();
+                else if (!combo.isMenuOpen()) input.one('mouseup', function (e) { e.preventDefault(); });
+            }, 10);
+        },
+
+        onSelectedZoomValue: function (combo, record) {
+            this.applyZoom(record.value);
+        },
+
+        applyZoom: function (value) {
+            var val = Math.max(10, Math.min(500, value));
+            if (this._state.zoomValue === val)
+                this.setZoomValue(this._state.zoomValue);
+            this.api.zoom(val);
+            Common.NotificationCenter.trigger('edit:complete', this.view);
+        },
+
+        setZoomValue: function(value) {
+            this.view && this.view.cmbZoom && this.view.cmbZoom.setValue(value, value + '%');
+        },
+
+        onZoomChanged: function (before, combo, record, e) {
+            var value = parseFloat(record.value);
+            if (before) {
+                var expr = new RegExp('^\\s*(\\d*(\\.|,)?\\d+)\\s*(%)?\\s*$');
+                if (!expr.exec(record.value)) {
+                    this.setZoomValue(this._state.zoomValue);
+                    Common.NotificationCenter.trigger('edit:complete', this.view);
+                }
+            } else {
+                if (this._state.zoomValue !== value && !isNaN(value)) {
+                    this.applyZoom(value);
+                } else if (record.value !== this._state.zoomValue + '%') {
+                    this.setZoomValue(this._state.zoomValue);
+                }
+            }
+        },
+
+        onComboBlur: function() {
+            Common.NotificationCenter.trigger('edit:complete', this.view);
         },
 
         onContextMenu: function(event){
