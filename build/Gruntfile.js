@@ -30,6 +30,8 @@
  *
  */
 module.exports = function(grunt) {
+    require('time-grunt')(grunt);
+
     var _ = require('lodash'),
         defaultConfig,
         packageFile;
