@@ -171,7 +171,9 @@ module.exports = (grunt, replaceDeployPaths) => {
         });
     });
 
+    var babelTask = grunt.option('skip-babel') ? [] : ['babel', 'terser:iecompat'];
+
     grunt.registerTask('deploy-app-forms', ['forms-app-init', 'clean:prebuild', /*'imagemin',*/ 'less',
-                                                            'requirejs', 'babel', 'terser', 'concat', 'copy','replace:indexhtml', 'inline', /*'json-minify',*/
+                                                            'requirejs', ...babelTask, 'terser:build', 'terser:postload', 'concat', 'copy','replace:indexhtml', 'inline', /*'json-minify',*/
                                                             'replace:varsEnviroment', /*'replace:prepareHelp',*/ 'clean:postbuild']);
 }
