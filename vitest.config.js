@@ -19,6 +19,10 @@ export default {
       '@common-ios-icons': path.resolve(__dirname, 'apps/common/mobile/resources/icons/ios'),
       '@common-android-icons': path.resolve(__dirname, 'apps/common/mobile/resources/icons/android'),
 
+      // Per-editor icon alias — webpack sets this dynamically per build.
+      // For tests, we stub SVGs anyway so the path just needs to resolve.
+      '@icons': path.resolve(__dirname, 'apps/documenteditor/mobile/resources/icons/common'),
+
       // Stub framework7 — not installed here, and not needed for logic tests.
       // When component tests need real F7, add it to package.json.
       'framework7-react': path.resolve(__dirname, 'vitest.stubs/framework7-react.js'),

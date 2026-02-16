@@ -8,6 +8,7 @@ import {
     initThemeColors as commonInitThemeColors,
     icons
 } from '../../../../common/mobile/lib/editor';
+import { getApi } from '../../../../common/mobile/lib/sdk/api';
 
 /**
  * Renders the edit and add toolbar buttons
@@ -62,7 +63,7 @@ export const initThemeColors = commonInitThemeColors;
  * @param {object} storeTextSettings - MobX store for text settings
  */
 export const initFonts = (storeTextSettings) => {
-    const api = Common.EditorApi.get();
+    const api = getApi();
     api.asc_registerCallback('asc_onInitEditorFonts', (fonts, select) => {
         storeTextSettings.initEditorFonts(fonts, select);
     });
@@ -92,7 +93,7 @@ export const initFonts = (storeTextSettings) => {
  * @param {object} storeSlideSettings - MobX store for slide settings
  */
 export const initEditorStyles = (storeSlideSettings) => {
-    const api = Common.EditorApi.get();
+    const api = getApi();
     api.asc_registerCallback('asc_onInitEditorStyles', (styles) => {
         let standardThemes = styles[0] || [];
         let customThemes = styles[1] || [];
@@ -120,7 +121,7 @@ export const initEditorStyles = (storeSlideSettings) => {
  * @param {object} storeFocusObjects - MobX store for focus objects
  */
 export const initFocusObjects = (storeFocusObjects) => {
-    Common.EditorApi.get().asc_registerCallback('asc_onFocusObject', (objects) => {
+    getApi().asc_registerCallback('asc_onFocusObject', (objects) => {
         storeFocusObjects.resetFocusObjects(objects);
     });
 
@@ -205,7 +206,7 @@ export const initFocusObjects = (storeFocusObjects) => {
  * @param {object} storeTableSettings - MobX store for table settings
  */
 export const initTableTemplates = (storeTableSettings) => {
-    Common.EditorApi.get().asc_registerCallback('asc_onInitTableTemplates', (styles) => {
+    getApi().asc_registerCallback('asc_onInitTableTemplates', (styles) => {
         storeTableSettings.initTableTemplates(styles);
     });
 };
@@ -216,7 +217,7 @@ export const initTableTemplates = (storeTableSettings) => {
  * @param {object} storeFocusObjects - MobX store for focus objects
  */
 export const updateChartStyles = (storeChartSettings, storeFocusObjects) => {
-    const api = Common.EditorApi.get();
+    const api = getApi();
     api.asc_registerCallback('asc_onUpdateChartStyles', () => {
         if (storeFocusObjects.chartObject) {
             storeChartSettings.updateChartStyles(
@@ -261,7 +262,7 @@ export const ContextMenu = {
         const _t = t('ContextMenu', { returnObjects: true });
         const { canViewComments, isDisconnected, isVersionHistoryMode } = controller.props;
 
-        const api = Common.EditorApi.get();
+        const api = getApi();
         const stack = api.getSelectedElements();
         const canCopy = api.can_CopyCut();
 
@@ -370,7 +371,7 @@ export const ContextMenu = {
      * @returns {boolean} True if action was handled, false otherwise
      */
     handleMenuItemClick(controller, action) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
 
         const actionHandlers = {
             cut: () => api.Cut(),

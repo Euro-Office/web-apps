@@ -5,6 +5,34 @@ import { f7 } from 'framework7-react';
 import { useTranslation } from 'react-i18next';
 import ToolbarView from "../view/Toolbar";
 import {LocalStorage} from "../../../../common/mobile/utils/LocalStorage.mjs";
+import { getApi } from '../../../../common/mobile/lib/sdk/api';
+
+/**
+ * Strip the file extension from a document name, if it matches.
+ * @param {string} name - The file name to process
+ * @param {string} ext - The expected file extension
+ * @returns {string} Name without extension, or original name if no match
+ */
+export const cutDocName = (name, ext) => {
+    if (name.length <= ext.length) return name;
+    const idx = name.length - ext.length;
+    return name.substring(idx) == ext ? name.substring(0, idx) : name;
+};
+
+/**
+ * Parse goback config to determine if back button should be shown.
+ * @param {object} data - The init event data
+ * @returns {boolean|null} true if back should show, null if config doesn't apply
+ */
+export const parseGobackConfig = (data) => {
+    if (data && data.config && data.config?.canBackToFolder !== false && data.config?.customization && data.config?.customization.goback) {
+        const canback = data.config.customization.close === undefined ?
+            data.config.customization.goback.url || data.config.customization.goback.requestClose && data.config.canRequestClose :
+            data.config.customization.goback.url && !data.config.customization.goback.requestClose;
+        return !!canback;
+    }
+    return null;
+};
 
 const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'storeFocusObjects', 'storeToolbarSettings','storeDocumentInfo', 'storeVersionHistory')(observer(props => {
     const {t} = useTranslation();
@@ -64,7 +92,7 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
     }, []);
 
     useEffect(() => {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         const navbarHeight = getNavbarTotalHeight();
 
         const onEngineCreated = api => {
@@ -81,7 +109,7 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
         }
 
         return () => {
-            const api = Common.EditorApi.get();
+            const api = getApi();
 
             if (api && isViewer && navbarHeight) {
                 api.SetMobileTopOffset(navbarHeight, navbarHeight);
@@ -109,7 +137,7 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
     // Scroll handler
 
     const scrollHandler = offset => {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         const navbarHeight = getNavbarTotalHeight();
         const isSearchbarEnabled = document.querySelector('.subnavbar .searchbar')?.classList.contains('searchbar-enabled');
 
@@ -139,16 +167,12 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
     // Back button
     const [isShowBack, setShowBack] = useState(appOptions.canBackToFolder);
     const loadConfig = (data) => {
-        if (data && data.config && data.config?.canBackToFolder !== false && data.config?.customization && data.config?.customization.goback) {
-            const canback = data.config.customization.close === undefined ?
-                data.config.customization.goback.url || data.config.customization.goback.requestClose && data.config.canRequestClose :
-                data.config.customization.goback.url && !data.config.customization.goback.requestClose;
-            canback && setShowBack(true);
-        }
+        const result = parseGobackConfig(data);
+        if (result) setShowBack(true);
     };
 
     const onRequestClose = () => {
-        const api = Common.EditorApi.get();
+        const api = getApi();
 
         if (api.isDocumentModified()) {
             api.asc_stopSaving();
@@ -195,14 +219,14 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
     }
 
     const onUndo = () => {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         if (api) {
             api.Undo();
         }
     };
 
     const onRedo = () => {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         if (api) {
             api.Redo();
         }
@@ -226,7 +250,7 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
     };
 
     const turnOnViewerMode = () => {
-        const api = Common.EditorApi.get();
+        const api = getApi();
 
         f7.popover.close('.document-menu.modal-in', false);
 
@@ -236,7 +260,7 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
     }
 
     const changeMobileView = () => {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         LocalStorage.setBool('mobile-view', !appOptions.isMobileView);
         appOptions.changeMobileView();
         api.ChangeReaderMode();
@@ -261,7 +285,7 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
     const changeTitleHandler = () => {
         if(!appOptions.canRename) return;
 
-        const api = Common.EditorApi.get();
+        const api = getApi();
         api.asc_enableKeyEvents(true);
 
         f7.dialog.create({
@@ -328,20 +352,15 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
         }).open();
     }
 
-    const cutDocName = name => {
-        if(name.length <= docExt.length) return name;
-        const idx = name.length - docExt.length;
-
-        return name.substring(idx) == docExt ? name.substring(0, idx) : name;
-    };
+    const cutName = name => cutDocName(name, docExt);
 
     const changeTitle = (name) => {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         const docInfo = storeDocumentInfo.docInfo;
         const currentTitle = `${name}.${docExt}`;
         let formatName = name.trim();
 
-        if(formatName.length > 0 && cutDocName(currentTitle) !== formatName) {
+        if(formatName.length > 0 && cutName(currentTitle) !== formatName) {
             if(/[\t*\+:\"<>?|\\\\/]/gim.test(formatName)) {
                 f7.dialog.create({
                     title: t('Edit.notcriticalErrorTitle'),
@@ -355,7 +374,7 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
                 }).open();
             } else {
                 const wopi = appOptions.wopi;
-                formatName = cutDocName(formatName);
+                formatName = cutName(formatName);
 
                 if(wopi) {
                     api.asc_wopi_renameFile(formatName);
@@ -377,12 +396,12 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
     }
 
     const moveNextField = () => {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         api.asc_MoveToFillingForm(true);
     }
 
     const movePrevField = () => {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         api.asc_MoveToFillingForm(false);
     }
 
@@ -395,7 +414,7 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
     }
 
     const saveAsPdf = () => {
-        const api = Common.EditorApi.get();
+        const api = getApi();
 
         if (appOptions.isOffline) {
             api.asc_DownloadAs(new Asc.asc_CDownloadOptions(Asc.c_oAscFileType.PDF));
@@ -408,7 +427,7 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
     }
 
     const submitForm = () => {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         if (!api.asc_IsAllRequiredFormsFilled()) {
             f7.dialog.create({
                 title   : t('Main.notcriticalErrorTitle'),

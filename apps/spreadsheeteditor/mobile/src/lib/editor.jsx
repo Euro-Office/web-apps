@@ -7,6 +7,7 @@ import {
     initThemeColors as commonInitThemeColors,
     icons
 } from '../../../../common/mobile/lib/editor';
+import { getApi } from '../../../../common/mobile/lib/sdk/api';
 
 /**
  * Toolbar option components for spreadsheet editor
@@ -69,7 +70,7 @@ export const initThemeColors = commonInitThemeColors;
  * @param {object} props.storeChartSettings - Store for chart settings
  */
 export const initCellInfo = (props) => {
-    const api = Common.EditorApi.get();
+    const api = getApi();
     const storeFocusObjects = props.storeFocusObjects;
     const storeCellSettings = props.storeCellSettings;
     const storeTextSettings = props.storeTextSettings;
@@ -138,7 +139,7 @@ export const initCellInfo = (props) => {
 
         // Determine graphic object types
         if (isImage || isShape || isChart || isShapeText || isChartText) {
-            const graphicObjects = Common.EditorApi.get().asc_getGraphicObjectProps();
+            const graphicObjects = getApi().asc_getGraphicObjectProps();
             if (isImage || isShape || isChart) {
                 isImage = isShape = isChart = false;
             }
@@ -185,7 +186,7 @@ export const initCellInfo = (props) => {
  * @param {object} storeCellSettings - MobX store for cell settings
  */
 export const initEditorStyles = (storeCellSettings) => {
-    Common.EditorApi.get().asc_registerCallback('asc_onInitEditorStyles', (styles) => {
+    getApi().asc_registerCallback('asc_onInitEditorStyles', (styles) => {
         storeCellSettings.initCellStyles(styles);
     });
 };
@@ -197,7 +198,7 @@ export const initEditorStyles = (storeCellSettings) => {
  * @param {object} props.storeTextSettings - Store for text settings
  */
 export const initFonts = (props) => {
-    const api = Common.EditorApi.get();
+    const api = getApi();
     const storeCellSettings = props.storeCellSettings;
     const storeTextSettings = props.storeTextSettings;
 
@@ -239,7 +240,7 @@ export const ContextMenu = {
         const _t = t('ContextMenu', { returnObjects: true });
         const { canViewComments, isDisconnected, wsProps, wsLock, isResolvedComments, isVersionHistoryMode } = controller.props;
 
-        const api = Common.EditorApi.get();
+        const api = getApi();
         const cellInfo = api.asc_getCellInfo();
         const isPivot = !!cellInfo.asc_getPivotTableInfo();
         const canFillHandle = api.asc_canFillHandle();
@@ -394,7 +395,7 @@ export const ContextMenu = {
      * @returns {boolean} True if action was handled, false otherwise
      */
     handleMenuItemClick(controller, action) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         const cellInfo = api.asc_getCellInfo();
         const isRow = cellInfo.asc_getSelectionType() === Asc.c_oAscSelectionType.RangeRow;
 

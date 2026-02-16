@@ -19,7 +19,7 @@ const dim = (s) => `\x1b[2m${s}\x1b[0m`;
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
 const vendorModules = join(root, 'vendor/framework7-react/node_modules');
 
-const depsToCheck = ['react', 'react-dom', 'mobx', 'mobx-react', 'i18next'];
+const depsToCheck = ['react', 'react-dom', 'mobx', 'mobx-react', 'i18next', 'react-i18next'];
 const mismatches = [];
 
 for (const dep of depsToCheck) {
