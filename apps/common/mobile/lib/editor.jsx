@@ -1,6 +1,7 @@
 import React from 'react';
 import { Device } from '../utils/device';
 import SvgIcon from './component/SvgIcon';
+import { getApi } from './sdk/api';
 import IconEditSettingsIos from '@common-ios-icons/icon-edit-settings.svg?ios';
 import IconEditSettingsAndroid from '@common-android-icons/icon-edit-settings.svg';
 import IconAddOtherIos from '@common-ios-icons/icon-add-other.svg?ios';
@@ -70,7 +71,7 @@ export const buildFocusObjectGetters = (storeFocusObjects, types) => {
  * Common theme colors initialization - identical across all editors
  */
 export const initThemeColors = () => {
-    Common.EditorApi.get().asc_registerCallback('asc_onSendThemeColors', (colors, standartColors) => {
+    getApi().asc_registerCallback('asc_onSendThemeColors', (colors, standartColors) => {
         Common.Utils.ThemeColor.setColors(colors, standartColors);
     });
 };
