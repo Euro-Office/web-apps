@@ -194,6 +194,53 @@ The idea is to use variables set in the `theme` file as much as possible, and us
 
 The `overrides` directory should match the structure of the existing app. It is only when it is not possible to accomplish the styling using variables.
 
+## Testing
+
+Mobile editor tests use [Vitest](https://vitest.dev/) and live co-located with source files in `__tests__/` directories.
+
+### Why a separate `package.json`?
+
+This project has three `package.json` files, each owning a distinct concern:
+
+| File | Purpose |
+|------|---------|
+| `build/package.json` | Grunt build tools (desktop editor) |
+| `vendor/framework7-react/package.json` | Webpack build + runtime deps (mobile editor) |
+| `package.json` (root) | Test infrastructure (Vitest, Testing Library) |
+
+The root `package.json` exists because:
+
+- `vendor/` should remain immutable — it tracks upstream dependencies and shouldn't be coupled to our test tooling
+- `build/` owns the Grunt pipeline — mixing test deps there conflates two unrelated concerns
+- Runtime deps (react, mobx) are pinned to exact versions matching `vendor/framework7-react/node_modules/` to ensure tests run against the same code the app ships
+
+### Running tests
+
+Tests must run inside the Docker container (the host is ARM64, dependencies are x64).
+
+First, start the dev environment from `fork/develop/`:
+
+```bash
+cd fork/develop
+make local       # starts containers and opens a shell in eo
+```
+
+Then inside the container:
+
+```bash
+cd /develop/web-apps
+npm install       # first time only
+npm test          # watch mode
+npm run test:run  # single run
+```
+
+Or without an interactive shell:
+
+```bash
+# From fork/develop/
+docker compose exec eo bash -c 'cd /develop/web-apps && npm run test:run'
+```
+
 ## License
 
 web-apps is released under an GNU AGPL v3.0 license. See the LICENSE file for more information.
