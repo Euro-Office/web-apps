@@ -1,0 +1,21 @@
+{
+  "name": "web-apps-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "pretest": "node scripts/check-dep-versions.js",
+    "test": "vitest",
+    "test:run": "node scripts/check-dep-versions.js && vitest run"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "jsdom": "^25.0.1",
+    "vitest": "^2.1.8",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "mobx": "6.13.6",
+    "mobx-react": "9.2.0",
+    "i18next": "25.2.1"
+  }
+}
