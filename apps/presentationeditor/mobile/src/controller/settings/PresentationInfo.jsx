@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PresentationInfo from "../../view/settings/PresentationInfo";
+import PresentationInfo from "../../view/settings/PresentationInfo.jsx";
 import { observer, inject } from "mobx-react";
 
 class PresentationInfoController extends Component {

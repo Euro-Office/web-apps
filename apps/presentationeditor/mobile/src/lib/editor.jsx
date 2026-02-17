@@ -1,14 +1,14 @@
 import React, { Fragment } from 'react';
 import { Link } from 'framework7-react';
-import { Device } from '../../../../common/mobile/utils/device';
-import { CommentsController, ViewCommentsController } from '../../../../common/mobile/lib/controller/collaboration/Comments';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
+import { CommentsController, ViewCommentsController } from '../../../../common/mobile/lib/controller/collaboration/Comments.jsx';
 import {
     PlatformIcon,
     buildFocusObjectGetters,
     initThemeColors as commonInitThemeColors,
     icons
-} from '../../../../common/mobile/lib/editor';
-import { getApi } from '../../../../common/mobile/lib/sdk/api';
+} from '../../../../common/mobile/lib/editor.jsx';
+import { getApi } from '../../../../common/mobile/lib/sdk/api.js';
 
 /**
  * Renders the edit and add toolbar buttons

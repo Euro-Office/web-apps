@@ -1,7 +1,7 @@
 import React, { memo, useEffect,useRef,useState } from 'react';
-import FilterView from '../../src/view/FilterOptions';
+import FilterView from '../../src/view/FilterOptions.jsx';
 import { f7,Sheet,Popover } from 'framework7-react';
-import { Device } from '../../../../common/mobile/utils/device';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 import { useTranslation } from 'react-i18next';
 
 const FilterOptionsController = memo(props => {

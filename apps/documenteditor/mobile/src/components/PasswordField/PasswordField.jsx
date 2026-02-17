@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Device } from '../../../../../common/mobile/utils/device';
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
 import SvgIcon from '@common/lib/component/SvgIcon';
 import IconShowPasswordAndroid from '@common-android-icons/icon-show-password.svg';
 import IconHidePasswordAndroid from '@common-android-icons/icon-hide-password.svg';

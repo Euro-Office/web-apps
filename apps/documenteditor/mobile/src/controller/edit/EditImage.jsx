@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import { f7 } from 'framework7-react';
-import {Device} from '../../../../../common/mobile/utils/device';
+import {Device} from '../../../../../common/mobile/utils/device.jsx';
 import {observer, inject} from "mobx-react";
 
-import { EditImage } from '../../view/edit/EditImage'
+import { EditImage } from '../../view/edit/EditImage.jsx'
 
 class EditImageController extends Component {
     constructor (props) {

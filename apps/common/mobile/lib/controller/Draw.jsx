@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { DrawView } from "../view/Draw";
+import { DrawView } from "../view/Draw.jsx";
 import { inject, observer } from "mobx-react";
-import { Device } from "../../utils/device";
+import { Device } from "../../utils/device.jsx";
 import { LocalStorage } from '../../utils/LocalStorage.mjs';
 
 const DEFAULT_TOOL_SETTINGS = {

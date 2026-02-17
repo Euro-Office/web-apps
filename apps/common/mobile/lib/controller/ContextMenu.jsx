@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { f7 } from 'framework7-react';
-import { Device } from '../../../../common/mobile/utils/device';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 
-import ContextMenuView, { idContextMenuElement, ActionsWithExtraItems } from '../view/ContextMenu';
+import ContextMenuView, { idContextMenuElement, ActionsWithExtraItems } from '../view/ContextMenu.jsx';
 
 const idCntextMenuTargetElement = '#idx-context-menu-target';
 

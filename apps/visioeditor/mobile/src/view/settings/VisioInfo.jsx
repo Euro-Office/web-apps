@@ -2,7 +2,7 @@ import React, { Fragment, useContext } from "react";
 import { observer, inject } from "mobx-react";
 import { Page, Navbar, List, ListItem, BlockTitle } from "framework7-react";
 import { useTranslation } from "react-i18next";
-import { SettingsContext } from "../../controller/settings/Settings";
+import { SettingsContext } from "../../controller/settings/Settings.jsx";
 
 const PageVisioInfo = (props) => {
     const { t } = useTranslation();

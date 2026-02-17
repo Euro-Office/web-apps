@@ -1,4 +1,4 @@
-import * as Editor from './editor';
+import * as Editor from './editor.jsx';
 
 const EditorUIController = () => null;
 

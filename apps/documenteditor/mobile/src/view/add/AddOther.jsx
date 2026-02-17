@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import {observer, inject} from "mobx-react";
 import {List, ListItem, Page, Navbar, Icon, ListButton, BlockTitle, Segmented, Button} from 'framework7-react';
 import { useTranslation } from 'react-i18next';
-import {Device} from "../../../../../common/mobile/utils/device";
-import SvgIcon from '../../../../../common/mobile//lib/component/SvgIcon'
+import {Device} from "../../../../../common/mobile/utils/device.jsx";
+import SvgIcon from '../../../../../common/mobile//lib/component/SvgIcon.jsx'
 import IconDraw from '../../../../../common/mobile/resources/icons/draw.svg'
 import IconPageBreakIos from '@common-ios-icons/icon-pagebreak.svg?ios';
 import IconPageBreakAndroid from '@common-android-icons/icon-pagebreak.svg';

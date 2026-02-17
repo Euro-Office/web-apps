@@ -1,5 +1,5 @@
 import React from 'react';
-import { CSSTransition } from '../../../../../common/mobile/lib/component/CSSTransition'
+import { CSSTransition } from '../../../../../common/mobile/lib/component/CSSTransition.js'
 
 const Snackbar = ({ isShowSnackbar, message, closeCallback }) => {
   return (

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { inject, observer } from 'mobx-react';
 import { f7 } from 'framework7-react';
 import { useTranslation } from 'react-i18next';
-import ToolbarView from "../view/Toolbar";
-import { Device } from '../../../../common/mobile/utils/device';
+import ToolbarView from "../view/Toolbar.jsx";
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 
 const ToolbarController = inject('storeAppOptions', 'users', 'storeToolbarSettings', 'storeVisioInfo')(observer(props => {
     const {t} = useTranslation();

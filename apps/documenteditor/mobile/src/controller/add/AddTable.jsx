@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import { f7 } from 'framework7-react';
-import {Device} from '../../../../../common/mobile/utils/device';
+import {Device} from '../../../../../common/mobile/utils/device.jsx';
 import {observer, inject} from "mobx-react";
 import { withTranslation } from 'react-i18next';
-import AddTable from '../../view/add/AddTable';
+import AddTable from '../../view/add/AddTable.jsx';
 
 class AddTableController extends Component {
     constructor (props) {

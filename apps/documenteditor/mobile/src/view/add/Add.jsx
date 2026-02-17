@@ -1,15 +1,15 @@
 import React, { useContext, useEffect } from 'react';
 import { View, Popup, Popover } from 'framework7-react';
 import { f7 } from 'framework7-react';
-import { Device } from '../../../../../common/mobile/utils/device';
-import { AddImageController } from "../../controller/add/AddImage";
-import { AddLinkController } from "../../controller/add/AddLink";
-import { PageImageLinkSettings } from "../add/AddImage";
-import { PageAddNumber, PageAddBreak, PageAddSectionBreak, PageAddFootnote } from "../add/AddOther";
-import AddTableContentsController from '../../controller/add/AddTableContents';
-import EditHyperlink from '../../controller/edit/EditHyperlink';
-import AddingPage from './AddingPage';
-import { MainContext } from '../../page/main';
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
+import { AddImageController } from "../../controller/add/AddImage.jsx";
+import { AddLinkController } from "../../controller/add/AddLink.jsx";
+import { PageImageLinkSettings } from "../add/AddImage.jsx";
+import { PageAddNumber, PageAddBreak, PageAddSectionBreak, PageAddFootnote } from "../add/AddOther.jsx";
+import AddTableContentsController from '../../controller/add/AddTableContents.jsx';
+import EditHyperlink from '../../controller/edit/EditHyperlink.jsx';
+import AddingPage from './AddingPage.jsx';
+import { MainContext } from '../../page/main.jsx';
 
 const routes = [
     {

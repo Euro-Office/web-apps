@@ -3,7 +3,7 @@ import { f7 } from 'framework7-react';
 import { withTranslation } from 'react-i18next';
 import {observer, inject} from "mobx-react";
 
-import AddSortAndFilter from '../../view/add/AddFilter';
+import AddSortAndFilter from '../../view/add/AddFilter.jsx';
 
 class AddFilterController extends Component {
     constructor (props) {

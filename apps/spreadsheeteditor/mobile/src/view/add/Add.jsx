@@ -1,16 +1,16 @@
 import React, { useContext, useEffect } from 'react';
 import { View, Popup, Popover, f7 } from 'framework7-react';
-import { Device } from '../../../../../common/mobile/utils/device';
-import { PageFunctionGroup, PageFunctionInfo } from "./AddFunction";
-import { AddImageController } from "../../controller/add/AddImage";
-import { PageImageLinkSettings } from "./AddImage";
-import { AddLinkController } from "../../controller/add/AddLink";
-import { EditLinkController } from "../../controller/edit/EditLink";
-import { PageTypeLink, PageSheet } from "./AddLink";
-import { PageEditTypeLink, PageEditSheet } from "../../view/edit/EditLink";
-import AddFilterController from "../../controller/add/AddFilter";
-import AddingPage from './AddingPage';
-import { MainContext } from '../../page/main';
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
+import { PageFunctionGroup, PageFunctionInfo } from "./AddFunction.jsx";
+import { AddImageController } from "../../controller/add/AddImage.jsx";
+import { PageImageLinkSettings } from "./AddImage.jsx";
+import { AddLinkController } from "../../controller/add/AddLink.jsx";
+import { EditLinkController } from "../../controller/edit/EditLink.jsx";
+import { PageTypeLink, PageSheet } from "./AddLink.jsx";
+import { PageEditTypeLink, PageEditSheet } from "../../view/edit/EditLink.jsx";
+import AddFilterController from "../../controller/add/AddFilter.jsx";
+import AddingPage from './AddingPage.jsx';
+import { MainContext } from '../../page/main.jsx';
 
 const routes = [
     {

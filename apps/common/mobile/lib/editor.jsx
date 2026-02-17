@@ -1,7 +1,7 @@
 import React from 'react';
-import { Device } from '../utils/device';
-import SvgIcon from './component/SvgIcon';
-import { getApi } from './sdk/api';
+import { Device } from '../utils/device.jsx';
+import SvgIcon from './component/SvgIcon.jsx';
+import { getApi } from './sdk/api.js';
 import IconEditSettingsIos from '@common-ios-icons/icon-edit-settings.svg?ios';
 import IconEditSettingsAndroid from '@common-android-icons/icon-edit-settings.svg';
 import IconAddOtherIos from '@common-ios-icons/icon-add-other.svg?ios';

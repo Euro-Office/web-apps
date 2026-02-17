@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { observer, inject } from "mobx-react";
-import ProtectionView from '../../view/settings/Protection';
+import ProtectionView from '../../view/settings/Protection.jsx';
 import { useTranslation } from 'react-i18next';
 import { f7 } from "framework7-react";
-import { Device } from '../../../../../common/mobile/utils/device';
-import Snackbar from '../../components/Snackbar/Snackbar';
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
+import Snackbar from '../../components/Snackbar/Snackbar.jsx';
 
 const ProtectionController = props => {
     const { t } = useTranslation();

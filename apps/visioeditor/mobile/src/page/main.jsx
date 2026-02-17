@@ -1,12 +1,12 @@
 import React, { Component, createContext } from 'react';
 import { f7, Page, View, Navbar, Subnavbar, Icon } from 'framework7-react';
 import { observer, inject } from "mobx-react";
-import { Device } from '../../../../common/mobile/utils/device';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 import CollaborationView from '../../../../common/mobile/lib/view/collaboration/Collaboration.jsx';
-import ContextMenu from '../controller/ContextMenu';
-import { Toolbar } from "../controller/Toolbar";
-import { Themes } from '../../../../common/mobile/lib/controller/Themes';
-import SettingsController from '../controller/settings/Settings';
+import ContextMenu from '../controller/ContextMenu.jsx';
+import { Toolbar } from "../controller/Toolbar.jsx";
+import { Themes } from '../../../../common/mobile/lib/controller/Themes.jsx';
+import SettingsController from '../controller/settings/Settings.jsx';
 
 export const MainContext = createContext();
 

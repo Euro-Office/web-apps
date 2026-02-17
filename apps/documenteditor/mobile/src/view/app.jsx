@@ -8,12 +8,12 @@ import '../../../../common/Analytics.js';
 import '../../../../common/Gateway.js';
 import '../../../../common/main/lib/util/utils.js';
 
-import routes from '../router/routes';
+import routes from '../router/routes.js';
 
 import Notifications from '../../../../common/mobile/utils/notifications.js'
-import {MainController} from '../controller/Main';
-import {Device} from '../../../../common/mobile/utils/device'
-import {Themes} from '../../../../common/mobile/lib/controller/Themes'
+import {MainController} from '../controller/Main.jsx';
+import {Device} from '../../../../common/mobile/utils/device.jsx'
+import {Themes} from '../../../../common/mobile/lib/controller/Themes.jsx'
 
 const f7params = {
     name: 'Desktop Editor', // App name

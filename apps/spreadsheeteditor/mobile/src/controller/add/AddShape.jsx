@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import { f7 } from 'framework7-react';
-import {Device} from '../../../../../common/mobile/utils/device';
+import {Device} from '../../../../../common/mobile/utils/device.jsx';
 
-import AddShape from '../../view/add/AddShape';
+import AddShape from '../../view/add/AddShape.jsx';
 
 class AddShapeController extends Component {
     constructor (props) {

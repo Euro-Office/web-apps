@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
-import DocumentInfo from "../../view/settings/DocumentInfo";
+import DocumentInfo from "../../view/settings/DocumentInfo.jsx";
 import { f7 } from 'framework7-react';
 import { withTranslation } from 'react-i18next';
-import { Device } from "../../../../../common/mobile/utils/device";
+import { Device } from "../../../../../common/mobile/utils/device.jsx";
 
 class DocumentInfoController extends Component {
     constructor(props) {

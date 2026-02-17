@@ -14,9 +14,9 @@ import '../../../../common/main/lib/util/utils.js';
 import '../../../../common/main/lib/util/LanguageInfo.js';
 import {LocalStorage} from '../../../../common/mobile/utils/LocalStorage.mjs';
 import Notifications from '../../../../common/mobile/utils/notifications.js';
-import {MainController} from '../controller/Main';
-import {Device} from '../../../../common/mobile/utils/device';
-import CellEditor from '../controller/CellEditor';
+import {MainController} from '../controller/Main.jsx';
+import {Device} from '../../../../common/mobile/utils/device.jsx';
+import CellEditor from '../controller/CellEditor.jsx';
 
 const f7params = {
     name: 'Spreadsheet Editor', // App name

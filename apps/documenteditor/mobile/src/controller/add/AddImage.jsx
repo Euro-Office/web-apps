@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import { f7 } from 'framework7-react';
-import {Device} from '../../../../../common/mobile/utils/device';
+import {Device} from '../../../../../common/mobile/utils/device.jsx';
 import { withTranslation} from 'react-i18next';
 
-import {AddImage} from '../../view/add/AddImage';
+import {AddImage} from '../../view/add/AddImage.jsx';
 
 class AddImageController extends Component {
     constructor (props) {

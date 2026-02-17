@@ -1,12 +1,12 @@
 import React, {Component, Fragment} from 'react';
 import { inject, observer } from "mobx-react";
 import { f7 } from 'framework7-react';
-import {Device} from '../../../../../common/mobile/utils/device';
+import {Device} from '../../../../../common/mobile/utils/device.jsx';
 import { withTranslation} from 'react-i18next';
 import { LocalStorage } from '../../../utils/LocalStorage.mjs';
 
-import {AddComment, EditComment, AddReply, EditReply, ViewComments, ViewCurrentComments} from '../../view/collaboration/Comments';
-import { getUserColor } from '../../../utils/getUserColor';
+import {AddComment, EditComment, AddReply, EditReply, ViewComments, ViewCurrentComments} from '../../view/collaboration/Comments.jsx';
+import { getUserColor } from '../../../utils/getUserColor.js';
 
 // utils
 const timeZoneOffsetInMs = (new Date()).getTimezoneOffset() * 60000;

@@ -4,10 +4,10 @@ import { inject, observer } from "mobx-react";
 import { withTranslation} from 'react-i18next';
 import { LocalStorage } from '../../../../common/mobile/utils/LocalStorage.mjs';
 
-import ContextMenuController from '../../../../common/mobile/lib/controller/ContextMenu';
-import { idContextMenuElement } from '../../../../common/mobile/lib/view/ContextMenu';
-// import { Device } from '../../../../common/mobile/utils/device';
-import EditorUIController from '../lib/patch';
+import ContextMenuController from '../../../../common/mobile/lib/controller/ContextMenu.jsx';
+import { idContextMenuElement } from '../../../../common/mobile/lib/view/ContextMenu.jsx';
+// import { Device } from '../../../../common/mobile/utils/device.jsx';
+import EditorUIController from '../lib/patch.jsx';
 
 @inject(stores => ({
     isEdit: stores.storeAppOptions.isEdit,

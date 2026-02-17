@@ -28,7 +28,7 @@ import App from './view/app.jsx';
 
 import { Provider } from 'mobx-react';
 import { stores } from './store/mainStore.js';
-// import { LocalStorage } from '../../../common/mobile/utils/LocalStorage';
+// import { LocalStorage } from '../../../common/mobile/utils/LocalStorage.mjs';
 
 const container = document.getElementById('app');
 

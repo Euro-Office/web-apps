@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { observer, inject } from "mobx-react";
-import VersionHistoryView from '../view/VersionHistory';
+import VersionHistoryView from '../view/VersionHistory.jsx';
 import { f7, Sheet, Popover, View } from 'framework7-react';
 import { useTranslation } from 'react-i18next';
-import { Device } from '../../../../common/mobile/utils/device';
-import { getUserColor } from '../../utils/getUserColor';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
+import { getUserColor } from '../../utils/getUserColor.js';
 
 const VersionHistoryController = inject('storeAppOptions', 'storeVersionHistory')(observer(props => {
     const api = Common.EditorApi.get();

@@ -26,7 +26,7 @@ import i18n from './lib/i18n.js';
 
 import { Provider } from 'mobx-react';
 import { stores } from './store/mainStore.js';
-// import { LocalStorage } from '../../../common/mobile/utils/LocalStorage';
+// import { LocalStorage } from '../../../common/mobile/utils/LocalStorage.mjs';
 
 const container = document.getElementById('app');
 const root = createRoot(container); 

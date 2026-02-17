@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { EditParagraph } from '../../view/edit/EditParagraph';
+import { EditParagraph } from '../../view/edit/EditParagraph.jsx';
 import {observer, inject} from "mobx-react";
 
 class EditParagraphController extends Component {

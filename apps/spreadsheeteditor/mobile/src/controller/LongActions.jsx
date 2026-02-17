@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { f7 } from 'framework7-react';
 import { inject } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
-import IrregularStack from "../../../../common/mobile/utils/IrregularStack";
-import { Device } from '../../../../common/mobile/utils/device';
+import IrregularStack from "../../../../common/mobile/utils/IrregularStack.js";
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 
 const LongActionsController = inject('storeAppOptions')(({storeAppOptions}) => {
     const {t} = useTranslation();

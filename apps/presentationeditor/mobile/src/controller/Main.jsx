@@ -4,17 +4,17 @@ import { inject } from "mobx-react";
 import { f7 } from "framework7-react";
 import { withTranslation } from 'react-i18next';
 import CollaborationController from '../../../../common/mobile/lib/controller/collaboration/Collaboration.jsx';
-import EditorUIController from '../lib/patch';
+import EditorUIController from '../lib/patch.jsx';
 import {
     CommentsController,
     ViewCommentsController
-} from "../../../../common/mobile/lib/controller/collaboration/Comments";
-import ErrorController from "./Error";
-import LongActionsController from "./LongActions";
+} from "../../../../common/mobile/lib/controller/collaboration/Comments.jsx";
+import ErrorController from "./Error.jsx";
+import LongActionsController from "./LongActions.jsx";
 import {LocalStorage} from "../../../../common/mobile/utils/LocalStorage.mjs";
-import About from '../../../../common/mobile/lib/view/About';
+import About from '../../../../common/mobile/lib/view/About.jsx';
 import PluginsController from '../../../../common/mobile/lib/controller/Plugins.jsx';
-import { Device } from '../../../../common/mobile/utils/device';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 import { Themes } from '../../../../common/mobile/lib/controller/Themes.jsx';
 import { processArrayScripts } from '../../../../common/mobile/utils/processArrayScripts.js';
 import '../../../../common/main/lib/util/LanguageInfo.js'

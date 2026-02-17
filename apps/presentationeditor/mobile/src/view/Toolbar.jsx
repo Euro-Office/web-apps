@@ -1,7 +1,7 @@
 import React, {Fragment, useEffect } from 'react';
 import {NavLeft, NavRight, Link} from 'framework7-react';
-import { Device } from '../../../../common/mobile/utils/device';
-import EditorUIController from '../lib/patch'
+import { Device } from '../../../../common/mobile/utils/device.jsx';
+import EditorUIController from '../lib/patch.jsx'
 import { useTranslation } from 'react-i18next';
 import SvgIcon from '@common/lib/component/SvgIcon'
 import IconSwitchToDesktop from '@common/resources/icons/switch-desktop.svg'

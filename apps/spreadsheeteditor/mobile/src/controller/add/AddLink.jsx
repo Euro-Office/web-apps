@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import { f7, Popup, Popover, View } from 'framework7-react';
-import {Device} from '../../../../../common/mobile/utils/device';
+import {Device} from '../../../../../common/mobile/utils/device.jsx';
 import {withTranslation} from 'react-i18next';
 
-import {AddLink, PageTypeLink, PageSheet} from '../../view/add/AddLink';
+import {AddLink, PageTypeLink, PageSheet} from '../../view/add/AddLink.jsx';
 
 const routes = [
     {

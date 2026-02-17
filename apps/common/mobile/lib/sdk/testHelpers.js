@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { setApiProvider, resetApiProvider } from './api';
+import { setApiProvider, resetApiProvider } from './api.js';
 
 /**
  * Creates a mock API object with the most commonly used methods.

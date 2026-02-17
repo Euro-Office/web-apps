@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import { EditText } from '../../view/edit/EditText'
+import { EditText } from '../../view/edit/EditText.jsx'
 import { inject, observer } from 'mobx-react';
-import { getApi } from '../../../../../common/mobile/lib/sdk/api';
+import { getApi } from '../../../../../common/mobile/lib/sdk/api.js';
 
 /**
  * Compute next font size, clamped to [1, 300].

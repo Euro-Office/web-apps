@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import { EditCell } from '../../view/edit/EditCell';
+import { EditCell } from '../../view/edit/EditCell.jsx';
 import { f7 } from 'framework7-react';
 import {observer, inject} from "mobx-react";
-import { Device } from '../../../../../common/mobile/utils/device';
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
 
 class EditCellController extends Component {
     constructor (props) {

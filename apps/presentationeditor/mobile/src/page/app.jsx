@@ -11,8 +11,8 @@ import '../../../../common/main/lib/util/utils.js';
 import routes from '../router/routes.js';
 
 import Notifications from '../../../../common/mobile/utils/notifications.js'
-import {MainController} from '../controller/Main';
-import {Device} from '../../../../common/mobile/utils/device'
+import {MainController} from '../controller/Main.jsx';
+import {Device} from '../../../../common/mobile/utils/device.jsx'
 
     // Framework7 Parameters
 const f7params = {

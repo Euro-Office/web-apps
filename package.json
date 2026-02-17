@@ -1,11 +1,10 @@
 {
   "name": "web-apps-tests",
   "private": true,
-  "type": "module",
   "scripts": {
-    "pretest": "node scripts/check-dep-versions.js",
+    "pretest": "node scripts/check-dep-versions.mjs",
     "test": "vitest --reporter=verbose",
-    "test:run": "node scripts/check-dep-versions.js && vitest run --reporter=verbose"
+    "test:run": "node scripts/check-dep-versions.mjs && vitest run --reporter=verbose"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.3",

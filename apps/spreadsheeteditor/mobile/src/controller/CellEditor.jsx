@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import CellEditorView from '../view/CellEditor';
+import CellEditorView from '../view/CellEditor.jsx';
 import { f7 } from 'framework7-react';
-import { Device } from '../../../../common/mobile/utils/device';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 import { useTranslation } from 'react-i18next';
 import {observer, inject} from "mobx-react";
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import { observer, inject } from "mobx-react";
-import EncryptionView from '../../view/settings/FileEncryption';
+import EncryptionView from '../../view/settings/FileEncryption.jsx';
 import { withTranslation } from 'react-i18next';
 import { f7 } from "framework7-react";
-import { Device } from '../../../../../common/mobile/utils/device';
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
 
 class FileEncryptionController extends React.Component {
     constructor(props) {

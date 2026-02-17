@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import { f7 } from 'framework7-react';
 import {observer, inject} from "mobx-react";
-import {Device} from '../../../../../common/mobile/utils/device';
+import {Device} from '../../../../../common/mobile/utils/device.jsx';
 import { withTranslation} from 'react-i18next';
 
-import {AddOther} from '../../view/add/AddOther';
+import {AddOther} from '../../view/add/AddOther.jsx';
 
 class AddOtherController extends Component {
     constructor (props) {

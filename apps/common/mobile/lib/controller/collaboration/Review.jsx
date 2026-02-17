@@ -3,7 +3,7 @@ import Notifications from '../../../utils/notifications.js'
 import {observer, inject} from "mobx-react"
 import { withTranslation } from 'react-i18next';
 
-import {PageReview, PageReviewChange} from "../../view/collaboration/Review";
+import {PageReview, PageReviewChange} from "../../view/collaboration/Review.jsx";
 import {LocalStorage} from "../../../utils/LocalStorage.mjs";
 
 class InitReview extends Component {

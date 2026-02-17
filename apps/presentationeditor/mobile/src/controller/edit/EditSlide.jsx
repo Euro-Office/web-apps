@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { f7 } from 'framework7-react';
-import {Device} from '../../../../../common/mobile/utils/device';
-import { EditSlide } from '../../view/edit/EditSlide';
+import {Device} from '../../../../../common/mobile/utils/device.jsx';
+import { EditSlide } from '../../view/edit/EditSlide.jsx';
 import {observer, inject} from "mobx-react";
 
 class EditSlideController extends Component {

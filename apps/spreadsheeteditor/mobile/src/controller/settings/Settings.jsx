@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import { observer, inject } from "mobx-react";
-import { Device } from '../../../../../common/mobile/utils/device';
-import SettingsView from "../../view/settings/Settings";
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
+import SettingsView from "../../view/settings/Settings.jsx";
 import { f7 } from 'framework7-react';
 import { useTranslation } from 'react-i18next';
 

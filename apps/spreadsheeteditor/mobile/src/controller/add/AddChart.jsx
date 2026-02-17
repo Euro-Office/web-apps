@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import { f7 } from 'framework7-react';
-import {Device} from '../../../../../common/mobile/utils/device';
+import {Device} from '../../../../../common/mobile/utils/device.jsx';
 import { withTranslation } from 'react-i18next';
 
-import AddChart from '../../view/add/AddChart';
+import AddChart from '../../view/add/AddChart.jsx';
 
 class AddChartController extends Component {
     constructor (props) {

@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Device } from '../../../../common/mobile/utils/device';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 import { inject, observer } from 'mobx-react';
 import { f7 } from 'framework7-react';
 import { useTranslation } from 'react-i18next';
-import ToolbarView from "../view/Toolbar";
+import ToolbarView from "../view/Toolbar.jsx";
 import {LocalStorage} from "../../../../common/mobile/utils/LocalStorage.mjs";
-import { getApi } from '../../../../common/mobile/lib/sdk/api';
+import { getApi } from '../../../../common/mobile/lib/sdk/api.js';
 
 /**
  * Strip the file extension from a document name, if it matches.

@@ -1,4 +1,4 @@
-import MainPage from '../page/main';
+import MainPage from '../page/main.jsx';
 
 var routes = [
   {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {f7, List, Popover, Sheet, ListItem, Icon, ListButton, Page, Navbar, NavRight, Link, View} from 'framework7-react';
 import { useTranslation } from 'react-i18next';
-import { Device } from '../../../../common/mobile/utils/device';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 import {observer, inject} from "mobx-react";
 import SvgIcon from '@common/lib/component/SvgIcon';
 import IconSortdown from '@icons/icon-sortdown.svg';

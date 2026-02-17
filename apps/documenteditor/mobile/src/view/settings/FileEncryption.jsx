@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { observer, inject } from "mobx-react";
-import { Device } from '../../../../../common/mobile/utils/device';
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
 import { Page, Navbar, List, ListItem, BlockTitle, Toggle, NavRight, f7, Link, ListInput, Icon, Block } from "framework7-react";
 import { useTranslation } from "react-i18next";
-import PasswordField from '../../components/PasswordField/PasswordField';
+import PasswordField from '../../components/PasswordField/PasswordField.jsx';
 import SvgIcon from '@common/lib/component/SvgIcon';
 import IconCheck from '@common-android-icons/icon-check.svg';
 

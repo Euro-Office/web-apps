@@ -1,6 +1,6 @@
 import React from 'react';
 import {observer, inject} from "mobx-react";
-import {Device} from "../../../../../common/mobile/utils/device";
+import {Device} from "../../../../../common/mobile/utils/device.jsx";
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 const AddChart = props => {

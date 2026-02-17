@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import Preview from "../view/Preview";
-import ContextMenu from './ContextMenu';
+import Preview from "../view/Preview.jsx";
+import ContextMenu from './ContextMenu.jsx';
 
 const PreviewController = props => {
     const { t } = useTranslation();

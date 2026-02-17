@@ -1,7 +1,7 @@
 import React from 'react';
-import { Device } from '../../../../../common/mobile/utils/device';
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
 import { observer, inject } from "mobx-react";
-import ProtectionDocumentView from '../../view/settings/DocumentProtection';
+import ProtectionDocumentView from '../../view/settings/DocumentProtection.jsx';
 import { f7 } from "framework7-react";
 
 class ProtectionDocumentController extends React.Component {

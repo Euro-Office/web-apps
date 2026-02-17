@@ -1,10 +1,10 @@
 
 import React, { Fragment, useEffect, useRef, useState } from 'react';
-import {StatusbarView} from '../view/Statusbar';
+import {StatusbarView} from '../view/Statusbar.jsx';
 import { inject, observer } from 'mobx-react';
 import { f7 } from 'framework7-react';
 import { useTranslation } from 'react-i18next';
-import { Device } from '../../../../common/mobile/utils/device';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 
 const StatusbarController = inject('storeWorksheets', 'storeFocusObjects', 'users')(observer(props => {
     const {storeWorksheets, storeFocusObjects, users} = props;

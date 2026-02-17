@@ -1,15 +1,15 @@
 import React, { useContext, useEffect } from 'react';
 import { Popover, Sheet, View, f7 } from 'framework7-react';
-import { Device } from '../../../../../common/mobile/utils/device';
-import { EditLinkController } from "../../controller/edit/EditLink";
-import { Theme, Layout, Transition, Type, Effect, StyleFillColor, CustomFillColor } from './EditSlide';
-import { PageTextFonts, PageTextFontColor, PageTextHighlightColor, PageTextCustomFontColor, PageTextAddFormatting, PageTextBulletsAndNumbers, PageTextLineSpacing, PageTextBulletsLinkSettings, PageOrientationTextShape, PageOrientationTextTable } from './EditText';
-import { PageShapeStyle, PageShapeStyleNoFill, PageReplaceContainer, PageReorderContainer, PageAlignContainer, PageShapeBorderColor, PageShapeCustomBorderColor, PageShapeCustomFillColor } from './EditShape';
-import { PageImageReplace, PageImageReorder, PageImageAlign, PageLinkSettings } from './EditImage';
-import { PageTableStyle, PageTableStyleOptions, PageTableCustomFillColor, PageTableBorderColor, PageTableCustomBorderColor, PageTableReorder, PageTableAlign, PageTableSize } from './EditTable';
-import { PageChartDesign, PageChartDesignType, PageChartDesignStyle, PageChartDesignFill, PageChartDesignBorder, PageChartCustomFillColor, PageChartBorderColor, PageChartCustomBorderColor, PageChartReorder, PageChartAlign } from './EditChart'
-import EditingPage from './EditingPage';
-import { MainContext } from '../../page/main';
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
+import { EditLinkController } from "../../controller/edit/EditLink.jsx";
+import { Theme, Layout, Transition, Type, Effect, StyleFillColor, CustomFillColor } from './EditSlide.jsx';
+import { PageTextFonts, PageTextFontColor, PageTextHighlightColor, PageTextCustomFontColor, PageTextAddFormatting, PageTextBulletsAndNumbers, PageTextLineSpacing, PageTextBulletsLinkSettings, PageOrientationTextShape, PageOrientationTextTable } from './EditText.jsx';
+import { PageShapeStyle, PageShapeStyleNoFill, PageReplaceContainer, PageReorderContainer, PageAlignContainer, PageShapeBorderColor, PageShapeCustomBorderColor, PageShapeCustomFillColor } from './EditShape.jsx';
+import { PageImageReplace, PageImageReorder, PageImageAlign, PageLinkSettings } from './EditImage.jsx';
+import { PageTableStyle, PageTableStyleOptions, PageTableCustomFillColor, PageTableBorderColor, PageTableCustomBorderColor, PageTableReorder, PageTableAlign, PageTableSize } from './EditTable.jsx';
+import { PageChartDesign, PageChartDesignType, PageChartDesignStyle, PageChartDesignFill, PageChartDesignBorder, PageChartCustomFillColor, PageChartBorderColor, PageChartCustomBorderColor, PageChartReorder, PageChartAlign } from './EditChart.jsx'
+import EditingPage from './EditingPage.jsx';
+import { MainContext } from '../../page/main.jsx';
 
 const routes = [
     {

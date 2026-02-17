@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { f7, Icon } from 'framework7-react';
-import { Device } from '../../../../common/mobile/utils/device';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 import SvgIcon from '@common/lib/component/SvgIcon'
 import IconPlusIos from '@common-ios-icons/icon-plus.svg?ios';
 import IconPlusAndroid from '@common-android-icons/icon-plus.svg?android';

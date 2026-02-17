@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Device } from '../../../../common/mobile/utils/device';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 import { f7 } from "framework7-react";
-import { Encoding } from "../view/Encoding";
+import { Encoding } from "../view/Encoding.jsx";
 import { withTranslation } from 'react-i18next';
 
 class EncodingController extends Component {

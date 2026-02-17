@@ -10,16 +10,18 @@ import { onAdvancedOptions } from './settings/Download.jsx';
 import {
     CommentsController,
     ViewCommentsController
-} from "../../../../common/mobile/lib/controller/collaboration/Comments";
-import About from '../../../../common/mobile/lib/view/About';
-import EditorUIController from '../lib/patch';
-import ErrorController from "./Error";
-import LongActionsController from "./LongActions";
+} from "../../../../common/mobile/lib/controller/collaboration/Comments.jsx";
+import About from '../../../../common/mobile/lib/view/About.jsx';
+import EditorUIController from '../lib/patch.jsx';
+import { fallbackSdkTranslations } from '../lib/fallbackTranslations.js';
+import { resolveRegion, isImperialRegion } from '../lib/metricSettings.js';
+import ErrorController from "./Error.jsx";
+import LongActionsController from "./LongActions.jsx";
 import PluginsController from '../../../../common/mobile/lib/controller/Plugins.jsx';
-import EncodingController from "./Encoding";
-import DropdownListController from "./DropdownList";
+import EncodingController from "./Encoding.jsx";
+import DropdownListController from "./DropdownList.jsx";
 import AddFormImageController from './add/AddFormImage.jsx';
-import { Device } from '../../../../common/mobile/utils/device';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 import { processArrayScripts } from '../../../../common/mobile/utils/processArrayScripts.js';
 import '../../../../common/main/lib/util/LanguageInfo.js'
 @inject(
@@ -46,84 +48,7 @@ class MainController extends Component {
         this.LoadingDocument = -256;
         this.ApplyEditRights = -255;
         this.boxSdk = $$('#editor_sdk');
-        this.fallbackSdkTranslations = {
-            " -Section ": " -Section ",
-            "above": "above",
-            "below": "below",
-            "Caption": "Caption",
-            "Choose an item": "Choose an item",
-            "Click to load image": "Click to load image",
-            "Current Document": "Current Document",
-            "Diagram Title": "Chart Title",
-            "endnote text": "Endnote Text",
-            "Enter a date": "Enter a date",
-            "Error! Bookmark not defined": "Error! Bookmark not defined.",
-            "Error! Main Document Only": "Error! Main Document Only.",
-            "Error! No text of specified style in document": "Error! No text of specified style in document.",
-            "Error! Not a valid bookmark self-reference": "Error! Not a valid bookmark self-reference.",
-            "Even Page ": "Even Page ",
-            "First Page ": "First Page ",
-            "Footer": "Footer",
-            "footnote text": "Footnote Text",
-            "Header": "Header",
-            "Heading 1": "Heading 1",
-            "Heading 2": "Heading 2",
-            "Heading 3": "Heading 3",
-            "Heading 4": "Heading 4",
-            "Heading 5": "Heading 5",
-            "Heading 6": "Heading 6",
-            "Heading 7": "Heading 7",
-            "Heading 8": "Heading 8",
-            "Heading 9": "Heading 9",
-            "Hyperlink": "Hyperlink",
-            "Index Too Large": "Index Too Large",
-            "Intense Quote": "Intense Quote",
-            "Is Not In Table": "Is Not In Table",
-            "List Paragraph": "List Paragraph",
-            "Missing Argument": "Missing Argument",
-            "Missing Operator": "Missing Operator",
-            "No Spacing": "No Spacing",
-            "No table of contents entries found": "There are no headings in the document. Apply a heading style to the text so that it appears in the table of contents.",
-            "No table of figures entries found": "No table of figures entries found.",
-            "None": "None",
-            "Normal": "Normal",
-            "Number Too Large To Format": "Number Too Large To Format",
-            "Odd Page ": "Odd Page ",
-            "Quote": "Quote",
-            "Same as Previous": "Same as Previous",
-            "Series": "Series",
-            "Subtitle": "Subtitle",
-            "Syntax Error": "Syntax Error",
-            "Table Index Cannot be Zero": "Table Index Cannot be Zero",
-            "Table of Contents": "Table of Contents",
-            "table of figures": "Table of figures",
-            "The Formula Not In Table": "The Formula Not In Table",
-            "Title": "Title",
-            "TOC Heading": "TOC Heading",
-            "Type equation here": "Type equation here",
-            "Undefined Bookmark": "Undefined Bookmark",
-            "Unexpected End of Formula": "Unexpected End of Formula",
-            "X Axis": "X Axis XAS",
-            "Y Axis": "Y Axis",
-            "Your text here": "Your text here",
-            "Zero Divide": "Zero Divide",
-            "Default Paragraph Font": "Default Paragraph Font",
-            "No List": "No list",
-            "Intense Emphasis": "Intense Emphasis",
-            "Intense Reference": "Intense Reference",
-            "Subtle Emphasis": "Subtle Emphasis",
-            "Emphasis": "Emphasis",
-            "Strong": "Strong",
-            "Subtle Reference": "Subtle Reference",
-            "Book Title":"Book Title",
-            "footnote reference": "Footnote reference",
-            "endnote reference": "Endnote reference"
-        };
-        let me = this;
-        ['Aspect', 'Blue Green', 'Blue II', 'Blue Warm', 'Blue', 'Grayscale', 'Green Yellow', 'Green', 'Marquee', 'Median', 'Office 2007 - 2010', 'Office 2013 - 2022', 'Office',
-        'Orange Red', 'Orange', 'Paper', 'Red Orange', 'Red Violet', 'Red', 'Slipstream', 'Violet II', 'Violet', 'Yellow Orange', 'Yellow'].forEach(function(item){
-            me.fallbackSdkTranslations[item] = item;
-        });
+        this.fallbackSdkTranslations = fallbackSdkTranslations;
 
         this._state = {
             licenseType: false,
@@ -597,30 +522,14 @@ class MainController extends Component {
 
     loadDefaultMetricSettings() {
         const appOptions = this.props.storeAppOptions;
-        let region = '';
 
         if (appOptions.location) {
             console.log("Obsolete: The 'location' parameter of the 'editorConfig' section is deprecated. Please use 'region' parameter in the 'editorConfig' section instead.");
-            region = appOptions.location;
-        } else if (appOptions.region) {
-            let val = appOptions.region;
-            val = Common.util.LanguageInfo.getLanguages().hasOwnProperty(val) ? Common.util.LanguageInfo.getLocalLanguageName(val)[0] : val;
-
-            if (val && typeof val === 'string') {
-                let arr = val.split(/[\-_]/);
-                if (arr.length > 1) region = arr[arr.length - 1]
-            }
-        } else {
-            let arr = (appOptions.lang || 'en').split(/[\-_]/);
-
-            if (arr.length > 1) region = arr[arr.length - 1]
-            if (!region) {
-                arr = (navigator.language || '').split(/[\-_]/);
-                if (arr.length > 1) region = arr[arr.length - 1]
-            }
         }
 
-        if (/^(ca|us)$/i.test(region)) {
+        const region = resolveRegion(appOptions, Common.util.LanguageInfo, navigator.language);
+
+        if (isImperialRegion(region)) {
             Common.Utils.Metric.setDefaultMetric(Common.Utils.Metric.c_MetricUnits.inch);
         }
     }

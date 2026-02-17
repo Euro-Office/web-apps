@@ -3,7 +3,7 @@ import {observer, inject} from "mobx-react";
 import {List, ListItem, Icon, Page, Navbar, NavRight, BlockTitle, Toggle, Range, ListButton, Link, Tabs, Tab} from 'framework7-react';
 import { f7 } from 'framework7-react';
 import { useTranslation } from 'react-i18next';
-import {Device} from '../../../../../common/mobile/utils/device';
+import {Device} from '../../../../../common/mobile/utils/device.jsx';
 import {CustomColorPicker, ThemeColorPalette} from "../../../../../common/mobile/lib/component/ThemeColorPalette.jsx";
 import SvgIcon from '@common/lib/component/SvgIcon';
 import IconExpandDownAndroid from '@common-android-icons/icon-expand-down.svg';

@@ -1,21 +1,21 @@
 import React, { useContext, useEffect } from 'react';
 import { f7, View, Popup, Popover } from 'framework7-react';
-import { Device } from '../../../../../common/mobile/utils/device';
-import DocumentSettingsController from "../../controller/settings/DocumentSettings";
-import DocumentInfoController from "../../controller/settings/DocumentInfo";
-import { DownloadController } from "../../controller/settings/Download";
-import ApplicationSettingsController from "../../controller/settings/ApplicationSettings";
-import { DocumentFormats, DocumentMargins, DocumentColorSchemes } from "./DocumentSettings";
-import { MacrosSettings, ThemeSettings } from "./ApplicationSettings";
-import About from '../../../../../common/mobile/lib/view/About';
-import NavigationController from '../../controller/settings/Navigation';
-import SharingSettings from "../../../../../common/mobile/lib/view/SharingSettings";
-import ProtectionDocumentController from '../../controller/settings/DocumentProtection';
-import ProtectionController from '../../controller/settings/Protection';
-import FileEncryptionController from '../../controller/settings/FileEncryption';
-import SettingsPage from './SettingsPage';
-import { MainContext } from '../../page/main';
-import VersionHistoryController from '../../../../../common/mobile/lib/controller/VersionHistory';
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
+import DocumentSettingsController from "../../controller/settings/DocumentSettings.jsx";
+import DocumentInfoController from "../../controller/settings/DocumentInfo.jsx";
+import { DownloadController } from "../../controller/settings/Download.jsx";
+import ApplicationSettingsController from "../../controller/settings/ApplicationSettings.jsx";
+import { DocumentFormats, DocumentMargins, DocumentColorSchemes } from "./DocumentSettings.jsx";
+import { MacrosSettings, ThemeSettings } from "./ApplicationSettings.jsx";
+import About from '../../../../../common/mobile/lib/view/About.jsx';
+import NavigationController from '../../controller/settings/Navigation.jsx';
+import SharingSettings from "../../../../../common/mobile/lib/view/SharingSettings.jsx";
+import ProtectionDocumentController from '../../controller/settings/DocumentProtection.jsx';
+import ProtectionController from '../../controller/settings/Protection.jsx';
+import FileEncryptionController from '../../controller/settings/FileEncryption.jsx';
+import SettingsPage from './SettingsPage.jsx';
+import { MainContext } from '../../page/main.jsx';
+import VersionHistoryController from '../../../../../common/mobile/lib/controller/VersionHistory.jsx';
 
 const routes = [
     {
