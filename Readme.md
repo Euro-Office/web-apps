@@ -214,6 +214,8 @@ The root `package.json` exists because:
 - `build/` owns the Grunt pipeline — mixing test deps there conflates two unrelated concerns
 - Runtime deps (react, mobx) are pinned to exact versions matching `vendor/framework7-react/node_modules/` to ensure tests run against the same code the app ships
 
+**Do not add `"type": "module"` to the root `package.json`.** It causes webpack to treat `.js` files as ESM, which increases bundle sizes by ~12% (~740KB across all mobile editors) and roughly doubles webpack build time. Files that need ESM use the `.mjs` extension instead.
+
 ### Running tests
 
 Tests must run inside the Docker container (the host is ARM64, dependencies are x64).
