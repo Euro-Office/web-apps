@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildProtectionFlags, protectionWarningKey } from '../docProtection.js';
+import { buildProtectionFlags, protectionWarningKey, resolveRestrictions } from '../docProtection.js';
 
 // Mirror the real Asc.c_oAscEDocProtect enum values
 const EDocProtect = {
@@ -80,5 +80,69 @@ describe('protectionWarningKey', () => {
 
     it('returns undefined for unknown type', () => {
         expect(protectionWarningKey(99, EDocProtect)).toBeUndefined();
+    });
+});
+
+// Mirror Asc.c_oAscRestrictionType
+const RestrictionType = {
+    None: 0,
+    OnlyForms: 1,
+    OnlyComments: 2,
+    View: 3,
+};
+
+describe('resolveRestrictions', () => {
+    it('returns View for ReadOnly regardless of permissions', () => {
+        const perms = { canComments: true, canFillForms: true, isRestrictedEdit: false };
+        expect(resolveRestrictions(EDocProtect.ReadOnly, perms, EDocProtect, RestrictionType))
+            .toEqual([RestrictionType.View]);
+    });
+
+    it('returns OnlyComments for Comments when canComments', () => {
+        const perms = { canComments: true, canFillForms: false, isRestrictedEdit: false };
+        expect(resolveRestrictions(EDocProtect.Comments, perms, EDocProtect, RestrictionType))
+            .toEqual([RestrictionType.OnlyComments]);
+    });
+
+    it('returns View for Comments when !canComments', () => {
+        const perms = { canComments: false, canFillForms: false, isRestrictedEdit: false };
+        expect(resolveRestrictions(EDocProtect.Comments, perms, EDocProtect, RestrictionType))
+            .toEqual([RestrictionType.View]);
+    });
+
+    it('returns OnlyForms for Forms when canFillForms', () => {
+        const perms = { canComments: false, canFillForms: true, isRestrictedEdit: false };
+        expect(resolveRestrictions(EDocProtect.Forms, perms, EDocProtect, RestrictionType))
+            .toEqual([RestrictionType.OnlyForms]);
+    });
+
+    it('returns View for Forms when !canFillForms', () => {
+        const perms = { canComments: false, canFillForms: false, isRestrictedEdit: false };
+        expect(resolveRestrictions(EDocProtect.Forms, perms, EDocProtect, RestrictionType))
+            .toEqual([RestrictionType.View]);
+    });
+
+    it('returns both OnlyComments and OnlyForms for restrictedEdit with both permissions', () => {
+        const perms = { canComments: true, canFillForms: true, isRestrictedEdit: true };
+        expect(resolveRestrictions(EDocProtect.TrackedChanges, perms, EDocProtect, RestrictionType))
+            .toEqual([RestrictionType.OnlyComments, RestrictionType.OnlyForms]);
+    });
+
+    it('returns only OnlyComments for restrictedEdit with canComments only', () => {
+        const perms = { canComments: true, canFillForms: false, isRestrictedEdit: true };
+        expect(resolveRestrictions(EDocProtect.None, perms, EDocProtect, RestrictionType))
+            .toEqual([RestrictionType.OnlyComments]);
+    });
+
+    it('returns empty array for restrictedEdit with no permissions', () => {
+        const perms = { canComments: false, canFillForms: false, isRestrictedEdit: true };
+        expect(resolveRestrictions(EDocProtect.None, perms, EDocProtect, RestrictionType))
+            .toEqual([]);
+    });
+
+    it('returns View for non-restrictedEdit fallback', () => {
+        const perms = { canComments: false, canFillForms: false, isRestrictedEdit: false };
+        expect(resolveRestrictions(EDocProtect.None, perms, EDocProtect, RestrictionType))
+            .toEqual([RestrictionType.View]);
     });
 });

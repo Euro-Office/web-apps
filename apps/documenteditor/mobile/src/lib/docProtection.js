@@ -33,6 +33,40 @@ export function buildProtectionFlags(type, enumValues) {
  * @param {object} enumValues  Same enum constants object as above.
  * @returns {string|undefined}  An i18n key such as 'Main.textDialogProtectedOnlyView'
  */
+/**
+ * Decide which restriction type to apply based on protection type and permissions.
+ *
+ * The caller is responsible for passing the result to `api.asc_setRestriction()`.
+ * When the protection type is "else" (e.g. TrackedChanges or None), the function
+ * may return multiple restriction values if `isRestrictedEdit` is true — the caller
+ * should apply them in order.
+ *
+ * @param {number} protectType       One of Asc.c_oAscEDocProtect.*
+ * @param {object} permissions       { canComments, canFillForms, isRestrictedEdit }
+ * @param {object} protectEnum       Asc.c_oAscEDocProtect enum
+ * @param {object} restrictionEnum   Asc.c_oAscRestrictionType enum
+ * @returns {number[]}  Array of restriction type values to apply (in order)
+ */
+export function resolveRestrictions(protectType, permissions, protectEnum, restrictionEnum) {
+    if (protectType === protectEnum.ReadOnly) {
+        return [restrictionEnum.View];
+    }
+    if (protectType === protectEnum.Comments) {
+        return [permissions.canComments ? restrictionEnum.OnlyComments : restrictionEnum.View];
+    }
+    if (protectType === protectEnum.Forms) {
+        return [permissions.canFillForms ? restrictionEnum.OnlyForms : restrictionEnum.View];
+    }
+    // TrackedChanges, None, or other
+    if (permissions.isRestrictedEdit) {
+        const result = [];
+        if (permissions.canComments) result.push(restrictionEnum.OnlyComments);
+        if (permissions.canFillForms) result.push(restrictionEnum.OnlyForms);
+        return result;
+    }
+    return [restrictionEnum.View];
+}
+
 export function protectionWarningKey(type, enumValues) {
     switch (type) {
         case enumValues.ReadOnly:       return 'Main.textDialogProtectedOnlyView';
