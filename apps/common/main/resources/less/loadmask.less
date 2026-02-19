@@ -46,6 +46,12 @@
         .margin-left-8();
     }
 
+    @supports (-moz-appearance: none) {
+        .asc-loadmask-image {
+            width: @loadmask-image-width + 1px;
+        }
+      }
+
     .asc-loadmask-title {
         //.fontsize(@font-size-large);
         .font-size-large();
