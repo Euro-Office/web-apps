@@ -102,9 +102,9 @@ function checkScaling() {
 }
 
 let svg_icons = window.uitheme.svg_icons || [
-    './resources/img/iconssmall@2.5x.svg',
-    './resources/img/iconsbig@2.5x.svg',
-    './resources/img/iconshuge@2.5x.svg',
+    '../main/resources/img/iconssmall@2.5x.svg',
+    '../main/resources/img/iconsbig@2.5x.svg',
+    '../main/resources/img/iconshuge@2.5x.svg',
     '../../common/main/resources/img/doc-formats/formats@2.5x.svg'
 ];
 
@@ -154,8 +154,8 @@ window.Common = {
                                     const el = document.querySelector('div.inlined-svg');
                                     const child = htmlToElements(text, el_id);
                                     if ( sprite_uid.length )
-                                        child.setAttribute('data-sprite-uid', sprite_uid);
-                                    el.appendChild(child);
+                                        child && child.setAttribute('data-sprite-uid', sprite_uid);
+                                    el && el.appendChild(child);
 
                                     const i = svg_icons_array.findIndex(function (item) {return item == url});
                                     if ( !(i < 0) ) svg_icons_array.splice(i, 1)
