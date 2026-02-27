@@ -30,7 +30,7 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
     const docExt = storeDocumentInfo.dataDoc ? storeDocumentInfo.dataDoc.fileType : '';
     const docTitle = storeDocumentInfo.dataDoc ? storeDocumentInfo.dataDoc.title : '';
     const scrollOffsetRef = useRef(0);
-    
+
     const getNavbarTotalHeight = useCallback(() => {
       	const navbarBg = document.querySelector('.navbar-bg');
       	const subnavbar = document.querySelector('.subnavbar');
