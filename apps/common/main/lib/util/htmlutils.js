@@ -105,7 +105,7 @@ let svg_icons = window.uitheme.svg_icons || [
     '../main/resources/img/iconssmall@2.5x.svg',
     '../main/resources/img/iconsbig@2.5x.svg',
     '../main/resources/img/iconshuge@2.5x.svg',
-    './common/main/resources/img/doc-formats/formats@2.5x.svg'
+    '../../common/main/resources/img/doc-formats/formats@2.5x.svg'
 ];
 
 window.Common = {
@@ -151,7 +151,7 @@ window.Common = {
                                             else return;
                                         };
                                     }
-                                    
+
                                     const child = htmlToElements(text, el_id);
                                     if ( sprite_uid.length )
                                         child && child.setAttribute('data-sprite-uid', sprite_uid);
