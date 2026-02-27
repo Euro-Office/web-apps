@@ -90,6 +90,35 @@ Each directory has a range of LESS files broken down by area, eg slider, search,
 
 ## Building
 
+### Full Build
+
+Run `docker compose` from the `euro-office/fork/build` directory:
+
+```bash
+# From euro-office/fork/build, enter the container:
+docker compose exec eo bash
+
+# Then inside the container:
+export BUILD_NUMBER=0 THEME=nextcloud && cd /var/www/onlyoffice/web-apps-develop/build && grunt --skip-imagemin --skip-babel
+```
+
+### Build Flags
+
+| Flag | Description |
+|------|-------------|
+| `--skip-imagemin` | Skip image optimization (faster builds) |
+| `--skip-babel` | Skip ES5 transpilation for IE compatibility (modern browsers only, no `ie/` directory created) |
+
+### Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `THEME` | Theme name to use (e.g., `nextcloud`, `default`) |
+| `BUILD_NUMBER` | Build number for versioning |
+
+## Style modifications
+## Building
+
 To build this project execute the following commands
 
 ```shell
@@ -164,6 +193,55 @@ Look at `apps/common/main/resources/less/themes/nextcloud` as an example.
 The idea is to use variables set in the `theme` file as much as possible, and use the overrides feature if it is not possible to just use a variable. By using variables, we don't introduce extra CSS in the final output.
 
 The `overrides` directory should match the structure of the existing app. It is only when it is not possible to accomplish the styling using variables.
+
+## Testing
+
+Mobile editor tests use [Vitest](https://vitest.dev/) and live co-located with source files in `__tests__/` directories.
+
+### Why a separate `package.json`?
+
+This project has three `package.json` files, each owning a distinct concern:
+
+| File | Purpose |
+|------|---------|
+| `build/package.json` | Grunt build tools (desktop editor) |
+| `vendor/framework7-react/package.json` | Webpack build + runtime deps (mobile editor) |
+| `package.json` (root) | Test infrastructure (Vitest, Testing Library) |
+
+The root `package.json` exists because:
+
+- `vendor/` should remain immutable — it tracks upstream dependencies and shouldn't be coupled to our test tooling
+- `build/` owns the Grunt pipeline — mixing test deps there conflates two unrelated concerns
+- Runtime deps (react, mobx) are pinned to exact versions matching `vendor/framework7-react/node_modules/` to ensure tests run against the same code the app ships
+
+**Do not add `"type": "module"` to the root `package.json`.** It causes webpack to treat `.js` files as ESM, which increases bundle sizes by ~12% (~740KB across all mobile editors) and roughly doubles webpack build time. Files that need ESM use the `.mjs` extension instead.
+
+### Running tests
+
+Tests must run inside the Docker container (the host is ARM64, dependencies are x64).
+
+First, start the dev environment from `fork/develop/`:
+
+```bash
+cd fork/develop
+make local       # starts containers and opens a shell in eo
+```
+
+Then inside the container:
+
+```bash
+cd /develop/web-apps
+npm install       # first time only
+npm test          # watch mode
+npm run test:run  # single run
+```
+
+Or without an interactive shell:
+
+```bash
+# From fork/develop/
+docker compose exec eo bash -c 'cd /develop/web-apps && npm run test:run'
+```
 
 ## License
 

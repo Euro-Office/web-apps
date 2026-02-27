@@ -1,23 +1,23 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { CSSTransition } from '../../../../common/mobile/lib/component/CSSTransition'
+import { CSSTransition } from '../../../../common/mobile/lib/component/CSSTransition.js'
 import { f7, Icon, Page, View, Navbar, Subnavbar } from 'framework7-react';
 import { observer, inject } from "mobx-react";
 import { useTranslation } from 'react-i18next';
-import AddOptions from '../view/add/Add';
-import SettingsController from '../controller/settings/Settings';
+import AddOptions from '../view/add/Add.jsx';
+import SettingsController from '../controller/settings/Settings.jsx';
 import CollaborationView from '../../../../common/mobile/lib/view/collaboration/Collaboration.jsx'
-import { Device } from '../../../../common/mobile/utils/device'
-import { Search, SearchSettings } from '../controller/Search';
-import ContextMenu from '../controller/ContextMenu';
-import ToolbarController from "../controller/Toolbar";
-import NavigationController from '../controller/settings/Navigation';
-import { AddLinkController } from '../controller/add/AddLink';
-import EditHyperlink from '../controller/edit/EditHyperlink';
-import Snackbar from '../components/Snackbar/Snackbar';
-import { Themes } from '../../../../common/mobile/lib/controller/Themes';
-import EditView from '../view/edit/Edit';
-import VersionHistoryController from '../../../../common/mobile/lib/controller/VersionHistory';
-import {DrawController} from "../../../../common/mobile/lib/controller/Draw";
+import { Device } from '../../../../common/mobile/utils/device.jsx'
+import { Search, SearchSettings } from '../controller/Search.jsx';
+import ContextMenu from '../controller/ContextMenu.jsx';
+import ToolbarController from "../controller/Toolbar.jsx";
+import NavigationController from '../controller/settings/Navigation.jsx';
+import { AddLinkController } from '../controller/add/AddLink.jsx';
+import EditHyperlink from '../controller/edit/EditHyperlink.jsx';
+import Snackbar from '../components/Snackbar/Snackbar.jsx';
+import { Themes } from '../../../../common/mobile/lib/controller/Themes.jsx';
+import EditView from '../view/edit/Edit.jsx';
+import VersionHistoryController from '../../../../common/mobile/lib/controller/VersionHistory.jsx';
+import {DrawController} from "../../../../common/mobile/lib/controller/Draw.jsx";
 import SvgIcon from '@common/lib/component/SvgIcon';
 import IconEditMode from '@icons/icon-edit-mode.svg';
 

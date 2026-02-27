@@ -10,16 +10,21 @@ import { onAdvancedOptions } from './settings/Download.jsx';
 import {
     CommentsController,
     ViewCommentsController
-} from "../../../../common/mobile/lib/controller/collaboration/Comments";
-import About from '../../../../common/mobile/lib/view/About';
-import EditorUIController from '../lib/patch';
-import ErrorController from "./Error";
-import LongActionsController from "./LongActions";
+} from "../../../../common/mobile/lib/controller/collaboration/Comments.jsx";
+import About from '../../../../common/mobile/lib/view/About.jsx';
+import EditorUIController from '../lib/patch.jsx';
+import { fallbackSdkTranslations } from '../lib/fallbackTranslations.js';
+import { resolveRegion, isImperialRegion } from '../lib/metricSettings.js';
+import { buildProtectionFlags, protectionWarningKey, resolveRestrictions } from '../lib/docProtection.js';
+import { resolveDownloadAs } from '../lib/downloadFormat.js';
+import { shouldStoreLicenseType, resolveLicenseAction } from '../lib/licenseAction.js';
+import ErrorController from "./Error.jsx";
+import LongActionsController from "./LongActions.jsx";
 import PluginsController from '../../../../common/mobile/lib/controller/Plugins.jsx';
-import EncodingController from "./Encoding";
-import DropdownListController from "./DropdownList";
+import EncodingController from "./Encoding.jsx";
+import DropdownListController from "./DropdownList.jsx";
 import AddFormImageController from './add/AddFormImage.jsx';
-import { Device } from '../../../../common/mobile/utils/device';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 import { processArrayScripts } from '../../../../common/mobile/utils/processArrayScripts.js';
 import '../../../../common/main/lib/util/LanguageInfo.js'
 @inject(
@@ -46,84 +51,7 @@ class MainController extends Component {
         this.LoadingDocument = -256;
         this.ApplyEditRights = -255;
         this.boxSdk = $$('#editor_sdk');
-        this.fallbackSdkTranslations = {
-            " -Section ": " -Section ",
-            "above": "above",
-            "below": "below",
-            "Caption": "Caption",
-            "Choose an item": "Choose an item",
-            "Click to load image": "Click to load image",
-            "Current Document": "Current Document",
-            "Diagram Title": "Chart Title",
-            "endnote text": "Endnote Text",
-            "Enter a date": "Enter a date",
-            "Error! Bookmark not defined": "Error! Bookmark not defined.",
-            "Error! Main Document Only": "Error! Main Document Only.",
-            "Error! No text of specified style in document": "Error! No text of specified style in document.",
-            "Error! Not a valid bookmark self-reference": "Error! Not a valid bookmark self-reference.",
-            "Even Page ": "Even Page ",
-            "First Page ": "First Page ",
-            "Footer": "Footer",
-            "footnote text": "Footnote Text",
-            "Header": "Header",
-            "Heading 1": "Heading 1",
-            "Heading 2": "Heading 2",
-            "Heading 3": "Heading 3",
-            "Heading 4": "Heading 4",
-            "Heading 5": "Heading 5",
-            "Heading 6": "Heading 6",
-            "Heading 7": "Heading 7",
-            "Heading 8": "Heading 8",
-            "Heading 9": "Heading 9",
-            "Hyperlink": "Hyperlink",
-            "Index Too Large": "Index Too Large",
-            "Intense Quote": "Intense Quote",
-            "Is Not In Table": "Is Not In Table",
-            "List Paragraph": "List Paragraph",
-            "Missing Argument": "Missing Argument",
-            "Missing Operator": "Missing Operator",
-            "No Spacing": "No Spacing",
-            "No table of contents entries found": "There are no headings in the document. Apply a heading style to the text so that it appears in the table of contents.",
-            "No table of figures entries found": "No table of figures entries found.",
-            "None": "None",
-            "Normal": "Normal",
-            "Number Too Large To Format": "Number Too Large To Format",
-            "Odd Page ": "Odd Page ",
-            "Quote": "Quote",
-            "Same as Previous": "Same as Previous",
-            "Series": "Series",
-            "Subtitle": "Subtitle",
-            "Syntax Error": "Syntax Error",
-            "Table Index Cannot be Zero": "Table Index Cannot be Zero",
-            "Table of Contents": "Table of Contents",
-            "table of figures": "Table of figures",
-            "The Formula Not In Table": "The Formula Not In Table",
-            "Title": "Title",
-            "TOC Heading": "TOC Heading",
-            "Type equation here": "Type equation here",
-            "Undefined Bookmark": "Undefined Bookmark",
-            "Unexpected End of Formula": "Unexpected End of Formula",
-            "X Axis": "X Axis XAS",
-            "Y Axis": "Y Axis",
-            "Your text here": "Your text here",
-            "Zero Divide": "Zero Divide",
-            "Default Paragraph Font": "Default Paragraph Font",
-            "No List": "No list",
-            "Intense Emphasis": "Intense Emphasis",
-            "Intense Reference": "Intense Reference",
-            "Subtle Emphasis": "Subtle Emphasis",
-            "Emphasis": "Emphasis",
-            "Strong": "Strong",
-            "Subtle Reference": "Subtle Reference",
-            "Book Title":"Book Title",
-            "footnote reference": "Footnote reference",
-            "endnote reference": "Endnote reference"
-        };
-        let me = this;
-        ['Aspect', 'Blue Green', 'Blue II', 'Blue Warm', 'Blue', 'Grayscale', 'Green Yellow', 'Green', 'Marquee', 'Median', 'Office 2007 - 2010', 'Office 2013 - 2022', 'Office',
-        'Orange Red', 'Orange', 'Paper', 'Red Orange', 'Red Violet', 'Red', 'Slipstream', 'Violet II', 'Violet', 'Yellow Orange', 'Yellow'].forEach(function(item){
-            me.fallbackSdkTranslations[item] = item;
-        });
+        this.fallbackSdkTranslations = fallbackSdkTranslations;
 
         this._state = {
             licenseType: false,
@@ -597,30 +525,14 @@ class MainController extends Component {
 
     loadDefaultMetricSettings() {
         const appOptions = this.props.storeAppOptions;
-        let region = '';
 
         if (appOptions.location) {
             console.log("Obsolete: The 'location' parameter of the 'editorConfig' section is deprecated. Please use 'region' parameter in the 'editorConfig' section instead.");
-            region = appOptions.location;
-        } else if (appOptions.region) {
-            let val = appOptions.region;
-            val = Common.util.LanguageInfo.getLanguages().hasOwnProperty(val) ? Common.util.LanguageInfo.getLocalLanguageName(val)[0] : val;
-
-            if (val && typeof val === 'string') {
-                let arr = val.split(/[\-_]/);
-                if (arr.length > 1) region = arr[arr.length - 1]
-            }
-        } else {
-            let arr = (appOptions.lang || 'en').split(/[\-_]/);
-
-            if (arr.length > 1) region = arr[arr.length - 1]
-            if (!region) {
-                arr = (navigator.language || '').split(/[\-_]/);
-                if (arr.length > 1) region = arr[arr.length - 1]
-            }
         }
 
-        if (/^(ca|us)$/i.test(region)) {
+        const region = resolveRegion(appOptions, Common.util.LanguageInfo, navigator.language);
+
+        if (isImperialRegion(region)) {
             Common.Utils.Metric.setDefaultMetric(Common.Utils.Metric.c_MetricUnits.inch);
         }
     }
@@ -697,17 +609,11 @@ class MainController extends Component {
     }
 
     onLicenseChanged (params) {
-        const appOptions = this.props.storeAppOptions;
         const licType = params.asc_getLicenseType();
-    
-        if (licType !== undefined && (appOptions.canEdit || appOptions.isRestrictedEdit) && appOptions.config.mode !== 'view' &&
-            (licType === Asc.c_oLicenseResult.Connections || licType === Asc.c_oLicenseResult.UsersCount || licType === Asc.c_oLicenseResult.ConnectionsOS || licType === Asc.c_oLicenseResult.UsersCountOS
-                || licType === Asc.c_oLicenseResult.SuccessLimit && (appOptions.trialMode & Asc.c_oLicenseMode.Limited) !== 0))
-            this._state.licenseType = licType;
 
-        if (licType !== undefined && appOptions.canLiveView && (licType===Asc.c_oLicenseResult.ConnectionsLive || licType===Asc.c_oLicenseResult.ConnectionsLiveOS ||
-                                                                licType===Asc.c_oLicenseResult.UsersViewCount || licType===Asc.c_oLicenseResult.UsersViewCountOS))
+        if (shouldStoreLicenseType(licType, this.props.storeAppOptions, Asc.c_oLicenseResult, Asc.c_oLicenseMode)) {
             this._state.licenseType = licType;
+        }
 
         if (this._isDocReady && this._state.licenseType)
             this.applyLicense();
@@ -716,23 +622,28 @@ class MainController extends Component {
     applyLicense () {
         const { t } = this.props;
         const _t = t('Main', {returnObjects:true});
-
-        const warnNoLicense  = _t.warnNoLicense.replace(/%1/g, __COMPANY_NAME__);
-        const warnNoLicenseUsers = _t.warnNoLicenseUsers.replace(/%1/g, __COMPANY_NAME__);
-        const textNoLicenseTitle = _t.textNoLicenseTitle.replace(/%1/g, __COMPANY_NAME__);
-
         const appOptions = this.props.storeAppOptions;
-        const isForm = appOptions.isForm;
 
-        if (appOptions.config.mode !== 'view' && !EditorUIController.isSupportEditFeature()) {
+        const action = resolveLicenseAction({
+            licenseType: this._state.licenseType,
+            isSupportEditFeature: EditorUIController.isSupportEditFeature(),
+            appOptions,
+            licResult: Asc.c_oLicenseResult,
+            licMode: Asc.c_oLicenseMode,
+            companyName: __COMPANY_NAME__,
+            translations: _t,
+        });
+
+        // Opensource warning has a 24-hour throttle via LocalStorage
+        if (action.type === 'opensource-warning') {
             let value = LocalStorage.getItem("de-opensource-warning");
             value = (value !== null) ? parseInt(value) : 0;
             const now = (new Date).getTime();
             if (now - value > 86400000) {
                 LocalStorage.setItem("de-opensource-warning", now);
                 f7.dialog.create({
-                    title: _t.notcriticalErrorTitle,
-                    text : _t.errorOpensource,
+                    title: action.dialogTitle,
+                    text: action.dialogText,
                     buttons: [{ text: _t.textOk }]
                 }).open();
             }
@@ -740,83 +651,47 @@ class MainController extends Component {
             return;
         }
 
-        if (appOptions.config.mode === 'view') {
-            if (appOptions.canLiveView && (this._state.licenseType===Asc.c_oLicenseResult.ConnectionsLive || this._state.licenseType===Asc.c_oLicenseResult.ConnectionsLiveOS ||
-                                            this._state.licenseType===Asc.c_oLicenseResult.UsersViewCount || this._state.licenseType===Asc.c_oLicenseResult.UsersViewCountOS ||
-                                            !appOptions.isAnonymousSupport && !!appOptions.config.user.anonymous)) {
-                appOptions.canLiveView = false;
-                this.api.asc_SetFastCollaborative(false);
-            }
+        if (action.disableLiveView) {
+            appOptions.canLiveView = false;
+            this.api.asc_SetFastCollaborative(false);
+        }
+
+        if (action.activateControls) {
             Common.Notifications.trigger('toolbar:activatecontrols');
-        } else if (!appOptions.isAnonymousSupport && !!appOptions.config.user.anonymous) {
-            Common.Notifications.trigger('toolbar:activatecontrols');
+        }
+
+        if (action.deactivateEdit) {
             Common.Notifications.trigger('toolbar:deactivateeditcontrols');
             this.api.asc_coAuthoringDisconnect();
             Common.Notifications.trigger('api:disconnect');
-            f7.dialog.create({
-                title: _t.notcriticalErrorTitle,
-                text : _t.warnLicenseAnonymous,
-                buttons: [{ text: _t.textOk }]
-            }).open();
-        } else if (this._state.licenseType) {
-            let license = this._state.licenseType;
-            let buttons = [{ text: _t.textOk }];
-            let title = textNoLicenseTitle;
-            if ((appOptions.trialMode & Asc.c_oLicenseMode.Limited) !== 0 &&
-                (license === Asc.c_oLicenseResult.SuccessLimit ||
-                    appOptions.permissionsLicense === Asc.c_oLicenseResult.SuccessLimit)
-            ) {
-                license = _t.warnLicenseLimitedRenewed;
-            } else if (license === Asc.c_oLicenseResult.Connections || license === Asc.c_oLicenseResult.UsersCount) {
-                title = _t.titleReadOnly;
-                license = (license===Asc.c_oLicenseResult.Connections) ? _t.tipLicenseExceeded : _t.tipLicenseUsersExceeded;
-            } else {
-                license = (license === Asc.c_oLicenseResult.ConnectionsOS) ? warnNoLicense : warnNoLicenseUsers;
+        }
+
+        if (action.dialogTitle) {
+            let buttons;
+            if (action.dialogButtons === 'buy') {
                 buttons = [{
                     text: _t.textBuyNow,
                     bold: true,
-                    onClick: function() {
-                        window.open(`${__PUBLISHER_URL__}`, "_blank");
-                    }
-                },
-                    {
-                        text: _t.textContactUs,
-                        onClick: function() {
-                            window.open(`mailto:${__SALES_EMAIL__}`, "_blank");
-                        }
-                    }];
-            }
-            if (this._state.licenseType === Asc.c_oLicenseResult.SuccessLimit) {
-                Common.Notifications.trigger('toolbar:activatecontrols');
+                    onClick: function() { window.open(`${__PUBLISHER_URL__}`, "_blank"); }
+                }, {
+                    text: _t.textContactUs,
+                    onClick: function() { window.open(`mailto:${__SALES_EMAIL__}`, "_blank"); }
+                }];
+            } else if (action.dialogButtons === 'contact') {
+                buttons = [{
+                    text: _t.textContactUs,
+                    bold: true,
+                    onClick: () => { window.open(`mailto:${__SALES_EMAIL__}`, "_blank"); }
+                }, { text: _t.textClose }];
             } else {
-                Common.Notifications.trigger('toolbar:activatecontrols');
-                Common.Notifications.trigger('toolbar:deactivateeditcontrols');
-                this.api.asc_coAuthoringDisconnect();
-                Common.Notifications.trigger('api:disconnect');
+                buttons = [{ text: _t.textOk }];
             }
 
             f7.dialog.create({
-                title: title,
-                text : license,
-                buttons: buttons
+                title: action.dialogTitle,
+                text: action.dialogText,
+                buttons,
             }).open();
-        } else {
-            if (!appOptions.isDesktopApp && !appOptions.canBrandingExt &&
-                appOptions.config && appOptions.config.customization && (appOptions.config.customization.loaderName || appOptions.config.customization.loaderLogo)) {
-                f7.dialog.create({
-                    title: _t.textPaidFeature,
-                    text  : _t.textCustomLoader,
-                    buttons: [{
-                        text: _t.textContactUs,
-                        bold: true,
-                        onClick: () => {
-                            window.open(`mailto:${__SALES_EMAIL__}`, "_blank");
-                        }
-                    },
-                        { text: _t.textClose }]
-                }).open();
-            }
-            Common.Notifications.trigger('toolbar:activatecontrols');
         }
     }
 
@@ -1077,8 +952,6 @@ class MainController extends Component {
         const { t } = this.props;
         const storeAppOptions = this.props.storeAppOptions;
         const isProtected = props && (props.isReadOnly || props.isCommentsOnly || props.isFormsOnly || props.isReviewOnly || props.isTrackedChanges);
-        let textWarningDialog;
-
         if(!storeAppOptions.isReviewOnly) {
             if(props.isReviewOnly) {
                 this.api.asc_SetLocalTrackRevisions(true);
@@ -1087,20 +960,8 @@ class MainController extends Component {
             }
         }
 
-        switch(props.type) {
-            case Asc.c_oAscEDocProtect.ReadOnly:
-                textWarningDialog = t('Main.textDialogProtectedOnlyView');
-                break;
-            case Asc.c_oAscEDocProtect.Comments:
-                textWarningDialog = t('Main.textDialogProtectedEditComments');
-                break;
-            case Asc.c_oAscEDocProtect.TrackedChanges: 
-                textWarningDialog = t('Main.textDialogProtectedChangesTracked')
-                break;
-            case Asc.c_oAscEDocProtect.Forms:
-                textWarningDialog = t('Main.textDialogProtectedFillForms');
-                break;
-        }
+        const warningKey = protectionWarningKey(props.type, Asc.c_oAscEDocProtect);
+        const textWarningDialog = warningKey ? t(warningKey) : undefined;
 
         storeAppOptions.setProtection(isProtected);
         storeAppOptions.setTypeProtection(props.type);
@@ -1121,24 +982,10 @@ class MainController extends Component {
     }
 
     applyRestrictions(type) {
-        const storeAppOptions = this.props.storeAppOptions;
-
-        if (type === Asc.c_oAscEDocProtect.ReadOnly) {
-            this.api.asc_setRestriction(Asc.c_oAscRestrictionType.View);
-        } else if (type === Asc.c_oAscEDocProtect.Comments) {
-            this.api.asc_setRestriction(storeAppOptions.canComments ? Asc.c_oAscRestrictionType.OnlyComments : Asc.c_oAscRestrictionType.View);
-        } else if (type === Asc.c_oAscEDocProtect.Forms) {
-            this.api.asc_setRestriction(storeAppOptions.canFillForms ? Asc.c_oAscRestrictionType.OnlyForms : Asc.c_oAscRestrictionType.View);
-        } else { 
-            if (storeAppOptions?.isRestrictedEdit) {
-                storeAppOptions.canComments && this.api.asc_setRestriction(Asc.c_oAscRestrictionType.OnlyComments);
-                storeAppOptions.canFillForms && this.api.asc_setRestriction(Asc.c_oAscRestrictionType.OnlyForms);
-            } else {
-                // this.api.asc_setRestriction(Asc.c_oAscRestrictionType.None);
-                this.api.asc_setRestriction(Asc.c_oAscRestrictionType.View);
-            }
-        }
-    };
+        const opts = this.props.storeAppOptions;
+        const restrictions = resolveRestrictions(type, opts, Asc.c_oAscEDocProtect, Asc.c_oAscRestrictionType);
+        restrictions.forEach(r => this.api.asc_setRestriction(r));
+    }
 
     getDocProps(isUpdate) {
         const storeAppOptions = this.props.storeAppOptions;
@@ -1148,14 +995,7 @@ class MainController extends Component {
             const props = this.api.asc_getDocumentProtection();
             const type = props ? props.asc_getEditType() : Asc.c_oAscEDocProtect.None;
 
-            this._state.docProtection = {
-                type: type,
-                isReadOnly: type === Asc.c_oAscEDocProtect.ReadOnly,
-                isCommentsOnly: type === Asc.c_oAscEDocProtect.Comments,
-                isReviewOnly: type === Asc.c_oAscEDocProtect.TrackedChanges,
-                isFormsOnly: type === Asc.c_oAscEDocProtect.Forms,
-                isTrackedChanges: type === Asc.c_oAscEDocProtect.TrackedChanges
-            };
+            this._state.docProtection = buildProtectionFlags(type, Asc.c_oAscEDocProtect);
         }
 
         return this._state.docProtection;
@@ -1303,57 +1143,26 @@ class MainController extends Component {
 
         this._state.isFromGatewayDownloadAs = true;
 
-        let _format = (format && (typeof format == 'string')) ? Asc.c_oAscFileType[format.toUpperCase()] : null,
-            _defaultFormat = null,
-            textParams,
-            _supported = [
-                Asc.c_oAscFileType.TXT,
-                Asc.c_oAscFileType.RTF,
-                Asc.c_oAscFileType.ODT,
-                Asc.c_oAscFileType.DOCX,
-                Asc.c_oAscFileType.HTML,
-                Asc.c_oAscFileType.DOTX,
-                Asc.c_oAscFileType.OTT,
-                Asc.c_oAscFileType.FB2,
-                Asc.c_oAscFileType.EPUB,
-                Asc.c_oAscFileType.DOCM,
-                Asc.c_oAscFileType.JPG,
-                Asc.c_oAscFileType.PNG
-            ];
-        const type = /^(?:(pdf|djvu|xps|oxps))$/.exec(this.document.fileType);
+        const result = resolveDownloadAs(format, this.document.fileType, {
+            isForm: appOptions.isForm,
+            canFeatureForms: appOptions.canFeatureForms,
+        }, Asc.c_oAscFileType);
 
-        if (type && typeof type[1] === 'string' && !appOptions.isForm) {
-            if (!(format && (typeof format == 'string')) || type[1] === format.toLowerCase()) {
-                const options = new Asc.asc_CDownloadOptions();
-                options.asc_setIsDownloadEvent(true);
-                options.asc_setIsSaveAs(true);
-                this.api.asc_DownloadOrigin(options);
-                return;
-            }
-
-            if (/^xps|oxps$/.test(this.document.fileType))
-                _supported = _supported.concat([Asc.c_oAscFileType.PDF, Asc.c_oAscFileType.PDFA]);
-            else if (/^djvu$/.test(this.document.fileType)) {
-                _supported = [Asc.c_oAscFileType.PDF];
-            }
-
-            textParams = new AscCommon.asc_CTextParams(Asc.c_oAscTextAssociation.PlainLine);
-        } else {
-            _supported = _supported.concat([Asc.c_oAscFileType.PDF, Asc.c_oAscFileType.PDFA]);
-            _defaultFormat = Asc.c_oAscFileType.DOCX;
+        if (result.action === 'origin') {
+            const options = new Asc.asc_CDownloadOptions();
+            options.asc_setIsDownloadEvent(true);
+            options.asc_setIsSaveAs(true);
+            this.api.asc_DownloadOrigin(options);
+            return;
         }
 
-        if (appOptions.canFeatureForms && !/^djvu$/.test(this.document.fileType)) {
-            _supported = _supported.concat([Asc.c_oAscFileType.DOCXF]);
-        }
-        if (!_format || _supported.indexOf(_format) < 0)
-            _format = _defaultFormat;
-
-        const options = new Asc.asc_CDownloadOptions(_format, true);
+        const options = new Asc.asc_CDownloadOptions(result.format, true);
         options.asc_setIsSaveAs(true);
 
-        if(_format) {
-            textParams && options.asc_setTextParams(textParams);
+        if (result.format) {
+            if (result.needsTextParams) {
+                options.asc_setTextParams(new AscCommon.asc_CTextParams(Asc.c_oAscTextAssociation.PlainLine));
+            }
             this.api.asc_DownloadAs(options);
         } else {
             this.api.asc_DownloadOrigin(options);

@@ -1,6 +1,47 @@
 import React, {Component} from 'react';
-import { EditText } from '../../view/edit/EditText'
+import { EditText } from '../../view/edit/EditText.jsx'
 import { inject, observer } from 'mobx-react';
+import { getApi } from '../../../../../common/mobile/lib/sdk/api.js';
+
+/**
+ * Compute next font size, clamped to [1, 300].
+ * Returns { size, useStepApi } where useStepApi means the caller should
+ * use FontSizeIn/FontSizeOut instead of setting an explicit size.
+ */
+export const clampFontSize = (curSize, isDecrement) => {
+    if (typeof curSize === 'undefined') {
+        return { useStepApi: true };
+    }
+    const size = isDecrement
+        ? Math.max(1, curSize - 1)
+        : Math.min(300, curSize + 1);
+    return { size, useStepApi: false };
+};
+
+/**
+ * Map paragraph alignment type string to SDK numeric value.
+ */
+export const paragraphAlignValue = (type) => {
+    switch (type) {
+        case 'just':   return 3;
+        case 'right':  return 0;
+        case 'center': return 2;
+        default:       return 1;
+    }
+};
+
+/**
+ * Parse a 6-char hex color string into RGB integers.
+ * Returns null for 'transparent'.
+ */
+export const parseHighlightColor = (strColor) => {
+    if (strColor == 'transparent') return null;
+    return {
+        r: parseInt(strColor[0] + strColor[1], 16),
+        g: parseInt(strColor[2] + strColor[3], 16),
+        b: parseInt(strColor[4] + strColor[5], 16),
+    };
+};
 
 class EditTextController extends Component {
     constructor(props) {
@@ -11,87 +52,81 @@ class EditTextController extends Component {
     }
 
     componentDidMount() {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         api && api.UpdateInterfaceState();
         api.asc_registerCallback('asc_onFocusObject', this.onApiFocusObject);
     }
 
     componentWillUnmount() {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         api.asc_unregisterCallback('asc_onFocusObject', this.onApiFocusObject);
     }
 
     changeFontSize(curSize, isDecrement) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         if (api) {
-            let size = curSize;
-            if (isDecrement) {
-                typeof size === 'undefined' ? api.FontSizeOut() : size = Math.max(1, --size);
+            const result = clampFontSize(curSize, isDecrement);
+            if (result.useStepApi) {
+                isDecrement ? api.FontSizeOut() : api.FontSizeIn();
             } else {
-                typeof size === 'undefined' ? api.FontSizeIn() : size = Math.min(300, ++size);
-            }
-            if (typeof size !== 'undefined') {
-                api.put_TextPrFontSize(size);
+                api.put_TextPrFontSize(result.size);
             }
         }
     }
 
     changeFontFamily(name) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         if (api && name) {
             api.put_TextPrFontName(name);
         }
     }
 
     onTextColorAuto() {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         const color = new Asc.asc_CColor();
         color.put_auto(true);
         api.put_TextColor(color);
     }
 
     onTextColor(color) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         api.put_TextColor(Common.Utils.ThemeColor.getRgbColor(color));
     }
 
     onHighlightColor(strColor) {
-        const api = Common.EditorApi.get();
-        
-        if (strColor == 'transparent') {
+        const api = getApi();
+        const rgb = parseHighlightColor(strColor);
+
+        if (rgb === null) {
             api.SetMarkerFormat(true, false);
         } else {
-            let r = strColor[0] + strColor[1],
-                g = strColor[2] + strColor[3],
-                b = strColor[4] + strColor[5];
-
-            api.SetMarkerFormat(true, true, parseInt(r, 16), parseInt(g, 16), parseInt(b, 16));
+            api.SetMarkerFormat(true, true, rgb.r, rgb.g, rgb.b);
         }
     }
 
     toggleBold(value) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         if (api) {
             api.put_TextPrBold(value);
         }
     }
 
     toggleItalic(value) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         if (api) {
             api.put_TextPrItalic(value);
         }
     }
 
     toggleUnderline(value) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         if (api) {
             api.put_TextPrUnderline(value);
         }
     }
 
     toggleStrikethrough(value) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         if (api) {
             api.put_TextPrStrikeout(value);
         }
@@ -100,7 +135,7 @@ class EditTextController extends Component {
     // Additional
 
     onAdditionalStrikethrough(type, value) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         if (api) {
             if ('strikeout' === type) {
                 api.put_TextPrStrikeout(value);
@@ -111,7 +146,7 @@ class EditTextController extends Component {
     }
 
     onAdditionalCaps(type, value) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         if (api) {
             const paragraphProps = new Asc.asc_CParagraphProperty();
             if ('small' === type) {
@@ -126,7 +161,7 @@ class EditTextController extends Component {
     }
 
     onAdditionalScript(type, value) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         if (api) {
             if ('superscript' === type) {
                 api.put_TextPrBaseline(value ? Asc.vertalign_SuperScript : Asc.vertalign_Baseline);
@@ -137,7 +172,7 @@ class EditTextController extends Component {
     }
 
     changeLetterSpacing(curSpacing, isDecrement) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         const step = Common.Utils.Metric.getCurrentMetric() === Common.Utils.Metric.c_MetricUnits.pt ? 1 : 0.01;
         const maxValue = Common.Utils.Metric.fnRecalcFromMM(558.7);
         const minValue = Common.Utils.Metric.fnRecalcFromMM(-558.7);
@@ -153,29 +188,14 @@ class EditTextController extends Component {
     }
 
     onParagraphAlign(type) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         if (api) {
-            let value;
-            switch (type) {
-                case 'just':
-                    value = 3;
-                    break;
-                case 'right':
-                    value = 0;
-                    break;
-                case 'center':
-                    value = 2;
-                    break;
-                default:
-                    value = 1;
-                    break;
-            }
-            api.put_PrAlign(value);
+            api.put_PrAlign(paragraphAlignValue(type));
         }
     }
 
     onParagraphMove(isLeft) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         if (api) {
             if (isLeft) {
                 api.DecreaseIndent();
@@ -186,7 +206,7 @@ class EditTextController extends Component {
     }
 
     onLineSpacing(value) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         if (api) {
             const LINERULE_AUTO = 1;
             api.put_PrLineSpacing(LINERULE_AUTO, value);
@@ -194,26 +214,26 @@ class EditTextController extends Component {
     }
 
     onBullet(numberingInfo) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         if (api) {
             api.put_ListTypeCustom(JSON.parse(numberingInfo));
         }
     }
 
     onNumber(numberingInfo) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         if (api) {
             api.put_ListTypeCustom(JSON.parse(numberingInfo));
         }
     }
 
     onMultiLevelList(numberingInfo) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         if (api) api.put_ListTypeCustom(JSON.parse(numberingInfo));
     }
 
     getIconsBulletsAndNumbers(arrayElements, type) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         const arr = [];
 
         arrayElements.forEach( item => {
@@ -227,7 +247,7 @@ class EditTextController extends Component {
     }
 
     updateBulletsNumbers(type) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         const storeTextSettings = this.props.storeTextSettings;
         let subtype = undefined;
         let arrayElements = (type===0) ? storeTextSettings.getBulletsList() : (type===1) ? storeTextSettings.getNumbersList() : storeTextSettings.getMultiLevelList();
@@ -253,7 +273,7 @@ class EditTextController extends Component {
     }
 
     updateListType() {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         const listId = api.asc_GetCurrentNumberingId();
         const numformat = (listId !== null) ? api.asc_GetNumberingPr(listId).get_Lvl(api.asc_GetCurrentNumberingLvl()).get_Format() : Asc.c_oAscNumberingFormat.None;
 
@@ -268,7 +288,7 @@ class EditTextController extends Component {
     }
 
     setOrientationTextShape(direction) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         const properties = new Asc.asc_CImgProperty();
 
         properties.put_Vert(direction);
@@ -276,7 +296,7 @@ class EditTextController extends Component {
     }
 
     setOrientationTextTable(direction) {
-        const api = Common.EditorApi.get();
+        const api = getApi();
         const properties = new Asc.CTableProp();
 
         properties.put_CellsTextDirection(direction);
@@ -285,7 +305,7 @@ class EditTextController extends Component {
 
     render() {
         return (
-            <EditText 
+            <EditText
                 changeFontSize={this.changeFontSize}
                 changeFontFamily={this.changeFontFamily}
                 onTextColorAuto={this.onTextColorAuto}

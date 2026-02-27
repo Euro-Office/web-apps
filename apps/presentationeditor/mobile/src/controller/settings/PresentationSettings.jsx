@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { observer, inject } from "mobx-react";
-import {PresentationSettings} from '../../view/settings/PresentationSettings';
+import {PresentationSettings} from '../../view/settings/PresentationSettings.jsx';
 
 class PresentationSettingsController extends Component {
     constructor(props) {

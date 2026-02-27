@@ -1,14 +1,14 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Button, f7, Icon, Range, Sheet } from 'framework7-react';
-import SvgIcon from '../../../../common/mobile//lib/component/SvgIcon'
+import SvgIcon from '../../../../common/mobile//lib/component/SvgIcon.jsx'
 import IconDrawPen from '../../../../common/mobile/resources/icons/draw-pen.svg'
 import IconDrawHighlighter from '../../../../common/mobile/resources/icons/draw-highlighter.svg'
 import IconClearAll from '../../../../common/mobile/resources/icons/clear-all.svg'
 import IconClearObject from '../../../../common/mobile/resources/icons/clear-object.svg'
 import IconScroll from '../../../../common/mobile/resources/icons/scroll.svg'
-import { WheelColorPicker } from "../component/WheelColorPicker";
-import { Device } from "../../utils/device";
+import { WheelColorPicker } from "../component/WheelColorPicker.jsx";
+import { Device } from "../../utils/device.jsx";
 
 export const DrawView = ({ currentTool, setTool, settings, setSettings, colors, addCustomColor, enableErasing }) => {
   const { t } = useTranslation();

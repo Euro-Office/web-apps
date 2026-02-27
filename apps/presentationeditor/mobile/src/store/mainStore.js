@@ -1,26 +1,26 @@
 
-import {storeAppOptions} from './appOptions';
+import {storeAppOptions} from './appOptions.js';
 // import {storeDocumentSettings} from './documentSettings';
-import {storeFocusObjects} from "./focusObjects";
-import {storeUsers} from '../../../../common/mobile/lib/store/users';
-import {storeApplicationSettings} from './applicationSettings';
-import {storePresentationInfo} from './presentationInfo';
-import {storePresentationSettings} from './presentationSettings';
-import { storePalette } from './palette';
-import { storeSlideSettings } from './slideSettings';
-import { storeTextSettings } from './textSettings';
-import { storeShapeSettings } from './shapeSettings';
-import { storeTableSettings } from "./tableSettings";
-import { storeChartSettings } from "./chartSettings";
-import { storeLinkSettings } from "./linkSettings";
+import {storeFocusObjects} from "./focusObjects.js";
+import {storeUsers} from '../../../../common/mobile/lib/store/users.js';
+import {storeApplicationSettings} from './applicationSettings.js';
+import {storePresentationInfo} from './presentationInfo.js';
+import {storePresentationSettings} from './presentationSettings.js';
+import { storePalette } from './palette.js';
+import { storeSlideSettings } from './slideSettings.js';
+import { storeTextSettings } from './textSettings.js';
+import { storeShapeSettings } from './shapeSettings.js';
+import { storeTableSettings } from "./tableSettings.js";
+import { storeChartSettings } from "./chartSettings.js";
+import { storeLinkSettings } from "./linkSettings.js";
 // import {storeParagraphSettings} from "./paragraphSettings";
-// import {storeShapeSettings} from "./shapeSettings";
+// import {storeShapeSettings} from "./shapeSettings.js";
 // import {storeImageSettings} from "./imageSettings";
-import {storeReview} from '../../../../common/mobile/lib/store/review';
-import {storeComments} from "../../../../common/mobile/lib/store/comments";
-import {storeToolbarSettings} from "./toolbar";
-import { storeThemes } from '../../../../common/mobile/lib/store/themes';
-import { storeVersionHistory } from '../../../../common/mobile/lib/store/versionHistory';
+import {storeReview} from '../../../../common/mobile/lib/store/review.js';
+import {storeComments} from "../../../../common/mobile/lib/store/comments.js";
+import {storeToolbarSettings} from "./toolbar.js";
+import { storeThemes } from '../../../../common/mobile/lib/store/themes.js';
+import { storeVersionHistory } from '../../../../common/mobile/lib/store/versionHistory.js';
 
 export const stores = {
     storeAppOptions: new storeAppOptions(),

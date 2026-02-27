@@ -1,23 +1,23 @@
 import React, { Component, Fragment, createContext } from 'react';
 import { Page, View, Navbar, Subnavbar, Icon, f7 } from 'framework7-react';
 import { observer, inject } from "mobx-react";
-import { Device } from '../../../../common/mobile/utils/device';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 import CollaborationView from '../../../../common/mobile/lib/view/collaboration/Collaboration.jsx'
-import CellEditor from '../controller/CellEditor';
-import { Statusbar } from '../controller/Statusbar';
+import CellEditor from '../controller/CellEditor.jsx';
+import { Statusbar } from '../controller/Statusbar.jsx';
 import FilterOptionsController from '../controller/FilterOptions.jsx'
-import { Search, SearchSettings } from '../controller/Search';
-import { FunctionGroups } from "../controller/add/AddFunction";
-import ContextMenu from '../controller/ContextMenu';
-import { Toolbar } from "../controller/Toolbar";
-import { AddLinkController } from '../controller/add/AddLink';
-import { EditLinkController } from '../controller/edit/EditLink';
-import { Themes } from '../../../../common/mobile/lib/controller/Themes';
-import SettingsController from '../controller/settings/Settings';
-import AddingController from '../controller/add/Add';
-import EditView from '../view/edit/Edit';
-import VersionHistoryController from '../../../../common/mobile/lib/controller/VersionHistory';
-import { DrawController } from "../../../../common/mobile/lib/controller/Draw";
+import { Search, SearchSettings } from '../controller/Search.jsx';
+import { FunctionGroups } from "../controller/add/AddFunction.jsx";
+import ContextMenu from '../controller/ContextMenu.jsx';
+import { Toolbar } from "../controller/Toolbar.jsx";
+import { AddLinkController } from '../controller/add/AddLink.jsx';
+import { EditLinkController } from '../controller/edit/EditLink.jsx';
+import { Themes } from '../../../../common/mobile/lib/controller/Themes.jsx';
+import SettingsController from '../controller/settings/Settings.jsx';
+import AddingController from '../controller/add/Add.jsx';
+import EditView from '../view/edit/Edit.jsx';
+import VersionHistoryController from '../../../../common/mobile/lib/controller/VersionHistory.jsx';
+import { DrawController } from "../../../../common/mobile/lib/controller/Draw.jsx";
 
 export const MainContext = createContext();
 

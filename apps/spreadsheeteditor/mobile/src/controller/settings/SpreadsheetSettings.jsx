@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {SpreadsheetSettings} from '../../view/settings/SpreadsheetSettings';
+import {SpreadsheetSettings} from '../../view/settings/SpreadsheetSettings.jsx';
 import {observer, inject} from "mobx-react";
 
 class SpreadsheetSettingsController extends Component {

@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { ApplicationSettings } from "../../view/settings/ApplicationSettings";
+import { ApplicationSettings } from "../../view/settings/ApplicationSettings.jsx";
 import {observer, inject} from "mobx-react";
 import { LocalStorage } from '../../../../../common/mobile/utils/LocalStorage.mjs';
 import { withTranslation } from 'react-i18next';
-import { ThemesContext } from "../../../../../common/mobile/lib/controller/Themes";
+import { ThemesContext } from "../../../../../common/mobile/lib/controller/Themes.jsx";
 import { f7 } from "framework7-react";
 
 class ApplicationSettingsController extends Component {

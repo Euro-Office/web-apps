@@ -1,15 +1,15 @@
 import React, { useContext, useEffect } from 'react';
 import { Popover, Sheet, View, f7 } from 'framework7-react';
-import { Device } from '../../../../../common/mobile/utils/device';
-import { PageTextFonts, PageTextAddFormatting, PageTextBulletsAndNumbers, PageTextLineSpacing, PageTextFontColor, PageTextCustomFontColor, PageTextHighlightColor, PageOrientationTextShape, PageOrientationTextTable  } from "./EditText";
-import { ParagraphAdvSettings, PageParagraphBackColor, PageParagraphCustomColor, PageParagraphStyle, PageCreateTextStyle, PageChangeNextParagraphStyle } from "./EditParagraph";
-import { PageShapeStyleNoFill, PageShapeStyle, PageShapeCustomFillColor, PageShapeBorderColor, PageShapeCustomBorderColor, PageWrap, PageReorder, PageReplace } from "./EditShape";
-import { PageImageReorder, PageImageReplace, PageImageWrap, PageLinkSettings, PageWrappingStyle } from "./EditImage";
-import { PageTableOptions, PageTableWrap, PageTableStyle, PageTableStyleOptions, PageTableCustomFillColor, PageTableBorderColor, PageTableCustomBorderColor } from "./EditTable";
-import { PageChartDesign,  PageChartDesignType, PageChartDesignStyle, PageChartDesignFill, PageChartDesignBorder, PageChartCustomFillColor, PageChartBorderColor, PageChartCustomBorderColor, PageChartWrap, PageChartReorder } from "./EditChart";
-import { PageEditLeaderTableContents, PageEditStylesTableContents, PageEditStructureTableContents } from './EditTableContents';
-import EditingPage from './EditingPage';
-import { MainContext } from '../../page/main';
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
+import { PageTextFonts, PageTextAddFormatting, PageTextBulletsAndNumbers, PageTextLineSpacing, PageTextFontColor, PageTextCustomFontColor, PageTextHighlightColor, PageOrientationTextShape, PageOrientationTextTable  } from "./EditText.jsx";
+import { ParagraphAdvSettings, PageParagraphBackColor, PageParagraphCustomColor, PageParagraphStyle, PageCreateTextStyle, PageChangeNextParagraphStyle } from "./EditParagraph.jsx";
+import { PageShapeStyleNoFill, PageShapeStyle, PageShapeCustomFillColor, PageShapeBorderColor, PageShapeCustomBorderColor, PageWrap, PageReorder, PageReplace } from "./EditShape.jsx";
+import { PageImageReorder, PageImageReplace, PageImageWrap, PageLinkSettings, PageWrappingStyle } from "./EditImage.jsx";
+import { PageTableOptions, PageTableWrap, PageTableStyle, PageTableStyleOptions, PageTableCustomFillColor, PageTableBorderColor, PageTableCustomBorderColor } from "./EditTable.jsx";
+import { PageChartDesign,  PageChartDesignType, PageChartDesignStyle, PageChartDesignFill, PageChartDesignBorder, PageChartCustomFillColor, PageChartBorderColor, PageChartCustomBorderColor, PageChartWrap, PageChartReorder } from "./EditChart.jsx";
+import { PageEditLeaderTableContents, PageEditStylesTableContents, PageEditStructureTableContents } from './EditTableContents.jsx';
+import EditingPage from './EditingPage.jsx';
+import { MainContext } from '../../page/main.jsx';
 
 const routes = [
     {

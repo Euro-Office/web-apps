@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import {f7, View, Link, Icon, Popover, Navbar, NavRight, List, ListGroup, ListItem, ListButton, Actions, ActionsGroup, ActionsButton, Sheet, Page } from 'framework7-react';
 import { useTranslation } from 'react-i18next';
-import { Device } from '../../../../common/mobile/utils/device';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 import { inject, observer } from 'mobx-react';
 import { ThemeColorPalette, CustomColorPicker } from '../../../../common/mobile/lib/component/ThemeColorPalette.jsx';
 import SvgIcon from '@common/lib/component/SvgIcon';

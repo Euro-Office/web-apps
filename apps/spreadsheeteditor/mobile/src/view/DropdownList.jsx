@@ -1,6 +1,6 @@
 import React, {Component, useEffect, useState} from 'react';
 import { f7, Page, Navbar, List, ListItem, BlockTitle, ListButton, Popover, Popup, View, Link, Sheet } from "framework7-react";
-import { Device } from '../../../../common/mobile/utils/device';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 
 const PageDropdownList = props => {
     const listItems = props.listItems;

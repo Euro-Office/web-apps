@@ -1,23 +1,23 @@
-import {storeFocusObjects} from "./focusObjects";
-import {storeUsers} from '../../../../common/mobile/lib/store/users';
-import {storeFunctions} from './functions';
-import {storePalette} from "./palette";
-import {storeTextSettings} from "./textSettings";
-import {storeApplicationSettings} from "./applicationSettings";
-import {storeShapeSettings} from "./shapeSettings";
-import {storeCellSettings} from "./cellSettings";
-import {storeSpreadsheetInfo} from "./spreadsheetInfo";
-import {storeAppOptions} from "./appOptions";
+import {storeFocusObjects} from "./focusObjects.js";
+import {storeUsers} from '../../../../common/mobile/lib/store/users.js';
+import {storeFunctions} from './functions.js';
+import {storePalette} from "./palette.js";
+import {storeTextSettings} from "./textSettings.js";
+import {storeApplicationSettings} from "./applicationSettings.js";
+import {storeShapeSettings} from "./shapeSettings.js";
+import {storeCellSettings} from "./cellSettings.js";
+import {storeSpreadsheetInfo} from "./spreadsheetInfo.js";
+import {storeAppOptions} from "./appOptions.js";
 // import {storeImageSettings} from "./imageSettings";
 // import {storeTableSettings} from "./tableSettings";
-import {storeChartSettings} from "./chartSettings";
-import {storeSpreadsheetSettings} from "./spreadsheetSettings";
-import {storeReview} from '../../../../common/mobile/lib/store/review';
-import {storeComments} from "../../../../common/mobile/lib/store/comments";
-import {storeToolbarSettings} from "./toolbar";
-import { storeThemes } from '../../../../common/mobile/lib/store/themes';
-import { storeVersionHistory } from "../../../../common/mobile/lib/store/versionHistory";
-import {storeWorksheets} from "./sheets";
+import {storeChartSettings} from "./chartSettings.js";
+import {storeSpreadsheetSettings} from "./spreadsheetSettings.js";
+import {storeReview} from '../../../../common/mobile/lib/store/review.js';
+import {storeComments} from "../../../../common/mobile/lib/store/comments.js";
+import {storeToolbarSettings} from "./toolbar.js";
+import { storeThemes } from '../../../../common/mobile/lib/store/themes.js';
+import { storeVersionHistory } from "../../../../common/mobile/lib/store/versionHistory.js";
+import {storeWorksheets} from "./sheets.js";
 
 export const stores = {
     storeFocusObjects: new storeFocusObjects(),

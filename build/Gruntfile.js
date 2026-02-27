@@ -30,6 +30,8 @@
  *
  */
 module.exports = function(grunt) {
+    require('time-grunt')(grunt);
+
     var _ = require('lodash'),
         defaultConfig,
         packageFile;
@@ -156,7 +158,7 @@ module.exports = function(grunt) {
         }
         return srcArray;
     };
-    
+
     const BUILD_ROOT = path.resolve(process.env.BUILD_ROOT || path.join('..', 'deploy'));
 
     const SRC_ROOT = path.resolve(__dirname, "..")
@@ -490,8 +492,10 @@ module.exports = function(grunt) {
 
             replace: {
                 writeVersion: {
-                    src: ['<%= pkg.main.js.requirejs.options.out %>', '<%= pkg.main.js.postload.options.out %>',
-                                packageFile.main.js.babel.files[0].dest],
+                    // When --skip-babel is used, don't include ie/ directory (it won't exist)
+                    src: grunt.option('skip-babel')
+                        ? ['<%= pkg.main.js.requirejs.options.out %>', '<%= pkg.main.js.postload.options.out %>']
+                        : ['<%= pkg.main.js.requirejs.options.out %>', '<%= pkg.main.js.postload.options.out %>', packageFile.main.js.babel.files[0].dest],
                     overwrite: true,
                     replacements: [{
                         from: /\{\{PRODUCT_VERSION\}\}/g,
@@ -572,6 +576,10 @@ module.exports = function(grunt) {
                 }
             },
 
+            // Terser tasks are broken out separately (build, postload, iecompat) rather than
+            // using a single 'terser' task. This allows deploy-app-main to run only the tasks
+            // it needs (terser:build, terser:postload) and skip terser:iecompat, which handles
+            // IE compatibility for babel-transpiled files - unnecessary overhead for modern builds.
             terser: {
                 options: {
                     format: {
@@ -904,6 +912,9 @@ module.exports = function(grunt) {
     //quick workaround for build desktop version
     var copyTask = grunt.option('desktop')? "copy": "copy:script";
     var imageminTask = grunt.option('skip-imagemin') ? ['copy:images-app'] : ['imagemin'];
+    // Skip babel ES5 transpilation for modern-only builds (use --skip-babel flag)
+    // When skipped, no ie/ directory is created - only ES6 output is produced
+    var babelTask = grunt.option('skip-babel') ? [] : ['babel'];
 
     grunt.registerTask('deploy-api',                    ['api-init', 'clean', copyTask, 'replace:writeVersion']);
     grunt.registerTask('deploy-apps-common',            ['apps-common-init', 'clean', 'copy', 'replace', 'inline', ...imageminTask, 'svgmin']);
@@ -923,7 +934,7 @@ module.exports = function(grunt) {
     grunt.registerTask('deploy-common-embed',           ['common-embed-init', 'clean', 'copy']);
 
     grunt.registerTask('deploy-app-main',               ['prebuild-icons-sprite', 'main-app-init', 'clean:prebuild', ...imageminTask, 'less',
-                                                            'requirejs', 'babel', 'terser', 'concat', 'copy', 'replace:indexhtml', 'svgmin', 'inline', 'json-minify',
+                                                            'requirejs', ...babelTask, 'terser:build', 'terser:postload', 'concat', 'copy', 'svgmin', 'replace:indexhtml', 'inline', 'json-minify',
                                                             'replace:writeVersion', 'replace:prepareHelp', 'clean:postbuild']);
 
     grunt.registerTask('deploy-app-mobile',             ['mobile-app-init', 'clean:deploy', /*'cssmin',*/ /*'copy:template-backup',*/
@@ -934,7 +945,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('deploy-app-embed',              ['embed-app-init', 'clean:prebuild', 'terser', 'less', 'copy', 'replace:indexhtml', 'inline', 'clean:postbuild']);
     grunt.registerTask('deploy-app-test',               ['test-app-init', 'clean:prebuild', 'terser', 'less', 'copy']);
-    
+
     doRegisterInitializeAppTask('common',               'Common',               'common.json');
     doRegisterInitializeAppTask('documenteditor',       'DocumentEditor',       'documenteditor.json');
     doRegisterInitializeAppTask('spreadsheeteditor',    'SpreadsheetEditor',    'spreadsheeteditor.json');

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { NavigationPopover, NavigationSheet } from "../../view/settings/Navigation";
-import { Device } from '../../../../../common/mobile/utils/device';
+import { NavigationPopover, NavigationSheet } from "../../view/settings/Navigation.jsx";
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
 import { withTranslation } from 'react-i18next';
 
 class NavigationController extends Component {

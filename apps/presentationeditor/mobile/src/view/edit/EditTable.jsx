@@ -2,7 +2,7 @@ import React, {Fragment, useState, useEffect} from 'react';
 import {observer, inject} from "mobx-react";
 import {f7, Page, Navbar, List, ListItem, ListButton, BlockTitle,SkeletonBlock, Range, Toggle, Icon, Link, Tabs, Tab, NavRight, Segmented, Button} from 'framework7-react';
 import { useTranslation } from 'react-i18next';
-import {Device} from '../../../../../common/mobile/utils/device';
+import {Device} from '../../../../../common/mobile/utils/device.jsx';
 import {CustomColorPicker, ThemeColorPalette} from "../../../../../common/mobile/lib/component/ThemeColorPalette.jsx";
 import SvgIcon from '@common/lib/component/SvgIcon';
 import IconExpandDownIos from '@common-ios-icons/icon-expand-down.svg?ios';

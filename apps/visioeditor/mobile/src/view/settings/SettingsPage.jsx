@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { Page, Navbar, NavRight, Link, Icon, ListItem, List, f7 } from 'framework7-react';
 import { useTranslation } from 'react-i18next';
-import { Device } from '../../../../../common/mobile/utils/device';
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
 import { observer, inject } from "mobx-react";
-import { MainContext } from '../../page/main';
-import { SettingsContext } from '../../controller/settings/Settings';
+import { MainContext } from '../../page/main.jsx';
+import { SettingsContext } from '../../controller/settings/Settings.jsx';
 import SvgIcon from '@common/lib/component/SvgIcon';
 import IconAppSettings from '@common-icons/icon-app-settings.svg';
 import IconDownload from '@common-icons/icon-download.svg';

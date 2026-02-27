@@ -1,7 +1,7 @@
 import React, {Component, useEffect, useState} from 'react';
 import { f7, Page, Navbar, List, ListItem, BlockTitle, ListButton, Popover, Popup, View, Link } from "framework7-react";
 import { useTranslation } from "react-i18next";
-import { Device } from '../../../../common/mobile/utils/device';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 
 const PageEncoding = props => {
     const { t } = useTranslation();

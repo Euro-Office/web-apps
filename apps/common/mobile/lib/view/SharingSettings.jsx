@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Navbar, Page } from 'framework7-react';
 import { useTranslation } from 'react-i18next';
-import { Device } from '../../utils/device';
+import { Device } from '../../utils/device.jsx';
 
 const frameStyle = {
     width: '100%',

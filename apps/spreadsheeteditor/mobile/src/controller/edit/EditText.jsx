@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import { f7 } from 'framework7-react';
-import {Device} from '../../../../../common/mobile/utils/device';
+import {Device} from '../../../../../common/mobile/utils/device.jsx';
 
-import { EditText } from '../../view/edit/EditText';
+import { EditText } from '../../view/edit/EditText.jsx';
 
 class EditTextController extends Component {
     constructor (props) {

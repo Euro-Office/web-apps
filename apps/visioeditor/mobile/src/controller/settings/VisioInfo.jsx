@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import VisioInfo from "../../view/settings/VisioInfo";
+import VisioInfo from "../../view/settings/VisioInfo.jsx";
 import { observer, inject } from "mobx-react";
 
 class VisioInfoController extends Component {

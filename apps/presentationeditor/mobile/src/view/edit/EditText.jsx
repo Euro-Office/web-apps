@@ -2,7 +2,7 @@ import React, {Fragment, useState, useEffect} from 'react';
 import {observer, inject} from "mobx-react";
 import {f7, View, List, ListItem, ListButton, ListInput, Icon,  Button, Page, Navbar, Segmented, BlockTitle, NavRight, Link} from 'framework7-react';
 import { useTranslation } from 'react-i18next';
-import {Device} from '../../../../../common/mobile/utils/device';
+import {Device} from '../../../../../common/mobile/utils/device.jsx';
 import { ThemeColorPalette, CustomColorPicker } from '../../../../../common/mobile/lib/component/ThemeColorPalette.jsx';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { LocalStorage } from '../../../../../common/mobile/utils/LocalStorage.mjs';

@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {observer, inject} from "mobx-react";
 import {Page, Navbar, List, ListItem, BlockTitle, Segmented, Button, Icon, Toggle} from 'framework7-react';
 import { useTranslation } from 'react-i18next';
-import {Device} from '../../../../../common/mobile/utils/device';
+import {Device} from '../../../../../common/mobile/utils/device.jsx';
 import SvgIcon from '@common/lib/component/SvgIcon';
 import IconExpandDownAndroid from '@common-android-icons/icon-expand-down.svg';
 import IconExpandUp from '@common-android-icons/icon-expand-up.svg';

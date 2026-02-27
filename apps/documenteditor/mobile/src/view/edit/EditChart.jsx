@@ -4,7 +4,7 @@ import { List, ListItem, ListButton, Icon, Page, Navbar, NavRight, BlockTitle, T
 import { Swiper, SwiperSlide } from 'swiper/react';
 import {f7} from 'framework7-react';
 import { useTranslation } from 'react-i18next';
-import {Device} from '../../../../../common/mobile/utils/device';
+import {Device} from '../../../../../common/mobile/utils/device.jsx';
 import {CustomColorPicker, ThemeColorPalette} from "../../../../../common/mobile/lib/component/ThemeColorPalette.jsx";
 import SvgIcon from '@common/lib/component/SvgIcon';
 import IconExpandDownIos from '@common-ios-icons/icon-expand-down.svg?ios';

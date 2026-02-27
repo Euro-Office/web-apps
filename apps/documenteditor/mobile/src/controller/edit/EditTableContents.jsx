@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import { f7 } from 'framework7-react';
-import {Device} from '../../../../../common/mobile/utils/device';
+import {Device} from '../../../../../common/mobile/utils/device.jsx';
 import {observer, inject} from "mobx-react";
-import { EditTableContents } from '../../view/edit/EditTableContents';
+import { EditTableContents } from '../../view/edit/EditTableContents.jsx';
 
 class EditTableContentsController extends Component {
     constructor (props) {

@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { Popover, Sheet, f7, View } from 'framework7-react';
-import { Device } from "../../../utils/device";
-import { ReviewController, ReviewChangeController } from "../../controller/collaboration/Review";
-import { PageDisplayMode } from "./Review";
-import { ViewCommentsController, ViewCommentsSheetsController } from "../../controller/collaboration/Comments";
-import SharingSettingsController from "../../controller/SharingSettings";
-import { CollaborationPage } from '../../pages/CollaborationPage';
-import UsersPage from '../../pages/UsersPage';
+import { Device } from "../../../utils/device.jsx";
+import { ReviewController, ReviewChangeController } from "../../controller/collaboration/Review.jsx";
+import { PageDisplayMode } from "./Review.jsx";
+import { ViewCommentsController, ViewCommentsSheetsController } from "../../controller/collaboration/Comments.jsx";
+import SharingSettingsController from "../../controller/SharingSettings.jsx";
+import { CollaborationPage } from '../../pages/CollaborationPage.jsx';
+import UsersPage from '../../pages/UsersPage.jsx';
 
 const routes = [
     {

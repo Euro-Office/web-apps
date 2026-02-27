@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import Download from "../../view/settings/Download";
-import { Device } from '../../../../../common/mobile/utils/device';
+import Download from "../../view/settings/Download.jsx";
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
 import { withTranslation, useTranslation } from 'react-i18next';
 import { f7 } from 'framework7-react';
 import { observer, inject } from "mobx-react";

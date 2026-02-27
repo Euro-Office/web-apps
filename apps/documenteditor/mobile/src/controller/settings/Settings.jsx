@@ -2,8 +2,8 @@ import React, { createContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { f7 } from 'framework7-react';
 import { observer, inject } from "mobx-react";
-import { Device } from '../../../../../common/mobile/utils/device';
-import SettingsView from "../../view/settings/Settings";
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
+import SettingsView from "../../view/settings/Settings.jsx";
 import { LocalStorage } from "../../../../../common/mobile/utils/LocalStorage.mjs";
 
 export const SettingsContext = createContext();

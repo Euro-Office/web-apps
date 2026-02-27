@@ -1,13 +1,13 @@
 import React, { useContext, useEffect } from 'react';
 import { View, Popup, Popover, f7 } from 'framework7-react';
-import { Device } from '../../../../../common/mobile/utils/device';
-import ApplicationSettingsController from "../../controller/settings/ApplicationSettings";
-import { ThemeSettings } from "./ApplicationSettings";
-import DownloadController from "../../controller/settings/Download";
-import VisioInfoController from "../../controller/settings/VisioInfo";
-import About from '../../../../../common/mobile/lib/view/About';
-import SettingsPage from './SettingsPage';
-import { MainContext } from '../../page/main';
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
+import ApplicationSettingsController from "../../controller/settings/ApplicationSettings.jsx";
+import { ThemeSettings } from "./ApplicationSettings.jsx";
+import DownloadController from "../../controller/settings/Download.jsx";
+import VisioInfoController from "../../controller/settings/VisioInfo.jsx";
+import About from '../../../../../common/mobile/lib/view/About.jsx';
+import SettingsPage from './SettingsPage.jsx';
+import { MainContext } from '../../page/main.jsx';
 
 const routes = [
     {

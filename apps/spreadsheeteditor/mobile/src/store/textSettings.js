@@ -1,5 +1,5 @@
 import {action, observable, makeObservable, computed} from 'mobx';
-import CThumbnailLoader from '../../../../common/mobile/utils/CThumbnailLoader';
+import CThumbnailLoader from '../../../../common/mobile/utils/CThumbnailLoader.js';
 
 export class storeTextSettings {
     constructor() {

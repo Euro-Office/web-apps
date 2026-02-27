@@ -1,5 +1,5 @@
 import {action, observable, computed, makeObservable} from 'mobx';
-import EditorUIController from '../lib/patch'
+import EditorUIController from '../lib/patch.jsx'
 
 export class storeFocusObjects {
     constructor() {

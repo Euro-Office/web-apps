@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Device } from '../../../../../common/mobile/utils/device';
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
 import { f7 } from "framework7-react";
 import { withTranslation } from "react-i18next";
-import FormImageList from "../../view/add/AddFormImage";
+import FormImageList from "../../view/add/AddFormImage.jsx";
 
 class AddFormImageController extends Component {
     constructor(props) {

@@ -1,20 +1,20 @@
 import React, { Component, createContext } from 'react';
 import { f7, Page, View, Navbar, Subnavbar, Icon } from 'framework7-react';
 import { observer, inject } from "mobx-react";
-import { Device } from '../../../../common/mobile/utils/device';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 import CollaborationView from '../../../../common/mobile/lib/view/collaboration/Collaboration.jsx';
-import { Preview } from "../controller/Preview";
-import { Search, SearchSettings } from '../controller/Search';
-import ContextMenu from '../controller/ContextMenu';
-import { Toolbar } from "../controller/Toolbar";
-import { AddLinkController } from '../controller/add/AddLink';
-import { EditLinkController } from '../controller/edit/EditLink';
-import { Themes } from '../../../../common/mobile/lib/controller/Themes';
-import SettingsController from '../controller/settings/Settings';
-import AddView from '../view/add/Add';
-import EditView from '../view/edit/Edit';
-import VersionHistoryController from '../../../../common/mobile/lib/controller/VersionHistory';
-import { DrawController } from "../../../../common/mobile/lib/controller/Draw";
+import { Preview } from "../controller/Preview.jsx";
+import { Search, SearchSettings } from '../controller/Search.jsx';
+import ContextMenu from '../controller/ContextMenu.jsx';
+import { Toolbar } from "../controller/Toolbar.jsx";
+import { AddLinkController } from '../controller/add/AddLink.jsx';
+import { EditLinkController } from '../controller/edit/EditLink.jsx';
+import { Themes } from '../../../../common/mobile/lib/controller/Themes.jsx';
+import SettingsController from '../controller/settings/Settings.jsx';
+import AddView from '../view/add/Add.jsx';
+import EditView from '../view/edit/Edit.jsx';
+import VersionHistoryController from '../../../../common/mobile/lib/controller/VersionHistory.jsx';
+import { DrawController } from "../../../../common/mobile/lib/controller/Draw.jsx";
 
 export const MainContext = createContext();
 

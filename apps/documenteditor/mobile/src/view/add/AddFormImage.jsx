@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Component } from 'react';
 import { f7, Sheet, PageContent, Navbar, List, Page, View, ListItem, ListInput, ListButton, NavRight, Link, BlockTitle, Icon, Popup, Popover } from 'framework7-react';
 import { useTranslation } from 'react-i18next';
-import { Device } from '../../../../../common/mobile/utils/device';
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
 import SvgIcon from '@common/lib/component/SvgIcon';
 import IconImageLibraryIos from '@common-ios-icons/icon-image-library.svg?ios';
 import IconImageLibraryAndroid from '@common-android-icons/icon-image-library.svg';

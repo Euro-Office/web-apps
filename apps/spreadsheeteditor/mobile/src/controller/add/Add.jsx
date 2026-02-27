@@ -1,5 +1,5 @@
 import React, { createContext } from "react";
-import AddView from "../../view/add/Add";
+import AddView from "../../view/add/Add.jsx";
 
 export const AddingContext = createContext();
 

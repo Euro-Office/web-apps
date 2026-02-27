@@ -3,7 +3,7 @@ import {observer, inject} from "mobx-react";
 import {List, ListItem, ListInput, ListButton, Icon, Page, Navbar, NavRight, BlockTitle, Toggle, Range, Link} from 'framework7-react';
 import { useTranslation } from 'react-i18next';
 import {f7} from 'framework7-react';
-import {Device} from '../../../../../common/mobile/utils/device';
+import {Device} from '../../../../../common/mobile/utils/device.jsx';
 import SvgIcon from '@common/lib/component/SvgIcon';
 import IconExpandDownIos from '@common-ios-icons/icon-expand-down.svg?ios';
 import IconExpandDownAndroid from '@common-android-icons/icon-expand-down.svg';

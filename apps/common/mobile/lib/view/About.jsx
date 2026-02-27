@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { observer, inject } from "mobx-react";
 import { Page, Navbar, Link } from "framework7-react";
 import { useTranslation } from "react-i18next";
-import { Device } from '../../utils/device';
+import { Device } from '../../utils/device.jsx';
 
 const PageAbout = props => {
     const { t } = useTranslation();

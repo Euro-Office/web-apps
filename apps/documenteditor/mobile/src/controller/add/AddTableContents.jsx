@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { f7 } from 'framework7-react';
-import {Device} from '../../../../../common/mobile/utils/device';
-import {AddTableContents} from '../../view/add/AddTableContents';
+import {Device} from '../../../../../common/mobile/utils/device.jsx';
+import {AddTableContents} from '../../view/add/AddTableContents.jsx';
 
 class AddTableContentsController extends Component {
     constructor (props) {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
-import SpreadsheetInfo from "../../view/settings/SpreadsheetInfo";
+import SpreadsheetInfo from "../../view/settings/SpreadsheetInfo.jsx";
 
 class SpreadsheetInfoController extends Component {
     constructor(props) {

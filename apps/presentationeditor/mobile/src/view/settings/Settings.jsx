@@ -1,16 +1,16 @@
 import React, { useContext, useEffect } from 'react';
 import { View, Popup, Popover, f7 } from 'framework7-react';
-import { Device } from '../../../../../common/mobile/utils/device';
-import ApplicationSettingsController from "../../controller/settings/ApplicationSettings";
-import { MacrosSettings, ThemeSettings } from "./ApplicationSettings";
-import DownloadController from "../../controller/settings/Download";
-import PresentationInfoController from "../../controller/settings/PresentationInfo";
-import PresentationSettingsController from "../../controller/settings/PresentationSettings";
-import { PresentationColorSchemes } from "./PresentationSettings";
-import About from '../../../../../common/mobile/lib/view/About';
-import SettingsPage from './SettingsPage';
-import { MainContext } from '../../page/main';
-import VersionHistoryController from '../../../../../common/mobile/lib/controller/VersionHistory';
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
+import ApplicationSettingsController from "../../controller/settings/ApplicationSettings.jsx";
+import { MacrosSettings, ThemeSettings } from "./ApplicationSettings.jsx";
+import DownloadController from "../../controller/settings/Download.jsx";
+import PresentationInfoController from "../../controller/settings/PresentationInfo.jsx";
+import PresentationSettingsController from "../../controller/settings/PresentationSettings.jsx";
+import { PresentationColorSchemes } from "./PresentationSettings.jsx";
+import About from '../../../../../common/mobile/lib/view/About.jsx';
+import SettingsPage from './SettingsPage.jsx';
+import { MainContext } from '../../page/main.jsx';
+import VersionHistoryController from '../../../../../common/mobile/lib/controller/VersionHistory.jsx';
 
 const routes = [
     {

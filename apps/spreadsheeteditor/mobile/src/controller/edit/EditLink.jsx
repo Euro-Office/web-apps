@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { f7, Popup, Popover, View } from 'framework7-react';
-import { Device } from '../../../../../common/mobile/utils/device';
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
 import { withTranslation } from 'react-i18next';
 
-import { EditLink, PageEditTypeLink, PageEditSheet} from '../../view/edit/EditLink';
+import { EditLink, PageEditTypeLink, PageEditSheet} from '../../view/edit/EditLink.jsx';
 
 const routes = [
     {

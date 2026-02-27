@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {List, Page, Navbar, Icon, ListButton, ListInput, NavRight, Link, NavLeft, f7, NavTitle} from 'framework7-react';
 import { useTranslation } from 'react-i18next';
-import {Device} from "../../../../../common/mobile/utils/device";
+import {Device} from "../../../../../common/mobile/utils/device.jsx";
 import SvgIcon from '@common/lib/component/SvgIcon';
 import IconClose from '@common-android-icons/icon-close.svg';
 import IconDone from '@common-android-icons/icon-done.svg';

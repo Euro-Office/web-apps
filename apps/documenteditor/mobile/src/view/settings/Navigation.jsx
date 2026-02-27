@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Device } from '../../../../../common/mobile/utils/device';
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
 import {f7, List, ListItem, Icon, Page, Navbar, Sheet} from 'framework7-react';
 import { useTranslation } from 'react-i18next';
 import { inject, observer } from "mobx-react";
-import { MainContext } from "../../page/main";
+import { MainContext } from "../../page/main.jsx";
 
 const NavigationPopover = inject('storeNavigation')(observer(props => {
     const { t } = useTranslation();

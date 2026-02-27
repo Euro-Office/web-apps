@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { f7, View, Popup, Popover } from 'framework7-react';
-import { Device } from '../../../../../common/mobile/utils/device';
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
 import {observer, inject} from "mobx-react";
 import { withTranslation } from 'react-i18next';
 
-import { EditLink, ObservablePageEditTypeLink, ObservablePageEditLinkTo } from '../../view/edit/EditLink';
+import { EditLink, ObservablePageEditTypeLink, ObservablePageEditLinkTo } from '../../view/edit/EditLink.jsx';
 
 const routes = [
     {

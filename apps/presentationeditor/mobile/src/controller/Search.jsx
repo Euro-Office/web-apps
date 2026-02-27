@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { List, ListItem, Toggle, Page, Navbar, NavRight, Link } from 'framework7-react';
-import { SearchView, SearchSettingsView } from '../../../../common/mobile/lib/controller/Search';
+import { SearchView, SearchSettingsView } from '../../../../common/mobile/lib/controller/Search.jsx';
 import { f7 } from 'framework7-react';
 import { withTranslation } from 'react-i18next';
-import { Device } from '../../../../common/mobile/utils/device';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 import { observer, inject } from "mobx-react";
 
 class SearchSettings extends SearchSettingsView {

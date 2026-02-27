@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import { f7 } from 'framework7-react';
-import {Device} from '../../../../../common/mobile/utils/device';
+import {Device} from '../../../../../common/mobile/utils/device.jsx';
 import {observer, inject} from "mobx-react";
 
-import { EditChart } from '../../view/edit/EditChart';
+import { EditChart } from '../../view/edit/EditChart.jsx';
 
 class EditChartController extends Component {
     constructor (props) {

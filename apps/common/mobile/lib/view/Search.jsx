@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { Popover, Popup, View, f7 } from 'framework7-react';
-import { Device } from '../../../../common/mobile/utils/device';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 import { observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import SvgIcon from '@common/lib/component/SvgIcon';

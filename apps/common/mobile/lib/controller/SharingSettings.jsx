@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import ViewSharingSettings from "../view/SharingSettings";
+import ViewSharingSettings from "../view/SharingSettings.jsx";
 import {observer, inject} from "mobx-react";
 
 const SharingSettingsController = props => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { f7, ListItem, List, Icon, Page } from 'framework7-react';
 import { useTranslation } from 'react-i18next';
-import {Device} from '../../utils/device';
+import {Device} from '../../utils/device.jsx';
 import SvgIcon from '@common/lib/component/SvgIcon';
 import IconCancellation from '@common-icons/icon-cancellation.svg';
 

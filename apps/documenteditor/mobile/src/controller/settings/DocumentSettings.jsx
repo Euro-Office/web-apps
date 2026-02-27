@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {DocumentSettings} from '../../view/settings/DocumentSettings';
+import {DocumentSettings} from '../../view/settings/DocumentSettings.jsx';
 import { inject, observer } from 'mobx-react';
 import { withTranslation } from 'react-i18next';
 import { f7 } from 'framework7-react';

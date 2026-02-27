@@ -1,16 +1,16 @@
 import React, { useContext, useEffect } from 'react';
 import { Popover, Sheet, View } from 'framework7-react';
 import { f7 } from 'framework7-react';
-import { Device } from '../../../../../common/mobile/utils/device';
-// import { EditLinkController } from "../../controller/edit/EditLink";
-import { PageShapeStyle, PageShapeStyleNoFill, PageReplaceContainer, PageReorderContainer, PageShapeBorderColor, PageShapeCustomBorderColor, PageShapeCustomFillColor } from './EditShape';
-import { PageImageReplace, PageImageReorder, PageLinkSettings } from './EditImage';
-import { TextColorCell, FillColorCell, CustomTextColorCell, CustomFillColorCell, FontsCell, TextFormatCell, TextOrientationCell, BorderStyleCell, BorderColorCell, CustomBorderColorCell, BorderSizeCell, PageFormatCell, PageAccountingFormatCell, PageCurrencyFormatCell, PageDateFormatCell, PageTimeFormatCell, CellStyle, PageCreationCustomFormat, CustomFormats } from './EditCell';
-import { PageTextFonts, PageTextFontColor, PageTextCustomFontColor, PageOrientationTextShape, PageTextAdditionalFormatting } from './EditText';
-import { PageChartDesign,  PageChartDesignType, PageChartDesignStyle, PageChartDesignFill, PageChartDesignBorder, PageChartCustomFillColor, PageChartBorderColor, PageChartCustomBorderColor, PageChartReorder, PageChartLayout, PageLegend, PageChartTitle, PageHorizontalAxisTitle, PageVerticalAxisTitle, PageHorizontalGridlines, PageVerticalGridlines, PageDataLabels, PageChartVerticalAxis, PageVertAxisCrosses, PageDisplayUnits, PageVertMajorType, PageVertMinorType, PageVertLabelPosition, PageChartHorizontalAxis, PageHorAxisCrosses, PageHorAxisPosition, PageHorMajorType, PageHorMinorType, PageHorLabelPosition } from './EditChart';
-import { PageEditTypeLink, PageEditSheet } from './EditLink';
-import EditingPage from './EditingPage';
-import { MainContext } from '../../page/main';
+import { Device } from '../../../../../common/mobile/utils/device.jsx';
+// import { EditLinkController } from "../../controller/edit/EditLink.jsx";
+import { PageShapeStyle, PageShapeStyleNoFill, PageReplaceContainer, PageReorderContainer, PageShapeBorderColor, PageShapeCustomBorderColor, PageShapeCustomFillColor } from './EditShape.jsx';
+import { PageImageReplace, PageImageReorder, PageLinkSettings } from './EditImage.jsx';
+import { TextColorCell, FillColorCell, CustomTextColorCell, CustomFillColorCell, FontsCell, TextFormatCell, TextOrientationCell, BorderStyleCell, BorderColorCell, CustomBorderColorCell, BorderSizeCell, PageFormatCell, PageAccountingFormatCell, PageCurrencyFormatCell, PageDateFormatCell, PageTimeFormatCell, CellStyle, PageCreationCustomFormat, CustomFormats } from './EditCell.jsx';
+import { PageTextFonts, PageTextFontColor, PageTextCustomFontColor, PageOrientationTextShape, PageTextAdditionalFormatting } from './EditText.jsx';
+import { PageChartDesign,  PageChartDesignType, PageChartDesignStyle, PageChartDesignFill, PageChartDesignBorder, PageChartCustomFillColor, PageChartBorderColor, PageChartCustomBorderColor, PageChartReorder, PageChartLayout, PageLegend, PageChartTitle, PageHorizontalAxisTitle, PageVerticalAxisTitle, PageHorizontalGridlines, PageVerticalGridlines, PageDataLabels, PageChartVerticalAxis, PageVertAxisCrosses, PageDisplayUnits, PageVertMajorType, PageVertMinorType, PageVertLabelPosition, PageChartHorizontalAxis, PageHorAxisCrosses, PageHorAxisPosition, PageHorMajorType, PageHorMinorType, PageHorLabelPosition } from './EditChart.jsx';
+import { PageEditTypeLink, PageEditSheet } from './EditLink.jsx';
+import EditingPage from './EditingPage.jsx';
+import { MainContext } from '../../page/main.jsx';
 
 const routes = [
     {

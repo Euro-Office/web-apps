@@ -1,10 +1,10 @@
 import React, { Fragment, useContext } from 'react';
 import { Page, Navbar, NavRight, Link, Icon, ListItem, List, Toggle } from 'framework7-react';
-import { Device } from "../../../../../common/mobile/utils/device";
+import { Device } from "../../../../../common/mobile/utils/device.jsx";
 import { observer, inject } from "mobx-react";
 import { useTranslation } from 'react-i18next';
-import { SettingsContext } from '../../controller/settings/Settings';
-import { MainContext } from '../../page/main';
+import { SettingsContext } from '../../controller/settings/Settings.jsx';
+import { MainContext } from '../../page/main.jsx';
 import SvgIcon from '@common/lib/component/SvgIcon';
 import IconAddFavorites from '@icons/icon-add-favorites.svg';
 import IconRemoveFavorites from '@icons/icon-remove-favorites.svg';

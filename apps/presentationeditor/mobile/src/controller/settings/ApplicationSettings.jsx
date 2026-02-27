@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { ApplicationSettings } from "../../view/settings/ApplicationSettings";
+import { ApplicationSettings } from "../../view/settings/ApplicationSettings.jsx";
 import { LocalStorage } from '../../../../../common/mobile/utils/LocalStorage.mjs';
 import {observer, inject} from "mobx-react";
-import { ThemesContext } from "../../../../../common/mobile/lib/controller/Themes";
+import { ThemesContext } from "../../../../../common/mobile/lib/controller/Themes.jsx";
 import { withTranslation } from 'react-i18next';
 import { f7 } from "framework7-react";
 

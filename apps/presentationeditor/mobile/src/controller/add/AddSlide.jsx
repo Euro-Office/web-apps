@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import { f7 } from 'framework7-react';
-import {Device} from '../../../../../common/mobile/utils/device';
+import {Device} from '../../../../../common/mobile/utils/device.jsx';
 import {observer, inject} from "mobx-react";
 
-import AddSlide from '../../view/add/AddSlide';
+import AddSlide from '../../view/add/AddSlide.jsx';
 
 class AddSlideController extends Component {
     constructor (props) {

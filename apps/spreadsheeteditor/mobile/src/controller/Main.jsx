@@ -5,23 +5,23 @@ import { f7 } from 'framework7-react';
 import { withTranslation } from 'react-i18next';
 import CollaborationController from '../../../../common/mobile/lib/controller/collaboration/Collaboration.jsx'
 import { onAdvancedOptions } from './settings/Download.jsx';
-import EditorUIController from '../lib/patch';
+import EditorUIController from '../lib/patch.jsx';
 import {
     AddCommentController,
     CommentsController,
     EditCommentController,
     ViewCommentsSheetsController
-} from "../../../../common/mobile/lib/controller/collaboration/Comments";
+} from "../../../../common/mobile/lib/controller/collaboration/Comments.jsx";
 import {LocalStorage} from "../../../../common/mobile/utils/LocalStorage.mjs";
-import LongActionsController from "./LongActions";
-import ErrorController from "./Error";
-import app from "../page/app";
-import About from "../../../../common/mobile/lib/view/About";
+import LongActionsController from "./LongActions.jsx";
+import ErrorController from "./Error.jsx";
+import app from "../page/app.jsx";
+import About from "../../../../common/mobile/lib/view/About.jsx";
 import PluginsController from '../../../../common/mobile/lib/controller/Plugins.jsx';
-import EncodingController from "./Encoding";
-import DropdownListController from "./DropdownList";
-import { StatusbarController } from "./Statusbar";
-import { Device } from '../../../../common/mobile/utils/device';
+import EncodingController from "./Encoding.jsx";
+import DropdownListController from "./DropdownList.jsx";
+import { StatusbarController } from "./Statusbar.jsx";
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 import { Themes } from '../../../../common/mobile/lib/controller/Themes.jsx';
 import { processArrayScripts } from '../../../../common/mobile/utils/processArrayScripts.js';
 import '../../../../common/main/lib/util/LanguageInfo.js'

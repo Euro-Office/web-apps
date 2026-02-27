@@ -3,7 +3,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { Input, View, Button, Link, Popover, ListItem, List, Icon, f7, Page, Navbar, NavRight } from 'framework7-react';
 import {observer, inject} from "mobx-react";
 // import { __interactionsRef } from 'scheduler/tracing';
-import { Device } from '../../../../common/mobile/utils/device';
+import { Device } from '../../../../common/mobile/utils/device.jsx';
 import { useTranslation } from 'react-i18next';
 import SvgIcon from '@common/lib/component/SvgIcon';
 import IconFunction from '@icons/icon-function.svg';

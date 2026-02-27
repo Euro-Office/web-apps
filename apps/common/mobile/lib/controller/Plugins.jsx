@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { inject, observer } from 'mobx-react';
 import { f7 } from 'framework7-react';
-import { Device } from '../../utils/device';
+import { Device } from '../../utils/device.jsx';
 
 const PluginsController = inject('storeAppOptions')(observer(props => {
     const { storeAppOptions } = props;
