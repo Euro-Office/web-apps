@@ -144,7 +144,6 @@ define([], function () { 'use strict';
                 parentEl: $window.find('#id-dlg-pdf-select-image'),
                 cls: 'btn-text-menu-default',
                 caption: this.textSelect,
-                style: 'width: 142px;',
                 menu: new Common.UI.Menu({
                     style: 'min-width: 142px;',
                     maxHeight: 200,
