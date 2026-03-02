@@ -143,7 +143,6 @@ export class storeAppOptions {
         this.canAnalytics = false;
         this.canRequestClose = config.canRequestClose;
         this.canCloseEditor = false;
-        this.disableForceDesktop = this.customization.mobile && this.customization.mobile.disableForceDesktop || false;
 
         let canBack = false;
 
