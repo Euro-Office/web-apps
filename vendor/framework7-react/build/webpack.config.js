@@ -5,7 +5,7 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 // import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import { themeGlobalVars, themeDefines } from './theme.config.js';
+import { themeGlobalVars, themeDefines } from '../../../build/theme.config.mjs';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from "url";
