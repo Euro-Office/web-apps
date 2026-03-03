@@ -11,7 +11,7 @@ const AddChart = props => {
                     <ul className="row" key={'chart-row-' + indexRow}>
                         {row.map((chartType, index) => {
                             return (
-                                <li key={'chart-' + indexRow + '-' + index} onClick={() => {props.onChartClick(chartType.type)}}>
+                                <li key={'chart-' + indexRow + '-' + index} onClick={() => {props.onInsertChart(chartType.type)}}>
                                     <div className="thumb"
                                          style={{backgroundImage: `url('resources/img/charts/${chartType.thumb}')`}}></div>
                                 </li>

@@ -7,7 +7,7 @@ import AddChart from '../../view/add/AddChart';
 class AddChartController extends Component {
     constructor (props) {
         super(props);
-        this.onChartClick = this.onChartClick.bind(this);
+        this.onInsertChart = this.onInsertChart.bind(this);
     }
 
     closeModal () {
@@ -18,7 +18,7 @@ class AddChartController extends Component {
         }
     }
 
-    onChartClick (type) {
+    onInsertChart (type) {
         const api = Common.EditorApi.get();
         api.asc_addChartDrawingObject(type, undefined, true);
         this.closeModal();
@@ -26,7 +26,7 @@ class AddChartController extends Component {
 
     render () {
         return (
-            <AddChart onChartClick={this.onChartClick} />
+            <AddChart onInsertChart={this.onInsertChart} />
         )
     }
 }
