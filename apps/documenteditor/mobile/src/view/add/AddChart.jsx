@@ -1,25 +1,69 @@
 import React from 'react';
 import {observer, inject} from "mobx-react";
+import {Device} from "../../../../../common/mobile/utils/device";
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 const AddChart = props => {
-    const storeChartSettings = props.storeChartSettings;
-    const types = storeChartSettings.types;
+    const types = props.storeChartSettings.types;
+    const countSlides = Math.floor(types.length / 3);
+    const arraySlides = !Device.phone ? Array(countSlides).fill(countSlides) : [types.slice(0, 6), types.slice(6)];
+
     return (
         <div className={'dataview chart-types'}>
-            {types && types.map((row, indexRow) => {
-                return (
-                    <ul className="row" key={'chart-row-' + indexRow}>
-                        {row.map((chartType, index) => {
+            {types && types.length ? (
+                <Swiper pagination={true}>
+                    {Device.phone ?
+                        arraySlides.map((typesSlide, indexSlide) => {
                             return (
-                                <li key={'chart-' + indexRow + '-' + index} onClick={() => {props.onInsertChart(chartType.type)}}>
-                                    <div className="thumb"
-                                         style={{backgroundImage: `url('resources/img/charts/${chartType.thumb}')`}}></div>
-                                </li>
+                                <SwiperSlide key={indexSlide}>
+                                    {typesSlide.map((row, indexRow) => {
+                                        return (
+                                            <ul className="row" key={`row-${indexRow}`}>
+                                                {row.map((chartType, index) => {
+                                                    return (
+                                                        <li key={`${indexRow}-${index}`}
+                                                            onClick={() => {
+                                                                props.onInsertChart(chartType.type)
+                                                            }}>
+                                                            <div className="thumb"
+                                                                 style={{backgroundImage: `url('resources/img/charts/${chartType.thumb}')`}}></div>
+                                                        </li>
+                                                    )
+                                                })}
+                                            </ul>
+                                        )
+                                    })}
+                                </SwiperSlide>
+                            )
+                        })
+                        :
+                        arraySlides.map((_, indexSlide) => {
+                            let typesSlide = types.slice(indexSlide * 3, (indexSlide * 3) + 3);
+
+                            return (
+                                <SwiperSlide key={indexSlide}>
+                                    {typesSlide.map((row, indexRow) => {
+                                        return (
+                                            <ul className="row" key={`row-${indexRow}`}>
+                                                {row.map((chartType, index) => {
+                                                    return (
+                                                        <li key={`${indexRow}-${index}`}
+                                                            onClick={() => {
+                                                                props.onInsertChart(chartType.type)
+                                                            }}>
+                                                            <div className="thumb"
+                                                                 style={{backgroundImage: `url('resources/img/charts/${chartType.thumb}')`}}></div>
+                                                        </li>
+                                                    )
+                                                })}
+                                            </ul>
+                                        )
+                                    })}
+                                </SwiperSlide>
                             )
                         })}
-                    </ul>
-                )
-            })}
+                </Swiper>
+            ) : null}
         </div>
     )
 };
