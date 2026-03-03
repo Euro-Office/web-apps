@@ -5,6 +5,7 @@ import { observer, inject } from "mobx-react";
 import { Device } from '../../../../../common/mobile/utils/device';
 import AddSlideController from "../../controller/add/AddSlide";
 import AddShapeController from "../../controller/add/AddShape";
+import AddChartController from "../../controller/add/AddChart";
 import { AddOtherController } from "../../controller/add/AddOther";
 import { MainContext } from '../../page/main';
 import SvgIcon from '@common/lib/component/SvgIcon';
@@ -12,6 +13,8 @@ import IconAddShapeIos from '@common-ios-icons/icon-add-shape.svg?ios';
 import IconAddShapeAndroid from '@common-android-icons/icon-add-shape.svg';
 import IconAddOtherIos from '@common-ios-icons/icon-add-other.svg?ios';
 import IconAddOtherAndroid from '@common-android-icons/icon-add-other.svg';
+import IconAddChartIos from '@common-ios-icons/icon-add-chart.svg?ios';
+import IconAddChartAndroid from '@common-android-icons/icon-add-chart.svg';
 import IconAddSlideIos from '@ios-icons/icon-add-slide.svg?ios';
 import IconAddSlideAndroid from '@android-icons/icon-add-slide.svg';
 import IconExpandDownIos from '@common-ios-icons/icon-expand-down.svg?ios';
@@ -77,6 +80,13 @@ const AddingPage = inject("storeApplicationSettings")(observer(props => {
     }, [directionMode])
     
     if (!showPanels && countPages) {
+        tabs.push({
+            caption: _t.textChart,
+            id: 'add-chart',
+            icon: Device.ios ? IconAddChartIos.id : IconAddChartAndroid.id,
+            component: <AddChartController/>
+        });
+
         tabs.push({
             caption: _t.textSlide,
             id: 'add-slide',

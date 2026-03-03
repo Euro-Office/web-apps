@@ -5,6 +5,7 @@ import { observer, inject } from "mobx-react";
 import { Device } from '../../../../../common/mobile/utils/device';
 import { AddTableController } from "../../controller/add/AddTable";
 import AddShapeController from "../../controller/add/AddShape";
+import AddChartController from "../../controller/add/AddChart";
 import { AddOtherController } from "../../controller/add/AddOther";
 import { MainContext } from '../../page/main';
 import SvgIcon from '@common/lib/component/SvgIcon';
@@ -14,6 +15,8 @@ import IconAddOtherIos from '@common-ios-icons/icon-add-other.svg?ios';
 import IconAddOtherAndroid from '@common-android-icons/icon-add-other.svg';
 import IconAddTableIos from '@common-ios-icons/icon-add-table.svg?ios';
 import IconAddTableAndroid from '@common-android-icons/icon-add-table.svg';
+import IconAddChartIos from '@common-ios-icons/icon-add-chart.svg?ios';
+import IconAddChartAndroid from '@common-android-icons/icon-add-chart.svg';
 import IconExpandDownIos from '@common-ios-icons/icon-expand-down.svg?ios';
 import IconExpandDownAndroid from '@common-android-icons/icon-expand-down.svg';
 
@@ -120,6 +123,17 @@ const AddingPage = inject("storeFocusObjects", "storeTableSettings", "storeAppli
         plainEditLock = paragraphObj ? !paragraphObj.can_EditInlineContentControl() : false;
     }
 
+    if(!showPanels) {
+        needDisable = paragraphLocked || controlPlain || contentLocked || inFootnote;
+        if(!needDisable) {
+            tabs.push({
+                caption: _t.textChart,
+                id: 'add-chart',
+                icon: Device.ios ? IconAddChartIos.id : IconAddChartAndroid.id,
+                component: <AddChartController/>
+            });
+        }
+    }
     if (!showPanels && options.indexOf('text') > -1) {
         needDisable = !canAddTable || controlPlain || richEditLock || plainEditLock || richDelLock || plainDelLock;
 

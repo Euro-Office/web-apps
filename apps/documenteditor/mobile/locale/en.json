@@ -65,6 +65,7 @@
     "textTable": "Table",
     "textTableContents": "Table of Contents",
     "textTableSize": "Table Size",
+    "textChart": "Chart",
     "textWithBlueLinks": "With Blue Links",
     "textWithPageNumbers": "With Page Numbers",
     "txtNotUrl": "This field should be a URL in the format \"http://www.example.com\""
