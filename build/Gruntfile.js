@@ -187,18 +187,28 @@ module.exports = function(grunt) {
             grunt.log.writeln('Theme config loaded: ' + configPath);
         }
 
+        // Populate forms logo vars from theme config
+        global.themeFormVars = {};
+        if (global.themeMeta.forms_logo_light) {
+            var relPath = '../../../../theme/' + theme + '/assets/img/header';
+            global.themeFormVars['theme-forms-logo-light-path'] = "'" + relPath + '/' + global.themeMeta.forms_logo_light + "'";
+            global.themeFormVars['theme-forms-logo-dark-path'] = "'" + relPath + '/' + (global.themeMeta.forms_logo_dark || global.themeMeta.forms_logo_light) + "'";
+            grunt.log.writeln('Theme forms logo vars set');
+        }
+
         if (!grunt.file.isDir(themeRoot) && theme !== 'default') {
             grunt.log.warn('Theme directory not found: ' + themeRoot);
         }
     });
 
     // deploy-theme-images: copy theme images to BUILD_ROOT.
-    // Runs after deploy-apps-common (which cleans BUILD_ROOT/web-apps/apps/common).
+    // Runs after all editor deploys so that theme images overwrite stock versions.
     grunt.registerTask('deploy-theme-images', 'Copy theme images to build output', function() {
         const themeRoot = path.join('..', 'theme', theme);
         const imgSrc = path.join(themeRoot, 'assets', 'img');
 
         if (grunt.file.isDir(imgSrc)) {
+            // Desktop + mobile common dirs
             const imgDests = [
                 path.join(BUILD_ROOT, 'web-apps', 'apps', 'common', 'main', 'resources', 'img'),
                 path.join(BUILD_ROOT, 'web-apps', 'apps', 'common', 'mobile', 'resources', 'img')
@@ -209,6 +219,17 @@ module.exports = function(grunt) {
                         grunt.file.copy(f.src[0], f.dest);
                     });
             });
+
+            // Embed logo — copy to each editor's embed img dir
+            var embedLogo = path.join(imgSrc, 'embed', 'logo.svg');
+            if (grunt.file.exists(embedLogo)) {
+                ['documenteditor', 'spreadsheeteditor', 'presentationeditor', 'visioeditor'].forEach(function(editor) {
+                    var dest = path.join(BUILD_ROOT, 'web-apps', 'apps', editor, 'embed', 'resources', 'img', 'logo.svg');
+                    grunt.file.copy(embedLogo, dest);
+                });
+                grunt.log.writeln('Theme embed logo deployed');
+            }
+
             grunt.log.writeln('Theme images deployed to ' + BUILD_ROOT);
         }
     });
@@ -895,7 +916,7 @@ module.exports = function(grunt) {
                     replacements: [{
                         from: /\@\@SRC_ROOT\@\@/g,
                         to: SRC_ROOT
-                    }]
+                    }, ...global.jsreplacements]
                 }
             },
 
@@ -1054,10 +1075,10 @@ module.exports = function(grunt) {
 
     grunt.registerTask('default', ['deploy-theme',
                                    'deploy-common-component',
-                                   'deploy-theme-images',
                                    'deploy-documenteditor-component',
                                    'deploy-spreadsheeteditor-component',
                                    'deploy-presentationeditor-component',
                                    'deploy-pdfeditor-component',
-                                   'deploy-visioeditor-component']);
+                                   'deploy-visioeditor-component',
+                                   'deploy-theme-images']);
 };

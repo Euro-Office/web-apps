@@ -1,13 +1,17 @@
+// Default about logos (overridden by theme)
+@theme-about-logo-url: '@{common-image-const-path}/about/logo_s.svg';
+@theme-about-logo-dark-url: '@{common-image-const-path}/about/logo-white_s.svg';
+
 .about-dlg {
     .asc-about-office {
         background-repeat: no-repeat;
         margin-bottom: 5px;
 
         &:before {
-            content: ~"url('@{common-image-const-path}/about/logo_s.svg')";
+            content: ~"url('@{theme-about-logo-url}')";
 
             .theme-type-dark & {
-                content: ~"url('@{common-image-const-path}/about/logo-white_s.svg')";
+                content: ~"url('@{theme-about-logo-dark-url}')";
             }
 
             height: 45px;

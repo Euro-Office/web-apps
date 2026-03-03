@@ -75,7 +75,7 @@ module.exports = (grunt, replaceDeployPaths) => {
                     options: {
                         compress: true,
                         ieCompat: false,
-                        modifyVars: packageFile.forms.less.vars,
+                        modifyVars: Object.assign({}, packageFile.forms.less.vars, global.themeFormVars || {}),
                         plugins: [
                             new (require('less-plugin-clean-css'))()
                         ]

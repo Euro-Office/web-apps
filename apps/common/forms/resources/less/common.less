@@ -205,16 +205,19 @@
 
 // Logo
 // -------------------------
+@theme-forms-logo-light-path: '../../../../common/main/resources/img/header/dark-logo_s.svg';
+@theme-forms-logo-dark-path: '../../../../common/main/resources/img/header/header-logo_s.svg';
+
 .brand-logo {
     display: block;
     width: 86px;
     height: 20px;
-    background: data-uri('../../../../common/main/resources/img/header/dark-logo_s.svg') no-repeat;
+    background: data-uri(@theme-forms-logo-light-path) no-repeat;
 }
 
 .theme-type-dark {
     .brand-logo {
-        background: data-uri('../../../../common/main/resources/img/header/header-logo_s.svg') no-repeat;
+        background: data-uri(@theme-forms-logo-dark-path) no-repeat;
     }
 }
 

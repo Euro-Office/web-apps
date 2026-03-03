@@ -10,5 +10,7 @@
   "help_url": "https://help.euro-office.example.com",
   "app_title": "Euro Office",
   "mobile_logo_light": "eo_logo_light.svg",
-  "mobile_logo_dark": "eo_logo_dark.svg"
+  "mobile_logo_dark": "eo_logo_dark.svg",
+  "forms_logo_light": "eo_logo_dark.svg",
+  "forms_logo_dark": "eo_logo_light.svg"
 }
