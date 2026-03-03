@@ -99,7 +99,7 @@ Run `docker compose` from the `euro-office/fork/build` directory:
 docker compose exec eo bash
 
 # Then inside the container:
-export BUILD_NUMBER=0 THEME=nextcloud && cd /var/www/onlyoffice/web-apps-develop/build && grunt --skip-imagemin --skip-babel
+export BUILD_NUMBER=0 THEME=eurooffice && cd /var/www/onlyoffice/web-apps-develop/build && grunt --skip-imagemin --skip-babel
 ```
 
 ### Build Flags
@@ -113,7 +113,7 @@ export BUILD_NUMBER=0 THEME=nextcloud && cd /var/www/onlyoffice/web-apps-develop
 
 | Variable | Description |
 |----------|-------------|
-| `THEME` | Theme name to use (e.g., `nextcloud`, `default`) |
+| `THEME` | Theme name to use (e.g., `eurooffice`, `default`) |
 | `BUILD_NUMBER` | Build number for versioning |
 
 ## Style modifications
@@ -175,7 +175,7 @@ We want to make upstream updates as painless as possible. From the perspective o
 Each theme is a self-contained folder under `theme/` at the web-apps root:
 
 ```
-theme/nextcloud/
+theme/eurooffice/
   meta/
     config.json           # Brand values (company name, URLs, logo filenames)
   assets/
@@ -201,7 +201,7 @@ Contains brand values that replace `{{PLACEHOLDER}}` tokens in JS and webpack `D
 #### Build
 
 ```shell
-THEME=nextcloud grunt
+THEME=eurooffice grunt
 ```
 
 The `deploy-theme` task runs first and:
@@ -213,7 +213,7 @@ LESS compilation and JS replacements then proceed as normal with theme files in 
 
 #### Creating a new theme
 
-1. Copy `theme/nextcloud/` to `theme/yourtheme/`
+1. Copy `theme/eurooffice/` to `theme/yourtheme/`
 2. Edit `meta/config.json` with your brand values
 3. Replace logo SVGs in `assets/img/header/`
 4. Adjust LESS variables in `assets/less/theme.less`
