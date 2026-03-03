@@ -1,10 +1,11 @@
 // @common-image-path - defined in webpack config
+// @theme-mobile-logo-light, @theme-mobile-logo-dark - defined in webpack globalVars
 
 .device-ios {
     .theme-type-dark {
         i.icon {
             &.icon-logo {
-                background: ~"url(@{common-image-path}/header/logo-android.svg)" no-repeat center;
+                background: ~"url(@{theme-mobile-logo-dark})" no-repeat center;
                 background-size: contain;
             }
         }
@@ -17,7 +18,7 @@
         &.icon-logo {
             width: 100px;
             height: 20px;
-            background: ~"url(@{common-image-path}/header/logo-ios.svg)" no-repeat center;
+            background: ~"url(@{theme-mobile-logo-light})" no-repeat center;
             background-size: contain;
         }
     }
