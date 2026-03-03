@@ -5,6 +5,7 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 // import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import { themeGlobalVars, themeDefines } from './theme.config.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from "url";
@@ -176,6 +177,7 @@ const config = {
                 globalVars: {
                   "common-image-path": env === 'production' ? `../../../${editor}/mobile/resources/img` : '../../common/mobile/resources/img',
                   "app-image-path": env === 'production' ? '../resources/img' : './resources/img',
+                  ...themeGlobalVars(env, editor),
                 }
               }
             }
@@ -216,16 +218,7 @@ const config = {
       'process.env.NODE_ENV': JSON.stringify(env),
       'process.env.TARGET': JSON.stringify(target),
       __PRODUCT_VERSION__: JSON.stringify(process.env.PRODUCT_VERSION ? `${process.env.PRODUCT_VERSION}.${process.env.BUILD_NUMBER}` : '6.2.0.123d'),
-      __PUBLISHER_ADDRESS__: JSON.stringify(process.env.PUBLISHER_ADDRESS || '20A-12 Ernesta Birznieka-Upisha street, Riga, Latvia, EU, LV-1050'),
-      __SUPPORT_EMAIL__: JSON.stringify(process.env.SUPPORT_EMAIL || 'support@onlyoffice.com'),
-      __SUPPORT_URL__: JSON.stringify(process.env.SUPPORT_URL || 'https://support.onlyoffice.com'),
-      __PUBLISHER_PHONE__: JSON.stringify(process.env.PUBLISHER_PHONE || '+371 633-99867'),
-      __PUBLISHER_URL__: JSON.stringify(process.env.PUBLISHER_URL || 'https://www.onlyoffice.com'),
-      __PUBLISHER_NAME__: JSON.stringify(process.env.PUBLISHER_NAME || 'Ascensio System SIA'),
-      __APP_TITLE_TEXT__: JSON.stringify(process.env.APP_TITLE_TEXT ? process.env.APP_TITLE_TEXT : 'ONLYOFFICE'),
-      __COMPANY_NAME__: JSON.stringify(process.env.COMPANY_NAME ? process.env.COMPANY_NAME : 'ONLYOFFICE'),
-      __HELP_URL__: JSON.stringify(process.env.HELP_URL || 'https://helpcenter.onlyoffice.com'),
-      __SALES_EMAIL__: JSON.stringify(process.env.SALES_EMAIL || 'sales@onlyoffice.com'),
+      ...themeDefines(),
     }),
     new webpack.BannerPlugin(`\n* Version: ${process.env.PRODUCT_VERSION} (build: ${process.env.BUILD_NUMBER})\n`),
 
