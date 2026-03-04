@@ -48,7 +48,6 @@ module.exports = function(grunt) {
 
     let iconv_lite, encoding = process.env.SYSTEM_ENCODING;
     grunt.log.writeln('platform: ' + process.platform.green);
-    grunt.log.writeln('theme: ' + theme.green);
     if (process.platform == 'win32') {
         const cmdencoding = require('child_process').execSync('chcp');
         grunt.log.writeln(cmdencoding);
@@ -150,6 +149,7 @@ module.exports = function(grunt) {
     // Theme support — load theme.less directly from theme/ folder (no copy to source tree)
     const defaultTheme = 'euro-office';
     const theme = process.env.THEME || defaultTheme;
+    grunt.log.writeln('theme: ' + theme.green);
     const themeEntry = path.join('..', 'theme', theme, 'assets', 'less', 'theme.less');
     let themeFiles = null; // null = not yet resolved
 
