@@ -1012,7 +1012,7 @@ module.exports = function(grunt) {
     grunt.registerTask('deploy-monaco',                 ['monaco-init', 'clean', 'copy']);
     grunt.registerTask('deploy-common-embed',           ['common-embed-init', 'clean', 'copy']);
 
-    grunt.registerTask('deploy-app-main',               ['prebuild-icons-sprite', 'main-app-init', 'clean:prebuild', ...imageminTask, 'less',
+    grunt.registerTask('deploy-app-main',               [...spritesTask, 'main-app-init', 'clean:prebuild', ...imageminTask, 'less',
                                                             'requirejs', ...babelTask, 'terser:build', 'terser:postload', 'concat', 'copy', 'svgmin', 'replace:indexhtml', 'inline', 'json-minify',
                                                             'replace:writeVersion', 'replace:prepareHelp', 'clean:postbuild']);
 
