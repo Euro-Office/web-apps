@@ -66,55 +66,64 @@ module.exports = function(grunt) {
         return !!string && !!iconv_lite ? iconv_lite.encode(string,encoding) : string;
     };
 
+    // Helper: resolve a brand value with priority: env var > theme config.json > default
+    let _themVal = (envVal, configKey, fallback) => {
+        return function() {
+            return _encode(envVal)
+                || _encode(global.themeMeta && global.themeMeta[configKey])
+                || fallback;
+        };
+    };
+
     global.jsreplacements = [
                 {
                     from: /\{\{SUPPORT_EMAIL\}\}/g,
-                    to: _encode(process.env.SUPPORT_EMAIL) || 'support@onlyoffice.com'
+                    to: _themVal(process.env.SUPPORT_EMAIL, 'support_email', 'support@onlyoffice.com')
                 },{
                     from: /\{\{SUPPORT_URL\}\}/g,
-                    to: _encode(process.env.SUPPORT_URL) || 'https://support.onlyoffice.com'
+                    to: _themVal(process.env.SUPPORT_URL, 'support_url', 'https://support.onlyoffice.com')
                 },{
                     from: /\{\{SALES_EMAIL\}\}/g,
-                    to: _encode(process.env.SALES_EMAIL) || 'sales@onlyoffice.com'
+                    to: _themVal(process.env.SALES_EMAIL, 'sales_email', 'sales@onlyoffice.com')
                 },{
                     from: /\{\{PUBLISHER_URL\}\}/g,
-                    to: _encode(process.env.PUBLISHER_URL) || 'https://www.onlyoffice.com'
+                    to: _themVal(process.env.PUBLISHER_URL, 'publisher_url', 'https://www.onlyoffice.com')
                 },{
                     from: /\{\{PUBLISHER_PHONE\}\}/,
-                    to: process.env['PUBLISHER_PHONE'] || '+371 633-99867'
+                    to: _themVal(process.env.PUBLISHER_PHONE, 'publisher_phone', '+371 633-99867')
                 },{
                     from: /\{\{PUBLISHER_NAME\}\}/g,
-                    to: _encode(process.env.PUBLISHER_NAME) || 'Ascensio System SIA'
+                    to: _themVal(process.env.PUBLISHER_NAME, 'publisher_name', 'Ascensio System SIA')
                 },{
                     from: /\{\{PUBLISHER_ADDRESS\}\}/,
-                    to: _encode(process.env.PUBLISHER_ADDRESS) || '20A-12 Ernesta Birznieka-Upisha street, Riga, Latvia, EU, LV-1050'
+                    to: _themVal(process.env.PUBLISHER_ADDRESS, 'publisher_address', '20A-12 Ernesta Birznieka-Upisha street, Riga, Latvia, EU, LV-1050')
                 },{
                     from: /\{\{API_URL_EDITING_CALLBACK\}\}/,
-                    to: _encode(process.env.API_URL_EDITING_CALLBACK) || 'https://api.onlyoffice.com/editors/callback'
+                    to: _themVal(process.env.API_URL_EDITING_CALLBACK, null, 'https://api.onlyoffice.com/editors/callback')
                 },{
                     from: /\{\{COMPANY_NAME\}\}/g,
-                    to: _encode(process.env.COMPANY_NAME) || 'ONLYOFFICE'
+                    to: _themVal(process.env.COMPANY_NAME, 'company_name', 'ONLYOFFICE')
                 }, {
                     from: /\{\{APP_TITLE_TEXT\}\}/g,
-                    to: _encode(process.env.APP_TITLE_TEXT) || 'ONLYOFFICE'
+                    to: _themVal(process.env.APP_TITLE_TEXT, 'app_title', 'ONLYOFFICE')
                 }, {
                     from: /\{\{HELP_URL\}\}/g,
-                    to: _encode(process.env.HELP_URL) || 'https://helpcenter.onlyoffice.com'
+                    to: _themVal(process.env.HELP_URL, 'help_url', 'https://helpcenter.onlyoffice.com')
                 }, {
                     from: /\{\{HELP_CENTER_WEB_DE\}\}/g,
-                    to: _encode(process.env.HELP_CENTER_WEB_DE) || _encode(process.env.HELP_CENTER_WEB_EDITORS) || 'https://helpcenter.onlyoffice.com/userguides/docs-de.aspx'
+                    to: function() { return _encode(process.env.HELP_CENTER_WEB_DE) || _encode(process.env.HELP_CENTER_WEB_EDITORS) || 'https://helpcenter.onlyoffice.com/userguides/docs-de.aspx'; }
                 }, {
                     from: /\{\{HELP_CENTER_WEB_SSE\}\}/g,
-                    to: _encode(process.env.HELP_CENTER_WEB_SSE) || _encode(process.env.HELP_CENTER_WEB_EDITORS) || 'https://helpcenter.onlyoffice.com/userguides/docs-se.aspx'
+                    to: function() { return _encode(process.env.HELP_CENTER_WEB_SSE) || _encode(process.env.HELP_CENTER_WEB_EDITORS) || 'https://helpcenter.onlyoffice.com/userguides/docs-se.aspx'; }
                 }, {
                     from: /\{\{HELP_CENTER_WEB_PE\}\}/g,
-                    to: _encode(process.env.HELP_CENTER_WEB_PE) || _encode(process.env.HELP_CENTER_WEB_EDITORS) || 'https://helpcenter.onlyoffice.com/userguides/docs-pe.aspx'
+                    to: function() { return _encode(process.env.HELP_CENTER_WEB_PE) || _encode(process.env.HELP_CENTER_WEB_EDITORS) || 'https://helpcenter.onlyoffice.com/userguides/docs-pe.aspx'; }
                 }, {
                     from: /\{\{DEFAULT_LANG\}\}/g,
-                    to: _encode(process.env.DEFAULT_LANG) || 'en'
+                    to: _themVal(process.env.DEFAULT_LANG, null, 'en')
                 }, {
                     from: /\{\{SUGGEST_URL\}\}/g,
-                    to: _encode(process.env.SUGGEST_URL) || 'https://feedback.onlyoffice.com/forums/966080-your-voice-matters?category_id=519084'
+                    to: _themVal(process.env.SUGGEST_URL, null, 'https://feedback.onlyoffice.com/forums/966080-your-voice-matters?category_id=519084')
                 }];
 
     var helpreplacements = [
@@ -137,27 +146,72 @@ module.exports = function(grunt) {
     addons.forEach((element,index,self) => self[index] = path.join('../..', element, '/build'));
     addons = addons.filter(element => grunt.file.isDir(element));
 
-    // Theme support - load theme.less from themes directory
+    // Theme support — load theme.less directly from theme/ folder (no copy to source tree)
     const theme = process.env.THEME || 'default';
-    const themePath = path.join('../apps/common/main/resources/less/themes', theme);
-    const themeEntry = path.join(themePath, 'theme.less');
-    let themeFiles = [];
-    if (grunt.file.exists(themeEntry)) {
-        themeFiles = [themeEntry];
-        grunt.log.writeln('Theme: ' + theme.green);
-    } else if (theme !== 'default') {
-        grunt.log.warn('Theme not found: ' + themeEntry);
-    }
+    const themeEntry = path.join('..', 'theme', theme, 'assets', 'less', 'theme.less');
+    let themeFiles = null; // null = not yet resolved
 
-    // Helper to append theme files to a LESS source array
+    // Helper to append theme files to a LESS source array (resolves lazily)
     global.appendThemeFiles = function(src) {
-        // Handle both string and array sources
+        if (themeFiles === null) {
+            if (grunt.file.exists(themeEntry)) {
+                themeFiles = [themeEntry];
+                grunt.log.writeln('Theme: ' + theme.green);
+            } else {
+                themeFiles = [];
+                if (theme !== 'default') {
+                    grunt.log.warn('Theme not found: ' + themeEntry);
+                }
+            }
+        }
         let srcArray = Array.isArray(src) ? src : [src];
         if (themeFiles.length > 0) {
             return srcArray.concat(themeFiles);
         }
         return srcArray;
     };
+
+    // Initialize themeMeta for config.json values (populated by deploy-theme task)
+    global.themeMeta = {};
+
+    // deploy-theme: load config.json from theme folder.
+    // LESS files are referenced directly from theme/ via appendThemeFiles — no copy needed.
+    grunt.registerTask('deploy-theme', 'Load theme config', function() {
+        const themeRoot = path.join('..', 'theme', theme);
+
+        global.themeMeta = {};
+
+        const configPath = path.join(themeRoot, 'meta', 'config.json');
+        if (grunt.file.exists(configPath)) {
+            global.themeMeta = grunt.file.readJSON(configPath);
+            grunt.log.writeln('Theme config loaded: ' + configPath);
+        }
+
+        if (!grunt.file.isDir(themeRoot) && theme !== 'default') {
+            grunt.log.warn('Theme directory not found: ' + themeRoot);
+        }
+    });
+
+    // deploy-theme-images: copy theme images to BUILD_ROOT.
+    // Runs after deploy-apps-common (which cleans BUILD_ROOT/web-apps/apps/common).
+    grunt.registerTask('deploy-theme-images', 'Copy theme images to build output', function() {
+        const themeRoot = path.join('..', 'theme', theme);
+        const imgSrc = path.join(themeRoot, 'assets', 'img');
+
+        if (grunt.file.isDir(imgSrc)) {
+            const imgDests = [
+                path.join(BUILD_ROOT, 'web-apps', 'apps', 'common', 'main', 'resources', 'img'),
+                path.join(BUILD_ROOT, 'web-apps', 'apps', 'common', 'mobile', 'resources', 'img')
+            ];
+            imgDests.forEach(function(imgDest) {
+                grunt.file.expandMapping('**/*', imgDest, { cwd: imgSrc, flatten: false, filter: 'isFile' })
+                    .forEach(function(f) {
+                        grunt.file.copy(f.src[0], f.dest);
+                    });
+            });
+            grunt.log.writeln('Theme images deployed to ' + BUILD_ROOT);
+        }
+    });
 
     const BUILD_ROOT = path.resolve(process.env.BUILD_ROOT || path.join('..', 'deploy'));
 
@@ -990,6 +1044,7 @@ module.exports = function(grunt) {
     // Build LESS only for all editors
     // Note: common styles are imported into each editor's app.less, no separate common build needed
     grunt.registerTask('less-all', [
+        'deploy-theme',
         'init-build-documenteditor', 'main-app-init', 'less',
         'init-build-spreadsheeteditor', 'main-app-init', 'less',
         'init-build-presentationeditor', 'main-app-init', 'less',
@@ -997,7 +1052,9 @@ module.exports = function(grunt) {
         'init-build-visioeditor', 'main-app-init', 'less'
     ]);
 
-    grunt.registerTask('default', ['deploy-common-component',
+    grunt.registerTask('default', ['deploy-theme',
+                                   'deploy-common-component',
+                                   'deploy-theme-images',
                                    'deploy-documenteditor-component',
                                    'deploy-spreadsheeteditor-component',
                                    'deploy-presentationeditor-component',

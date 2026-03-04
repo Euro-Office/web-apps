@@ -99,7 +99,7 @@ Run `docker compose` from the `euro-office/fork/build` directory:
 docker compose exec eo bash
 
 # Then inside the container:
-export BUILD_NUMBER=0 THEME=nextcloud && cd /var/www/onlyoffice/web-apps-develop/build && grunt --skip-imagemin --skip-babel
+export BUILD_NUMBER=0 THEME=euro-office && cd /var/www/onlyoffice/web-apps-develop/build && grunt --skip-imagemin --skip-babel
 ```
 
 ### Build Flags
@@ -113,7 +113,7 @@ export BUILD_NUMBER=0 THEME=nextcloud && cd /var/www/onlyoffice/web-apps-develop
 
 | Variable | Description |
 |----------|-------------|
-| `THEME` | Theme name to use (e.g., `nextcloud`, `default`) |
+| `THEME` | Theme name to use (e.g., `euro-office`, `default`) |
 | `BUILD_NUMBER` | Build number for versioning |
 
 ## Style modifications
@@ -170,29 +170,58 @@ These paths have been updated to use the `@@SRC_ROOT@@` placeholder instead. At 
 
 We want to make upstream updates as painless as possible. From the perspective of making modifications we have added theming capability to the office package.
 
-You need to use a env variable.
+#### Theme folder structure
 
-#### Set ENV var
+Each theme is a self-contained folder under `theme/` at the web-apps root:
+
+```
+theme/euro-office/
+  meta/
+    config.json           # Brand values (company name, URLs, logo filenames)
+  assets/
+    img/header/           # Logo SVGs (copied to desktop + mobile resource dirs at build time)
+    less/                 # LESS variable overrides and CSS rule overrides
+```
+
+#### config.json
+
+Contains brand values that replace `{{PLACEHOLDER}}` tokens in JS and webpack `DefinePlugin` constants. Priority: environment variable > config.json > hardcoded default.
+
+```json
+{
+  "company_name": "Euro Office",
+  "app_title": "Euro Office",
+  "publisher_name": "Euro Office",
+  "publisher_url": "https://euro-office.example.com",
+  "mobile_logo_light": "eo_logo_light.svg",
+  "mobile_logo_dark": "eo_logo_dark.svg"
+}
+```
+
+#### Build
 
 ```shell
-THEME=[your theme] grunt [optional grunt command]
+THEME=euro-office grunt
 ```
-eg
-```shell
-THEME=nextcloud grunt less-all
-```
-> If you do this, you need to restart the docker eo, as the css files are cache busted
-> `docker compose exec eo bash`
 
-> If you add images, these need to be copied, to do that, you need to run `grunt` with no params (or on AMR64, with --skip-imagemin)
+The `deploy-theme` task runs first and:
+1. Reads `config.json` into `global.themeMeta` for brand replacements
+2. Copies images to `apps/common/main/resources/img/` (desktop) and `apps/common/mobile/resources/img/` (mobile)
+3. Copies LESS to `apps/common/main/resources/less/themes/{THEME}/`
 
-#### Setting up a theme
+LESS compilation and JS replacements then proceed as normal with theme files in place.
 
-Look at `apps/common/main/resources/less/themes/nextcloud` as an example.
+#### Creating a new theme
 
-The idea is to use variables set in the `theme` file as much as possible, and use the overrides feature if it is not possible to just use a variable. By using variables, we don't introduce extra CSS in the final output.
+1. Copy `theme/euro-office/` to `theme/yourtheme/`
+2. Edit `meta/config.json` with your brand values
+3. Replace logo SVGs in `assets/img/header/`
+4. Adjust LESS variables in `assets/less/theme.less`
+5. Build with `THEME=yourtheme`
 
-The `overrides` directory should match the structure of the existing app. It is only when it is not possible to accomplish the styling using variables.
+#### LESS guidelines
+
+Use variables in `theme.less` as much as possible — this avoids duplicate CSS in the final output. Only use `overrides/` for rules that cannot be changed via variables. The overrides directory should mirror the structure of the main app for clarity.
 
 ## License
 
