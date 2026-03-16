@@ -293,6 +293,7 @@ define([
                 if (!record) return;
                 var innerEl = $(this.el).find('.inner'),
                     innerHeight = innerEl.innerHeight(),
+                    outerHeight = innerEl.outerHeight(),
                     idx = _.indexOf(this.store.models, record),
                     div = (idx>=0 && this.dataViewItems.length>idx) ? $(this.dataViewItems[idx].el) : innerEl.find('#' + record.get('id'));
                 if (div.length<=0) return;
@@ -304,9 +305,9 @@ define([
                     newpos;
 
                 if (force || div_top<div_first_top)
-                    newpos = innerEl.scrollTop() + div_top - div_first_top;
+                    newpos = idx * div_height;
                 else if (div_top+div_height>innerHeight)
-                    newpos = innerEl.scrollTop() + div_top + div_height - innerHeight;
+                    newpos = (idx + 1) * div_height - outerHeight;
 
                 if (newpos!==undefined) {
                     if (this.scroller && this.allowScrollbar) {
