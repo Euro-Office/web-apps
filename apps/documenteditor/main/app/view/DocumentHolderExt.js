@@ -1820,7 +1820,7 @@ define([], function () {
                             lock_type = (control_props) ? control_props.get_Lock() : Asc.c_oAscSdtLockType.Unlocked,
                             is_form = control_props && control_props.get_FormPr();
                         me.menuTableRemoveForm.setVisible(is_form);
-                        me.menuTableStretchContentControl.setVisible(is_form);
+                        me.menuTableStretchContentControl.setVisible(is_form && !control_lock);
 
                         menuTableControl.setVisible(!is_form);
                         if (is_form) {
