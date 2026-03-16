@@ -255,8 +255,14 @@ define([
             if (this.spinners) {
                 for (var i=0; i<this.spinners.length; i++) {
                     const spinner = this.spinners[i];
+                    const maxValue = spinner.getMaxValue();
+                    const minValue = spinner.getMinValue();
                     spinner.setDefaultUnit(Common.Utils.Metric.getCurrentMetricName());
-                    spinner.setStep(Common.Utils.Metric.getCurrentMetric()==Common.Utils.Metric.c_MetricUnits.pt ? 1 : 0.01);
+                    spinner.setStep(
+                        Common.Utils.Metric.getCurrentMetric() == Common.Utils.Metric.c_MetricUnits.pt ? 1 : 0.01
+                    );
+                    spinner.setMinValue(Math.floor(Common.Utils.Metric.fnRecalcFromPt(minValue) * 100) / 100);
+                    spinner.setMaxValue(Math.ceil(Common.Utils.Metric.fnRecalcFromPt(maxValue)* 100) / 100);
                 }
             }
         },
@@ -379,7 +385,7 @@ define([
                 //Line end
                 value = (annotProps && annotProps.asc_getLineEnd) ? annotProps.asc_getLineEnd() : null; 
                 $formValue = getFormField(this.cmbLineEnd);
-                if(value !== null) {
+                if(value != null) {
                     if (this._state.LineEnd !== value) {
                         this.cmbLineEnd.setValue(value);
                         this._state.LineEnd = value;
@@ -392,7 +398,7 @@ define([
                 // Opacity
                 value = props.asc_getOpacity ? props.asc_getOpacity() : null; 
                 $formValue = getFormField(this.sldrOpacity);
-                if(value !== null) {
+                if(value != null) {
                     if (
                         Math.abs(this._state.Opacity - value) > 0.001 || 
                         Math.abs(this.numOpacity.getNumberValue() - value) > 0.001 || 
