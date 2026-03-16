@@ -955,7 +955,6 @@ define([], function () {
                         is_form = control_props && control_props.get_FormPr();
 
                     me.menuImgStretchContentControl.setVisible(is_form && !!value.imgProps.isTable && (!lock_type || lock_type == Asc.c_oAscSdtLockType.Unlocked));
-                    is_form && console.log('menuImgStretch visible');
 
                     me.menuImgRemoveControl.setVisible(in_control);
                     me.menuImgControlSettings.setVisible(in_control && me.mode.canEditContentControl && !is_form);
@@ -1822,7 +1821,6 @@ define([], function () {
                             is_form = control_props && control_props.get_FormPr();
                         me.menuTableRemoveForm.setVisible(is_form);
                         me.menuTableStretchContentControl.setVisible(is_form);
-                        is_form && console.log('menuTableStretch visible');
 
                         menuTableControl.setVisible(!is_form);
                         if (is_form) {
