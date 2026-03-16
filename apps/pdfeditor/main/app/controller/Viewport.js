@@ -335,7 +335,7 @@ define([
         applyEditorMode: function() {
             if (!this.viewport) return;
 
-            if (this.mode.isPDFEdit && this._initEditing) {
+            if (this._initEditing) {
                 var rightmenuController = this.getApplication().getController('RightMenu'),
                     rightMenuView   = rightmenuController.getView('RightMenu');
 
@@ -348,13 +348,7 @@ define([
                 Common.localStorage.getBool("pdfe-hidden-rightmenu", value) && this._rightMenu.hide();
                 Common.Utils.InternalSettings.set("pdfe-hidden-rightmenu", Common.localStorage.getBool("pdfe-hidden-rightmenu", value));
 
-                rightMenuView.setApi(this.api);
-                rightMenuView.setMode(this.mode);
-
                 this._initEditing = false;
-            }
-            if (!this._initEditing) {
-                this.getApplication().getController('RightMenu').onRightMenuHide(undefined, this.mode.isPDFEdit && !Common.Utils.InternalSettings.get("pdfe-hidden-rightmenu"), true);
             }
         },
 

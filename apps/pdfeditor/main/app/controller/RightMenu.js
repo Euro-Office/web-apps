@@ -131,7 +131,7 @@ define([
         },
 
         onFocusObject: function(SelectedObjects, forceSignature, forceOpen) {
-            if (!(this.editMode && this.mode.isPDFEdit) && !forceSignature)
+            if (!this.editMode && !forceSignature)
                 return;
 
             var open = this._initSettings ? !Common.localStorage.getBool("pdfe-hide-right-settings", this.rightmenu.defaultHideRightMenu) : !!forceOpen;

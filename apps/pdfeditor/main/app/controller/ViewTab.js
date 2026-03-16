@@ -155,7 +155,6 @@ define([
                         emptyGroup.push(me.view.chRightMenu.$el.closest('.elset'));
                         emptyGroup.shift().append(me.view.chRightMenu.$el[0]);
                     }
-                    config.canPDFEdit && me.applyEditorMode(config);
 
                     if (emptyGroup.length>1) { // remove empty group
                         emptyGroup[emptyGroup.length-1].closest('.group').remove();
@@ -350,19 +349,6 @@ define([
 
         onComboBlur: function() {
             Common.NotificationCenter.trigger('edit:complete', this.view);
-        },
-
-        applyEditorMode: function(config) {
-            if (this.view && this.view.chRightMenu) {
-                var isVisible = (config || this.mode)['isPDFEdit'];
-                isVisible && this.view.chRightMenu.$el.closest('.elset').addClass('transparent');
-                this.view.chRightMenu.setVisible(isVisible);
-                if (this.toolbar && this.toolbar.toolbar) {
-                    this.toolbar.toolbar.moveAllFromMoreButton('view');
-                    this.toolbar.toolbar.processPanelVisible(null, true, true);
-                }
-                this.view.chRightMenu.$el.closest('.elset').removeClass('transparent');
-            }
         }
 
     }, PDFE.Controllers.ViewTab || {}));

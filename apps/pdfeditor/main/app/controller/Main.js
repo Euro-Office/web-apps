@@ -1102,10 +1102,14 @@ define([
                     statusbarController         = application.getController('Statusbar'),
                     documentHolderController    = application.getController('DocumentHolder'),
                     leftmenuController          = application.getController('LeftMenu'),
+                    rightmenuController         = application.getController('RightMenu'),
                     chatController              = application.getController('Common.Controllers.Chat'),
                     pluginsController           = application.getController('Common.Controllers.Plugins'),
                     navigationController        = application.getController('Navigation');
 
+
+                rightmenuController.getView('RightMenu').setApi(this.api);
+                rightmenuController.getView('RightMenu').setMode(this.appOptions);
 
                 leftmenuController.getView('LeftMenu').getMenu('file').loadDocument({doc:me.document});
                 leftmenuController.createDelayedElements().setApi(me.api);
@@ -1585,7 +1589,6 @@ define([
                     toolbar = app.getController('Toolbar');
                 toolbar.applyMode(activeTab);
                 app.getController('Viewport').applyEditorMode();
-                app.getController('ViewTab').applyEditorMode();
                 app.getController('DocumentHolder').applyEditorMode();
                 app.getController('LeftMenu').leftMenu.getMenu('file').applyMode();
                 callback && callback.call();
