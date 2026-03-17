@@ -120,17 +120,40 @@ define([
                 this.lockedControls = [];
 
                 this._arrEffectName = [
-                    {title: this.textNone, imageUrl: "btn-transition-none", value: Asc.c_oAscSlideTransitionTypes.None, id: Common.UI.getId()},
-                    {title: this.textMorph, imageUrl: "btn-transition-morph", value: Asc.c_oAscSlideTransitionTypes.Morph, id: Common.UI.getId()},
-                    {title: this.textFade, imageUrl: "btn-transition-fade", value: Asc.c_oAscSlideTransitionTypes.Fade, id: Common.UI.getId()},
-                    {title: this.textPush, imageUrl: "btn-transition-push", value: Asc.c_oAscSlideTransitionTypes.Push, id: Common.UI.getId()},
-                    {title: this.textWipe, imageUrl: "btn-transition-wipe", value: Asc.c_oAscSlideTransitionTypes.Wipe, id: Common.UI.getId()},
-                    {title: this.textSplit, imageUrl: "btn-transition-split", value: Asc.c_oAscSlideTransitionTypes.Split, id: Common.UI.getId()},
-                    {title: this.textUnCover, imageUrl: "btn-transition-uncover", value: Asc.c_oAscSlideTransitionTypes.UnCover, id: Common.UI.getId()},
-                    {title: this.textCover, imageUrl: "btn-transition-cover", value: Asc.c_oAscSlideTransitionTypes.Cover, id: Common.UI.getId()},
-                    {title: this.textClock, imageUrl: "btn-transition-clock", value: Asc.c_oAscSlideTransitionTypes.Clock, id: Common.UI.getId()},
-                    {title: this.textZoom, imageUrl: "btn-transition-zoom", value: Asc.c_oAscSlideTransitionTypes.Zoom, id: Common.UI.getId()},
-                    {title: this.textRandom, imageUrl: "btn-transition-random", value: Asc.c_oAscSlideTransitionTypes.Random, id: Common.UI.getId(), cls: 'last-item'}
+                    {group: 'subtle', title: this.textNone, imageUrl: "btn-transition-none", value: Asc.c_oAscSlideTransitionTypes.None, id: Common.UI.getId()},
+                    {group: 'subtle', title: this.textMorph, imageUrl: "btn-transition-morph", value: Asc.c_oAscSlideTransitionTypes.Morph, id: Common.UI.getId()},
+                    {group: 'subtle', title: this.textFade, imageUrl: "btn-transition-fade", value: Asc.c_oAscSlideTransitionTypes.Fade, id: Common.UI.getId()},
+                    {group: 'subtle', title: this.textPush, imageUrl: "btn-transition-push", value: Asc.c_oAscSlideTransitionTypes.Push, id: Common.UI.getId()},
+                    {group: 'subtle', title: this.textWipe, imageUrl: "btn-transition-wipe", value: Asc.c_oAscSlideTransitionTypes.Wipe, id: Common.UI.getId()},
+                    {group: 'subtle', title: this.textSplit, imageUrl: "btn-transition-split", value: Asc.c_oAscSlideTransitionTypes.Split, id: Common.UI.getId()},
+                    {group: 'subtle', title: this.textCut, imageUrl: "btn-transition-cut", value: Asc.c_oAscSlideTransitionTypes.Cut, id: Common.UI.getId()},
+                    {group: 'subtle', title: this.textRandomBars, imageUrl: "btn-transition-randombars", value: Asc.c_oAscSlideTransitionTypes.RandomBar, id: Common.UI.getId()},
+                    {group: 'subtle', title: this.textUnCover, imageUrl: "btn-transition-uncover", value: Asc.c_oAscSlideTransitionTypes.UnCover, id: Common.UI.getId()},
+                    {group: 'subtle', title: this.textCover, imageUrl: "btn-transition-cover", value: Asc.c_oAscSlideTransitionTypes.Cover, id: Common.UI.getId()},
+                    {group: 'subtle', title: this.textCircle, imageUrl: "btn-transition-circle", value: Asc.c_oAscSlideTransitionTypes.Circle, id: Common.UI.getId()},
+                    {group: 'subtle', title: this.textDiamond, imageUrl: "btn-transition-diamond", value: Asc.c_oAscSlideTransitionTypes.Diamond, id: Common.UI.getId()},
+                    {group: 'subtle', title: this.textPlus, imageUrl: "btn-transition-plus", value: Asc.c_oAscSlideTransitionTypes.Plus, id: Common.UI.getId()},
+                    {group: 'exciting', title: this.textDissolve, imageUrl: "btn-transition-dissolve", value: Asc.c_oAscSlideTransitionTypes.Dissolve, id: Common.UI.getId()},
+                    {group: 'exciting', title: this.textChecker, imageUrl: "btn-transition-checker", value: Asc.c_oAscSlideTransitionTypes.Checker, id: Common.UI.getId()},
+                    {group: 'exciting', title: this.textBlinds, imageUrl: "btn-transition-blinds", value: Asc.c_oAscSlideTransitionTypes.Blinds, id: Common.UI.getId()},
+                    {group: 'exciting', title: this.textClock, imageUrl: "btn-transition-clock", value: Asc.c_oAscSlideTransitionTypes.Clock, id: Common.UI.getId()},
+                    {group: 'exciting', title: this.textRipple, imageUrl: "btn-transition-ripple", value: Asc.c_oAscSlideTransitionTypes.Ripple, id: Common.UI.getId()},
+                    {group: 'exciting', title: this.textHoneycomb, imageUrl: "btn-transition-honeycomb", value: Asc.c_oAscSlideTransitionTypes.Honeycomb, id: Common.UI.getId()},
+                    {group: 'exciting', title: this.textVortex, imageUrl: "btn-transition-vortex", value: Asc.c_oAscSlideTransitionTypes.Vortex, id: Common.UI.getId()},
+                    {group: 'exciting', title: this.textSwitch, imageUrl: "btn-transition-switch", value: Asc.c_oAscSlideTransitionTypes.Switch, id: Common.UI.getId()},
+                    {group: 'exciting', title: this.textFlip, imageUrl: "btn-transition-flip", value: Asc.c_oAscSlideTransitionTypes.Flip, id: Common.UI.getId()},
+                    {group: 'exciting', title: this.textGallery, imageUrl: "btn-transition-gallery", value: Asc.c_oAscSlideTransitionTypes.Gallery, id: Common.UI.getId()},
+                    {group: 'exciting', title: this.textCube, imageUrl: "btn-transition-cube", prismId: 'prism-cube', value: Asc.c_oAscSlideTransitionTypes.Prism, id: Common.UI.getId()},
+                    {group: 'exciting', title: this.textBoxZoom, imageUrl: "btn-transition-boxzoom", value: Asc.c_oAscSlideTransitionTypes.BoxZoom, id: Common.UI.getId()},
+                    {group: 'exciting', title: this.textDoors, imageUrl: "btn-transition-doors", value: Asc.c_oAscSlideTransitionTypes.Doors, id: Common.UI.getId()},
+                    {group: 'exciting', title: this.textBox, imageUrl: "btn-transition-box", prismId: 'prism-box', value: Asc.c_oAscSlideTransitionTypes.Prism, id: Common.UI.getId()},
+                    {group: 'exciting', title: this.textComb, imageUrl: "btn-transition-comb", value: Asc.c_oAscSlideTransitionTypes.Comb, id: Common.UI.getId()},
+                    {group: 'exciting', title: this.textZoom, imageUrl: "btn-transition-zoom", value: Asc.c_oAscSlideTransitionTypes.Zoom, id: Common.UI.getId()},
+                    {group: 'exciting', title: this.textRandom, imageUrl: "btn-transition-random", value: Asc.c_oAscSlideTransitionTypes.Random, id: Common.UI.getId()},
+                    {group: 'dynamic-content', title: this.textFerris, imageUrl: "btn-transition-ferris", value: Asc.c_oAscSlideTransitionTypes.Ferris, id: Common.UI.getId()},
+                    {group: 'dynamic-content', title: this.textRotate, imageUrl: "btn-transition-rotate", prismId: 'prism-rotate', value: Asc.c_oAscSlideTransitionTypes.Prism, id: Common.UI.getId()},
+                    {group: 'dynamic-content', title: this.textWindow, imageUrl: "btn-transition-window", value: Asc.c_oAscSlideTransitionTypes.Window, id: Common.UI.getId()},
+                    {group: 'dynamic-content', title: this.textOrbit, imageUrl: "btn-transition-orbit", prismId: 'prism-orbit', value: Asc.c_oAscSlideTransitionTypes.Prism, id: Common.UI.getId(), cls: 'last-item'}
                 ];
                 this._arrEffectName.forEach(function (item) {
                     item.tip = item.title;
@@ -150,6 +173,11 @@ define([
                         '<div class = "caption"><%= title %></div>',
                         '</div>'
                     ].join('')),
+                    groups: new Common.UI.DataViewGroupStore([
+                        {id: 'subtle',  caption: this.textSubtle},
+                        {id: 'exciting', caption: this.textExciting},
+                        {id: 'dynamic-content', caption: this.textDynamicContent}
+                    ]),
                     enableKeyEvents: true,
                     lock: [_set.slideDeleted, _set.noSlides, _set.disableOnStart, _set.transitLock],
                     dataHint: '1',
@@ -314,7 +342,56 @@ define([
                     {caption: this.textZoomRotate, value: Asc.c_oAscSlideTransitionParams.Zoom_AndRotate},
                     {caption: this.textMorphObjects, value: Asc.c_oAscSlideTransitionParams.Morph_Objects},
                     {caption: this.textMorphWord, value: Asc.c_oAscSlideTransitionParams.Morph_Words},
-                    {caption: this.textMorphLetters, value: Asc.c_oAscSlideTransitionParams.Morph_Letters}
+                    {caption: this.textMorphLetters, value: Asc.c_oAscSlideTransitionParams.Morph_Letters},
+                    {caption: this.textSmoothly, value: Asc.c_oAscSlideTransitionParams.Cut_Default},
+                    {caption: this.textBlack, value: Asc.c_oAscSlideTransitionParams.Cut_ThroughBlack},
+                    {caption: this.textHorizontal, value: Asc.c_oAscSlideTransitionParams.Blinds_Horizontal},
+                    {caption: this.textVertical, value: Asc.c_oAscSlideTransitionParams.Blinds_Vertical},
+                    {caption: this.textHorizontal, value: Asc.c_oAscSlideTransitionParams.Checker_Horizontal},
+                    {caption: this.textVertical, value: Asc.c_oAscSlideTransitionParams.Checker_Vertical},
+                    {caption: this.textHorizontal, value: Asc.c_oAscSlideTransitionParams.Comb_Horizontal},
+                    {caption: this.textVertical, value: Asc.c_oAscSlideTransitionParams.Comb_Vertical},
+                    {caption: this.textHorizontal, value: Asc.c_oAscSlideTransitionParams.RandomBar_Horizontal},
+                    {caption: this.textVertical, value: Asc.c_oAscSlideTransitionParams.RandomBar_Vertical},
+                    {caption: this.textIn, value: Asc.c_oAscSlideTransitionParams.BoxZoom_In},
+                    {caption: this.textOut, value: Asc.c_oAscSlideTransitionParams.BoxZoom_Out},
+                    {caption: this.textLeft, value: Asc.c_oAscSlideTransitionParams.Vortex_Left},
+                    {caption: this.textRight, value: Asc.c_oAscSlideTransitionParams.Vortex_Right},
+                    {caption: this.textTop, value: Asc.c_oAscSlideTransitionParams.Vortex_Up},
+                    {caption: this.textBottom, value: Asc.c_oAscSlideTransitionParams.Vortex_Down},
+                    {caption: this.textLeftShort, value: Asc.c_oAscSlideTransitionParams.Switch_Left},
+                    {caption: this.textRightShort, value: Asc.c_oAscSlideTransitionParams.Switch_Right},
+                    {caption: this.textLeftShort, value: Asc.c_oAscSlideTransitionParams.Flip_Left},
+                    {caption: this.textRightShort, value: Asc.c_oAscSlideTransitionParams.Flip_Right},
+                    {caption: this.textCenter, value: Asc.c_oAscSlideTransitionParams.Ripple_Center},
+                    {caption: this.textTopLeft, value: Asc.c_oAscSlideTransitionParams.Ripple_LeftUp},
+                    {caption: this.textTopRight, value: Asc.c_oAscSlideTransitionParams.Ripple_RightUp},
+                    {caption: this.textBottomLeft, value: Asc.c_oAscSlideTransitionParams.Ripple_LeftDown},
+                    {caption: this.textBottomRight, value: Asc.c_oAscSlideTransitionParams.Ripple_RightDown},
+                    {caption: this.textLeft, value: Asc.c_oAscSlideTransitionParams.Prism_Left},
+                    {caption: this.textRight, value: Asc.c_oAscSlideTransitionParams.Prism_Right},
+                    {caption: this.textTop, value: Asc.c_oAscSlideTransitionParams.Prism_Up},
+                    {caption: this.textBottom, value: Asc.c_oAscSlideTransitionParams.Prism_Down},
+                    {caption: this.textLeft, value: Asc.c_oAscSlideTransitionParams.Prism_Left_Inverted},
+                    {caption: this.textRight, value: Asc.c_oAscSlideTransitionParams.Prism_Right_Inverted},
+                    {caption: this.textTop, value: Asc.c_oAscSlideTransitionParams.Prism_Up_Inverted},
+                    {caption: this.textBottom, value: Asc.c_oAscSlideTransitionParams.Prism_Down_Inverted},
+                    {caption: this.textLeft, value: Asc.c_oAscSlideTransitionParams.Prism_Left_Content},
+                    {caption: this.textRight, value: Asc.c_oAscSlideTransitionParams.Prism_Right_Content},
+                    {caption: this.textTop, value: Asc.c_oAscSlideTransitionParams.Prism_Up_Content},
+                    {caption: this.textBottom, value: Asc.c_oAscSlideTransitionParams.Prism_Down_Content},
+                    {caption: this.textLeft, value: Asc.c_oAscSlideTransitionParams.Prism_Left_ContentInv},
+                    {caption: this.textRight, value: Asc.c_oAscSlideTransitionParams.Prism_Right_ContentInv},
+                    {caption: this.textTop, value: Asc.c_oAscSlideTransitionParams.Prism_Up_ContentInv},
+                    {caption: this.textBottom, value: Asc.c_oAscSlideTransitionParams.Prism_Down_ContentInv},
+                    {caption: this.textHorizontal, value: Asc.c_oAscSlideTransitionParams.Doors_Horizontal},
+                    {caption: this.textVertical, value: Asc.c_oAscSlideTransitionParams.Doors_Vertical},
+                    {caption: this.textHorizontal, value: Asc.c_oAscSlideTransitionParams.Window_Horizontal},
+                    {caption: this.textVertical, value: Asc.c_oAscSlideTransitionParams.Window_Vertical},
+                    {caption: this.textLeftShort, value: Asc.c_oAscSlideTransitionParams.Ferris_Left},
+                    {caption: this.textRightShort, value: Asc.c_oAscSlideTransitionParams.Ferris_Right},
+                    {caption: this.textLeftShort, value: Asc.c_oAscSlideTransitionParams.Gallery_Left},
+                    {caption: this.textRightShort, value: Asc.c_oAscSlideTransitionParams.Gallery_Right}
                 ];
 
                 var itemsMenu = [];
@@ -372,7 +449,26 @@ define([
                 }, this);
             },
 
-            setMenuParameters: function (effect, value) {
+            getPrismId: function (value) {
+                var prismId = 'prism-cube';
+                if (value >= Asc.c_oAscSlideTransitionParams.Prism_Left_Inverted && value <= Asc.c_oAscSlideTransitionParams.Prism_Down_Inverted)
+                    prismId = 'prism-box';
+                else if (value >= Asc.c_oAscSlideTransitionParams.Prism_Left_Content && value <= Asc.c_oAscSlideTransitionParams.Prism_Down_Content)
+                    prismId = 'prism-rotate';
+                else if (value >= Asc.c_oAscSlideTransitionParams.Prism_Left_ContentInv && value <= Asc.c_oAscSlideTransitionParams.Prism_Down_ContentInv)
+                    prismId = 'prism-orbit';
+                return prismId;
+            },
+
+            getEffect: function (effect, value) {
+                if (effect === Asc.c_oAscSlideTransitionTypes.Prism) {
+                    var prism = this.getPrismId(value);
+                    return this.listEffects.store.findWhere({prismId: prism});
+                }
+                return this.listEffects.store.findWhere({value: effect});
+            },
+
+            setMenuParameters: function (effect, value, prismId) {
                 var minMax = [-1, -1];
                 switch (effect) {
                     case Asc.c_oAscSlideTransitionTypes.Fade:
@@ -402,6 +498,65 @@ define([
                     case Asc.c_oAscSlideTransitionTypes.Morph:
                         minMax = [20, 22];
                         break;
+                    case Asc.c_oAscSlideTransitionTypes.Cut:
+                        minMax = [23, 24];
+                        break;
+                    case Asc.c_oAscSlideTransitionTypes.Blinds:
+                        minMax = [25, 26];
+                        break;
+                    case Asc.c_oAscSlideTransitionTypes.Checker:
+                        minMax = [27, 28];
+                        break;
+                    case Asc.c_oAscSlideTransitionTypes.Comb:
+                        minMax = [29, 30];
+                        break;
+                    case Asc.c_oAscSlideTransitionTypes.RandomBar:
+                        minMax = [31, 32];
+                        break;
+                    case Asc.c_oAscSlideTransitionTypes.BoxZoom:
+                        minMax = [33, 34];
+                        break;
+                    case Asc.c_oAscSlideTransitionTypes.Vortex:
+                        minMax = [35, 38];
+                        break;
+                    case Asc.c_oAscSlideTransitionTypes.Switch:
+                        minMax = [39, 40];
+                        break;
+                    case Asc.c_oAscSlideTransitionTypes.Flip:
+                        minMax = [41, 42];
+                        break;
+                    case Asc.c_oAscSlideTransitionTypes.Ripple:
+                        minMax = [43, 47];
+                        break;
+                    case Asc.c_oAscSlideTransitionTypes.Prism:
+                        var prism = prismId || this.getPrismId(value);
+                        switch (prism) {
+                            case 'prism-box':
+                                minMax = [52, 55];
+                                break;
+                            case 'prism-rotate':
+                                minMax = [56, 59];
+                                break;
+                            case 'prism-orbit':
+                                minMax = [60, 63];
+                                break;
+                            default:
+                                minMax = [48, 51];
+                                break;
+                        }
+                        break;
+                    case Asc.c_oAscSlideTransitionTypes.Doors:
+                        minMax = [64, 65];
+                        break;
+                    case Asc.c_oAscSlideTransitionTypes.Window:
+                        minMax = [66, 67];
+                        break;
+                    case Asc.c_oAscSlideTransitionTypes.Ferris:
+                        minMax = [68, 69];
+                        break;
+                    case Asc.c_oAscSlideTransitionTypes.Gallery:
+                        minMax = [70, 71];
+                        break;
                 }
 
                 var selectedElement;
@@ -423,11 +578,16 @@ define([
                     selectedElement.setChecked(true);
 
                 if (!this.listEffects.isDisabled()) {
+                    var noParameters = effect === Asc.c_oAscSlideTransitionTypes.None ||
+                        effect === Asc.c_oAscSlideTransitionTypes.Random ||
+                        effect === Asc.c_oAscSlideTransitionTypes.Circle ||
+                        effect === Asc.c_oAscSlideTransitionTypes.Diamond ||
+                        effect === Asc.c_oAscSlideTransitionTypes.Dissolve ||
+                        effect === Asc.c_oAscSlideTransitionTypes.Plus ||
+                        effect === Asc.c_oAscSlideTransitionTypes.Honeycomb;
+
                     this.numDelay.setDisabled(this.chDelay.getValue() !== 'checked');
-                    this.btnParameters.setDisabled(
-                        effect === Asc.c_oAscSlideTransitionTypes.None || 
-                        effect === Asc.c_oAscSlideTransitionTypes.Random
-                    );
+                    this.btnParameters.setDisabled(noParameters);
                     this.btnPreview.setDisabled(effect === Asc.c_oAscSlideTransitionTypes.None);
                     this.numDuration.setDisabled(effect === Asc.c_oAscSlideTransitionTypes.None);
                     this.lblDuration.setDisabled(effect === Asc.c_oAscSlideTransitionTypes.None);
