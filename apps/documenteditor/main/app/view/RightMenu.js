@@ -421,7 +421,9 @@ define([
             var pane = $(this.el).find('.right-panel'),
                 paddings = parseInt(pane.css('padding-left')) + parseInt(pane.css('padding-right'));
             MENU_SCALE_PART = MENU_BASE_WIDTH + paddings;
-            this.$el.css('width', (!Common.Utils.InternalSettings.get("de-hide-right-settings") ? MENU_SCALE_PART : SCALE_MIN) + 'px');
+            if ( !this.isPluginButtonPressed() ) {
+                this.$el.css('width', (!Common.Utils.InternalSettings.get("de-hide-right-settings") ? MENU_SCALE_PART : SCALE_MIN) + 'px');
+            }
         },
 
         txtParagraphSettings:       'Paragraph Settings',
