@@ -507,7 +507,12 @@
       "textZoomOut": "Уменьшение",
       "textZoomRotate": "Увеличение с поворотом",
       "txtHeight": "Высота",
-      "txtWidth": "Ширина"
+      "txtWidth": "Ширина",
+      "textCenter": "Из центра",
+      "textHorizontal": "По горизонтали",
+      "textIn": "Внутрь",
+      "textOut": "Наружу",
+      "textVertical": "По вертикали"
     },
     "Settings": {
       "mniSlideStandard": "Стандартный (4:3)",
