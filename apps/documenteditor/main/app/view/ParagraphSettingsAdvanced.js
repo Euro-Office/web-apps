@@ -803,25 +803,36 @@ define([
                 if (this.Margins.Left!==undefined) {
                     if (borders.get_Left()===undefined || borders.get_Left()===null)
                         borders.put_Left(new Asc.asc_CTextBorder(this.Borders.get_Left()));
-                    borders.get_Left().put_Space(this.Margins.Left);
+
+                    if (borders.get_Left() && 1 == borders.get_Left().get_Value())
+                        borders.get_Left().put_Space(this.Margins.Left);
                 }
                 if (this.Margins.Top!==undefined) {
                     if (borders.get_Top()===undefined || borders.get_Top()===null)
                         borders.put_Top(new Asc.asc_CTextBorder(this.Borders.get_Top()));
-                    borders.get_Top().put_Space(this.Margins.Top);
+
+                    if (borders.get_Top() && 1 == borders.get_Top().get_Value())
+                        borders.get_Top().put_Space(this.Margins.Top);
                 }
                 if (this.Margins.Right!==undefined) {
                     if (borders.get_Right()===undefined || borders.get_Right()===null)
                         borders.put_Right(new Asc.asc_CTextBorder(this.Borders.get_Right()));
-                    borders.get_Right().put_Space(this.Margins.Right);
+
+                    if (borders.get_Right() && 1 == borders.get_Right().get_Value())
+                        borders.get_Right().put_Space(this.Margins.Right);
                 }
                 if (this.Margins.Bottom!==undefined) {
                     if (borders.get_Bottom()===undefined || borders.get_Bottom()===null)
                         borders.put_Bottom(new Asc.asc_CTextBorder(this.Borders.get_Bottom()));
-                    borders.get_Bottom().put_Space(this.Margins.Bottom);
+
+                    if (borders.get_Bottom() && 1 == borders.get_Bottom().get_Value())
+                        borders.get_Bottom().put_Space(this.Margins.Bottom);
+
                     if (borders.get_Between()===undefined || borders.get_Between()===null)
                         borders.put_Between(new Asc.asc_CTextBorder(this.Borders.get_Between()));
-                    borders.get_Between().put_Space(this.Margins.Bottom);
+
+                    if (borders.get_Between() && 1 == borders.get_Between().get_Value())
+                        borders.get_Between().put_Space(this.Margins.Bottom);
                 }
             }
             if ( this._tabListChanged ) {
@@ -1251,6 +1262,7 @@ define([
             else {
                 border.put_Color(new Asc.asc_CColor());
                 border.put_Value(0);
+                border.put_Space(0);
             }
             return border;
         },
