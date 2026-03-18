@@ -538,7 +538,15 @@
       "textSwitch": "Switch",
       "textVertical": "Vertical",
       "textVortex": "Vortex",
-      "textWindow": "Window"
+      "textWindow": "Window",
+      "textFromLeft": "From Left",
+      "textFromRight": "From Right",
+      "textFromTop": "From Top",
+      "textFromBottom": "From Bottom",
+      "textFromTopLeft": "From Top-Left",
+      "textFromTopRight": "From Top-Right",
+      "textFromBottomLeft": "From Bottom-Left",
+      "textFromBottomRight": "From Bottom-Right"
     },
     "Settings": {
       "mniSlideStandard": "Standard (4:3)",
