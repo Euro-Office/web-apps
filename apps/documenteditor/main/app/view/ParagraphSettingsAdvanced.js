@@ -664,6 +664,22 @@ define([
             });
             this.btnRemoveAll.on('click', _.bind(this.removeAllTabs, this));
 
+            const check_max_padding = function (field) {
+                const max_val = (639 / 20 / 72 * 25.4 - 0.001); // in mm
+                let cur_val = Common.Utils.Metric.fnRecalcToMM(field.getNumberValue());
+                if ( max_val < cur_val ) {
+                    cur_val = max_val;
+                    const metric_max_val = Common.Utils.Metric.fnRecalcFromMM(max_val);
+                    const msg = this.errorBorderPaddingsRange.replace('%1', metric_max_val.toFixed(2))
+                                                    .replace('%2', Common.Utils.Metric.getCurrentMetricName());
+
+                    Common.UI.error({msg: msg, buttons: ['ok']});
+                    field.setValue(metric_max_val, true);
+                }
+
+                return cur_val;
+            };
+
             // Margins
             this.spnMarginTop = new Common.UI.MetricSpinner({
                 el: $('#paraadv-number-margin-top'),
@@ -678,7 +694,7 @@ define([
                 if (!this._noApply) {
                     if (this.Margins===undefined)
                         this.Margins = {};
-                    this.Margins.Top = Common.Utils.Metric.fnRecalcToMM(field.getNumberValue());
+                    this.Margins.Top = check_max_padding.call(this, field);
                 }
             }, this));
             this.spinners.push(this.spnMarginTop);
@@ -696,7 +712,7 @@ define([
                 if (!this._noApply) {
                     if (this.Margins===undefined)
                         this.Margins = {};
-                    this.Margins.Bottom = Common.Utils.Metric.fnRecalcToMM(field.getNumberValue());
+                    this.Margins.Bottom = check_max_padding.call(this, field);
                 }
             }, this));
             this.spinners.push(this.spnMarginBottom);
@@ -714,7 +730,7 @@ define([
                 if (!this._noApply) {
                     if (this.Margins===undefined)
                         this.Margins = {};
-                    this.Margins.Left = Common.Utils.Metric.fnRecalcToMM(field.getNumberValue());
+                    this.Margins.Left = check_max_padding.call(this, field);
                 }
             }, this));
             this.spinners.push(this.spnMarginLeft);
@@ -732,7 +748,7 @@ define([
                 if (!this._noApply) {
                     if (this.Margins===undefined)
                         this.Margins = {};
-                    this.Margins.Right = Common.Utils.Metric.fnRecalcToMM(field.getNumberValue());
+                    this.Margins.Right = check_max_padding.call(this, field);
                 }
             }, this));
             this.spinners.push(this.spnMarginRight);

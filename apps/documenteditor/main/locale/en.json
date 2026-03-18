@@ -3666,6 +3666,7 @@
   "DE.Views.ParagraphSettingsAdvanced.tipTop": "Set top border only",
   "DE.Views.ParagraphSettingsAdvanced.txtAutoText": "Auto",
   "DE.Views.ParagraphSettingsAdvanced.txtNoBorders": "No borders",
+  "DE.Views.ParagraphSettingsAdvanced.errorBorderPaddingsRange": "The measurement must be not more than %1 %2",
   "DE.Views.PrintWithPreview.textMarginsLast": "Last Custom",
   "DE.Views.PrintWithPreview.textMarginsModerate": "Moderate",
   "DE.Views.PrintWithPreview.textMarginsNarrow": "Narrow",
