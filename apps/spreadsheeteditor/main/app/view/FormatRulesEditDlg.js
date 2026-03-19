@@ -422,7 +422,6 @@ define([
                 icls        : 'btn-border-out',
                 borderId    : 'outer',
                 borderswidth: Asc.c_oAscBorderStyles.Thin,
-                split       : true,
                 takeFocusOnClose: true,
                 menu        : new Common.UI.Menu({
                     items: [
