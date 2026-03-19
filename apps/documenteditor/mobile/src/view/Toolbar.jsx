@@ -134,7 +134,7 @@ const ToolbarView = props => {
                             <SvgIcon slot="media" symbolId={IconVersionHistory.id} className={'icon icon-svg'} />
                         </Link>  
                     : null),
-                    <Link iconOnly key='btn-settings' className={(props.disabledSettings || props.disabledControls || isDisconnected || isOpenModal) && 'disabled'} id='btn-settings' href={false} onClick={() => props.openOptions('settings')}>        
+                    <Link iconOnly key='btn-settings' className={(props.disabledSettings || props.disabledControls || isDisconnected || isOpenModal) ? 'disabled' : (props.isSaveBadgeShown ? ' notify' : '')} id='btn-settings' href={false} onClick={() => props.openOptions('settings')}>
                         {Device.ios ? 
                            <SvgIcon symbolId={IconSettingsIos.id} className={'icon icon-svg'} /> :
                            <SvgIcon symbolId={IconSettingsAndroid.id} className={'icon icon-svg'} />

@@ -193,7 +193,12 @@ const SettingsController = props => {
 
     const switchAutosave = (value) => {
         LocalStorage.setBool("de-mobile-autosave", value);
+        Common.EditorApi.get().asc_SetFastCollaborative(LocalStorage.getBool("de-mobile-autosave"));
         Common.EditorApi.get().asc_setAutoSaveGap(parseInt(LocalStorage.getItem("de-mobile-autosave")));
+    };
+
+    const tryToSave = () => {
+        Common.EditorApi.get().asc_Save();
     };
 
     const saveAsPdf = () => {
@@ -227,6 +232,7 @@ const SettingsController = props => {
             clearAllFields,
             toggleFavorite,
             switchAutosave,
+            tryToSave,
             saveAsPdf,
             submitForm
         }}>

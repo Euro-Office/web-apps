@@ -49,6 +49,12 @@ export class storeAppOptions {
             isAutosave: observable,
             changeAutosave: action,
 
+            isSaveBadgeShown: observable,
+            changeIsSaveBadgeShown: action,
+
+            savingDocStatusText: observable,
+            changeSavingDocStatusText: action,
+
             customization: observable,
         });
     }
@@ -116,6 +122,16 @@ export class storeAppOptions {
     isAutosave = true;
     changeAutosave (value) {
         this.isAutosave = value;
+    }
+
+    isSaveBadgeShown = false;
+    changeIsSaveBadgeShown (value) {
+        this.isSaveBadgeShown = value;
+    }
+
+    savingDocStatusText = '';
+    changeSavingDocStatusText (value) {
+        this.savingDocStatusText = value;
     }
 
     config = {};

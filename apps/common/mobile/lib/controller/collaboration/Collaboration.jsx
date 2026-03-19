@@ -43,9 +43,9 @@ class CollaborationController extends Component {
             }
         } else if (!appOptions.isEdit && appOptions.isRestrictedEdit) {
             isFastCoauth = true;
-            api.asc_SetFastCollaborative(isFastCoauth);
+            api.asc_SetFastCollaborative(LocalStorage.itemExists('de-mobile-autosave') ? LocalStorage.getBool("de-mobile-autosave") : true);
             window.editorType === 'de' && api.SetCollaborativeMarksShowType(Asc.c_oAscCollaborativeMarksShowType.None);
-            api.asc_setAutoSaveGap(1);
+            api.asc_setAutoSaveGap(LocalStorage.itemExists('de-mobile-autosave') ? parseInt(LocalStorage.getItem("de-mobile-autosave")) : 1);
         } else if (appOptions.canLiveView) { // viewer
             isFastCoauth = !(appOptions.config.coEditing && appOptions.config.coEditing.mode==='strict');
             api.asc_SetFastCollaborative(isFastCoauth);
@@ -65,7 +65,8 @@ class CollaborationController extends Component {
                 value = isFastCoauth; // Common.localStorage.getItem("de-settings-autosave");
                 value = (!isFastCoauth && value !== null) ? parseInt(value) : (appOptions.canCoAuthoring ? 1 : 0);
             }
-            api.asc_setAutoSaveGap(value);
+            api.asc_SetFastCollaborative(value ? (LocalStorage.itemExists('de-mobile-autosave') ? LocalStorage.getBool("de-mobile-autosave") : true) : false);
+            api.asc_setAutoSaveGap(value ? (LocalStorage.itemExists('de-mobile-autosave') ? parseInt(LocalStorage.getItem("de-mobile-autosave")) : 1) : 0);
         }
         /** coauthoring end **/
     }
