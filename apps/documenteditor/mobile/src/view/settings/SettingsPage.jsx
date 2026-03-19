@@ -46,7 +46,10 @@ const SettingsPage = inject("storeAppOptions", "storeReview", "storeDocumentInfo
     const isHistoryDisabled = docExt && (docExt === 'xps' || docExt === 'djvu' || docExt === 'pdf');
     const navbar =
         <Navbar>
-            <div className="title" onClick={settingsContext.changeTitleHandler}>{docTitle}</div>
+            <div className="title" onClick={settingsContext.changeTitleHandler}>
+                {docTitle}
+                <span className="subtitle">{appOptions.savingDocStatusText}</span>
+            </div>
             {Device.phone && <NavRight><Link popupClose=".settings-popup">{_t.textDone}</Link></NavRight>}
         </Navbar>;
     const isSignatureForm = props.storeToolbarSettings.isSignatureForm; 
@@ -129,24 +132,28 @@ const SettingsPage = inject("storeAppOptions", "storeReview", "storeDocumentInfo
                             <SvgIcon slot="media" symbolId={IconClearFields.id} className={'icon icon-svg'} />
                         </ListItem>
                     ] : null}
-                    <ListItem title={_t.textAutoSaveDocument}>
-                        {Device.ios ?
-                            <SvgIcon slot="media" symbolId={IconReturnIos.id} className={'icon icon-svg'} /> :
-                            <SvgIcon slot="media" symbolId={IconReturnAndroid.id} className={'icon icon-svg'} />
-                        }
-                        <Toggle checked={isAutosave}
-                            onToggleChange={() => {
-                                appOptions.changeAutosave(!isAutosave);
-                                settingsContext.switchAutosave(!isAutosave);
-                            }}
-                        />
-                    </ListItem>
-                    <ListItem title={_t.textSaveDocument}  className='no-indicator' onClick={() => Common.Notifications.trigger('goback')}>
-                        {Device.ios ? 
-                            <SvgIcon slot="media" symbolId={IconReturnIos.id} className={'icon icon-svg'} /> :
-                            <SvgIcon slot="media" symbolId={IconReturnAndroid.id} className={'icon icon-svg'} />
-                        }
-                    </ListItem>
+                    {!appOptions.canLiveView &&
+                        <ListItem title={_t.textAutoSaveDocument}>
+                            {Device.ios ?
+                                <SvgIcon slot="media" symbolId={IconReturnIos.id} className={'icon icon-svg'} /> :
+                                <SvgIcon slot="media" symbolId={IconReturnAndroid.id} className={'icon icon-svg'} />
+                            }
+                            <Toggle checked={isAutosave}
+                                onToggleChange={() => {
+                                    appOptions.changeAutosave(!isAutosave);
+                                    settingsContext.switchAutosave(!isAutosave);
+                                }}
+                            />
+                        </ListItem>
+                    }
+                    {!appOptions.canLiveView &&
+                        <ListItem title={_t.textSaveDocument}  className={`no-indicator${appOptions.isSaveBadgeShown ? ' notify' : ''}`} onClick={settingsContext.tryToSave}>
+                            {Device.ios ?
+                                <SvgIcon slot="media" symbolId={IconReturnIos.id} className={'icon icon-svg'} /> :
+                                <SvgIcon slot="media" symbolId={IconReturnAndroid.id} className={'icon icon-svg'} />
+                            }
+                        </ListItem>
+                    }
                 </List>
                 <List>
                     {(Device.phone || isEditableForms) &&
