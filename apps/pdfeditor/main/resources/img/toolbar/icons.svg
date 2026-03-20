@@ -96,6 +96,8 @@
     <path d="M6.5 21.5h11m-9-10h11m-13-5h11m-7 10h11" class="icon-stroke-gray-primary"/>
 </symbol><symbol viewBox="0 0 28 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-big-more" xmlns="http://www.w3.org/2000/svg">
     <path stroke-width="1.5" d="M14.75 14a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm-6 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" class="icon-stroke-gray-primary"/>
+</symbol><symbol viewBox="0 0 28 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-big-redact-text" xmlns="http://www.w3.org/2000/svg">
+    <path d="M11.5 16.5 6 22m10.5-5.5-6 6M21 17l-5.5 5.5m-2-9v-8m0 0h-6a1 1 0 0 0-1 1v1m7-2h6a1 1 0 0 1 1 1v1m-14 15h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-14a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1Z" class="icon-stroke-gray-primary"/>
 </symbol><symbol viewBox="0 0 28 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-big-sheet-view" xmlns="http://www.w3.org/2000/svg">
     <path d="M14 20.5c-6.5 0-9.5-6.5-9.5-6.5s3-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3 6.5-9.5 6.5Z" class="icon-stroke-gray-primary"/>
     <path d="M16.5 14c0 .74-.322 1.406-.833 1.863A2.5 2.5 0 1 1 16.5 14Z" class="icon-stroke-gray-primary"/>
@@ -544,8 +546,8 @@
     <path d="M18.502 16a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Zm2.317 3.114a.5.5 0 0 0-.704.064l-2.095 2.511-1.119-1.492a.5.5 0 0 0-.8.6l1.31 1.747a.75.75 0 0 0 1.176.03l2.297-2.756a.5.5 0 0 0-.065-.704Z" class="icon-success" stroke="none" fill="currentColor"/>
 </symbol><symbol viewBox="0 0 28 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-redact-pages" xmlns="http://www.w3.org/2000/svg">
     <path d="M20.5 8.5h-9a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-13a1 1 0 0 0-1-1Zm0 0-10 10m-2 1h-1a1 1 0 0 1-1-1v-13a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v1m4 6L11 22.999m10.5-5.5-6 6.001m0-15.001-5 5.001" class="icon-stroke-gray-primary"/>
-</symbol><symbol viewBox="0 0 28 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-redact-text" xmlns="http://www.w3.org/2000/svg">
-    <path d="M11.5 16.5 6 22m10.5-5.5-6 6M21 17l-5.5 5.5m-2-9v-8m0 0h-6a1 1 0 0 0-1 1v1m7-2h6a1 1 0 0 1 1 1v1m-14 15h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-14a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1Z" class="icon-stroke-gray-primary"/>
+</symbol><symbol viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-redact-text" xmlns="http://www.w3.org/2000/svg">
+    <path d="M7.5 6.5V6a.5.5 0 0 1 .5-.5h3.5m4 1V6a.5.5 0 0 0-.5-.5h-3.5m0 0v4m-6 8v-4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1m-12 4a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-4m-12 4 5-5m7 1-5 5m2-6-6 6" class="icon-stroke-gray-primary"/>
 </symbol><symbol viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-redo" xmlns="http://www.w3.org/2000/svg">
     <path d="m14.5 5.5 4 4m0 0-4 4m4-4h-8a5 5 0 0 0 0 10h1" class="icon-stroke-gray-primary"/>
 </symbol><symbol viewBox="0 0 28 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-rem-comment" xmlns="http://www.w3.org/2000/svg">
@@ -565,6 +567,9 @@
     <path d="M17.5 16a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z" class="icon-stroke-blue-primary"/>
 </symbol><symbol viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-reset" xmlns="http://www.w3.org/2000/svg">
     <path d="M5 9.302A7.503 7.503 0 0 1 19.5 12 7.5 7.5 0 0 1 5 14.698M7.5 9.5h-3v-3" class="icon-stroke-gray-primary"/>
+</symbol><symbol viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-resize-to-cell" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18.5 17.5v-11a1 1 0 0 0-1-1h-11a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1Z" class="icon-stroke-gray-primary"/>
+    <path d="M15.5 8.5 13 11m2.5-2.5v3m0-3h-3m-4 7L11 13m-2.5 2.5v-3m0 3h3" class="icon-stroke-blue-primary"/>
 </symbol><symbol viewBox="0 0 28 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-resolve-all" xmlns="http://www.w3.org/2000/svg">
     <path d="M23.5 13.5v-7a1 1 0 0 0-1-1h-17a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2.9a.1.1 0 0 1 .1.1v3.659a.1.1 0 0 0 .17.07l3.537-3.536a1 1 0 0 1 .707-.293H14.5m-6-9h11m-11 4h6" class="icon-stroke-gray-primary"/>
     <path d="M20.502 15a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Zm2.317 3.115a.5.5 0 0 0-.631-.007l-.073.07-2.095 2.512-1.119-1.492-.4.301-.4.3 1.31 1.746.058.068a.75.75 0 0 0 1.118-.038l2.297-2.756a.5.5 0 0 0-.065-.704Zm-3.918 1.083a.5.5 0 0 0-.8.6l.8-.6Z" fill="currentColor" stroke="none" class="icon-fill-success"/>
@@ -712,8 +717,7 @@
 </symbol><symbol viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-text-comment" xmlns="http://www.w3.org/2000/svg">
     <path d="M18.5 6.5v10m-1 1h-11m-1-1v-10m1-1h11m-9 3h7m-7 3h7m-7 3h3m6-10v2h2v-2h-2Zm2 12h-2v2h2v-2Zm-15 0v2h2v-2h-2Zm0-12v2h2v-2h-2Z" class="icon-stroke-gray-primary"/>
 </symbol><symbol viewBox="0 0 28 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-text-field" xmlns="http://www.w3.org/2000/svg">
-    <path d="M9.5 11v7m0-7 1-.5h1m-2 .5-1-.5h-1m2 7.5 1 .5h1m-2-.5-1 .5h-1" class="icon-stroke-gray-primary"/>
-    <path d="M23.5 20.25V8.75c0-.69-.56-1.25-1.25-1.25H5.75c-.69 0-1.25.56-1.25 1.25v11.5c0 .69.56 1.25 1.25 1.25h16.5c.69 0 1.25-.56 1.25-1.25Z" class="icon-stroke-blue-primary"/>
+    <path d="M8.5 10.5v7m0-7h1m-1 0h-1m1 7h1m-1 0h-1m16-8.75v10.5c0 .69-.56 1.25-1.25 1.25H5.75c-.69 0-1.25-.56-1.25-1.25V8.75c0-.69.56-1.25 1.25-1.25h16.5c.69 0 1.25.56 1.25 1.25Z" class="icon-stroke-gray-primary"/>
 </symbol><symbol viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-text-orient-hor" xmlns="http://www.w3.org/2000/svg">
     <path d="m5.5 13.5.75-2m0 0 2.25-6 2.25 6m-4.5 0h4.5m0 0 .75 2" class="icon-stroke-gray-primary"/>
     <path d="M5.5 16.5h13m0 0-2 2m2-2-2-2m-4-5h6m0 0-2 2m2-2-2-2" class="icon-stroke-blue-primary"/>
@@ -761,6 +765,9 @@
     <path d="M16.5 12a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" class="icon-stroke-blue-primary"/>
 </symbol><symbol viewBox="0 0 28 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-zip-code" xmlns="http://www.w3.org/2000/svg">
     <path d="M7.5 12.5h3.813a.1.1 0 0 1 .083.156l-3.792 5.689a.1.1 0 0 0 .083.155H11.5m2-6v6m3-3v-2.9a.1.1 0 0 1 .1-.1H19a1.5 1.5 0 0 1 0 3h-2.5Zm0 0v3M13.534 4.745l-8.5 4.474a1 1 0 0 0-.534.885V20.5a1 1 0 0 0 1 1h17a1 1 0 0 0 1-1V10.104a1 1 0 0 0-.534-.885l-8.5-4.474a1 1 0 0 0-.932 0Z" class="icon-stroke-gray-primary"/>
+</symbol><symbol viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-zoom-100" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6.5 6.5V5.496a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1V6.5m-11 11v1a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-1" class="icon-stroke-gray-primary"/>
+    <path d="M6.5 15.5v-7l-2 2m12 5a2 2 0 0 1-2-2v-3a2 2 0 1 1 4 0v3a2 2 0 0 1-2 2Zm-6 0a2 2 0 0 1-2-2v-3a2 2 0 1 1 4 0v3a2 2 0 0 1-2 2Z" class="icon-stroke-blue-primary"/>
 </symbol><symbol viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-zoomdown" xmlns="http://www.w3.org/2000/svg">
     <path d="M17.5 11.5h-12" class="icon-stroke-gray-primary"/>
 </symbol><symbol viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-zoomup" xmlns="http://www.w3.org/2000/svg">
