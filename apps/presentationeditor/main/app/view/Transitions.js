@@ -165,6 +165,7 @@ define([
                     cls: 'combo-transitions',
                     itemWidth: itemWidth,
                     itemHeight: itemHeight,
+                    menuMaxHeight: 350,
                     style: 'min-width:115px;',
                     autoWidth:       true,
                     itemTemplate: _.template([
