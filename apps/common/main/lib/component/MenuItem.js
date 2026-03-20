@@ -467,7 +467,7 @@ define([
                             re_icon_name = /btn-[^\s]+/.exec(iconCls),
                             icon_name = re_icon_name ? re_icon_name[0] : "null",
                             rtlCls = (iconCls ? iconCls.indexOf('icon-rtl') : -1) > -1 ? 'icon-rtl' : '',
-                            svg_icon = '<svg class="menu-item-icon %rtlCls"><use class="zoom-int" href="#%iconname"></use></svg>'.replace('%iconname', icon_name).replace('%rtlCls', rtlCls);
+                            svg_icon = '<svg class="menu-item-icon uni-scale %rtlCls"><use href="#%iconname"></use></svg>'.replace('%iconname', icon_name).replace('%rtlCls', rtlCls);
 
                         firstChild.find('span.menu-item-icon').after(svg_icon);
                     }

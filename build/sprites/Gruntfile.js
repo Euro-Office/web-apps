@@ -116,71 +116,87 @@ module.exports = function (grunt, rootpathprefix) {
         return out
     }
 
-    const generate_svg_sprite_tasks = function(editor, mod2=false) {
-        const alias = {"word": "documenteditor",
-                        "cell": "spreadsheeteditor",
-                        "slide": "presentationeditor",
-                        "pdf": "pdfeditor",
-                        "draw": "visioeditor"};
-        const mod_path = mod2 ? 'v2' : '.';
-        const mod_task_name_ext = mod2 ? '-v2' : '';
-
-        let out = {};
-        ['small', 'big', 'huge'].forEach((ext, i) => {
-            const ext_path = ext == 'small' ? '' : `${ext}/`;
-            out[`${editor}${mod_task_name_ext}-${ext}2.5x`] = {
-                src: [`${_prefix}apps/common/main/resources/img/toolbar/${mod_path}/2.5x/${ext_path}*.svg`,
-                    `${_prefix}apps/${alias[editor]}/main/resources/img/toolbar/${mod_path}/2.5x/${ext_path}*.svg`],
-                dest: `${_prefix}apps/${alias[editor]}/main/resources/img/${mod_path}/`,
+    // Single global SVG sprite with all icons from all editors (deprecated, kept for reference)
+    const generate_svg_sprite_task = function() {
+        return {
+            toolbar: {
+                src: [
+                    `${_prefix}apps/common/main/resources/img/toolbar/v2/2.5x/*.svg`,
+                    `${_prefix}apps/common/main/resources/img/toolbar/v2/2.5x/big/*.svg`,
+                    `${_prefix}apps/common/main/resources/img/toolbar/v2/2.5x/huge/*.svg`,
+                    `${_prefix}apps/*/main/resources/img/toolbar/v2/2.5x/*.svg`,
+                    `${_prefix}apps/*/main/resources/img/toolbar/v2/2.5x/big/*.svg`,
+                    `${_prefix}apps/*/main/resources/img/toolbar/v2/2.5x/huge/*.svg`,
+                ],
+                dest: `${_prefix}apps/common/main/resources/img/toolbar/`,
                 options: {
                     mode: {
                         symbol: {
-                            inline: true,
+                            inline: true,  // true = inline sprite (injected into DOM, referenced via <use href="#id">)
                             dest: './',
-                            sprite: `icons${ext}@2.5x.svg`,
+                            sprite: `icons.svg`,
                         },
                     },
                 }
-            };
-        })
+            }
+        };
+    }
 
-        return out;
+    // Per-editor SVG sprite generation (analogous to PNG sprite generation)
+    // Each editor gets common icons + editor-specific icons combined into one sprite
+    const generate_svg_sprite_tasks = function(editor) {
+        const alias = {
+            "word": "documenteditor",
+            "cell": "spreadsheeteditor",
+            "slide": "presentationeditor",
+            "pdf": "pdfeditor",
+            "draw": "visioeditor"
+        };
+
+        const editorPath = alias[editor];
+        const _editor_res_root = `${_prefix}apps/${editorPath}/main/resources`;
+        const _common_res_root = `${_prefix}apps/common/main/resources`;
+
+        return {
+            [`${editor}-icons`]: {
+                src: [
+                    // Common icons (small, big, huge) - v2 icons for theming support
+                    `${_common_res_root}/img/toolbar/v2/2.5x/*.svg`,
+                    `${_common_res_root}/img/toolbar/v2/2.5x/big/*.svg`,
+                    `${_common_res_root}/img/toolbar/v2/2.5x/huge/*.svg`,
+                    // Editor-specific icons (small, big, huge)
+                    `${_editor_res_root}/img/toolbar/v2/2.5x/*.svg`,
+                    `${_editor_res_root}/img/toolbar/v2/2.5x/big/*.svg`,
+                    `${_editor_res_root}/img/toolbar/v2/2.5x/huge/*.svg`,
+                ],
+                dest: `${_editor_res_root}/img/toolbar/`,
+                options: {
+                    mode: {
+                        symbol: {
+                            inline: true,  // true = inline sprite (injected into DOM, referenced via <use href="#id">)
+                            dest: './',
+                            sprite: `icons.svg`,
+                        },
+                    },
+                }
+            }
+        };
     }
 
     grunt.initConfig({
-        sprite: {
-            // 'word-1x': configTemplate({
-            //     editor:'documenteditor',
-            //     spritename: sprite_name,
-            //     scale: '1x'
-            // }),
-            // 'word-big-1x': configTemplate({
-            //     editor:'documenteditor',
-            //     spritename: sprite_name_big,
-            //     scale: '1x',
-            //     extpath: 'big'
-            // }),
-            // 'word-huge-1x': configTemplate({
-            //     editor:'documenteditor',
-            //     spritename: sprite_name_huge,
-            //     scale: '1x',
-            //     extpath: 'huge'
-            // }),
-            ...generate_sprite_tasks('word'),
-            ...generate_sprite_tasks('word', mod2=true),
-
-            ...generate_sprite_tasks('slide'),
-            ...generate_sprite_tasks('slide', mod2=true),
-
-            ...generate_sprite_tasks('cell'),
-            ...generate_sprite_tasks('cell', true),
-
-            ...generate_sprite_tasks('pdf'),
-            ...generate_sprite_tasks('pdf', true),
-
-            ...generate_sprite_tasks('draw'),
-            ...generate_sprite_tasks('draw', true),
-        },
+        // PNG sprites disabled - using SVG sprites only
+        // sprite: {
+        //     ...generate_sprite_tasks('word'),
+        //     ...generate_sprite_tasks('word', mod2=true),
+        //     ...generate_sprite_tasks('slide'),
+        //     ...generate_sprite_tasks('slide', mod2=true),
+        //     ...generate_sprite_tasks('cell'),
+        //     ...generate_sprite_tasks('cell', true),
+        //     ...generate_sprite_tasks('pdf'),
+        //     ...generate_sprite_tasks('pdf', true),
+        //     ...generate_sprite_tasks('draw'),
+        //     ...generate_sprite_tasks('draw', true),
+        // },
         svg_sprite: {
             options: {
                 svg: {
@@ -193,39 +209,24 @@ module.exports = function (grunt, rootpathprefix) {
                     id: {
                         separator: ""
                     },
-                    transform: [{
-                        svgo: {
-                            plugins: [
-                                'removeXMLNS',
-                                {
-                                    name: "removeAttrs",
-                                    params: {
-                                      attrs: "(fill|stroke)"
-                                    }
-                                },
-                            ]
-                        },
-                    }]
+                    // Disable SVGO transform - svg-sprite's built-in SVGO has a
+                    // callback bug on Node 18 (cb inside try-catch). SVG optimization
+                    // is handled separately by the svgmin grunt task instead.
+                    transform: []
                 },
                 mode: {
                     symbol: {
                     },
                 },
             },
+            // Per-editor SVG sprites (common + editor-specific icons)
             ...generate_svg_sprite_tasks('word'),
-            ...generate_svg_sprite_tasks('word', mod=true),
-
-            ...generate_svg_sprite_tasks('slide'),
-            ...generate_svg_sprite_tasks('slide', true),
-
             ...generate_svg_sprite_tasks('cell'),
-            ...generate_svg_sprite_tasks('cell', true),
-
+            ...generate_svg_sprite_tasks('slide'),
             ...generate_svg_sprite_tasks('pdf'),
-            ...generate_svg_sprite_tasks('pdf', mod=true),
-
             ...generate_svg_sprite_tasks('draw'),
-            ...generate_svg_sprite_tasks('draw', true),
+            // Single global sprite with all icons (kept for backwards compatibility)
+            ...generate_svg_sprite_task(),
 
             docformats: {
                 src: [
@@ -265,34 +266,31 @@ module.exports = function (grunt, rootpathprefix) {
         },
     });
 
-    // Load in `grunt-spritesmith`
-    grunt.loadNpmTasks('grunt-spritesmith');
+    // grunt-spritesmith disabled - using SVG sprites only
+    // grunt.loadNpmTasks('grunt-spritesmith');
     grunt.loadNpmTasks('grunt-svg-sprite');
 
-    grunt.registerTask('word-icons', ['sprite:word-1x', 'sprite:word-mod2-1x', 'sprite:word-big-1x', 'sprite:word-mod2-big-1x', 'sprite:word-huge-1x', 'sprite:word-mod2-huge-1x',
-                                        'sprite:word-2x', 'sprite:word-big-2x', 'sprite:word-huge-2x', 'sprite:word-mod2-2x', 'sprite:word-mod2-big-2x', 'sprite:word-mod2-huge-2x',
-                                        'sprite:word-1.25x', 'sprite:word-big-1.25x', 'sprite:word-huge-1.25x', 'sprite:word-mod2-1.25x', 'sprite:word-mod2-big-1.25x', 'sprite:word-mod2-huge-1.25x',
-                                        'sprite:word-1.5x', 'sprite:word-big-1.5x', 'sprite:word-huge-1.5x', 'sprite:word-mod2-1.5x', 'sprite:word-mod2-big-1.5x', 'sprite:word-mod2-huge-1.5x',
-                                        'sprite:word-1.75x', 'sprite:word-big-1.75x', 'sprite:word-huge-1.75x', 'sprite:word-mod2-1.75x', 'sprite:word-mod2-big-1.75x', 'sprite:word-mod2-huge-1.75x']);
-    grunt.registerTask('slide-icons', ['sprite:slide-1x', 'sprite:slide-big-1x','sprite:slide-2x', 'sprite:slide-big-2x',
-                                        'sprite:slide-1.5x', 'sprite:slide-big-1.5x',
-                                        'sprite:slide-1.25x', 'sprite:slide-big-1.25x',
-                                        'sprite:slide-1.75x', 'sprite:slide-big-1.75x']);
-    grunt.registerTask('cell-icons', ['sprite:cell-1x', 'sprite:cell-big-1x','sprite:cell-2x', 'sprite:cell-big-2x',
-                                        'sprite:cell-1.5x', 'sprite:cell-big-1.5x',
-                                        'sprite:cell-1.25x', 'sprite:cell-big-1.25x',
-                                        'sprite:cell-1.75x', 'sprite:cell-big-1.75x']);
-    grunt.registerTask('pdf-icons', ['sprite:pdf-1x', 'sprite:pdf-big-1x', 'sprite:pdf-huge-1x', 'sprite:pdf-2x', 'sprite:pdf-big-2x', 'sprite:pdf-huge-2x',
-                                        'sprite:pdf-1.25x', 'sprite:pdf-big-1.25x', 'sprite:pdf-huge-1.25x',
-                                        'sprite:pdf-1.5x', 'sprite:pdf-big-1.5x', 'sprite:pdf-huge-1.5x',
-                                        'sprite:pdf-1.75x', 'sprite:pdf-big-1.75x', 'sprite:pdf-huge-1.75x']);
+    // PNG sprite tasks disabled
+    // grunt.registerTask('word-icons', ['sprite:word-1x', ...]);
+    // grunt.registerTask('slide-icons', ['sprite:slide-1x', ...]);
+    // grunt.registerTask('cell-icons', ['sprite:cell-1x', ...]);
+    // grunt.registerTask('pdf-icons', ['sprite:pdf-1x', ...]);
+    // grunt.registerTask('draw-icons', ['sprite:draw-1x', ...]);
+    // grunt.registerTask('png_sprite', ['sprite']);
 
-    grunt.registerTask('draw-icons', ['sprite:draw-1x', 'sprite:draw-big-1x', 'sprite:draw-2x', 'sprite:draw-big-2x',
-                                        'sprite:draw-1.25x', 'sprite:draw-big-1.25x',
-                                        'sprite:draw-1.5x', 'sprite:draw-big-1.5x',
-                                        'sprite:draw-1.75x', 'sprite:draw-big-1.75x']);
-    grunt.registerTask('png_sprite', ['sprite']);
+    // SVG sprite tasks - generates per-editor icons.svg with common + editor-specific icons
+    grunt.registerTask('word-svg', ['svg_sprite:word-icons']);
+    grunt.registerTask('cell-svg', ['svg_sprite:cell-icons']);
+    grunt.registerTask('slide-svg', ['svg_sprite:slide-icons']);
+    grunt.registerTask('pdf-svg', ['svg_sprite:pdf-icons']);
+    grunt.registerTask('draw-svg', ['svg_sprite:draw-icons']);
+    grunt.registerTask('all-svg', [
+        'svg_sprite:word-icons',
+        'svg_sprite:cell-icons',
+        'svg_sprite:slide-icons',
+        'svg_sprite:pdf-icons',
+        'svg_sprite:draw-icons'
+    ]);
 
-    grunt.registerTask('all-icons-sprite', ['png_sprite','svg_sprite']);
-    grunt.registerTask('default', ['all-icons-sprite']);
+    grunt.registerTask('default', ['svg_sprite']);
 };

@@ -147,7 +147,9 @@ module.exports = function(grunt) {
     addons = addons.filter(element => grunt.file.isDir(element));
 
     // Theme support — load theme.less directly from theme/ folder (no copy to source tree)
-    const theme = process.env.THEME || 'euro-office';
+    const defaultTheme = 'euro-office';
+    const theme = process.env.THEME || defaultTheme;
+    grunt.log.writeln('theme: ' + theme.green);
     const themeEntry = path.join('..', 'theme', theme, 'assets', 'less', 'theme.less');
     let themeFiles = null; // null = not yet resolved
 
@@ -159,7 +161,7 @@ module.exports = function(grunt) {
                 grunt.log.writeln('Theme: ' + theme.green);
             } else {
                 themeFiles = [];
-                if (theme !== 'default') {
+                if (theme !== defaultTheme) {
                     grunt.log.warn('Theme not found: ' + themeEntry);
                 }
             }
@@ -454,6 +456,9 @@ module.exports = function(grunt) {
                 options: {...svgmin_opts},
                 dist: {
                     files: packageFile['apps-common'].svgicons.common
+                },
+                toolbar: {
+                    files: packageFile['apps-common'].svgicons['toolbar-icons-flat']
                 }
             },
             replace: {
@@ -516,9 +521,9 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('prebuild-icons-sprite', function() {
+    grunt.registerTask('prebuild-svg-sprites', function() {
         require('./sprites/Gruntfile.js')(grunt, '../');
-        grunt.task.run('all-icons-sprite');
+        grunt.task.run('all-svg');
     });
 
     grunt.registerTask('main-app-init', function() {
@@ -987,6 +992,7 @@ module.exports = function(grunt) {
     //quick workaround for build desktop version
     var copyTask = grunt.option('desktop')? "copy": "copy:script";
     var imageminTask = grunt.option('skip-imagemin') ? ['copy:images-app'] : ['imagemin'];
+    var spritesTask = grunt.option('skip-sprites') ? [] : ['prebuild-svg-sprites'];
     // Skip babel ES5 transpilation for modern-only builds (use --skip-babel flag)
     // When skipped, no ie/ directory is created - only ES6 output is produced
     var babelTask = grunt.option('skip-babel') ? [] : ['babel'];
@@ -1008,7 +1014,7 @@ module.exports = function(grunt) {
     grunt.registerTask('deploy-monaco',                 ['monaco-init', 'clean', 'copy']);
     grunt.registerTask('deploy-common-embed',           ['common-embed-init', 'clean', 'copy']);
 
-    grunt.registerTask('deploy-app-main',               ['prebuild-icons-sprite', 'main-app-init', 'clean:prebuild', ...imageminTask, 'less',
+    grunt.registerTask('deploy-app-main',               [...spritesTask, 'main-app-init', 'clean:prebuild', ...imageminTask, 'less',
                                                             'requirejs', ...babelTask, 'terser:build', 'terser:postload', 'concat', 'copy', 'svgmin', 'replace:indexhtml', 'inline', 'json-minify',
                                                             'replace:writeVersion', 'replace:prepareHelp', 'clean:postbuild']);
 
@@ -1074,6 +1080,7 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('default', ['deploy-theme',
+                                    ...spritesTask,
                                    'deploy-common-component',
                                    'deploy-documenteditor-component',
                                    'deploy-spreadsheeteditor-component',

@@ -180,13 +180,16 @@ define([
         return _out_array;
     };
 
+    // SVG sprite approach - uses <svg><use href="#id"> for dark mode support
+    // Sprite is injected into DOM via svg-injector, so we use fragment-only references
     var templateBtnIcon =
             '<% if ( iconImg ) { %>' +
                 '<img src="<%= iconImg %>">' +
             '<% } else { %>' +
-                '<% if (/svgicon/.test(iconCls)) {' +
-                    'print(\'<svg class=\"icon uni-scale\"><use class=\"zoom-int\" xlink:href=\"#\' + /svgicon\\s(\\S+)/.exec(iconCls)[1] + \'\"></use></svg>\');' +
-            '} else ' +
+                '<% var iconMatch = /btn-[^\\s]+/.exec(iconCls); ' +
+                'if (iconMatch) {' +
+                    'print(\'<svg class=\"icon uni-scale\"><use href=\"#\' + iconMatch[0] + \'\"></use></svg>\');' +
+                '} else ' +
                     'print(\'<i class=\"icon \' + iconCls + \'\">&nbsp;</i>\'); %>' +
             '<% } %>';
 
@@ -285,10 +288,11 @@ define([
         template: _.template([
             '<% var applyicon = function() { %>',
                 '<% if (iconImg) { print(\'<img src=\"\' + iconImg + \'\">\'); } else { %>',
-                // '<% if (iconCls != "") { print(\'<i class=\"icon \' + iconCls + \'\">&nbsp;</i>\'); }} %>',
+                // SVG sprite approach - uses <svg><use href="#id"> for dark mode support
                 '<% if (iconCls != "") { ' +
-                    ' if (/svgicon/.test(iconCls)) {' +
-                        'print(\'<svg class=\"icon uni-scale\"><use class=\"zoom-int\" xlink:href=\"#\' + /svgicon\\s(\\S+)/.exec(iconCls)[1] + \'\"></use></svg>\');' +
+                    'var iconMatch = /btn-[^\\s]+/.exec(iconCls); ' +
+                    'if (iconMatch) {' +
+                        'print(\'<svg class=\"icon uni-scale\"><use href=\"#\' + iconMatch[0] + \'\"></use></svg>\');' +
                     '} else ' +
                         'print(\'<i class=\"icon \' + iconCls + \'\">&nbsp;</i>\'); ' +
                 '}} %>',
@@ -769,7 +773,7 @@ define([
             this.iconCls = cls;
             if (/svgicon/.test(this.iconCls)) {
                 var icon = /svgicon\s(\S+)/.exec(this.iconCls);
-                svgIcon.attr('xlink:href', icon && icon.length > 1 ? '#' + icon[1] : '');
+                svgIcon.attr('href', icon && icon.length > 1 ? '#' + icon[1] : '');
             } else {
                 if (svgIcon.length) {
                     var icon = /btn-[^\s]+/.exec(this.iconCls);
@@ -1010,12 +1014,12 @@ define([
                         const re_icon_name = /btn-[^\s]+/.exec(iconCls);
                         const icon_name = re_icon_name ? re_icon_name[0] : "null";
                         const rtlCls = (iconCls ? iconCls.indexOf('icon-rtl') : -1) > -1 ? 'icon-rtl' : '';
-                        const svg_icon = '<svg class="icon %rtlCls"><use class="zoom-int" href="#%iconname"></use></svg>'.replace('%iconname', icon_name).replace('%rtlCls', rtlCls);
+                        const svg_icon = '<svg class="icon uni-scale %rtlCls"><use href="#%iconname"></use></svg>'.replace('%iconname', icon_name).replace('%rtlCls', rtlCls);
                         $el.find('i.icon').after(svg_icon);
                     }
                 } else {
                     if (!me.$el.find('i.icon')) {
-                        const png_icon = '<i class="icon %cls">&nbsp;</i>'.replace('%cls', me.iconCls);
+                        const png_icon = '<i class="icon %cls" dummy-attr>&nbsp;</i>'.replace('%cls', me.iconCls);
                         me.$el.find('svg.icon').after(png_icon);
                     }
                 }
