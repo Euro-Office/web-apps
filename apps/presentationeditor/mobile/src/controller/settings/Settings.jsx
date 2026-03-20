@@ -4,6 +4,7 @@ import SettingsView from '../../view/settings/Settings';
 import { f7 } from 'framework7-react';
 import { observer, inject } from "mobx-react";
 import { useTranslation } from 'react-i18next';
+import { LocalStorage } from "../../../../../common/mobile/utils/LocalStorage.mjs";
 
 export const SettingsContext = createContext();
 
@@ -160,6 +161,16 @@ const SettingsController = props => {
         }
     }
 
+    const switchAutosave = (value) => {
+        LocalStorage.setBool("pe-mobile-autosave", value);
+        Common.EditorApi.get().asc_SetFastCollaborative(LocalStorage.getBool("pe-mobile-autosave"));
+        Common.EditorApi.get().asc_setAutoSaveGap(parseInt(LocalStorage.getItem("pe-mobile-autosave")));
+    };
+
+    const tryToSave = () => {
+        Common.EditorApi.get().asc_Save();
+    };
+
     return (
         <SettingsContext.Provider value={{
             onPrint,
@@ -167,7 +178,9 @@ const SettingsController = props => {
             showFeedback,
             onDownloadOrigin,
             closeModal,
-            changeTitleHandler
+            changeTitleHandler,
+            switchAutosave,
+            tryToSave,
         }}>
             <SettingsView />
         </SettingsContext.Provider>

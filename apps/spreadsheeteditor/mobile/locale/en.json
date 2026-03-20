@@ -426,7 +426,8 @@
     "txtEditingMode": "Set editing mode...",
     "uploadImageTextText": "Uploading image...",
     "uploadImageTitleText": "Uploading Image",
-    "waitText": "Please, wait..."
+    "waitText": "Please, wait...",
+    "changesSaved": "All changes saved"
   },
   "Statusbar": {
     "notcriticalErrorTitle": "Warning",
@@ -792,6 +793,8 @@
       "textFind": "Find",
       "textFindAndReplace": "Find and Replace",
       "textFindAndReplaceAll": "Find and Replace All",
+      "textSaveDocument": "Save",
+      "textAutoSaveDocument": "Autosave",
       "textFormat": "Format",
       "textFormulaLanguage": "Formula Language",
       "textFormulas": "Formulas",

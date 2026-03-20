@@ -317,6 +317,7 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeSpreadsheetIn
             changeTitleHandler={changeTitleHandler}
             forceDesktopMode={forceDesktopMode}
             isHiddenFileName={appOptions.config?.customization?.toolbarHideFileName ?? false}
+            isSaveBadgeShown={appOptions.isSaveBadgeShown}
         />
     )
 }));
