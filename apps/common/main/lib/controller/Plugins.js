@@ -1296,7 +1296,7 @@ define([
 
         onPluginPanelShow: function (frameId, variation, lang) {
             var guid = variation.guid,
-                menu = this.isPDFEditor ? 'left' : (variation.type == 'panelRight' ? 'right' : 'left');
+                menu = this.isPDFEditor ? 'left' : ((variation.dockedPlace||variation.type) == 'panelRight' ? 'right' : 'left');
             !menu && (menu = 'left');
 
             var description = variation.description;
