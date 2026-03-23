@@ -179,9 +179,10 @@ const SettingsController = inject('storeAppOptions', 'storeSpreadsheetInfo')(obs
     }
 
     const switchAutosave = (value) => {
+        const api = Common.EditorApi.get();
         LocalStorage.setBool("sse-mobile-autosave", value);
-        Common.EditorApi.get().asc_SetFastCollaborative(LocalStorage.getBool("sse-mobile-autosave"));
-        Common.EditorApi.get().asc_setAutoSaveGap(parseInt(LocalStorage.getItem("sse-mobile-autosave")));
+        api.asc_SetFastCollaborative(value);
+        api.asc_setAutoSaveGap(value ? 1 : 0);
     };
 
     const tryToSave = () => {

@@ -590,8 +590,7 @@ class MainController extends Component {
         appSettings.changeSpellCheck(value);
         this.api.asc_setSpellCheck(value);
 
-        value = LocalStorage.getBool("pe-mobile-autosave");
-        appOptions.changeAutosave(LocalStorage.itemExists('pe-mobile-autosave') ? value : true);
+        appOptions.changeAutosave(LocalStorage.itemExists('pe-mobile-autosave') ? LocalStorage.getBool("pe-mobile-autosave") : true);
 
         this.updateWindowTitle(true);
 
