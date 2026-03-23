@@ -135,6 +135,24 @@ define([
             this.cmbBorderStyle.on('selected', this.onCmbBorderStyleChange.bind(this));
             this.lockedControls.push(this.cmbBorderStyle);
 
+            this.cmbBorderStyleForLink = new Common.UI.ComboBox({
+                el: $markup.findById('#annotation-combo-line-style-for-link'),
+                cls: 'input-group-nr',
+                menuStyle: 'min-width: 100%;',
+                editable: false,
+                data: [
+                    {displayValue: this.txtSolid,       value: AscPDF.BORDER_TYPES.solid},
+                    {displayValue: this.txtDashed,      value: AscPDF.BORDER_TYPES.dashed},
+                    {displayValue: this.txtUnderline,   value: AscPDF.BORDER_TYPES.underline},
+                    {displayValue: this.txtNone,        value: 'None'},
+                ],
+                dataHint: '1',
+                dataHintDirection: 'bottom',
+                dataHintOffset: 'big'
+            });
+            this.cmbBorderStyleForLink.on('selected', this.onCmbBorderStyleChange.bind(this));
+            this.lockedControls.push(this.cmbBorderStyleForLink);           
+
             this.numBorderWidth = new Common.UI.MetricSpinner({
                 el: $('#annotation-spin-border-width'),
                 step: 1,
@@ -356,15 +374,22 @@ define([
                 }
 
                 //Border style
+                const isLink = props.asc_getType() == AscPDF.ANNOTATIONS_TYPES.Link;
+                const cmbBorderStyle = isLink ? this.cmbBorderStyleForLink : this.cmbBorderStyle;
+                getFormField(isLink ? this.cmbBorderStyle : this.cmbBorderStyleForLink).hide();
+
                 value = (annotProps && annotProps.asc_getBorderStyle) ? annotProps.asc_getBorderStyle() : null; 
-                $formValue = getFormField(this.cmbBorderStyle);
+                $formValue = getFormField(cmbBorderStyle);
                 if(value !== null) {
-                    value = annotProps.asc_getBorderStyle();
+                    const isValueNone = value === undefined;
+                    isValueNone && (value = 'None');
                     if (this._state.BorderStyle !== value) {
-                        this.cmbBorderStyle.setValue(value, '');
+                        cmbBorderStyle.setValue(value, '');
                         this._state.BorderStyle = value;
                     }
                     $formValue.show();
+                    this.btnBorderColor.setDisabled(isValueNone);
+                    this.numBorderWidth.setDisabled(isValueNone);
                 } else {
                     $formValue.hide();
                 }
@@ -461,8 +486,9 @@ define([
 
         onCmbBorderStyleChange: function(cmb, record) {
             if (this.api && !this._noApply)  {
+                const isValueNone = record.value === 'None';
                 this._state.BorderStyle = undefined;
-                this.api.SetAnnotStrokeStyle(record.value);
+                this.api.SetAnnotStrokeStyle(isValueNone ? undefined : record.value);
                 this.fireEvent('editcomplete', this);
             }
         },

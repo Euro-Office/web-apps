@@ -22,6 +22,13 @@
         </td>
     </tr>
     <tr class="form-field">
+        <td class="padding-large" width="50%"></td>
+        <td class="padding-large" width="50%">
+            <label class="input-label"><%= scope.textStyle %></label>
+            <div id="annotation-combo-line-style-for-link"></div>
+        </td>
+    </tr>
+    <tr class="form-field">
         <td colspan=2 class="padding-small">
             <label class="input-label" style="margin-top: 4px;"><%= scope.textFillColor %></label>
             <div id="annotation-background-color-btn" style="display: inline-block;" class="float-right"></div>

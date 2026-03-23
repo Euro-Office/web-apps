@@ -3052,5 +3052,8 @@
   "PDFE.Views.AnnotationSettings.txtDiamond": "Diamond",
   "PDFE.Views.AnnotationSettings.txtCircle": "Circle",
   "PDFE.Views.AnnotationSettings.txtSquare": "Square",
-  "PDFE.Views.AnnotationSettings.txtSlash": "Slash"
+  "PDFE.Views.AnnotationSettings.txtSlash": "Slash",
+  "PDFE.Views.AnnotationSettings.txtSolid": "Solid",
+  "PDFE.Views.AnnotationSettings.txtDashed": "Dashed",
+  "PDFE.Views.AnnotationSettings.txtUnderline": "Underline"
 }
