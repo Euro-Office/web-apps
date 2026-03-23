@@ -106,6 +106,7 @@ const LongActionsController = inject('storeAppOptions')(({storeAppOptions}) => {
             case Asc.c_oAscAsyncAction['Save']:
                 title   = _t.saveTitleText;
                 text    = _t.saveTextText;
+                storeAppOptions.changeSavingDocStatusText(text);
                 break;
 
             case Asc.c_oAscAsyncAction['LoadDocumentFonts']:
@@ -207,10 +208,7 @@ const LongActionsController = inject('storeAppOptions')(({storeAppOptions}) => {
             } else {
                 loadMask = f7.dialog.preloader(title);
             }
-        } else {
-            storeAppOptions.changeSavingDocStatusText(text);
         }
-
     };
 
     const onConfirmAction = (id, apiCallback, data) => {

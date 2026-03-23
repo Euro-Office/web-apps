@@ -764,8 +764,7 @@ class MainController extends Component {
         appSettings.changeRefStyle(value);
         this.api.asc_setR1C1Mode(value);
 
-        value = LocalStorage.getBool("sse-mobile-autosave");
-        appOptions.changeAutosave(LocalStorage.itemExists('sse-mobile-autosave') ? value : true);
+        appOptions.changeAutosave(LocalStorage.itemExists('sse-mobile-autosave') ? LocalStorage.getBool("sse-mobile-autosave") : true);
 
         Common.Gateway.documentReady();
         f7.emit('resize');
