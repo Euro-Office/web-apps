@@ -509,7 +509,20 @@
       "textZoomOut": "Уменьшение",
       "textZoomRotate": "Увеличение с поворотом",
       "txtHeight": "Высота",
-      "txtWidth": "Ширина"
+      "txtWidth": "Ширина",
+      "textCenter": "Из центра",
+      "textHorizontal": "По горизонтали",
+      "textIn": "Внутрь",
+      "textOut": "Наружу",
+      "textVertical": "По вертикали",
+      "textFromLeft": "Слева",
+      "textFromRight": "Справа",
+      "textFromTop": "Сверху",
+      "textFromBottom": "Снизу",
+      "textFromTopLeft": "Из верхнего левого",
+      "textFromTopRight": "Из верхнего правого",
+      "textFromBottomLeft": "Из нижнего левого",
+      "textFromBottomRight": "Из нижнего правого"
     },
     "Settings": {
       "mniSlideStandard": "Стандартный (4:3)",

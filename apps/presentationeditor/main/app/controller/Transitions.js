@@ -179,13 +179,15 @@ define([
         onEffectSelect: function (combo, record) {
             var type = record.get('value');
             var parameter = this._state.EffectType;
+            var prismId = (type === Asc.c_oAscSlideTransitionTypes.Prism) ? record.get('prismId') : undefined;
 
-            if (this._state.Effect !== type &&
+            if ((this._state.Effect !== type || (type === Asc.c_oAscSlideTransitionTypes.Prism && this._state.prismId !== prismId)) &&
                 !((this._state.Effect === Asc.c_oAscSlideTransitionTypes.Wipe || this._state.Effect === Asc.c_oAscSlideTransitionTypes.UnCover || this._state.Effect === Asc.c_oAscSlideTransitionTypes.Cover)&&
                     (type === Asc.c_oAscSlideTransitionTypes.Wipe || type === Asc.c_oAscSlideTransitionTypes.UnCover || type === Asc.c_oAscSlideTransitionTypes.Cover)))
-                    parameter = this.view.setMenuParameters(type);
+                    parameter = this.view.setMenuParameters(type, this._state.EffectType, prismId);
 
             this._state.Effect = type;
+            this._state.prismId = prismId;
             this.onParameterClick(parameter);
             Common.NotificationCenter.trigger('edit:complete', this.view);
         },
@@ -223,6 +225,11 @@ define([
             if (transition) {
                 this._state.Effect = transition.get_TransitionType();
                 this._state.EffectType = transition.get_TransitionOption();
+                if (this._state.Effect === Asc.c_oAscSlideTransitionTypes.Prism) {
+                    var effectRecord = this.view && this.view.getEffect(this._state.Effect, this._state.EffectType);
+                    this._state.prismId = effectRecord ? effectRecord.get('prismId') : undefined;
+                } else this._state.prismId = undefined;
+                
 
                 var value = transition.get_TransitionDuration();
                 if (Math.abs(this._state.Duration - value) > 0.001 ||
@@ -265,12 +272,16 @@ define([
             var me = this.view;
             if (this._state.Effect !== undefined) {
                 var item = me.listEffects.store.findWhere({value: this._state.Effect});
+                if (this._state.Effect === Asc.c_oAscSlideTransitionTypes.Prism)
+                    item = me.getEffect(this._state.Effect, this._state.EffectType) || item;
+
                 me.listEffects.menuPicker.selectRecord(item ? item : me.listEffects.menuPicker.items[0]);
                 this.view.btnParameters.setIconCls('toolbar__icon ' + item.get('imageUrl'));
+                this._state.prismId = this._state.Effect === Asc.c_oAscSlideTransitionTypes.Prism ? item.get('prismId') : undefined;
             }
 
             if (me.btnParameters.menu.getItemsLength() > 0 && this._state.EffectType !== undefined)
-                    me.setMenuParameters(this._state.Effect, this._state.EffectType);
+                    me.setMenuParameters(this._state.Effect, this._state.EffectType, this._state.prismId);
 
             me.numDuration.setValue((this._state.Duration !== null  && this._state.Duration !== undefined) ? this._state.Duration / 1000. : '', true);
             me.numDelay.setValue((this._state.Delay !== null && this._state.Delay !== undefined) ? this._state.Delay / 1000. : '', true);
