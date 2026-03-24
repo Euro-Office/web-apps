@@ -1,0 +1,13 @@
+// --------------------------------------------------------------------------
+// About Dialog Logo — theme override
+// Upstream: apps/common/main/resources/less/about.less:6-19
+// Overrides the default ONLYOFFICE logo with the Euro Office logo.
+// --------------------------------------------------------------------------
+
+.about-dlg .asc-about-office:before {
+    content: ~"url('@{common-image-const-path}/about/logo.svg')";
+
+    .theme-type-dark & {
+        content: ~"url('@{common-image-const-path}/about/logo.svg')";
+    }
+}
