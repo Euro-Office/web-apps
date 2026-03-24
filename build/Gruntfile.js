@@ -66,64 +66,66 @@ module.exports = function(grunt) {
         return !!string && !!iconv_lite ? iconv_lite.encode(string,encoding) : string;
     };
 
-    // Helper: resolve a brand value with priority: env var > theme config.json > default
-    let _themVal = (envVal, configKey, fallback) => {
+    // Helper: resolve a brand value with priority: env var > theme config.json > ''
+    // Empty strings from config are respected (row will be hidden in templates).
+    let _themVal = (envVal, configKey) => {
         return function() {
-            return _encode(envVal)
-                || _encode(global.themeMeta && global.themeMeta[configKey])
-                || fallback;
+            if (envVal != null && envVal !== '') return _encode(envVal);
+            var configVal = configKey && global.themeMeta && global.themeMeta[configKey];
+            if (configVal != null) return _encode(configVal);
+            return '';
         };
     };
 
     global.jsreplacements = [
                 {
                     from: /\{\{SUPPORT_EMAIL\}\}/g,
-                    to: _themVal(process.env.SUPPORT_EMAIL, 'support_email', 'support@onlyoffice.com')
+                    to: _themVal(process.env.SUPPORT_EMAIL, 'support_email')
                 },{
                     from: /\{\{SUPPORT_URL\}\}/g,
-                    to: _themVal(process.env.SUPPORT_URL, 'support_url', 'https://support.onlyoffice.com')
+                    to: _themVal(process.env.SUPPORT_URL, 'support_url')
                 },{
                     from: /\{\{SALES_EMAIL\}\}/g,
-                    to: _themVal(process.env.SALES_EMAIL, 'sales_email', 'sales@onlyoffice.com')
+                    to: _themVal(process.env.SALES_EMAIL, 'sales_email')
                 },{
                     from: /\{\{PUBLISHER_URL\}\}/g,
-                    to: _themVal(process.env.PUBLISHER_URL, 'publisher_url', 'https://www.onlyoffice.com')
+                    to: _themVal(process.env.PUBLISHER_URL, 'publisher_url')
                 },{
                     from: /\{\{PUBLISHER_PHONE\}\}/,
-                    to: _themVal(process.env.PUBLISHER_PHONE, 'publisher_phone', '+371 633-99867')
+                    to: _themVal(process.env.PUBLISHER_PHONE, 'publisher_phone')
                 },{
                     from: /\{\{PUBLISHER_NAME\}\}/g,
-                    to: _themVal(process.env.PUBLISHER_NAME, 'publisher_name', 'Ascensio System SIA')
+                    to: _themVal(process.env.PUBLISHER_NAME, 'publisher_name')
                 },{
                     from: /\{\{PUBLISHER_ADDRESS\}\}/,
-                    to: _themVal(process.env.PUBLISHER_ADDRESS, 'publisher_address', '20A-12 Ernesta Birznieka-Upisha street, Riga, Latvia, EU, LV-1050')
+                    to: _themVal(process.env.PUBLISHER_ADDRESS, 'publisher_address')
                 },{
                     from: /\{\{API_URL_EDITING_CALLBACK\}\}/,
-                    to: _themVal(process.env.API_URL_EDITING_CALLBACK, null, 'https://api.onlyoffice.com/editors/callback')
+                    to: _themVal(process.env.API_URL_EDITING_CALLBACK, 'api_url_editing_callback')
                 },{
                     from: /\{\{COMPANY_NAME\}\}/g,
-                    to: _themVal(process.env.COMPANY_NAME, 'company_name', 'ONLYOFFICE')
+                    to: _themVal(process.env.COMPANY_NAME, 'company_name')
                 }, {
                     from: /\{\{APP_TITLE_TEXT\}\}/g,
-                    to: _themVal(process.env.APP_TITLE_TEXT, 'app_title', 'ONLYOFFICE')
+                    to: _themVal(process.env.APP_TITLE_TEXT, 'app_title')
                 }, {
                     from: /\{\{HELP_URL\}\}/g,
-                    to: _themVal(process.env.HELP_URL, 'help_url', 'https://helpcenter.onlyoffice.com')
+                    to: _themVal(process.env.HELP_URL, 'help_url')
                 }, {
                     from: /\{\{HELP_CENTER_WEB_DE\}\}/g,
-                    to: function() { return _encode(process.env.HELP_CENTER_WEB_DE) || _encode(process.env.HELP_CENTER_WEB_EDITORS) || 'https://helpcenter.onlyoffice.com/userguides/docs-de.aspx'; }
+                    to: _themVal(process.env.HELP_CENTER_WEB_DE, 'help_center_web_de')
                 }, {
                     from: /\{\{HELP_CENTER_WEB_SSE\}\}/g,
-                    to: function() { return _encode(process.env.HELP_CENTER_WEB_SSE) || _encode(process.env.HELP_CENTER_WEB_EDITORS) || 'https://helpcenter.onlyoffice.com/userguides/docs-se.aspx'; }
+                    to: _themVal(process.env.HELP_CENTER_WEB_SSE, 'help_center_web_sse')
                 }, {
                     from: /\{\{HELP_CENTER_WEB_PE\}\}/g,
-                    to: function() { return _encode(process.env.HELP_CENTER_WEB_PE) || _encode(process.env.HELP_CENTER_WEB_EDITORS) || 'https://helpcenter.onlyoffice.com/userguides/docs-pe.aspx'; }
+                    to: _themVal(process.env.HELP_CENTER_WEB_PE, 'help_center_web_pe')
                 }, {
                     from: /\{\{DEFAULT_LANG\}\}/g,
-                    to: _themVal(process.env.DEFAULT_LANG, null, 'en')
+                    to: function() { return _themVal(process.env.DEFAULT_LANG, 'default_lang')() || 'en'; }
                 }, {
                     from: /\{\{SUGGEST_URL\}\}/g,
-                    to: _themVal(process.env.SUGGEST_URL, null, 'https://feedback.onlyoffice.com/forums/966080-your-voice-matters?category_id=519084')
+                    to: _themVal(process.env.SUGGEST_URL, 'suggest_url')
                 }];
 
     var helpreplacements = [
