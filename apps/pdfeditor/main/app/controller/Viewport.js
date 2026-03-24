@@ -154,10 +154,21 @@ define([
             Common.NotificationCenter.on('layout:changed', _.bind(this.onLayoutChanged, this));
             $(window).on('resize', _.bind(this.onWindowResize, this));
 
-            var leftPanel = $('#left-menu');
+            var leftPanel = $('#left-menu'),
+                histPanel = $('#left-panel-history'),
+                rightPanel = $('#right-menu');
             this.viewport.hlayout.on('layout:resizedrag', function() {
                 this.api.Resize();
-                Common.localStorage.setItem('pdfe-mainmenu-width', leftPanel.width() );
+
+                const leftPanelWidth = histPanel.is(':visible') ? (histPanel.width()+SCALE_MIN) : leftPanel.width();
+                if(leftPanelWidth > SCALE_MIN) {
+                    Common.localStorage.setItem('pdfe-mainmenu-width', leftPanelWidth);
+                }
+
+                const rightPanelWidth = rightPanel.width();
+                if(rightPanelWidth > SCALE_MIN) {
+                    Common.localStorage.setItem('pdfe-rightmenu-width', rightPanelWidth);
+                }
             }, this);
 
             this.boxSdk = $('#editor_sdk');
@@ -220,6 +231,14 @@ define([
             case 'rightmenu':
                     this.viewport.hlayout.doLayout();
                     break;
+            case 'history':
+                var panel = this.viewport.hlayout.getItem('history');
+                if (panel.resize.el) {
+                    this.boxSdk.css('border-left', '');
+                    panel.resize.el.show();
+                }
+                this.viewport.hlayout.doLayout();
+                break;
             case 'leftmenu':
                 var panel = this.viewport.hlayout.getItem('left');
                 if (panel.resize.el) {

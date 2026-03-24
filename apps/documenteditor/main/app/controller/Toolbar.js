@@ -87,7 +87,8 @@ define([
                 in_chart: false,
                 linenum_apply: Asc.c_oAscSectionApplyType.All,
                 suppress_num: undefined,
-                rtlDir: undefined
+                rtlDir: undefined,
+                showChartTab: false,
             };
             this.flg = {};
             this.diagramEditor = null;
@@ -112,6 +113,7 @@ define([
                     'smartart:mouseenter': this.mouseenterSmartArt,
                     'smartart:mouseleave': this.mouseleaveSmartArt,
                     'tab:active': this.onActiveTab,
+                    'tab:click': this.onClickTab,
                     'tab:collapse': this.onTabCollapse
                 },
                 'FileMenu': {
@@ -174,6 +176,9 @@ define([
                 },
                 'ViewTab': {
                     'toolbar:setcompact': this.onChangeCompactView.bind(this)
+                },
+                'Common.Views.ChartTab': {
+                    'add:chart': this.onSelectChart.bind(this)
                 },
                 'DocumentHolder': {
                     'list:settings': this.onMarkerSettingsClick.bind(this),
@@ -271,8 +276,18 @@ define([
                 'commentFilter' : {name: 'help-tip-comment-filter', placement: 'bottom-right', text: this.helpCommentFilter, header: this.helpCommentFilterHeader, target: '#comments-btn-sort', maxwidth: 300,
                                   closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
                 'chartElements' : {name: 'help-tip-chart-elements', placement: 'bottom', text: this.helpChartElements, header: this.helpChartElementsHeader, target: '#id-document-holder-btn-chart-element', maxwidth: 300,
-                                    automove: true, noHighlight: true, noArrow: true, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}}
+                                    automove: true, noHighlight: true, noArrow: true, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url},
+                                },
+                // 'multipageViewToolbar' : {name: 'de-help-tip-multipage-view-toolbar', placement: 'bottom-right', text: this.helpMultipageView, header: this.helpMultipageViewHeader, target: '#slot-btn-multiple-pages', maxwidth: 300,
+                //                     automove: true, closable: false, isNewFeature: true},
+                'multipageViewStatusbar' : {name: 'de-help-tip-multipage-view-statusbar', placement: 'top-left', text: this.helpMultipageView, header: this.helpMultipageViewHeader, target: '#status-btn-multiple-pages', maxwidth: 300,
+                                    automove: true, closable: false, isNewFeature: true},
+                'headerFooterTab' : {name:'de-help-tip-header-footer-tab', placement: 'bottom-left', text: this.helpHeaderFooterTab, header: this.helpHeaderFooterTabHeader, target: 'li.ribtab #headerfooter', maxwidth: 300,
+                                    automove: true, closable: false, isNewFeature: true},
+                'signature' : {name:'de-help-tip-signature', placement: 'bottom-right', text: this.helpSignature, header: this.helpSignatureHeader, target: '#slot-btn-form-signature', maxwidth: 300, 
+                                    automove: true, closable: false, isNewFeature: true}
             });
+            // TODO: Добавить name
             Common.UI.TooltipManager.addTips({
                 'refreshFile' : {text: _main.textUpdateVersion, header: _main.textUpdating, target: '#toolbar', maxwidth: 'none', showButton: false, automove: true, noHighlight: true, noArrow: true, multiple: true},
                 'disconnect' : {text: _main.textConnectionLost, header: _main.textDisconnect, target: '#toolbar', maxwidth: 'none', showButton: false, automove: true, noHighlight: true, noArrow: true, multiple: true},
@@ -930,9 +945,18 @@ define([
             this.toolbar.lockToolbar(Common.enumLock.cantAddImagePara, in_para && !can_add_image, {array: [toolbar.btnInsertTextArt]});
 
             if (in_chart !== this._state.in_chart) {
-                toolbar.btnInsertChart.updateHint(in_chart ? toolbar.tipChangeChart : toolbar.tipInsertChart);
+                toolbar.btnInsertChart.updateHint(
+                    in_chart ? toolbar.tipChangeChart : toolbar.tipInsertChart
+                );
+
+                if (!in_chart && this.toolbar.isTabActive('charttab'))
+                    this.toolbar.setTab('home');
+                this.toolbar.setVisible('charttab', !!in_chart);
+                if (in_chart && this._state.showChartTab)
+                    this.toolbar.setTab('charttab');
                 this._state.in_chart = in_chart;
             }
+
             var need_disable = paragraph_locked || header_locked || in_equation || control_plain || rich_del_lock || plain_del_lock  || content_locked || in_para && !can_add_image;
             need_disable = !in_chart && need_disable;
             this.toolbar.lockToolbar(Common.enumLock.cantAddChart, need_disable, {array: [toolbar.btnInsertChart]});
@@ -2564,6 +2588,7 @@ define([
                     chart.changeType(type);
                 Common.NotificationCenter.trigger('edit:complete', this.toolbar);
             } else {
+                me._state.showChartTab = true;
                 me.api.asc_addChartDrawingObject(type, undefined, true);
                 me.toolbar.fireEvent('insertchart', me.toolbar);
             }
@@ -3929,19 +3954,35 @@ define([
                 }
                 Array.prototype.push.apply(me.toolbar.lockControls, headerfootertab.getView('HeaderFooterTab').getButtons());
 
-                if ( config.canProtect && !config.isPDFForm) {
+                tab = {caption: me.toolbar.textTabChart, action: 'charttab', extcls: config.isEdit ? 'canedit' : '', layoutname: 'toolbar-charttab', dataHintTitle: 'B', aux: true};
+                var charttab = me.getApplication().getController('Common.Controllers.ChartTab');
+                charttab.setApi(me.api).setConfig({toolbar: me});
+                var view = charttab.getView('Common.Views.ChartTab');
+                var chartbuttons = view.getButtons();
+                var $panel = charttab.createToolbarPanel();
+                if ($panel) {
+                    me.toolbar.addTab(tab, $panel);
+                    me._state.inchart && me.toolbar.setVisible('charttab', true);
+                    Array.prototype.push.apply(me.toolbar.lockControls, chartbuttons);
+                }
+
+                if ( config.canProtect) {
                     tab = {action: 'protect', caption: me.toolbar.textTabProtect, layoutname: 'toolbar-protect', dataHintTitle: 'T'};
                     $panel = application.getController('Common.Controllers.Protection').createToolbarPanel();
                     if ($panel) {
-                        (config.isSignatureSupport || config.isPasswordSupport) && $panel.append($('<div class="separator long"></div>'));
-                        var doctab = application.getController('DocProtection');
-                        $panel.append(doctab.createToolbarPanel());
+                        const doctabController = application.getController('DocProtection');
+                        const doctabView = doctabController.getView('DocProtection');
+                        const doctabButtons = doctabView.getButtons();
+                        if(doctabButtons.length > 0 && (config.isSignatureSupport || config.isPasswordSupport)) {
+                            $panel.append($('<div class="separator long"></div>'));
+                        }
+                        $panel.append(doctabController.createToolbarPanel());
                         me.toolbar.addTab(tab, $panel, 7);
                         me.toolbar.setVisible('protect', Common.UI.LayoutManager.isElementVisible('toolbar-protect'));
-                        Array.prototype.push.apply(me.toolbar.lockControls, doctab.getView('DocProtection').getButtons());
+                        Array.prototype.push.apply(me.toolbar.lockControls, doctabButtons);
                     }
                 }
-
+                
                 var links = application.getController('Links');
                 links.setApi(me.api).setConfig({toolbar: me});
                 Array.prototype.push.apply(me.toolbar.lockControls, links.getView('Links').getButtons());
@@ -4034,9 +4075,13 @@ define([
                         this.btnsComment.add(_comments.buttonAddNew);
                     }
                 }
+
+                Array.prototype.push.apply(this.toolbar.paragraphControls, this.toolbar.btnsImgWrapping);
+                Array.prototype.push.apply(this.toolbar.lockControls, this.toolbar.btnsImgWrapping);
                 Array.prototype.push.apply(this.toolbar.paragraphControls, this.btnsComment);
                 Array.prototype.push.apply(this.toolbar.lockControls, this.btnsComment);
                 Common.UI.LayoutManager.addControls(this.btnsComment);
+                Common.UI.LayoutManager.addControls(this.toolbar.btnsImgWrapping);
             }
 
             (new Promise(function(accept) {
@@ -4287,12 +4332,49 @@ define([
                 me.onPluginToolbarCustomMenuItems(plugin.action, plugin.data);
             });
             this._state.customPluginData = null;
+            
+            if(this.mode.isPDFForm) {
+                const formsTabView = this.getApplication().getController('FormsTab').getView();
+                if(formsTabView && formsTabView.btnSignField && !formsTabView.btnSignField.isDisabled() && 
+                    this.toolbar.isTabActive('forms')
+                ) {
+                    Common.UI.TooltipManager.showTip('signature');
+                }
+            }
+
+            Common.UI.TooltipManager.showTip('multipageViewStatusbar');
         },
 
         onActiveTab: function(tab) {
+            if(tab !== 'forms') {
+                Common.UI.TooltipManager.closeTip('signature');
+            } else {
+                const formsTabView = this.getApplication().getController('FormsTab').getView();
+                if(formsTabView && formsTabView.btnSignField && !formsTabView.btnSignField.isDisabled()) {
+                    setTimeout(() => {
+                        Common.UI.TooltipManager.showTip('signature') 
+                    }, 10);
+                }
+            }
+
+            if(tab === 'view') {
+                Common.UI.TooltipManager.showTip('multipageViewToolbar');
+                Common.UI.TooltipManager.closeTip('multipageViewStatusbar');
+            } else {
+                Common.UI.TooltipManager.closeTip('multipageViewToolbar');
+            }
+
+            (tab === 'headerfooter') 
+                ? Common.UI.TooltipManager.showTip('headerFooterTab') 
+                : Common.UI.TooltipManager.closeTip('headerFooterTab');
+        },
+
+        onClickTab: function(tab) {
+            this._state.showChartTab = tab ==='charttab';
         },
 
         onTabCollapse: function(tab) {
+            Common.UI.TooltipManager.closeTip('signature')
         }
 
     }, DE.Controllers.Toolbar || {}));

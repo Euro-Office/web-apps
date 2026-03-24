@@ -80,7 +80,9 @@ define([
                 can_decrease: undefined,
                 fontsize: undefined,
                 textclrhighlight: undefined,
-                initEditing: true
+                initEditing: true,
+                showChartTab: false,
+                inDrawingMode: false,
             };
             this.editMode = true;
             this.binding = {
@@ -92,6 +94,7 @@ define([
                     'change:compact'    : this.onClickChangeCompact,
                     'home:open'         : this.onHomeOpen,
                     'tab:active'        : this.onActiveTab,
+                    'tab:click'         : this.onClickTab,
                     'tab:collapse'      : this.onTabCollapse,
                     'shapeannot:size'   : this.onShapeCommentSizeClick
                 },
@@ -154,7 +157,10 @@ define([
                 },
                 'DocumentHolder': {
                     'annotbar:create': this.onCreateAnnotBar.bind(this)
-                }
+                },
+                'InsTab': {
+                    'insert:chart': this.onSelectChart.bind(this)
+                },
             });
 
             Common.NotificationCenter.on('toolbar:collapse', _.bind(function () {
@@ -184,12 +190,14 @@ define([
             var url = 'https://www.onlyoffice.com/blog/2025/10/docs-9-1-released';
 
             Common.UI.FeaturesManager.isFeatureEnabled('featuresTips', true) && Common.UI.TooltipManager.addTips({
-                'pdfCharts' : {name: 'pdfe-help-tip-pdf-charts', placement: 'bottom', offset: {x: Common.UI.isRTL() ? -30 : 30, y: 0}, text: this.helpPdfCharts, header: this.helpPdfChartsHeader,
-                              target: '#slot-btn-inssmartart', isNewFeature: true, maxwidth: 300, closable: false, link: {text: _main.textLearnMore, url: url}},
+                // 'pdfCharts' : {name: 'pdfe-help-tip-pdf-charts', placement: 'bottom', offset: {x: Common.UI.isRTL() ? -30 : 30, y: 0}, text: this.helpPdfCharts, header: this.helpPdfChartsHeader,
+                //               target: '#slot-btn-inssmartart', isNewFeature: true, maxwidth: 300, closable: false, link: {text: _main.textLearnMore, url: url}},
                 'annotRect' : {name: 'pdfe-help-tip-annot-rect', placement: 'bottom', text: this.helpAnnotRect, header: this.helpAnnotRectHeader,
                               target: '#slot-btn-shape-comment', isNewFeature: true, maxwidth: 300, closable: false, noHighlight: true, link: {text: _main.textLearnMore, url: url}},
                 'redactTab' : {name: 'help-tip-redact-tab', placement: 'bottom-right', offset: {x: Common.UI.isRTL() ? -10 : 10, y: 0}, text: this.helpRedactTab, header: this.helpRedactTabHeader, target: 'li.ribtab #red',
-                               automove: true, maxwidth: 300, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}}
+                               automove: true, maxwidth: 300, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
+                'createLink': {name:'pdfe-help-tip-create-link', placement: 'bottom-left', text: this.helpCreateLink, header: this.helpCreateLinkHeader, target: '#slot-btn-insertlink', maxwidth: 300,
+                                automove: true, closable: false, isNewFeature: true}
             });
             Common.UI.TooltipManager.addTips({
                 'refreshFile' : {text: _main.textUpdateVersion, header: _main.textUpdating, target: '#toolbar', maxwidth: 'none', showButton: false, automove: true, noHighlight: true, noArrow: true, multiple: true},
@@ -595,7 +603,8 @@ define([
                 page_edit_text = false,
                 in_form = false,
                 in_check_form = false,
-                in_text_form = false;
+                in_text_form = false,
+                in_chart = false;
 
             while (++i < selectedObjects.length) {
                 type = selectedObjects[i].get_ObjectType();
@@ -619,6 +628,7 @@ define([
                     }
                     if (type == Asc.c_oAscTypeSelectElement.Chart) {
                         no_columns = true;
+                        in_chart = true;
                     }
                     if (type == Asc.c_oAscTypeSelectElement.Shape) {
                         var shapetype = pr.asc_getType();
@@ -642,7 +652,7 @@ define([
                     if (annotPr && annotPr.asc_getCanEditText && annotPr.asc_getCanEditText()) {
                         in_text_annot = true;
                         no_text = false;
-                    }
+                }
                 } else if (type == Asc.c_oAscTypeSelectElement.PdfPage) {
                     page_deleted = pr.asc_getDeleteLock();
                     page_rotate_lock = pr.asc_getRotateLock();
@@ -653,7 +663,16 @@ define([
                     no_text = false;
                     in_text_form = ft===AscPDF.FIELD_TYPES.text || ft===AscPDF.FIELD_TYPES.combobox || ft===AscPDF.FIELD_TYPES.listbox;
                     in_check_form = ft===AscPDF.FIELD_TYPES.checkbox || ft===AscPDF.FIELD_TYPES.radiobutton;
-                }
+            }
+            }
+
+            if (this._state.in_chart !== in_chart) {
+                if ( !in_chart && this.toolbar.isTabActive('charttab') )
+                    this.toolbar.setTab('home');
+                this.toolbar.setVisible('charttab', !!in_chart);
+                if (in_chart && this._state.showChartTab)
+                    this.toolbar.setTab('charttab');
+                this._state.in_chart = in_chart;
             }
 
             if (this._state.prcontrolsdisable !== paragraph_locked) {
@@ -818,8 +837,8 @@ define([
                     options.asc_setIsSaveAs(false);
                     me.api.asc_DownloadOrigin(options);
                 } else {
-                    Common.UI.info({
-                        maxwidth: 500,
+                Common.UI.info({
+                    maxwidth: 500,
                         msg: this.errorAccessDeny,
                         callback: function(btn) {
                             Common.NotificationCenter.trigger('edit:complete', toolbar);
@@ -966,6 +985,10 @@ define([
             }
         },
 
+        onSelectChart: function () {
+            this._state.showChartTab = true;
+        },
+
         clearSelectTools: function() {
             if (this.toolbar && this.toolbar.btnSelectTool && (this.toolbar.btnSelectTool.pressed || this.toolbar.btnHandTool.pressed)) {
                 this._state.select_tool = this.toolbar.btnSelectTool.pressed;
@@ -975,7 +998,7 @@ define([
         },
 
         updateSelectTools: function() {
-            if (this.toolbar && this.toolbar.btnSelectTool) {
+            if (this.toolbar && this.toolbar.btnSelectTool && !this._state.inDrawingMode && !this.toolbar.btnStrikeout.pressed && !this.toolbar.btnHighlight.pressed && !this.toolbar.btnUnderline.pressed) {
                 this.toolbar.btnSelectTool.toggle(!!this._state.select_tool, true);
                 this.toolbar.btnHandTool.toggle(!this._state.select_tool, true);
             }
@@ -1187,12 +1210,14 @@ define([
 
         onDrawStart: function() {
             this.api && this.api.SetMarkerFormat(undefined, false);
+            this._state.inDrawingMode = true;
             this.onClearHighlight();
             this.turnOnShowComments();
             this.clearSelectTools();
         },
 
         onDrawStop: function() {
+            this._state.inDrawingMode = false;
             this.onClearHighlight();
             this.turnOnShowComments();
             this.updateSelectTools();
@@ -1552,6 +1577,25 @@ define([
                 }
                 me.getApplication().getController('Common.Controllers.ExternalLinks').setConfig({toolbar: me}).setApi(me.api);
                 !config.canComments && me.toolbar.setVisible('comment', false);
+
+                var tab = {action: 'review', caption: me.toolbar.textTabCollaboration, dataHintTitle: 'U', layoutname: 'toolbar-collaboration'};
+                var $panel = me.getApplication().getController('Common.Controllers.ReviewChanges').createToolbarPanel();
+                if ( $panel ) {
+                    me.toolbar.addTab(tab, $panel, 7);
+                    me.toolbar.setVisible('review', (config.isPDFAnnotate || config.isPDFEdit) && Common.UI.LayoutManager.isElementVisible('toolbar-collaboration') ); // use config.canViewReview in review controller. set visible review tab in view mode only when asc_HaveRevisionsChanges
+                }
+            }
+
+            tab = {caption: me.textTabChart, action: 'charttab', extcls: config.isEdit ? 'canedit' : '', layoutname: 'toolbar-charttab', dataHintTitle: 'B', aux: true};
+            var charttab = me.getApplication().getController('Common.Controllers.ChartTab');
+            charttab.setApi(me.api).setConfig({toolbar: me});
+            var view = charttab.getView('Common.Views.ChartTab');
+            var chartbuttons = view.getButtons();
+            var $panel = charttab.createToolbarPanel();
+            if ($panel) {
+                me.toolbar.addTab(tab, $panel);
+                me._state.inchart && me.toolbar.setVisible('charttab', true);
+                Array.prototype.push.apply(me.toolbar.lockControls, chartbuttons);
             }
 
             var tab = {caption: me.toolbar.textTabView, action: 'view', extcls: config.isEdit ? 'canedit' : '', layoutname: 'toolbar-view', dataHintTitle: 'W'};
@@ -1597,7 +1641,7 @@ define([
                         me.toolbar.setVisible('forms', true);
 
                         Array.prototype.push.apply(me.toolbar.lockControls, forms.getView('FormsTab').getButtons());
-                    }
+            }
                 }
             }
         },
@@ -1711,6 +1755,30 @@ define([
                         me.toolbar.btnSubmit.updateHint(me.textRequired);
                     }
                 }
+
+                me.btnsComment = [];
+                if ( config.canComments ) {
+                    var _set = Common.enumLock;
+                    me.btnsComment = Common.Utils.injectButtons(me.toolbar.$el.find('.slot-comment'), 'tlbtn-addcomment-', 'toolbar__icon btn-big-add-comment', me.toolbar.capBtnComment, [_set.lostConnect], undefined, undefined, undefined, '1', 'bottom', 'small');
+
+                    if ( me.btnsComment.length ) {
+                        var _comments = PDFE.getController('Common.Controllers.Comments').getView();
+                        me.btnsComment.forEach(function (btn) {
+                            btn.updateHint( _comments.textHintAddComment );
+                            btn.on('click', function (btn, e) {
+                                Common.NotificationCenter.trigger('app:comment:add', 'toolbar');
+                            });
+                            if (btn.cmpEl.closest('#review-changes-panel').length>0)
+                                btn.setCaption(me.toolbar.capBtnAddComment);
+                        }, me);
+                        if (_comments.buttonAddNew) {
+                            _comments.buttonAddNew.options.lock = [ _set.lostConnect ];
+                            me.btnsComment.add(_comments.buttonAddNew);
+                        }
+                        Array.prototype.push.apply(me.toolbar.lockControls, me.btnsComment);
+                        Array.prototype.push.apply(me.toolbar.toolbarControls, me.btnsComment);
+                    }
+                }
             });
         },
 
@@ -1742,12 +1810,18 @@ define([
             } else
                 Common.UI.TooltipManager.closeTip('annotRect');
 
+            (tab === 'ins') ? Common.UI.TooltipManager.showTip('createLink') : Common.UI.TooltipManager.closeTip('createLink');
             (tab === 'red') && Common.UI.TooltipManager.closeTip('redactTab');
+        },
+
+        onClickTab: function(tab) {
+            this._state.showChartTab = tab ==='charttab';
         },
 
         onTabCollapse: function(tab) {
             Common.UI.TooltipManager.closeTip('pdfCharts');
             Common.UI.TooltipManager.closeTip('annotRect');
+            Common.UI.TooltipManager.closeTip('createLink');
         },
 
         applySettings: function() {

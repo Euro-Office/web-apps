@@ -43,6 +43,7 @@ define([
     'common/main/lib/util/Shortcuts',
     'common/main/lib/view/OpenDialog',
     'common/forms/lib/view/modals',
+    'common/main/lib/controller/Fonts',
     'documenteditor/forms/app/view/ApplicationView',
     'common/main/lib/controller/LaunchController'
 ], function (Viewport) {
@@ -358,6 +359,14 @@ define([
                     config.msg = this.errorCopyDisabled;
                     break;
 
+                case Asc.c_oAscError.ID.FileNotAssembled:
+                    config.msg = this.errorFileNotAssembled;
+                    break;
+
+                case Asc.c_oAscError.ID.ForcedViewMode:
+                    config.msg = this.errorForcedViewMode;
+                    break;
+
                 default:
                     config.msg = (typeof id == 'string') ? id : this.errorDefaultMessage.replace('%1', id);
                     if (typeof id == 'string')
@@ -501,6 +510,7 @@ define([
             this.appOptions.lang            = this.editorConfig.lang;
             this.appOptions.canPlugins      = false;
             this.appOptions.canRequestFillingStatus = this.editorConfig.canRequestFillingStatus;
+            this.appOptions.disableNetworkFunctionality = !!(window["AscDesktopEditor"] && window["AscDesktopEditor"]["isSupportNetworkFunctionality"] && false === window["AscDesktopEditor"]["isSupportNetworkFunctionality"]());
 
             Common.Controllers.Desktop.init(this.appOptions);
 
@@ -771,6 +781,8 @@ define([
                 this.api.asc_SetFastCollaborative(true);
                 this.api.asc_setAutoSaveGap(1);
                 this.api.SetCollaborativeMarksShowType(Asc.c_oAscCollaborativeMarksShowType.None);
+
+                DE.getController('Common.Controllers.Fonts').setApi(this.api);
             }
 
             this.view.btnClose.setVisible(this.appOptions.canCloseEditor);
@@ -1282,10 +1294,29 @@ define([
                         if (lock == Asc.c_oAscSdtLockType.SdtContentLocked || lock==Asc.c_oAscSdtLockType.ContentLocked)
                             return;
                     }
-                    me.api.asc_addImage(obj.pr);
-                    setTimeout(function(){
-                        me.api.asc_UncheckContentControlButtons();
-                    }, 500);
+                    var signProps = obj.asc_getSignatureProps(me.api);
+                    var win = (new Common.Views.PdfSignDialog({
+                        props: signProps,
+                        api: me.api,
+                        disableNetworkFunctionality: me.appOptions.disableNetworkFunctionality,
+                        storage: me.appOptions.canRequestInsertImage || me.appOptions.fileChoiceUrl && me.appOptions.fileChoiceUrl.indexOf("{documentType}")>-1,
+                        fontStore: this.getCollection('Common.Collections.Fonts'),
+                        iconType: 'svg',
+                        handler: function(result, value) {
+                            if (result == 'ok') {
+                                me.api.asc_SetSignatureProps(signProps.getResult());
+                            }
+                        }
+                        })).on('close', function(obj){
+                            setTimeout(function(){
+                                me.api.asc_UncheckContentControlButtons();
+                            }, 100);
+                        });
+                    win.show();
+                    // me.api.asc_addImage(obj.pr);
+                    // setTimeout(function(){
+                    //     me.api.asc_UncheckContentControlButtons();
+                    // }, 500);
                     break;
                 case Asc.c_oAscContentControlSpecificType.DropDownList:
                 case Asc.c_oAscContentControlSpecificType.ComboBox:
@@ -1728,28 +1759,56 @@ define([
             (item.value!==null) && Common.UI.Themes.setTheme(item.value);
         },
         onApiZoomChange: function(percent, type) {
+            var me = this;
+            var correspondingZoomFound = false;
+
             this.view.mnuZoom.items[0].setChecked(type == 2, true);
             this.view.mnuZoom.items[1].setChecked(type == 1, true);
-            this.view.mnuZoom.options.value = percent;
 
-            if ( this.view.mnuZoom.$el )
-                $('.menu-zoom label.zoom', this.view.mnuZoom.$el).html(percent + '%');
+            this.view.mnuZoom.items.forEach(function (item, index) {
+                if (percent === item.value) {
+                    me.view.mnuZoom.items[index].setChecked(true);
+                    correspondingZoomFound = true;
+                };
+            });
+
+            if (!correspondingZoomFound)
+                for (var i = 2; i < this.view.mnuZoom.items.length; i++) {
+                    this.view.mnuZoom.items[i].setChecked(false);
+                };
         },
 
         onMenuZoomClick: function(menu, item, e){
             switch ( item.value ) {
                 case 'zoom:page':
-                    item.isChecked() ? this.api.zoomFitToPage() : this.api.zoomCustomMode();
+                    if (item.isChecked()) {
+                        this.api.GetMultipageViewMode() && this.api.SetMultipageViewMode(false);
+                        this.api.zoomFitToPage();
+                        this.view.mnuZoom.items[2].setChecked(false);
+                    } else {
+                        this.api.zoomCustomMode();
+                    }
                     break;
                 case 'zoom:width':
-                    item.isChecked() ? this.api.zoomFitToWidth() : this.api.zoomCustomMode();
+                    if (item.isChecked()) {
+                        this.api.GetMultipageViewMode() && this.api.SetMultipageViewMode(false);
+                        this.api.zoomFitToWidth();
+                        this.view.mnuZoom.items[2].setChecked(false);
+                    } else {
+                        this.api.zoomCustomMode();
+                    }
                     break;
+                case 'zoom:multi':
+                    if (item.isChecked()) {
+                        this.api.zoomCustomMode();
+                        this.api.SetMultipageViewMode(true);
+                    } else {
+                        this.api.SetMultipageViewMode(false);
+                    }
+                    break;
+                default:
+                    this.api.zoom(item.value);
             }
-
-        },
-        onBtnZoom: function (btn, e) {
-            btn == 'up' ? this.api.zoomIn() : this.api.zoomOut();
-            e.stopPropagation();
         },
 
         onDarkModeClick: function(item) {
@@ -1933,8 +1992,6 @@ define([
             // zoom
             $('#id-btn-zoom-in').on('click', this.api.zoomIn.bind(this.api));
             $('#id-btn-zoom-out').on('click', this.api.zoomOut.bind(this.api));
-            $('#id-menu-zoom-in').on('click', _.bind(this.onBtnZoom, this,'up'));
-            $('#id-menu-zoom-out').on('click', _.bind(this.onBtnZoom, this,'down'));
             this.view.btnOptions.menu.on('item:click', _.bind(this.onOptionsClick, this));
             this.view.mnuZoom.on('item:click', _.bind(this.onMenuZoomClick, this));
 

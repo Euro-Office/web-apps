@@ -85,7 +85,8 @@ define([
                 'ViewTab': {
                     'zoom:topage': _.bind(this.onBtnZoomTo, this, 'topage'),
                     'zoom:towidth': _.bind(this.onBtnZoomTo, this, 'towidth'),
-                    'darkmode:change': _.bind(this.onChangeDarkMode, this)
+                    'darkmode:change': _.bind(this.onChangeDarkMode, this),
+                    'macros:click':  _.bind(this.onClickMacros, this)
                 },
                 'Toolbar': {
                     'view:compact': _.bind(function (toolbar, state) {
@@ -158,6 +159,14 @@ define([
 
                     if (emptyGroup.length>1) { // remove empty group
                         emptyGroup[emptyGroup.length-1].closest('.group').remove();
+                    }
+
+                    if (
+                        !config.canPDFEdit ||
+                        config.customization && config.customization.macros===false ||
+                        (Common.Controllers.Desktop && Common.Controllers.Desktop.isWinXp())
+                    ) {
+                        me.view.$el.find('.macro').remove();
                     }
 
                     me.view.cmbsZoom.forEach(function (cmb) {
@@ -347,8 +356,31 @@ define([
             }
         },
 
+        onClickMacros: function() {
+            var macrosWindow = new Common.Views.MacrosDialog({
+                api: this.api,
+            });
+            macrosWindow.show();
+        },
+
         onComboBlur: function() {
             Common.NotificationCenter.trigger('edit:complete', this.view);
+        },
+
+        applyEditorMode: function(config) {
+            if (this.view) {
+                this.view.$el && this.view.$el.find('.macro')[(config || this.mode)['isPDFEdit'] ? 'show' : 'hide']();
+            }
+            if (this.view && this.view.chRightMenu) {
+                var isVisible = (config || this.mode)['isPDFEdit'];
+                isVisible && this.view.chRightMenu.$el.closest('.elset').addClass('transparent');
+                this.view.chRightMenu.setVisible(isVisible);
+                if (this.toolbar && this.toolbar.toolbar) {
+                    this.toolbar.toolbar.moveAllFromMoreButton('view');
+                    this.toolbar.toolbar.processPanelVisible(null, true, true);
+                }
+                this.view.chRightMenu.$el.closest('.elset').removeClass('transparent');
+            }
         }
 
     }, PDFE.Controllers.ViewTab || {}));

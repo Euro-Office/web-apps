@@ -65,6 +65,16 @@ define([], function () {
                     'equation:callback': this.equationCallback,
                     'layout:change': this.onLayoutChange,
                     'theme:change': this.onThemeChange
+                },
+                'Common.Views.ChartTab': {
+                    'charttab:updatemenu': function (menu) {
+                        if (me.chartProps) {
+                            this.updateChartElementMenu(menu, me.chartProps)
+                        }
+                    },
+                    'charttab:elementselected': function (menu, item) {
+                        me.onChartElement(menu, item)
+                    }
                 }
             });
 
@@ -111,6 +121,8 @@ define([], function () {
                 me.api.asc_registerCallback('asc_onHideForeignCursorLabel', _.bind(me.onHideForeignCursorLabel, me));
                 me.api.asc_registerCallback('asc_onFocusObject',            _.bind(me.onFocusObject, me));
                 me.api.asc_registerCallback('onPluginContextMenu',          _.bind(me.onPluginContextMenu, me));
+
+                Common.NotificationCenter.on('charttab:advanced', _.bind(this.onChartAdvanced, this));
             }
         };
 
@@ -187,10 +199,13 @@ define([], function () {
             view.menuTableCut.on('click', _.bind(me.onCutCopyPaste, me));
             view.menuAddHyperlinkPara.on('click', _.bind(me.addHyperlink, me));
             view.menuAddHyperlinkTable.on('click', _.bind(me.addHyperlink, me));
+            view.menuAddHyperlinkPic.on('click', _.bind(me.addHyperlink, me));
             view.menuEditHyperlinkPara.on('click', _.bind(me.editHyperlink, me));
             view.menuEditHyperlinkTable.on('click', _.bind(me.editHyperlink, me));
+            view.menuEditHyperlinkPic.on('click', _.bind(me.editHyperlink, me));
             view.menuRemoveHyperlinkPara.on('click', _.bind(me.removeHyperlink, me));
             view.menuRemoveHyperlinkTable.on('click', _.bind(me.removeHyperlink, me));
+            view.menuRemoveHyperlinkPic.on('click', _.bind(me.removeHyperlink, me));
             view.menuChartEdit.on('click', _.bind(me.editChartClick, me, undefined));
             view.menuImgSaveAsPicture.on('click', _.bind(me.saveAsPicture, me));
             view.menuTableSaveAsPicture.on('click', _.bind(me.saveAsPicture, me));
@@ -460,6 +475,21 @@ define([], function () {
                     }
                     var recalc = false;
                     screenTip.isHidden = false;
+
+                    if (!me.screenTip.toolTip) {
+                        me.screenTip.toolTip = new Common.UI.Tooltip({
+                            owner: me,
+                            html: true,
+                            title: '<br><b>Press Ctrl and click link</b>'
+                        });
+                        me.screenTip.toolTip.on('tooltip:show', function () {
+                            $('#id_main_parent').on('mouseleave', me.wrapEvents.onMouseLeave);
+                        });
+                        me.screenTip.toolTip.on('tooltip:hide',function () {
+                            $('#id_main_parent').off('mouseleave', me.wrapEvents.onMouseLeave);
+                        });
+                    }
+
                     if (screenTip.tipType !== type || screenTip.tipLength !== ToolTip.length || screenTip.strTip.indexOf(ToolTip)<0 ) {
                         screenTip.toolTip.setTitle((type===Asc.c_oAscMouseMoveDataTypes.Hyperlink) ? (ToolTip + (me.isPreviewVisible ? '' : '<br><b>' + Common.Utils.String.platformKey('Ctrl', me.documentHolder.txtPressLink) + '</b>')) : ToolTip);
                         screenTip.tipLength = ToolTip.length;
@@ -1166,7 +1196,7 @@ define([], function () {
                         elType = selectedElements[i].get_ObjectType();
 
                         if (elType === Asc.c_oAscTypeSelectElement.Chart) {
-                            return me.api.asc_getChartSettings();
+                            return me.api.asc_getChartSettings(true);
                         }
                     }
                 }
