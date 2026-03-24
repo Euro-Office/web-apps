@@ -380,6 +380,7 @@ define([], function () { 'use strict';
             };
             this.api.asc_registerCallback('asc_CanUndoSignature', onCanUndoChanged);
             this.api.asc_registerCallback('asc_CanRedoSignature', onCanRedoChanged);
+            this.restoreSignature();
 
             var insertImageFromStorage = function(data) {
                 if (data && data._urls && data.c==='signature') {
@@ -421,14 +422,76 @@ define([], function () { 'use strict';
 
             const $window = this.getChild();
             $window.find('.dlg-btn').on('click', e => {
+                const result = e.currentTarget.getAttribute('result');
+                if (result === 'ok' && me.props) {
+                    const serialized = me.props.serialize();
+                    serialized.mode = me.mode;
+                    Common.localStorage.setItem(me.getKey(), JSON.stringify(serialized));
+                }
                 if ( me.options.handler )
-                    me.options.handler.call(me, event.currentTarget.attributes['result'].value);
+                    me.options.handler.call(me, result);
                 me.close();
             });
         },
 
         updateThemeColors: function() {
             // this.colorsLine.updateColors(Common.Utils.ThemeColor.getEffectColors(), Common.Utils.ThemeColor.getStandartColors());
+        },
+
+        getSignatureId: function() {
+            return this.props ? this.props.getResult().internalId : '';
+        },
+
+        getKey: function() {
+            return 'dialog-signature-' + this.getSignatureId();
+        },
+
+        getStoredData: function() {
+            var storedJson = Common.localStorage.getItem(this.getKey());
+            if (!storedJson) return null;
+            return JSON.parse(storedJson);
+        },
+
+        restoreSignature: function() {
+            if (!this.props) return;
+
+            var data = this.getStoredData();
+            if (!data) return;
+
+            this.props.deserialize(data);
+
+            var mode = data.mode !== undefined ? data.mode : 0;
+            this.mode = mode;
+            this.btnUpload.toggle(mode === 0, true);
+            this.btnDraw.toggle(mode === 1, true);
+            this.btnType.toggle(mode === 2, true);
+            this.ShowHideElem(mode);
+
+            if (mode === 1) {
+                var lineColor = data.lineColor;
+                if (lineColor) this.btnLineColor.setColor(lineColor.replace('#', ''));
+                if (data.lineSize) this.cmbLineSize.setValue(data.lineSize);
+            } else if (mode === 2) {
+                if (data.text) this.inputName.setValue(data.text);
+                if (data.font) {
+                    this.font.name = data.font;
+                    var rec = this.fontStore && this.fontStore.findWhere({name: data.font});
+                    if (rec) this.cmbFonts.selectRecord(rec);
+                    this.props.put_TypeFont(data.font);
+                }
+                if (data.fontSize) {
+                    this.font.size = data.fontSize;
+                    this.cmbFontSize.setValue(data.fontSize);
+                }
+                if (data.bold !== undefined) {
+                    this.font.bold = data.bold;
+                    this.btnBold.toggle(data.bold);
+                }
+                if (data.italic !== undefined) {
+                    this.font.italic = data.italic;
+                    this.btnItalic.toggle(data.italic);
+                }
+            }
         },
 
         onImgModeClick: function(mode, btn) {
