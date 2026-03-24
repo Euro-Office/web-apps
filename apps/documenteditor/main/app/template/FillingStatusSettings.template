@@ -1,0 +1,48 @@
+<table cols="2" role="presentation">
+    <tr>
+        <td>
+            <label class="header padding-small"><%= scope.txtTitle %></label>
+        </td>
+    </tr>
+    <tr>
+        <td class="progress-list">
+            <% _.each(items, function(item, index) { %>
+                <div class="progress-item <%= item.status %>">
+                    <div class="progress-item-left">
+                        <div class="progress-item-number"><%= index + 1 %></div>
+                        <div class="progress-item-dashes"></div>
+                    </div>
+                    <div class="progress-item-content">
+                        <div class="progress-item-header">
+                            <div class="progress-item-label"><%= item.name %></div>
+                            <% if (item.status == 'done') { %>
+                                <div class="progress-item-check"></div>
+                            <% } %>
+                        </div>
+                        <div class="progress-item-description"><%= item.email %></div>
+                        <% if (item.status == 'done') { %>
+                            <div class="progress-item-footer">
+                                <div class="progress-item-status">The document is signed</div>
+                                <% if (item.date) { %>
+                                    <div class="progress-item-date"><%= item.date %></div>
+                                <% } %>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            <% }) %>
+            <div class="progress-item complete <%= isAllDone ? 'all-done' : '' %>">
+                <div class="progress-item-left">
+                    <div class="progress-item-number">
+                        <div class="progress-item-check"></div>
+                    </div>
+                </div>
+                <div class="progress-item-content">
+                    <div class="progress-item-header">
+                        <div class="progress-item-label">Complete</div>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>

@@ -100,6 +100,8 @@ define([
             this._settings[Common.Utils.documentSettingsType.MailMerge] = {panelId: "id-mail-merge-settings", panel: rightMenu.mergeSettings,    btn: rightMenu.btnMailMerge,   hidden: 1, props: {}, locked: false};
             this._settings[Common.Utils.documentSettingsType.Signature] = {panelId: "id-signature-settings",  panel: rightMenu.signatureSettings, btn: rightMenu.btnSignature,  hidden: 1, props: {}, locked: false};
             this._settings[Common.Utils.documentSettingsType.Form] = {panelId: "id-form-settings",  panel: rightMenu.formSettings, btn: rightMenu.btnForm,  hidden: 1, props: {}, locked: false};
+            // this._settings[Common.Utils.documentSettingsType.FillingStatus] = {panelId: "id-filling-status-settings",  panel: rightMenu.fillingStatusSettings, btn: rightMenu.btnFillingStatus,  hidden: 1, props: {}, locked: false};
+            this._settings[Common.Utils.documentSettingsType.SendForSigning] = {panelId: "id-send-for-signing-settings",  panel: rightMenu.sendForSigningSettings, btn: rightMenu.btnSendForSigning,  hidden: 1, props: {}, locked: false};
         },
 
         setApi: function(api) {
@@ -359,6 +361,8 @@ define([
 
             this._settings[Common.Utils.documentSettingsType.Image].needShow = false;
             this._settings[Common.Utils.documentSettingsType.Chart].needShow = false;
+
+            this.rightmenu.btnSendForSigning && this.rightmenu.btnSendForSigning.setDisabled(false);
         },
 
         onCoAuthoringDisconnect: function() {
@@ -504,6 +508,8 @@ define([
                     disabled && this.rightmenu.btnMailMerge.setDisabled(disabled);
                 }
                 this.rightmenu.chartSettings.disableControls(disabled);
+                this.rightmenu.fillingStatusSettings && this.rightmenu.fillingStatusSettings.disableControls(disabled);
+                this.rightmenu.sendForSigningSettings && this.rightmenu.sendForSigningSettings.disableControls(disabled);
 
                 if (this.rightmenu.signatureSettings) {
                     !allowSignature && this.rightmenu.btnSignature.setDisabled(disabled);
@@ -519,6 +525,8 @@ define([
                     this.rightmenu.btnTextArt.setDisabled(disabled);
                     this.rightmenu.btnChart.setDisabled(disabled);
                     this.rightmenu.btnForm && this.rightmenu.btnForm.setDisabled(disabled);
+                    this.rightmenu.btnFillingStatus && this.rightmenu.btnFillingStatus.setDisabled(disabled);
+                    this.rightmenu.btnSendForSigning && this.rightmenu.btnSendForSigning.setDisabled(disabled);
                     this.rightmenu.setDisabledAllMoreMenuItems(disabled);
                 } else {
                     var selectedElements = this.api.getSelectedElements();
@@ -608,6 +616,20 @@ define([
             this.rightmenu.onBtnMenuClick();
             Common.NotificationCenter.trigger('layout:changed', 'rightmenu');
             this.rightmenu.fireEvent('editcomplete', this.rightmenu);
+        },
+
+        openSendForSigning: function() {
+            const btnSendForSigning = this.rightmenu.btnSendForSigning;
+            if(!btnSendForSigning.isActive()) {
+                btnSendForSigning.click();
+            }
+        },
+
+        closeSendForSigning: function() {
+            const btnSendForSigning = this.rightmenu.btnSendForSigning;
+            if(btnSendForSigning.isActive()) {
+                btnSendForSigning.click();
+            }
         },
 
         onHidePlugins: function() {

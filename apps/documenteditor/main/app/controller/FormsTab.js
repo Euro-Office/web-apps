@@ -90,6 +90,7 @@ define([
             Common.NotificationCenter.on('forms:close-help', _.bind(this.closeHelpTip, this));
             Common.NotificationCenter.on('forms:show-help', _.bind(this.showHelpTip, this));
             Common.NotificationCenter.on('forms:request-fill', _.bind(this.requestStartFilling, this));
+            Common.NotificationCenter.on('forms:show-send-for-signing', _.bind(this.showSendForSigning, this));
             Common.NotificationCenter.on('document:ready', _.bind(this.onDocumentReady, this));
             return this;
         },
@@ -722,6 +723,11 @@ define([
                 });
             }
             Common.Gateway.requestStartFilling(arr);
+        },
+
+        showSendForSigning: function() {
+            const rightmenuController = this.getApplication().getController('RightMenu');
+            rightmenuController.openSendForSigning();
         },
 
         onActiveTab: function(tab) {

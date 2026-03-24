@@ -403,7 +403,8 @@
         _config.editorConfig.canRequestSelectSpreadsheet = _config.events && !!_config.events.onRequestSelectSpreadsheet;
         _config.editorConfig.canRequestReferenceSource = _config.events && !!_config.events.onRequestReferenceSource;
         _config.editorConfig.canSaveDocumentToBinary = _config.events && !!_config.events.onSaveDocument;
-        _config.editorConfig.canStartFilling = _config.events && !!_config.events.onRequestStartFilling;
+        _config.editorConfig.canRequestStartFilling = _config.events && !!_config.events.onRequestStartFilling;
+        _config.editorConfig.canStartFilling = _config.events && !!_config.events.onStartFilling;
         _config.editorConfig.canRequestRefreshFile = _config.events && !!_config.events.onRequestRefreshFile;
         _config.editorConfig.canUpdateVersion = _config.events && !!_config.events.onOutdatedVersion;
         _config.editorConfig.canRequestFillingStatus = _config.events && !!_config.events.onRequestFillingStatus;

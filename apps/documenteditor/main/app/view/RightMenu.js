@@ -39,6 +39,7 @@
 var SCALE_MIN = 40;
 var MENU_SCALE_PART = 260;
 var MENU_BASE_WIDTH = 220;
+// var MENU_BASE_WIDTH = 360;
 
 define([
     'text!documenteditor/main/app/template/RightMenu.template',
@@ -59,6 +60,8 @@ define([
     'documenteditor/main/app/view/TextArtSettings',
     'documenteditor/main/app/view/SignatureSettings',
     'documenteditor/main/app/view/FormSettings',
+    'documenteditor/main/app/view/FillingStatusSettings',
+    'documenteditor/main/app/view/SendForSigningSettings',
     'common/main/lib/component/Scroller',
     'common/main/lib/component/ListView',
 ], function (menuTemplate, $, _, Backbone) {
@@ -253,6 +256,39 @@ define([
                 this.formSettings = new DE.Views.FormSettings();
             }
 
+            if (false) {
+                this.btnFillingStatus = new Common.UI.Button({
+                    hint: this.txtFormSettings,
+                    asctype: Common.Utils.documentSettingsType.FillingStatus,
+                    enableToggle: true,
+                    disabled: true,
+                    iconCls: 'btn-field',
+                    toggleGroup: 'tabpanelbtnsGroup',
+                    allowMouseEventsOnDisabled: true
+                });
+                this._settings[Common.Utils.documentSettingsType.FillingStatus]   = {panel: "id-filling-status-settings", btn: this.btnFillingStatus};
+                this.btnFillingStatus.setElement($markup.findById('#id-right-menu-filling-status'), false); 
+                this.btnFillingStatus.render().setVisible(true);
+                this.btnFillingStatus.on('click', this.onBtnMenuClick.bind(this));
+                this.fillingStatusSettings = new DE.Views.FillingStatusSettings();
+            }
+
+            if (!mode.canRequestStartFilling) {
+                this.btnSendForSigning = new Common.UI.Button({
+                    hint: this.txtSendForSigning,
+                    asctype: Common.Utils.documentSettingsType.SendForSigning,
+                    enableToggle: true,
+                    disabled: false,
+                    iconCls: 'btn-field',
+                    toggleGroup: 'tabpanelbtnsGroup',
+                    allowMouseEventsOnDisabled: true
+                });
+                this._settings[Common.Utils.documentSettingsType.SendForSigning]   = {panel: "id-send-for-signing-settings", btn: this.btnSendForSigning};
+                this.btnSendForSigning.setElement($markup.findById('#id-right-menu-send-for-signing'), false); 
+                this.btnSendForSigning.render().setVisible(true);
+                this.btnSendForSigning.on('click', this.onBtnMenuClick.bind(this));
+                this.sendForSigningSettings = new DE.Views.SendForSigningSettings();
+            }
 
             if (_.isUndefined(this.scroller)) {
                 this.scroller = new Common.UI.Scroller({
@@ -289,6 +325,8 @@ define([
             if (this.mergeSettings) this.mergeSettings.setApi(api).on('editcomplete', _fire_editcomplete);
             if (this.signatureSettings) this.signatureSettings.setApi(api).on('editcomplete', _fire_editcomplete);
             if (this.formSettings) this.formSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('updatescroller', _updateScroller);
+            if (this.fillingStatusSettings) this.fillingStatusSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('updatescroller', _updateScroller);
+            if (this.sendForSigningSettings) this.sendForSigningSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('updatescroller', _updateScroller);
         },
 
         setMode: function(mode) {
@@ -300,6 +338,8 @@ define([
             this.chartSettings && this.chartSettings.setMode(mode);
             // this.headerSettings && this.headerSettings.setMode(mode);
             this.signatureSettings && this.signatureSettings.setMode(mode);
+            this.fillingStatusSettings && this.fillingStatusSettings.setMode(mode);
+            this.sendForSigningSettings && this.sendForSigningSettings.setMode(mode);
         },
 
         onBtnMenuClick: function(btn, e) {
@@ -402,7 +442,7 @@ define([
 
         setButtons: function () {
             var allButtons = [this.btnText, this.btnTable, this.btnImage, this.btnShape, this.btnChart, this.btnTextArt,
-                    this.btnMailMerge, this.btnSignature, this.btnForm];
+                    this.btnMailMerge, this.btnSignature, this.btnForm, this.btnFillingStatus, this.btnSendForSigning];
             Common.UI.SideMenu.prototype.setButtons.apply(this, [allButtons]);
         },
 
@@ -434,6 +474,7 @@ define([
         txtMailMergeSettings:       'Mail Merge Settings',
         txtSignatureSettings:       'Signature Settings',
         txtFormSettings:            'Form Settings',
+        txtSendForSigning:          'Send for signing',
         ariaRightMenu:              'Right menu'
     }, DE.Views.RightMenu || {}));
 });

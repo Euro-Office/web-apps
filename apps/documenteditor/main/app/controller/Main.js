@@ -1776,7 +1776,9 @@ define([
                 this.appOptions.canSwitchMode  = this.appOptions.isEdit;
                 this.appOptions.canSubmitForms = this.appOptions.isRestrictedEdit && this.appOptions.canFillForms && this.appOptions.canLicense && !this.appOptions.isOffline && (typeof (this.editorConfig.customization) == 'object') &&
                                                 !!this.editorConfig.customization.submitForm && (typeof this.editorConfig.customization.submitForm !== 'object' || this.editorConfig.customization.submitForm.visible!==false);
-                this.appOptions.canStartFilling = this.editorConfig.canStartFilling && this.appOptions.isEdit &&  this.appOptions.isPDFForm; // show Start Filling button in the header
+                this.appOptions.canStartFilling = this.editorConfig.canStartFilling && this.appOptions.isEdit &&  this.appOptions.isPDFForm;
+                this.appOptions.canRequestStartFilling = this.editorConfig.canRequestStartFilling && this.appOptions.isEdit &&  this.appOptions.isPDFForm;
+                this.appOptions.showStartFillingButton = this.appOptions.canStartFilling || this.appOptions.canRequestStartFilling; // show Start Filling button in the header
 
                 this.appOptions.compactHeader = this.appOptions.customization && (typeof (this.appOptions.customization) == 'object') && !!this.appOptions.customization.compactHeader;
                 this.appOptions.twoLevelHeader = this.appOptions.isEdit || this.appOptions.isPDFForm && this.appOptions.canFillForms && this.appOptions.isRestrictedEdit; // when compactHeader=true some buttons move to toolbar
@@ -1983,8 +1985,9 @@ define([
                 (!inViewMode || force) && Common.NotificationCenter.trigger('doc:mode-changed', mode);
             },
 
-            onStartFilling: function(disconnect) {
+            onStartFilling: function(disconnect, roles) {
                 this._isFillInitiator = true;
+                this._rolesForFilling = roles;
                 this.api.asc_CompletePreparingOForm(!!disconnect);
                 !disconnect && this.onDisconnectEveryone(); // disable editing only for current user
             },
@@ -1999,7 +2002,7 @@ define([
             },
 
             onCompletePreparingOForm: function() {
-                Common.Gateway.startFilling();
+                Common.Gateway.startFilling(this._rolesForFilling);
             },
 
             applyModeCommonElements: function() {
