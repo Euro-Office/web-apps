@@ -68,7 +68,7 @@ const LongActionsController = inject('storeAppOptions')(({storeAppOptions}) => {
         let action = {id: id, type: type};
         stackLongActions.pop(action);
 
-        //this.updateWindowTitle(true);
+        Common.Notifications.trigger('update:windowtitle', true);
 
         action = stackLongActions.get({type: Asc.c_oAscAsyncActionType.Information}) || stackLongActions.get({type: Asc.c_oAscAsyncActionType.BlockInteraction});
 

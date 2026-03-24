@@ -550,6 +550,8 @@ class MainController extends Component {
                 storePresentationInfo.changeTitle(meta.title);
             }
         });
+
+        Common.Notifications.on('update:windowtitle', force => this.updateWindowTitle(force));
     }
 
     insertImageFromStorage(data) {
