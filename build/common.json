@@ -1,7 +1,7 @@
 {
     "name": "common",
     "version": "4.3.0",
-    "build": 52,
+    "build": 58,
     "homepage": "http://www.onlyoffice.com",
     "private": true,
     "sdk": {
