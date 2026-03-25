@@ -452,10 +452,15 @@ define([
         },
 
         showHideFormGroups: function() {
+            let isFirstVisibleGroup = true;
             (this.$el || $(this.el)).find('.form-group').each(function (index, group) {
                 $(group).show();
                 const hasVisibleFields = $(group).find('.form-field:visible').length > 0;
-                if(!hasVisibleFields) {
+                if(hasVisibleFields) {
+                    const $separator = $(group).find('.separator');
+                    $separator && $separator[isFirstVisibleGroup ? 'hide' : 'show']();
+                    isFirstVisibleGroup = false;
+                } else {
                     $(group).hide();
                 }
             });
