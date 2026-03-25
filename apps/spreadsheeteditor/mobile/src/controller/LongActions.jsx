@@ -112,7 +112,7 @@ const LongActionsController = inject('storeAppOptions')(({storeAppOptions}) => {
 
     const setLongActionView = (action) => {
         let title = '';
-        let text = '';
+        // let text = '';
         switch (action.id) {
             case Asc.c_oAscAsyncAction['Open']:
                 title   = _t.textLoadingDocument;
@@ -122,8 +122,8 @@ const LongActionsController = inject('storeAppOptions')(({storeAppOptions}) => {
 
             case Asc.c_oAscAsyncAction['Save']:
                 title   = _t.saveTitleText;
-                text    = _t.saveTextText;
-                storeAppOptions.changeSavingDocStatusText(text);
+                // text    = _t.saveTextText;
+                storeAppOptions.changeSavingDocStatusText(_t.saveTextText);
                 break;
 
             case Asc.c_oAscAsyncAction['LoadDocumentFonts']:
