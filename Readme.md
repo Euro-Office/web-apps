@@ -2,7 +2,7 @@
 
 ## web-apps
 
-The frontend for [ONLYOFFICE Document Server][2] and [ONLYOFFICE Desktop Editors](https://github.com/ONLYOFFICE/DesktopEditors). Builds the program interface and allows the user create, edit, save and export text documents, spreadsheets, and presentations.
+The frontend for [Euro-Office Document Server][2] and [Euro-Office Desktop Editors](https://github.com/euro-office/DesktopEditors). Builds the program interface and allows the user create, edit, save and export text documents, spreadsheets, and presentations.
 
 ## Previous versions
 
@@ -10,21 +10,21 @@ Until 2019-10-23 the repository was called web-apps-pro.
 
 ## Project information
 
-Official website: [https://www.onlyoffice.com/](https://www.onlyoffice.com "https://www.onlyoffice.com")
+Official website: [https://github.com/euro-office](https://github.com/euro-office "https://github.com/euro-office")
 
-Code repository: [https://github.com/ONLYOFFICE/web-apps](https://github.com/ONLYOFFICE/web-apps "https://github.com/ONLYOFFICE/web-apps")
+Code repository: [https://github.com/euro-office/web-apps](https://github.com/euro-office/web-apps "https://github.com/euro-office/web-apps")
 
 ## User feedback and support
 
-If you have any problems with or questions about [ONLYOFFICE Document Server][2], please visit our official forum: [forum.onlyoffice.com][1] or you can ask and answer ONLYOFFICE development questions on [Stack Overflow][3].
+If you have any problems with or questions about [Euro-Office Document Server][2], please visit our official forum: [github.com/euro-office][1] or you can ask and answer Euro-Office development questions on [Stack Overflow][3].
 
-  [1]: https://forum.onlyoffice.com
-  [2]: https://github.com/ONLYOFFICE/DocumentServer
-  [3]: http://stackoverflow.com/questions/tagged/onlyoffice
+  [1]: https://github.com/euro-office
+  [2]: https://github.com/euro-office/DocumentServer
+  [3]: http://stackoverflow.com/questions/tagged/euro-office
 
 ## Styling
 
-Styling is accomplished via LESS, there is the content set by ONLYOFFICE. Before you do anything, please read the section under this about modifications.
+Styling is accomplished via LESS, there is the content set by Euro-Office. Before you do anything, please read the section under this about modifications.
 
 There are several hundred LESS files, organised in several folders:
 
