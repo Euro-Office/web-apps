@@ -496,6 +496,7 @@
     </script>
 
     <inline src="../../common/main/resources/img/header/icons.svg" />
+    <inline src="resources/img/toolbar/icons.svg" />
     <script src="../../../../../../sdkjs/common/device_scale.js?__inline=true"></script>
 
     <script>
