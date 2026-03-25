@@ -954,7 +954,8 @@ define([], function () {
                         content_locked = lock_type==Asc.c_oAscSdtLockType.SdtContentLocked || lock_type==Asc.c_oAscSdtLockType.ContentLocked,
                         is_form = control_props && control_props.get_FormPr();
 
-                    me.menuImgStretchContentControl.setVisible(is_form);
+                    me.menuImgStretchContentControl.setVisible(is_form && !!value.imgProps.isTable && (!lock_type || lock_type == Asc.c_oAscSdtLockType.Unlocked));
+
                     me.menuImgRemoveControl.setVisible(in_control);
                     me.menuImgControlSettings.setVisible(in_control && me.mode.canEditContentControl && !is_form);
                     menuImgControlSeparator.setVisible(in_control);
@@ -1819,7 +1820,8 @@ define([], function () {
                             lock_type = (control_props) ? control_props.get_Lock() : Asc.c_oAscSdtLockType.Unlocked,
                             is_form = control_props && control_props.get_FormPr();
                         me.menuTableRemoveForm.setVisible(is_form);
-                        me.menuTableStretchContentControl.setVisible(is_form);
+                        me.menuTableStretchContentControl.setVisible(is_form && !control_lock);
+
                         menuTableControl.setVisible(!is_form);
                         if (is_form) {
                             me.menuTableRemoveForm.setDisabled(lock_type==Asc.c_oAscSdtLockType.SdtContentLocked || lock_type==Asc.c_oAscSdtLockType.SdtLocked);

@@ -335,6 +335,19 @@ define([
             toolbar.btnRedo.on('disabled',                              _.bind(this.onBtnChangeState, this, 'redo:disabled'));
             toolbar.btnCopy.on('click',                                 _.bind(this.onCopyPaste, this, 'copy'));
             toolbar.btnPaste.on('click',                                _.bind(this.onCopyPaste, this, 'paste'));
+            $('#slot-btn-paste').on('click', '.dropdown-toggle', _.bind(function(e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                var menu = this.toolbar.btnPaste.menu;
+
+                if (menu && menu.isVisible && menu.isVisible()) {
+                    menu.hide();
+                    return;
+                }
+
+                this.toolbar.fireEvent('paste:options', [toolbar.btnPaste, this.api]);
+            }, this));
             toolbar.btnCut.on('click',                                  _.bind(this.onCopyPaste, this, 'cut'));
             toolbar.btnSelectAll.on('click',                            _.bind(this.onSelectAll, this));
             toolbar.btnReplace.on('click',                              _.bind(this.onReplace, this));
@@ -403,6 +416,7 @@ define([
                     $('#id-toolbar-menu-auto-bordercolor').on('click',  _.bind(this.onAutoBorderColor, this));
                 }
             $('#id-toolbar-menu-new-bordercolor').on('click',           _.bind(this.onNewBorderColor, this));    
+            $('#id-toolbar-menu-item-horizontal-line').on('click',      _.bind(this.onHorizontalLine, this));
             this.mode.isEdit && Common.NotificationCenter.on('eyedropper:start', _.bind(this.eyedropperStart, this));
             toolbar.mnuHighlightColorPicker.on('select',                _.bind(this.onSelectHighlightColor, this));
             toolbar.mnuHighlightTransparent.on('click',                 _.bind(this.onHighlightTransparentClick, this));
@@ -3204,6 +3218,14 @@ define([
             Common.component.Analytics.trackEvent('ToolBar', 'Border Color');
         },
 
+        onHorizontalLine: function() {
+            if (this.api)
+                this.api.asc_addHorizontalRule();
+            
+            Common.NotificationCenter.trigger('edit:complete', this.toolbar);
+            Common.component.Analytics.trackEvent('ToolBar', 'Horizontal Line');
+        },
+
         eyedropperStart: function () {
             if (this.toolbar.btnCopyStyle.pressed) {
                 this.toolbar.btnCopyStyle.toggle(false, true);
@@ -4029,11 +4051,11 @@ define([
             config.isEdit && config.canFeatureContentControl && me.onChangeSdtGlobalSettings();
 
             tab = {caption: me.toolbar.textTabView, action: 'view', extcls: config.isEdit ? 'canedit' : '', layoutname: 'toolbar-view', dataHintTitle: 'W'};
-            var viewtab = application.getController('ViewTab');
+            const viewtab = application.getController('ViewTab');
             viewtab.setApi(me.api).setConfig({toolbar: me, mode: config});
             $panel = viewtab.createToolbarPanel();
             if ($panel) {
-                var visible = Common.UI.LayoutManager.isElementVisible('toolbar-view');
+                const visible = Common.UI.LayoutManager.isElementVisible('toolbar-view');
                 me.toolbar.addTab(tab, $panel, 8);
                 me.toolbar.setVisible('view', visible);
                 !editmode && !compactview && visible && Common.Utils.InternalSettings.set('toolbar-active-tab', 'view'); // need to activate later
