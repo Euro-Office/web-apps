@@ -190,11 +190,19 @@ Contains brand values that replace `{{PLACEHOLDER}}` tokens in JS and webpack `D
 ```json
 {
   "company_name": "Euro Office",
-  "app_title": "Euro Office",
   "publisher_name": "Euro Office",
-  "publisher_url": "https://euro-office.example.com",
+  "publisher_url": "https://github.com/euro-office",
+  "publisher_address": "",
+  "publisher_phone": "",
+  "sales_email": "",
+  "support_email": "",
+  "support_url": "https://github.com/euro-office",
+  "help_url": "https://github.com/euro-office",
+  "app_title": "Euro Office",
   "mobile_logo_light": "eo_logo_light.svg",
-  "mobile_logo_dark": "eo_logo_dark.svg"
+  "mobile_logo_dark": "eo_logo_dark.svg",
+  "forms_logo_light": "eo_logo_dark.svg",
+  "forms_logo_dark": "eo_logo_light.svg"
 }
 ```
 
