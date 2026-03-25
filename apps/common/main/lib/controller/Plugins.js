@@ -1223,7 +1223,7 @@ define([
                     help && window.open(help, '_blank');
                 },
                 'docked': function(frameId){
-                    const docked_place = isPanel ? variation.type : !!variation.dockedPlace ? variation.dockedPlace : 'panelRight';
+                    const docked_place = isPanel ? variation.type : !!variation.dockedPlace ? variation.dockedPlace : 'panel';
                     me.api.asc_pluginButtonDockChanged(docked_place, variation.guid, frameId, function(){
                         setTimeout(function () {
                             me.customPluginsDlg[frameId].close();
@@ -1296,7 +1296,7 @@ define([
 
         onPluginPanelShow: function (frameId, variation, lang) {
             var guid = variation.guid,
-                menu = this.isPDFEditor ? 'left' : (variation.type == 'panelRight' ? 'right' : 'left');
+                menu = this.isPDFEditor ? 'left' : ((variation.dockedPlace||variation.type) == 'panelRight' ? 'right' : 'left');
             !menu && (menu = 'left');
 
             var description = variation.description;
