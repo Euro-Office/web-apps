@@ -1,1 +1,7 @@
-<svg width="28" height="28" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M24 5H4v17h20V5zM4 4a1 1 0 0 0-1 1v17a1 1 0 0 0 1 1h20a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H4z" fill="#000"/><path opacity=".2" d="M4 5h20v17H4V5z" fill="#000"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M15 8a1 1 0 0 1-1 1H4V6h11v2Z" fill="currentColor" stroke="none" opacity="100%" class="icon-fill-blue-primary"/>
+    <path d="M14 16a1 1 0 1 1 0 2H4v-2h10Z" fill="currentColor" stroke="none" opacity="60%" class="icon-fill-blue-primary"/>
+    <path d="M24 22H13v-1a1 1 0 0 1 1-1h10v2Z" fill="currentColor" stroke="none" opacity="40%" class="icon-fill-blue-primary"/>
+    <path d="M24 14H14a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1h10v3Z" fill="currentColor" stroke="none" opacity="80%" class="icon-fill-blue-primary"/>
+    <path d="M24.5 21.5v-15a1 1 0 0 0-1-1h-19a1 1 0 0 0-1 1v15a1 1 0 0 0 1 1h19a1 1 0 0 0 1-1Z" class="icon-stroke-gray-primary"/>
+</svg>
