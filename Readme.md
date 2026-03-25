@@ -186,6 +186,8 @@ theme/euro-office/
 
 Contains brand values that replace `{{PLACEHOLDER}}` tokens in JS and webpack `DefinePlugin` constants. Priority: environment variable > config.json > hardcoded default.
 
+> **Note:** Mobile and forms logo fields (`mobile_logo_*`, `forms_logo_*`) are in this file because the mobile editors use webpack, not Grunt. `build/theme.config.mjs` reads `config.json` directly to provide LESS `globalVars` (logo paths) and `DefinePlugin` constants (brand values) for the mobile webpack builds. This makes `config.json` the shared contract between the Grunt build (desktop) and the webpack build (mobile).
+
 ```json
 {
   "company_name": "Euro Office",
