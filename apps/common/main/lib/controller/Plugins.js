@@ -884,7 +884,11 @@ define([
             if ( pluginsdata instanceof Array ) {
                 var arr = [], arrUI = [],
                     lang = me.appOptions.lang.split(/[\-_]/)[0];
+                const exclude_guids = me.configPlugins.config.disabled instanceof Array ? me.configPlugins.config.disabled : [];
                 pluginsdata.forEach(function(item){
+                    if ( exclude_guids.length && exclude_guids.includes(item.guid) )
+                        return;
+
                     var updatedItem;
                     if (forceUpdate) {
                         updatedItem = arr.find(function (i){
