@@ -88,7 +88,8 @@ const LongActionsController = inject('storeAppOptions')(({storeAppOptions}) => {
         if (id===Asc.c_oAscAsyncAction['Submit'] && !submitFail) {
             Common.Gateway.submitForm();
         } else if ((id==Asc.c_oAscAsyncAction['Save'] || id==Asc.c_oAscAsyncAction['ForceSaveButton'])) {
-            storeAppOptions.changeSavingDocStatusText(_t.changesSaved)
+            storeAppOptions.changeSavingDocStatusText(_t.changesSaved);
+            storeAppOptions.isSaveBadgeShown && storeAppOptions.changeIsSaveBadgeShown(false);
         }
     };
 
