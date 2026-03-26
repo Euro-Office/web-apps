@@ -326,6 +326,7 @@ class MainController extends Component {
 
         this.api.asc_registerCallback('asc_onDocumentModifiedChanged', this.onDocumentModifiedChanged.bind(this));
         this.api.asc_registerCallback('asc_onDocumentCanSaveChanged',  this.onDocumentCanSaveChanged.bind(this));
+        this.api.asc_registerCallback('asc_onCollaborativeChanges',  this.onCollaborativeChanges.bind(this));
 
         Common.Notifications.trigger('preloader:close');
         Common.Notifications.trigger('preloader:endAction', Asc.c_oAscAsyncActionType['BlockInteraction'], this.ApplyEditRights);
@@ -379,7 +380,14 @@ class MainController extends Component {
     }
 
     onDocumentCanSaveChanged (isCanSave) {
-        //
+        const storeAppOptions = this.props.storeAppOptions;
+        storeAppOptions.changeIsSaveBadgeShown(isCanSave);
+    }
+
+    onCollaborativeChanges () {
+        const storeAppOptions = this.props.storeAppOptions;
+        if (!storeAppOptions.isSaveBadgeShown) storeAppOptions.changeIsSaveBadgeShown(true);
+        storeAppOptions.changeSavingDocStatusText('');
     }
 
     onBeforeUnload () {
@@ -542,6 +550,8 @@ class MainController extends Component {
                 storePresentationInfo.changeTitle(meta.title);
             }
         });
+
+        Common.Notifications.on('update:windowtitle', force => this.updateWindowTitle(force));
     }
 
     insertImageFromStorage(data) {
@@ -581,6 +591,8 @@ class MainController extends Component {
         value = LocalStorage.getBool("pe-mobile-spellcheck", !(appOptions.customization && appOptions.customization.spellcheck===false));
         appSettings.changeSpellCheck(value);
         this.api.asc_setSpellCheck(value);
+
+        appOptions.changeAutosave(LocalStorage.itemExists('pe-mobile-autosave') ? LocalStorage.getBool("pe-mobile-autosave") : true);
 
         this.updateWindowTitle(true);
 
@@ -882,6 +894,9 @@ class MainController extends Component {
             if (window.document.title !== title) {
                 window.document.title = title;
             }
+
+            if (isModified)
+                this.props.storeAppOptions.changeSavingDocStatusText('');
 
             this._isDocReady && (this._state.isDocModified !== isModified) && Common.Gateway.setDocumentModified(isModified);
             this._state.isDocModified = isModified;

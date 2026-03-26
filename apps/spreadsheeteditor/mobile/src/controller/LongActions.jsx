@@ -93,7 +93,7 @@ const LongActionsController = inject('storeAppOptions')(({storeAppOptions}) => {
         let action = {id: id, type: type};
         stackLongActions.pop(action);
 
-        //this.updateWindowTitle(true);
+        Common.Notifications.trigger('update:windowtitle', true);
 
         action = stackLongActions.get({type: Asc.c_oAscAsyncActionType.Information}) || stackLongActions.get({type: Asc.c_oAscAsyncActionType.BlockInteraction});
 
@@ -103,6 +103,11 @@ const LongActionsController = inject('storeAppOptions')(({storeAppOptions}) => {
             loadMask && loadMask.el && loadMask.el.classList.contains('modal-in') ?
             f7.dialog.close(loadMask.el) :
             f7.dialog.close($$('.dialog-preloader'));
+        }
+
+        if ((id==Asc.c_oAscAsyncAction['Save'] || id==Asc.c_oAscAsyncAction['ForceSaveButton'])) {
+            storeAppOptions.changeSavingDocStatusText(_t.changesSaved);
+            storeAppOptions.isSaveBadgeShown && storeAppOptions.changeIsSaveBadgeShown(false);
         }
     };
 
@@ -119,6 +124,7 @@ const LongActionsController = inject('storeAppOptions')(({storeAppOptions}) => {
             case Asc.c_oAscAsyncAction['Save']:
                 title   = _t.saveTitleText;
                 // text    = _t.saveTextText;
+                storeAppOptions.changeSavingDocStatusText(_t.saveTextText);
                 break;
 
             case Asc.c_oAscAsyncAction['LoadDocumentFonts']:
@@ -214,7 +220,6 @@ const LongActionsController = inject('storeAppOptions')(({storeAppOptions}) => {
                 loadMask = showLoadMask(title, action.id === Asc.c_oAscAsyncAction['Open']);
             }
         }
-
     };
 
     const onConfirmAction = (id, apiCallback, data) => {
