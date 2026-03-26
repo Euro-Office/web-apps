@@ -3649,6 +3649,7 @@
   "PE.Views.Transitions.textComb": "Comb",
   "PE.Views.Transitions.textCircle": "Circle",
   "PE.Views.Transitions.textWindow": "Window",
+  "PE.Views.Transitions.textShape": "Shape",
   "PE.Views.ViewTab.capBtnHand": "Hand",
   "PE.Views.ViewTab.capBtnSelect": "Select",
   "PE.Views.ViewTab.textAddHGuides": "Add horizontal guide",
