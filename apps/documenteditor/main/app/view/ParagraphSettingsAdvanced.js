@@ -664,6 +664,22 @@ define([
             });
             this.btnRemoveAll.on('click', _.bind(this.removeAllTabs, this));
 
+            const check_max_padding = function (field) {
+                const max_val = (639 / 20 / 72 * 25.4 - 0.001); // in mm
+                let cur_val = Common.Utils.Metric.fnRecalcToMM(field.getNumberValue());
+                if ( max_val < cur_val ) {
+                    cur_val = max_val;
+                    const metric_max_val = Common.Utils.Metric.fnRecalcFromMM(max_val);
+                    const msg = this.errorBorderPaddingsRange.replace('%1', metric_max_val.toFixed(2))
+                                                    .replace('%2', Common.Utils.Metric.getCurrentMetricName());
+
+                    Common.UI.error({msg: msg, buttons: ['ok']});
+                    field.setValue(metric_max_val, true);
+                }
+
+                return cur_val;
+            };
+
             // Margins
             this.spnMarginTop = new Common.UI.MetricSpinner({
                 el: $('#paraadv-number-margin-top'),
@@ -678,7 +694,7 @@ define([
                 if (!this._noApply) {
                     if (this.Margins===undefined)
                         this.Margins = {};
-                    this.Margins.Top = Common.Utils.Metric.fnRecalcToMM(field.getNumberValue());
+                    this.Margins.Top = check_max_padding.call(this, field);
                 }
             }, this));
             this.spinners.push(this.spnMarginTop);
@@ -696,7 +712,7 @@ define([
                 if (!this._noApply) {
                     if (this.Margins===undefined)
                         this.Margins = {};
-                    this.Margins.Bottom = Common.Utils.Metric.fnRecalcToMM(field.getNumberValue());
+                    this.Margins.Bottom = check_max_padding.call(this, field);
                 }
             }, this));
             this.spinners.push(this.spnMarginBottom);
@@ -714,7 +730,7 @@ define([
                 if (!this._noApply) {
                     if (this.Margins===undefined)
                         this.Margins = {};
-                    this.Margins.Left = Common.Utils.Metric.fnRecalcToMM(field.getNumberValue());
+                    this.Margins.Left = check_max_padding.call(this, field);
                 }
             }, this));
             this.spinners.push(this.spnMarginLeft);
@@ -732,7 +748,7 @@ define([
                 if (!this._noApply) {
                     if (this.Margins===undefined)
                         this.Margins = {};
-                    this.Margins.Right = Common.Utils.Metric.fnRecalcToMM(field.getNumberValue());
+                    this.Margins.Right = check_max_padding.call(this, field);
                 }
             }, this));
             this.spinners.push(this.spnMarginRight);
@@ -803,25 +819,36 @@ define([
                 if (this.Margins.Left!==undefined) {
                     if (borders.get_Left()===undefined || borders.get_Left()===null)
                         borders.put_Left(new Asc.asc_CTextBorder(this.Borders.get_Left()));
-                    borders.get_Left().put_Space(this.Margins.Left);
+
+                    if (borders.get_Left() && 1 == borders.get_Left().get_Value())
+                        borders.get_Left().put_Space(this.Margins.Left);
                 }
                 if (this.Margins.Top!==undefined) {
                     if (borders.get_Top()===undefined || borders.get_Top()===null)
                         borders.put_Top(new Asc.asc_CTextBorder(this.Borders.get_Top()));
-                    borders.get_Top().put_Space(this.Margins.Top);
+
+                    if (borders.get_Top() && 1 == borders.get_Top().get_Value())
+                        borders.get_Top().put_Space(this.Margins.Top);
                 }
                 if (this.Margins.Right!==undefined) {
                     if (borders.get_Right()===undefined || borders.get_Right()===null)
                         borders.put_Right(new Asc.asc_CTextBorder(this.Borders.get_Right()));
-                    borders.get_Right().put_Space(this.Margins.Right);
+
+                    if (borders.get_Right() && 1 == borders.get_Right().get_Value())
+                        borders.get_Right().put_Space(this.Margins.Right);
                 }
                 if (this.Margins.Bottom!==undefined) {
                     if (borders.get_Bottom()===undefined || borders.get_Bottom()===null)
                         borders.put_Bottom(new Asc.asc_CTextBorder(this.Borders.get_Bottom()));
-                    borders.get_Bottom().put_Space(this.Margins.Bottom);
+
+                    if (borders.get_Bottom() && 1 == borders.get_Bottom().get_Value())
+                        borders.get_Bottom().put_Space(this.Margins.Bottom);
+
                     if (borders.get_Between()===undefined || borders.get_Between()===null)
                         borders.put_Between(new Asc.asc_CTextBorder(this.Borders.get_Between()));
-                    borders.get_Between().put_Space(this.Margins.Bottom);
+
+                    if (borders.get_Between() && 1 == borders.get_Between().get_Value())
+                        borders.get_Between().put_Space(this.Margins.Bottom);
                 }
             }
             if ( this._tabListChanged ) {
@@ -1251,6 +1278,7 @@ define([
             else {
                 border.put_Color(new Asc.asc_CColor());
                 border.put_Value(0);
+                border.put_Space(0);
             }
             return border;
         },

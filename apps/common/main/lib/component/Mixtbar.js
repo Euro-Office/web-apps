@@ -170,7 +170,6 @@ define([
 
                         const $more = me.getVisibleMoreContainer();
                         if (!$more.length) return;
-                        if (p.level === 0) { p.cancel = true; return; }
                         p.set($more, 1);
                     },
 
