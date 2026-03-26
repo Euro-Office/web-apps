@@ -128,11 +128,9 @@ define([
                     {group: 'subtle', title: this.textSplit, imageUrl: "btn-transition-split", value: Asc.c_oAscSlideTransitionTypes.Split, id: Common.UI.getId()},
                     {group: 'subtle', title: this.textCut, imageUrl: "btn-transition-cut", value: Asc.c_oAscSlideTransitionTypes.Cut, id: Common.UI.getId()},
                     {group: 'subtle', title: this.textRandomBars, imageUrl: "btn-transition-randombars", value: Asc.c_oAscSlideTransitionTypes.RandomBar, id: Common.UI.getId()},
+                    {group: 'subtle', title: this.textShape, imageUrl: "btn-transition-shape", value: Asc.c_oAscSlideTransitionTypes.Circle, id: Common.UI.getId()},
                     {group: 'subtle', title: this.textUnCover, imageUrl: "btn-transition-uncover", value: Asc.c_oAscSlideTransitionTypes.UnCover, id: Common.UI.getId()},
                     {group: 'subtle', title: this.textCover, imageUrl: "btn-transition-cover", value: Asc.c_oAscSlideTransitionTypes.Cover, id: Common.UI.getId()},
-                    {group: 'subtle', title: this.textCircle, imageUrl: "btn-transition-circle", value: Asc.c_oAscSlideTransitionTypes.Circle, id: Common.UI.getId()},
-                    {group: 'subtle', title: this.textDiamond, imageUrl: "btn-transition-diamond", value: Asc.c_oAscSlideTransitionTypes.Diamond, id: Common.UI.getId()},
-                    {group: 'subtle', title: this.textPlus, imageUrl: "btn-transition-plus", value: Asc.c_oAscSlideTransitionTypes.Plus, id: Common.UI.getId()},
                     {group: 'exciting', title: this.textDissolve, imageUrl: "btn-transition-dissolve", value: Asc.c_oAscSlideTransitionTypes.Dissolve, id: Common.UI.getId()},
                     {group: 'exciting', title: this.textChecker, imageUrl: "btn-transition-checker", value: Asc.c_oAscSlideTransitionTypes.Checker, id: Common.UI.getId()},
                     {group: 'exciting', title: this.textBlinds, imageUrl: "btn-transition-blinds", value: Asc.c_oAscSlideTransitionTypes.Blinds, id: Common.UI.getId()},
@@ -144,7 +142,6 @@ define([
                     {group: 'exciting', title: this.textFlip, imageUrl: "btn-transition-flip", value: Asc.c_oAscSlideTransitionTypes.Flip, id: Common.UI.getId()},
                     {group: 'exciting', title: this.textGallery, imageUrl: "btn-transition-gallery", value: Asc.c_oAscSlideTransitionTypes.Gallery, id: Common.UI.getId()},
                     {group: 'exciting', title: this.textCube, imageUrl: "btn-transition-cube", prismId: 'prism-cube', value: Asc.c_oAscSlideTransitionTypes.Prism, id: Common.UI.getId()},
-                    {group: 'exciting', title: this.textBoxZoom, imageUrl: "btn-transition-boxzoom", value: Asc.c_oAscSlideTransitionTypes.BoxZoom, id: Common.UI.getId()},
                     {group: 'exciting', title: this.textDoors, imageUrl: "btn-transition-doors", value: Asc.c_oAscSlideTransitionTypes.Doors, id: Common.UI.getId()},
                     {group: 'exciting', title: this.textBox, imageUrl: "btn-transition-box", prismId: 'prism-box', value: Asc.c_oAscSlideTransitionTypes.Prism, id: Common.UI.getId()},
                     {group: 'exciting', title: this.textComb, imageUrl: "btn-transition-comb", value: Asc.c_oAscSlideTransitionTypes.Comb, id: Common.UI.getId()},
@@ -352,6 +349,10 @@ define([
                     {caption: this.textVertical, value: Asc.c_oAscSlideTransitionParams.Checker_Vertical},
                     {caption: this.textHorizontal, value: Asc.c_oAscSlideTransitionParams.Comb_Horizontal},
                     {caption: this.textVertical, value: Asc.c_oAscSlideTransitionParams.Comb_Vertical},
+                    {caption: this.textCircle, value: Asc.c_oAscSlideTransitionParams.Circle_Default},
+                    {caption: this.textDiamond, value: Asc.c_oAscSlideTransitionParams.Diamond_Default},
+                    {caption: this.textDissolve, value: Asc.c_oAscSlideTransitionParams.Dissolve_Default},
+                    {caption: this.textPlus, value: Asc.c_oAscSlideTransitionParams.Plus_Default},
                     {caption: this.textHorizontal, value: Asc.c_oAscSlideTransitionParams.RandomBar_Horizontal},
                     {caption: this.textVertical, value: Asc.c_oAscSlideTransitionParams.RandomBar_Vertical},
                     {caption: this.textIn, value: Asc.c_oAscSlideTransitionParams.BoxZoom_In},
@@ -369,6 +370,7 @@ define([
                     {caption: this.textTopRight, value: Asc.c_oAscSlideTransitionParams.Ripple_RightUp},
                     {caption: this.textBottomLeft, value: Asc.c_oAscSlideTransitionParams.Ripple_LeftDown},
                     {caption: this.textBottomRight, value: Asc.c_oAscSlideTransitionParams.Ripple_RightDown},
+                    {caption: this.textHoneycomb, value: Asc.c_oAscSlideTransitionParams.Honeycomb_Default},
                     {caption: this.textLeft, value: Asc.c_oAscSlideTransitionParams.Prism_Left},
                     {caption: this.textRight, value: Asc.c_oAscSlideTransitionParams.Prism_Right},
                     {caption: this.textTop, value: Asc.c_oAscSlideTransitionParams.Prism_Up},
@@ -461,16 +463,37 @@ define([
                 return prismId;
             },
 
+            getShapeType: function (value) {
+                if (value === Asc.c_oAscSlideTransitionParams.Diamond_Default)
+                    return Asc.c_oAscSlideTransitionTypes.Diamond;
+                if (value === Asc.c_oAscSlideTransitionParams.Plus_Default)
+                    return Asc.c_oAscSlideTransitionTypes.Plus;
+                if (value === Asc.c_oAscSlideTransitionParams.BoxZoom_In || value === Asc.c_oAscSlideTransitionParams.BoxZoom_Out)
+                    return Asc.c_oAscSlideTransitionTypes.BoxZoom;
+                return Asc.c_oAscSlideTransitionTypes.Circle;
+            },
+
             getEffect: function (effect, value) {
                 if (effect === Asc.c_oAscSlideTransitionTypes.Prism) {
                     var prism = this.getPrismId(value);
                     return this.listEffects.store.findWhere({prismId: prism});
                 }
+                if (this.isShape(effect))
+                    return this.listEffects.store.findWhere({value: Asc.c_oAscSlideTransitionTypes.Circle});
                 return this.listEffects.store.findWhere({value: effect});
             },
 
+            isShape: function (effect) {
+                return effect === Asc.c_oAscSlideTransitionTypes.Circle ||
+                    effect === Asc.c_oAscSlideTransitionTypes.Diamond ||
+                    effect === Asc.c_oAscSlideTransitionTypes.Plus ||
+                    effect === Asc.c_oAscSlideTransitionTypes.BoxZoom;
+            },
+
+
             setMenuParameters: function (effect, value, prismId) {
                 var minMax = [-1, -1];
+                var shapeItems;
                 switch (effect) {
                     case Asc.c_oAscSlideTransitionTypes.Fade:
                         minMax = [0, 1];
@@ -512,58 +535,62 @@ define([
                         minMax = [29, 30];
                         break;
                     case Asc.c_oAscSlideTransitionTypes.RandomBar:
-                        minMax = [31, 32];
+                        minMax = [35, 36];
                         break;
+                    case Asc.c_oAscSlideTransitionTypes.Circle:
+                    case Asc.c_oAscSlideTransitionTypes.Diamond:
+                    case Asc.c_oAscSlideTransitionTypes.Plus:
                     case Asc.c_oAscSlideTransitionTypes.BoxZoom:
-                        minMax = [33, 34];
+                        shapeItems = [31, 32, 34, 37, 38];
                         break;
                     case Asc.c_oAscSlideTransitionTypes.Vortex:
-                        minMax = [35, 38];
+                        minMax = [39, 42];
                         break;
                     case Asc.c_oAscSlideTransitionTypes.Switch:
-                        minMax = [39, 40];
+                        minMax = [43, 44];
                         break;
                     case Asc.c_oAscSlideTransitionTypes.Flip:
-                        minMax = [41, 42];
+                        minMax = [45, 46];
                         break;
                     case Asc.c_oAscSlideTransitionTypes.Ripple:
-                        minMax = [43, 47];
+                        minMax = [47, 51];
                         break;
                     case Asc.c_oAscSlideTransitionTypes.Prism:
                         var prism = prismId || this.getPrismId(value);
                         switch (prism) {
                             case 'prism-box':
-                                minMax = [52, 55];
+                                minMax = [57, 60];
                                 break;
                             case 'prism-rotate':
-                                minMax = [56, 59];
+                                minMax = [61, 64];
                                 break;
                             case 'prism-orbit':
-                                minMax = [60, 63];
+                                minMax = [65, 68];
                                 break;
                             default:
-                                minMax = [48, 51];
+                                minMax = [53, 56];
                                 break;
                         }
                         break;
                     case Asc.c_oAscSlideTransitionTypes.Doors:
-                        minMax = [64, 65];
+                        minMax = [69, 70];
                         break;
                     case Asc.c_oAscSlideTransitionTypes.Window:
-                        minMax = [66, 67];
+                        minMax = [71, 72];
                         break;
                     case Asc.c_oAscSlideTransitionTypes.Ferris:
-                        minMax = [68, 69];
+                        minMax = [73, 74];
                         break;
                     case Asc.c_oAscSlideTransitionTypes.Gallery:
-                        minMax = [70, 71];
+                        minMax = [75, 76];
                         break;
                 }
 
                 var selectedElement;
 
                 _.each(this.btnParameters.menu.getItems(), function (element, index) {
-                    if ((index >= minMax[0]) && (index <= minMax[1])) {
+                    var itemVisible = shapeItems ? _.contains(shapeItems, index) : ((index >= minMax[0]) && (index <= minMax[1]));
+                    if (itemVisible) {
                         element.setVisible(true);
                         if (value != undefined) {
                             if (value == element.value) selectedElement = element;
@@ -573,7 +600,7 @@ define([
                 });
 
                 if (selectedElement == undefined)
-                    selectedElement = this.btnParameters.menu.items[minMax[0]];
+                    selectedElement = shapeItems ? this.btnParameters.menu.items[shapeItems[0]] : this.btnParameters.menu.items[minMax[0]];
 
                 if (effect != Asc.c_oAscSlideTransitionTypes.None && selectedElement)
                     selectedElement.setChecked(true);
@@ -581,10 +608,7 @@ define([
                 if (!this.listEffects.isDisabled()) {
                     var noParameters = effect === Asc.c_oAscSlideTransitionTypes.None ||
                         effect === Asc.c_oAscSlideTransitionTypes.Random ||
-                        effect === Asc.c_oAscSlideTransitionTypes.Circle ||
-                        effect === Asc.c_oAscSlideTransitionTypes.Diamond ||
                         effect === Asc.c_oAscSlideTransitionTypes.Dissolve ||
-                        effect === Asc.c_oAscSlideTransitionTypes.Plus ||
                         effect === Asc.c_oAscSlideTransitionTypes.Honeycomb;
 
                     this.numDelay.setDisabled(this.chDelay.getValue() !== 'checked');

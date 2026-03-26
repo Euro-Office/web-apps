@@ -121,6 +121,8 @@ define([
 
         onParameterClick: function (value) {
             this._state.EffectType = value;
+            if (this.view && this.view.isShape(this._state.Effect))
+                this._state.Effect = this.view.getShapeType(value);
             if (this.api) {
                 var props = new Asc.CAscSlideProps();
                 var transition = new Asc.CAscSlideTransition();
@@ -272,7 +274,7 @@ define([
             var me = this.view;
             if (this._state.Effect !== undefined) {
                 var item = me.listEffects.store.findWhere({value: this._state.Effect});
-                if (this._state.Effect === Asc.c_oAscSlideTransitionTypes.Prism)
+                if (this._state.Effect === Asc.c_oAscSlideTransitionTypes.Prism || me.isShape(this._state.Effect))
                     item = me.getEffect(this._state.Effect, this._state.EffectType) || item;
 
                 me.listEffects.menuPicker.selectRecord(item ? item : me.listEffects.menuPicker.items[0]);
