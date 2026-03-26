@@ -43,10 +43,11 @@ class CollaborationController extends Component {
             }
         } else if (!appOptions.isEdit && appOptions.isRestrictedEdit) {
             isFastCoauth = true;
-            const isAutosaveInLs = LocalStorage.itemExists(`${window.editorType}-mobile-autosave`);
-            api.asc_SetFastCollaborative(isAutosaveInLs ? LocalStorage.getBool(`${window.editorType}-mobile-autosave`) : true);
+            const lsvalue = LocalStorage.getItem(`${window.editorType}-mobile-autosave`),
+                intvalue = lsvalue != null ? parseInt(lsvalue) : 1;
+            api.asc_setAutoSaveGap(intvalue);
+            api.asc_SetFastCollaborative(intvalue == 1);
             window.editorType === 'de' && api.SetCollaborativeMarksShowType(Asc.c_oAscCollaborativeMarksShowType.None);
-            api.asc_setAutoSaveGap(isAutosaveInLs ? parseInt(LocalStorage.getItem(`${window.editorType}-mobile-autosave`)) : 1);
         } else if (appOptions.canLiveView) { // viewer
             isFastCoauth = !(appOptions.config.coEditing && appOptions.config.coEditing.mode==='strict');
             api.asc_SetFastCollaborative(isFastCoauth);
@@ -63,12 +64,18 @@ class CollaborationController extends Component {
             if (window.editorType === 'sse') {
                 value = appOptions.canAutosave ? 1 : 0; // FORCE AUTOSAVE
             } else {
-                value = isFastCoauth; // Common.localStorage.getItem("de-settings-autosave");
-                value = (!isFastCoauth && value !== null) ? parseInt(value) : (appOptions.canCoAuthoring ? 1 : 0);
+                value = appOptions.canCoAuthoring && isFastCoauth ? 1 : 0;
             }
-            const isAutosaveInLs = LocalStorage.itemExists(`${window.editorType}-mobile-autosave`);
-            api.asc_SetFastCollaborative(value ? (isAutosaveInLs ? LocalStorage.getBool(`${window.editorType}-mobile-autosave`) : true) : false);
-            api.asc_setAutoSaveGap(value ? (isAutosaveInLs ? parseInt(LocalStorage.getItem(`${window.editorType}-mobile-autosave`)) : 1) : 0);
+
+            if ( !value ) {
+                api.asc_SetFastCollaborative(false);
+                api.asc_setAutoSaveGap(0);
+            } else {
+                const lsvalue = LocalStorage.getItem(`${window.editorType}-mobile-autosave`),
+                    intvalue = lsvalue != null ? parseInt(lsvalue) : 1;
+                api.asc_setAutoSaveGap(intvalue);
+                api.asc_SetFastCollaborative(intvalue == 1);
+            }
         }
         /** coauthoring end **/
     }
