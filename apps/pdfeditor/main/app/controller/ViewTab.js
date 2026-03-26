@@ -156,7 +156,6 @@ define([
                         emptyGroup.push(me.view.chRightMenu.$el.closest('.elset'));
                         emptyGroup.shift().append(me.view.chRightMenu.$el[0]);
                     }
-                    config.canPDFEdit && me.applyEditorMode(config);
 
                     if (emptyGroup.length>1) { // remove empty group
                         emptyGroup[emptyGroup.length-1].closest('.group').remove();
