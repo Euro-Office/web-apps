@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -115,7 +110,6 @@ define([
             this.oldAngle = this.shadowProps.getAngle();
             this.oldDistance = this._mm2pt(this.shadowProps.getDistance());
 
-
             Common.Views.AdvancedSettingsWindow.prototype.initialize.call(this, this.options);
         },
         render: function () {
@@ -153,7 +147,6 @@ define([
             this.spinTransparency.setValue(this.oldTransparency, true);
             this.spinTransparency.on('change', _.bind(this.onSpinnerTransparencyChange, this));
 
-
             this.sldrSize = new Common.UI.SingleSlider({
                 el: $('#shape-shadow-size-slider'),
                 width: 128,
@@ -179,7 +172,6 @@ define([
             this.spinSize.setValue(this.oldSize, true);
             this.spinSize.on('change', _.bind(this.onSpinnerSizeChange, this));
 
-
             this.sldrAngle = new Common.UI.SingleSlider({
                 el: $('#shape-shadow-angle-slider'),
                 width: 128,
@@ -188,7 +180,6 @@ define([
                 value: this.oldAngle
             });
             this.sldrAngle.on('change', _.bind(this.onSliderAngleChange, this));
-
 
             this.spinAngle = new Common.UI.MetricSpinner({
                 el: $('#shape-shadow-angle-spin'),
@@ -205,7 +196,6 @@ define([
             });
             this.spinAngle.setValue(this.oldAngle, true);
             this.spinAngle.on('change', _.bind(this.onSpinnerAngleChange, this));
-
 
             this.sldrDistance = new Common.UI.SingleSlider({
                 el: $('#shape-shadow-distance-slider'),
@@ -234,7 +224,6 @@ define([
             this.spinDistance.setValue(this.oldDistance, true);
             this.spinDistance.on('change', _.bind(this.onSpinnerDistanceChange, this));
 
-
             this.on('close', _.bind(this.handleCancelClose, this));
         },
 
@@ -256,7 +245,6 @@ define([
             this.methodApplySettings && this.methodApplySettings.call(this, shapeProps);
         },
 
-
         onSliderSizeChange: function (field, newValue, oldValue) {
             this.spinSize.setValue(newValue, true);
             this.setSize(newValue);
@@ -274,7 +262,6 @@ define([
             shapeProps.asc_putShadow(this.shadowProps);
             this.methodApplySettings && this.methodApplySettings.call(this, shapeProps);
         },
-
 
         onSliderAngleChange: function (field, newValue, oldValue) {
             this.spinAngle.setValue(newValue, true);
@@ -294,7 +281,6 @@ define([
             this.methodApplySettings && this.methodApplySettings.call(this, shapeProps);
         },
 
-
         onSliderDistanceChange: function (field, newValue, oldValue) {
             this.spinDistance.setValue(newValue, true);
             this.setDistance(newValue);
@@ -312,7 +298,6 @@ define([
             shapeProps.asc_putShadow(this.shadowProps);
             this.methodApplySettings && this.methodApplySettings.call(this, shapeProps);
         },
-
 
         setAllProperties: function(transparency, size, angle, distance) {
             var shapeProps = new Asc.asc_CShapeProperty();
@@ -380,7 +365,6 @@ define([
             this.api.setEndPointHistory();
             this.handler && this.handler.call(this, 'cancel');
         },
-
 
         txtTitle: 'Adjust Shadow',
         txtTransparency: 'Transparency',
