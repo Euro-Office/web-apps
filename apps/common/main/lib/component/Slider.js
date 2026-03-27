@@ -45,12 +45,10 @@
  *          value       : 100
  *      });
  *
- *
  *  @property {Boolean} enableKeyEvents
  *  If true slider increase/decrease its value by {@link #step} when arrow key Up/Down or Right/Left is pressed.
  *
  *  enableKeyEvents: false,
- *
  *
  *
  *  Example usage:

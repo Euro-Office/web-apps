@@ -42,7 +42,6 @@
  *      <button ... data-hint="1" data-hint-direction="right" data-hint-offset="big" data-hint-title="B">...</button>
  *      <label ... data-hint="1" data-hint-direction="bottom" data-hint-offset="medium" data-hint-title="L">...</label>
  *
- *
  *  Example usage with components:
  *
  *      new Common.UI.Button({

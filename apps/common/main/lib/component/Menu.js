@@ -52,7 +52,6 @@
  *
  *  - `'pull-right'` using for layout menu by right side of a parent
  *
- *
  *  Example usage:
  *
  *      new Common.UI.Menu({
@@ -68,16 +67,13 @@
  *
  *  Default template for items
  *
- *
  *  @property {Array} items
  *
  *  Arrow of the {Common.UI.MenuItem} menu items
  *
- *
  *  @property {Boolean/Number} restoreHeight
  *
  *  Adjust to the browser height and restore to restoreHeight when it's Number
- *
  *
  */
 

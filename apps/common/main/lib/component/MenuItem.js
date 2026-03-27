@@ -54,7 +54,6 @@
  *      <ul class="dropdown-menu"></ul>
  *  </li>
  *
- *
  *  Example usage:
  *
  *      new Common.UI.MenuItem({
@@ -72,7 +71,6 @@
  *  @property {Object} value
  *
  *  @property {Common.UI.Menu} menu
- *
  *
  */
 

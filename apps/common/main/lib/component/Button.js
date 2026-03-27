@@ -78,7 +78,6 @@
  *  - `'default'`
  *  - `'active'`
  *
- *
  *  Buttons can also be toggled. To enable this, you simple set the {@link #enableToggle} property to `true`.
  *
  *  Example usage:
@@ -87,18 +86,15 @@
  *          enableToggle: true
  *      });
  *
- *
  *  @property {Boolean} disabled
  *  True if this button is disabled. Read-only.
  *
  *  disabled: false,
  *
- *
  *  @property {Boolean} pressed
  *  True if this button is pressed (only if enableToggle = true). Read-only.
  *
  *  pressed: false,
- *
  *
  *  @cfg {Boolean} [allowDepress=true]
  *  False to not allow a pressed Button to be depressed. Only valid when {@link #enableToggle} is true.

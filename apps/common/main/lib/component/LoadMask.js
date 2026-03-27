@@ -48,7 +48,6 @@
  *
  *  Component or selector that will be masked.
  *
- *
  *  @property {String} title
  *
  *  @property {String} cls
