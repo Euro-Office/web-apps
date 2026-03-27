@@ -263,6 +263,9 @@ define([], function () {
                 '<tr class="edit">',
                     '<td colspan = "2"><div id="fms-chb-function-tooltip"></div></td>',
                 '</tr>',
+                '<tr class="image-copying">',
+                    '<td colspan = "2"><span id="fms-chb-image-copying"></span></td>',
+                '</tr>',
                 '<tr class ="editsave divider-group"></tr>',
                 '<tr class="collaboration" >',
                     '<td class="group-name" colspan="2"><label><%= scope.txtCollaboration %></label></td>',
@@ -631,6 +634,14 @@ define([], function () {
                 if (field.getValue()!=='checked' && me.rbCoAuthModeFast.getValue()) {
                     me.rbCoAuthModeStrict.setValue(true);
                 }
+            });
+
+            this.chImageCopying = new Common.UI.CheckBox({
+                el: $markup.findById('#fms-chb-image-copying'),
+                labelText: this.textImageCopying,
+                dataHint    : '2',
+                dataHintDirection: 'left',
+                dataHintOffset: 'small'
             });
 
             this.chForcesave = new Common.UI.CheckBox({
@@ -1172,6 +1183,7 @@ define([], function () {
 
             this.chPaste.setValue(Common.Utils.InternalSettings.get("sse-settings-paste-button"));
             this.chTooltip.setValue(Common.Utils.InternalSettings.get("sse-settings-function-tooltip"));
+            this.chImageCopying.setValue(Common.Utils.InternalSettings.get("sse-settings-image-copying"));
             //this.chQuickPrint.setValue(Common.Utils.InternalSettings.get("sse-settings-quick-print-button"));
 
             value = this.api.asc_GetCalcSettings();
@@ -1313,6 +1325,8 @@ define([], function () {
 
             Common.localStorage.setItem("sse-settings-function-tooltip", this.chTooltip.isChecked() ? 1 : 0);
             Common.Utils.InternalSettings.set("sse-settings-function-tooltip", this.chTooltip.isChecked() ? 1 : 0);
+
+            Common.localStorage.setItem("sse-settings-image-copying", this.chImageCopying.isChecked() ? 1 : 0);
 
             this.mode.isEdit && Common.localStorage.setBool("sse-settings-def-sheet-rtl", this.rbSheetRtl.getValue());
 

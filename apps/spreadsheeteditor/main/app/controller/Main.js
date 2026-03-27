@@ -1046,6 +1046,11 @@ define([
                 Common.Utils.InternalSettings.set("sse-settings-def-sheet-rtl", value);
                 this.api.asc_setDefaultDirection(value);
 
+                value = Common.localStorage.getItem("sse-settings-image-copying");
+                if (value===null) value = '1';
+                Common.Utils.InternalSettings.set("sse-settings-image-copying", parseInt(value));
+                me.api.asc_setPutImageToClipboard(!!parseInt(value))
+
                 me.api.asc_registerCallback('asc_onStartAction',        _.bind(me.onLongActionBegin, me));
                 me.api.asc_registerCallback('asc_onConfirmAction',      _.bind(me.onConfirmAction, me));
                 me.api.asc_registerCallback('asc_onActiveSheetChanged', _.bind(me.onActiveSheetChanged, me));
