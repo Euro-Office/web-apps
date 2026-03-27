@@ -517,6 +517,10 @@ define([
             Common.Utils.InternalSettings.set("sse-settings-smooth-scroll", value);
             this.api.asc_SetSmoothScrolling(value);
 
+            value = parseInt(Common.localStorage.getItem("sse-settings-image-copying"));
+            Common.Utils.InternalSettings.set("sse-settings-image-copying", value);
+            this.api.asc_setPutImageToClipboard(!!value);
+
             var fast_coauth = Common.Utils.InternalSettings.get("sse-settings-coauthmode");
             if (this.mode.isEdit && !this.mode.isOffline && this.mode.canCoAuthoring) {
                 if (this.mode.canChangeCoAuthoring) {
