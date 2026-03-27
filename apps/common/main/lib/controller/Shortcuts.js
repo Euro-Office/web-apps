@@ -33,8 +33,6 @@
 /**
  * Created on 1/9/2025.
  */
-
-
 define([
     'core'
 ], function () {

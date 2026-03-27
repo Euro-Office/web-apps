@@ -98,8 +98,6 @@ define([
                 el: $('#pivot-calculated-btn-delete'),
                 disabled: true
             }).on('click', _.bind(this.onDeleteItem, this));
-
-
             this.itemsList = new Common.UI.ListView({
                 el: $('#pivot-calculated-items-list', this.$window),
                 store: new Common.UI.DataViewStore(),

@@ -38,8 +38,6 @@
  *
  */
 
-
-
 define([
     'common/main/lib/util/utils',
     'common/main/lib/component/Button',
@@ -681,8 +679,6 @@ define([
             updateColors: function (){
                 this.colorPickerParameters && this.colorPickerParameters.updateColors(Common.Utils.ThemeColor.getEffectColors(), Common.Utils.ThemeColor.getStandartColors());
             },
-
-
             txtSec: 's',
             txtPreview: 'Preview',
             txtParameters: 'Parameters',

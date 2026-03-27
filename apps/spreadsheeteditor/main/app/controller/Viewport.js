@@ -388,8 +388,6 @@ define([
                 var height = parseInt(computed_style.getPropertyValue('--statusbar-height'));
                 var NoCompact = $('.statusbar').hasClass('no-compact');
                 this.viewport.vlayout.getItem('statusbar').height = NoCompact ? height * 2 : height;
-            
-            
                 var celleditor = this.viewport.celayout.getItem('celleditor');
                 var celleditorResizeOptions = this.viewport.getCelleditorResizeOptions();
                 celleditor.resize.min = celleditorResizeOptions.min;

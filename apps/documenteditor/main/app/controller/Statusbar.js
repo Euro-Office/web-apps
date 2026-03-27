@@ -80,8 +80,6 @@ define([
                 'click #btn-zoom-towidth': _.bind(this.onBtnZoomTo, this, 'towidth')
             };
         },
-
-
         onLaunch: function() {
             this.statusbar = this.createView('Statusbar', {
                 // storeUsers: this.getApplication().getCollection('Common.Collections.Users')

@@ -427,8 +427,6 @@
     var lcid_iuLatn = 0x7c5d; // Inuktitut, Latin
     var lcid_tzmLatn = 0x7c5f; // Central Atlas Tamazight, Latin
     var lcid_haLatn = 0x7c68; // Hausa, Latin
-
-
     /**
 	 * @enum {number}
 	 */
@@ -1314,8 +1312,6 @@
                 if (_param[4] != (_select.m_ulCodePageRange1 & _param[4]))
                     continue;
             }*/
-
-			
 			if (_param[4] != (_select.m_ulCodePageRange1 & _param[4]))
 				continue;
 			

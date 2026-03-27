@@ -76,8 +76,6 @@ common.view.modals = new(function() {
     var _tplbody_warning = '<div class="warning-body">' +
                                 '<span class="message">{message}</span>' +
                            '</div>';                        
-                  
-
     return {
         create: function(name, parent, config) {
             !parent && (parent = 'body');

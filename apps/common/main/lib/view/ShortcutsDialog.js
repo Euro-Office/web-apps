@@ -123,8 +123,6 @@ define([
 
             this.searchInput = this.$window.find('#search-input');
             this.searchInput.on('input', _.bind(this.onInputSearch, this));
-
-
             this.resetAllBtn = new Common.UI.Button({
                 el: this.$window.find('#reset-all-btn')
             });

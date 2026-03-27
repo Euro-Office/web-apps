@@ -76,8 +76,6 @@ DE.ApplicationController = new(function(){
 
             docInfo.asc_putIsEnabledMacroses(true);
             docInfo.asc_putIsEnabledPlugins(true);
-
-
             var type = /^(?:(pdf|djvu|xps))$/.exec(docConfig.fileType);
             if (type && typeof type[1] === 'string') {
                 permissions.edit = permissions.review = false;
@@ -116,8 +114,6 @@ DE.ApplicationController = new(function(){
         Common.Gateway.on('processmouse',       onProcessMouse);
         Common.Gateway.on('downloadas',         onDownloadAs);
         Common.Gateway.on('requestclose',       onRequestClose);
-
-
         // TODO: add asc_hasRequiredFields to sdk
         Common.Gateway.documentReady();
     }
@@ -222,8 +218,6 @@ DE.ApplicationController = new(function(){
             console.error(error.msg);
         }
     }
-
-
     function onProcessMouse(data) {
         if (data.type == 'mouseup') {
             var e = document.getElementById('editor_sdk');

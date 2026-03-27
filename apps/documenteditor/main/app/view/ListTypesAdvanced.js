@@ -36,8 +36,6 @@
  *  Created on 11/16/2022
  *
  */
-
-
 define([], function () { 'use strict';
 
     DE.Views.ListTypesAdvanced = Common.UI.Window.extend(_.extend({

@@ -938,8 +938,6 @@ define([
                 } else {
                     this.api.zoom(zf > 0 ? zf : 100);
                 }
-
-
                 // spellcheck
                 value = Common.UI.FeaturesManager.getInitValue('spellcheck', true);
                 value = (value !== undefined) ? value : !(this.appOptions.customization && this.appOptions.customization.spellcheck===false);
@@ -1861,8 +1859,6 @@ define([
                             config.maxwidth = 600;
                         break;
                 }
-
-
                 if (level == Asc.c_oAscError.Level.Critical) {
 
                     // report only critical errors

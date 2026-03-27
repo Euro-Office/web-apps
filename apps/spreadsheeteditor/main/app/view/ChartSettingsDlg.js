@@ -1289,8 +1289,6 @@ define([
 
             this.chVertHide[index].setValue(!props.getShow());
             this.cmbVertGrid[index].setValue(props.getGridlines());
-
-
             this.cmbVertTitle[index].setData(hor ? this._arrHorTitle : this._arrVertTitle);
             this.cmbVertTitle[index].setValue(props.getLabel());
             this.cmbVertTitle[index].setDisabled(!!props.isRadarAxis());

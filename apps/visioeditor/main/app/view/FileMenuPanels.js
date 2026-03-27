@@ -55,8 +55,6 @@ define([], function () {
             {name: 'JPG',   imgCls: 'jpg',  type: Asc.c_oAscFileType.JPG},
             {name: 'PNG',   imgCls: 'png',  type: Asc.c_oAscFileType.PNG}
         ]],
-
-
         template: _.template([
             '<div class="content-container">',
                 '<div class="header"><%= header %></div>',
@@ -308,8 +306,6 @@ define([], function () {
         render: function(node) {
             var me = this;
             var $markup = $(this.template({scope: this}));
-
-
             this.chUseAltKey = new Common.UI.CheckBox({
                 el: $markup.findById('#fms-chb-use-alt-key'),
                 labelText: Common.Utils.isMac ? this.txtUseOptionKey : this.txtUseAltKey,
@@ -2111,8 +2107,6 @@ define([], function () {
             }
             this.cmbPaperSize.onResetItems();
         },
-
-
         setOriginalPageSize: function (w, h) {
             this._originalPageSize = {w: w, h: h};
         },

@@ -54,8 +54,6 @@ SSE.ApplicationController = new(function(){
     // -------------------------
 
 //    Common.Analytics.initialize('UA-12442749-13', 'Embedded Spreadsheet Editor');
-
-
     // Check browser
     // -------------------------
 

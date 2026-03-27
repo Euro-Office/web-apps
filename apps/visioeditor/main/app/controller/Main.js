@@ -895,8 +895,6 @@ define([
                 } else {
                     this.api.zoom(zf > 0 ? zf : 100);
                 }
-
-
                 value = Common.localStorage.getBool("ve-settings-compatible", false);
                 Common.Utils.InternalSettings.set("ve-settings-compatible", value);
 
@@ -936,8 +934,6 @@ define([
                     leftmenuController          = application.getController('LeftMenu'),
                     chatController              = application.getController('Common.Controllers.Chat'),
                     pluginsController           = application.getController('Common.Controllers.Plugins');
-
-
                 leftmenuController.getView('LeftMenu').getMenu('file').loadDocument({doc:me.document});
                 leftmenuController.createDelayedElements().setApi(me.api);
 
@@ -2032,8 +2028,6 @@ define([
                     Common.NotificationCenter.trigger('mentions:clearusers', this);
                 }
             },
-
-
             onSaveDocumentBinary: function(data) {
                 Common.Gateway.saveDocument(data);
             },

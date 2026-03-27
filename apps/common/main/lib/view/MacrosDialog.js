@@ -527,8 +527,6 @@ define([], function () {
                     insertIndex = null;
                 }
             }
-
-
             macrosList.addEventListener('dragstart', function(e) {
                 handleDragstart(me.listMacros, e);
             });
@@ -889,8 +887,6 @@ define([], function () {
         //     this.close();
         //     return false;
         // },
-
-
         textTitle           : 'Macros',
         textSave            : 'Save',
         textMacro           : 'Macro',

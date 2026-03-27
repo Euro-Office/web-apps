@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 +function() {
     !window.common && (window.common = {});
     !common.controller && (common.controller = {});
@@ -39,8 +37,6 @@
         var localStorageKey = '',
             actionsMap = {},
             api = null;
-
-
         var setApi = function(newApi) {
             api = newApi;
 
@@ -268,8 +264,6 @@
 
             applyMethod();
         };
-
-
         /**
          * Retrieves user-modified shortcuts from localStorage.
          * @returns {Object<number, CAscShortcut[]>}
@@ -286,8 +280,6 @@
             }
             return storage;
         };
-
-    
         var _getAscShortcutKeys = function(ascShortcut) {
             const keys = [];
             ascShortcut.asc_IsCommand() && keys.push(_keyCodeToKeyName(91));

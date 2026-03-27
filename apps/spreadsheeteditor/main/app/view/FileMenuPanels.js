@@ -53,8 +53,6 @@ define([], function () {
             {name: 'JPG',   imgCls: 'jpg',  type: Asc.c_oAscFileType.JPG},
             {name: 'PNG',   imgCls: 'png',  type: Asc.c_oAscFileType.PNG}
         ]],
-
-
         template: _.template([
             '<div class="content-container">',
                 '<div class="header"><%= header %></div>',
@@ -466,8 +464,6 @@ define([], function () {
         render: function(node) {
             var me = this;
             var $markup = $(this.template({scope: this}));
-
-
             this.chLiveComment = new Common.UI.CheckBox({
                 el: $markup.findById('#fms-chb-live-comment'),
                 labelText: this.strShowComments,
@@ -3260,8 +3256,6 @@ define([], function () {
             this.pnlApply = $markup.find('.fms-flex-apply').addBack().filter('.fms-flex-apply');
             this.pnlTable = $(this.pnlSettings.find('table')[0]);
             this.trApply = $markup.find('.fms-btn-apply');
-
-
             this.btnPrintSystemDialog = $markup.find('#print-btn-system-dialog > span');
             
             this.btnsSave = [];

@@ -35,8 +35,6 @@
  *  Created on 5/19/17
  *
  */
-
-
 if (Common === undefined)
     var Common = {};
 
@@ -311,8 +309,6 @@ define([], function () { 'use strict';
                     }
                     return;
                 }
-
-
                 this.options.handler.call(this, this, state);
             }
             this.close();

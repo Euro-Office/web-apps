@@ -35,8 +35,6 @@
  *  Created on 4/10/14
  *
  */
-
-
 define([
     'core',
     'presentationeditor/main/app/view/RightMenu'

@@ -2761,8 +2761,6 @@ define([
             this.btnsEditHeader.forEach(function (btn) {
                 _updateHint(btn, me.tipEditHeader);
             });
-
-
             SSE.getController('Common.Controllers.Shortcuts').updateShortcutHints(this.shortcutHints);
         },
 
@@ -3791,8 +3789,6 @@ define([
                     },
                 ]
             }));
-
-
             me.btnImgGroup.updateHint(me.tipImgGroup);
             me.btnImgGroup.setMenu(new Common.UI.Menu({
                 items: [{

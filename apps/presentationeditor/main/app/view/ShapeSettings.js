@@ -1160,8 +1160,6 @@ define([
                     Common.Utils.ThemeColor.selectPickerColorByEffect(color, this.colorsGrad);
                     this._state.GradColor = color;
                 }
-
-
                 var shadow = props.asc_getShadow(),
                     shadowPresetRecord = null;
                 if(shadow) {
@@ -1199,8 +1197,6 @@ define([
                 }
 
                 this.btnShadowShape.menu.items[1].setChecked(!shadow, true)
-
-
                 this._noApply = false;
             }
         },

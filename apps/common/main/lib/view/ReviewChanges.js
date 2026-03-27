@@ -146,8 +146,6 @@ define([
                     this.btnCompare.menu.on('item:click', function (menu, item, e) {
                         me.fireEvent('reviewchange:compare', [item.value]);
                     });
-
-
                     this.btnCombine.on('click', function(e) {
                         me.fireEvent('reviewchange:combine', ['file']);
                     });
@@ -644,8 +642,6 @@ define([
                             me.btnCompare.menu.items[1].setDisabled(me.appConfig.disableNetworkFunctionality);
                             me.btnCompare.menu.items[2].setDisabled(me.appConfig.disableNetworkFunctionality);
                             me.btnCompare.updateHint(me.tipCompare);
-
-
                             me.btnCombine.setMenu(new Common.UI.Menu({
                                 items: [
                                     {caption: me.mniFromFile, value: 'file'},

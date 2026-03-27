@@ -232,8 +232,6 @@ define([
             this.btnApply = _.find(this.getFooterButtons(), function (item) {
                 return (item.$el && item.$el.find('#hf-dlg-btn-apply').addBack().filter('#hf-dlg-btn-apply').length>0);
             }) || new Common.UI.Button({ el: $('#hf-dlg-btn-apply') });
-
-
             this.headerControls = this.$window.find('.notes');
             this.slideControls = this.$window.find('.slides');
 

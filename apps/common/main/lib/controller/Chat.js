@@ -76,8 +76,6 @@ define([
 
         events: {
         },
-
-
         onLaunch: function() {
             this.panelChat = this.createView('Common.Views.Chat', {
                 storeUsers: this.getApplication().getCollection('Common.Collections.Users'),

@@ -74,8 +74,6 @@ function checkScaling() {
 
 }
 
-
-
 window.Common = {
     Utils: {
         injectSvgIcons: function (svg_icons_array, force) {
@@ -83,8 +81,6 @@ window.Common = {
         }
     }
 }
-
-
 if ( !window.uitheme.id && !!params.uitheme ) {
     if ( params.uitheme == 'default-dark' ) {
         window.uitheme.id = window.uitheme.DEFAULT_DARK_THEME_ID;

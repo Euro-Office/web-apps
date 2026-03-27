@@ -1195,8 +1195,6 @@ define([
                 }
 
                 this.btnShadowShape.menu.items[1].setChecked(!shadow, true)
-
-
                 this._noApply = false;
             }
         },

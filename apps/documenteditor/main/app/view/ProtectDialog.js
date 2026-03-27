@@ -144,8 +144,6 @@ define([], function () {
                 name: 'asc-radio-protect-mode',
                 value: Asc.c_oAscEDocProtect.Comments
             });
-
-
             this.btnOk = _.find(this.getFooterButtons(), function (item) {
                 return (item.$el && item.$el.find('.primary').addBack().filter('.primary').length>0);
             }) || new Common.UI.Button({ el: this.$window.find('.primary') });

@@ -50,8 +50,6 @@ define([
             targetApp       = '',
             externalEditor  = null,
             isAppFirstOpened = true;
-
-
         var createExternalEditor = function() {
             Common.UI.HintManager.setInternalEditorLoading(true);
             externalEditor = new DocsAPI.DocEditor('id-merge-editor-placeholder', {

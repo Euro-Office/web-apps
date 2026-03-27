@@ -140,8 +140,6 @@ define([
             });
             this.cmbSummarize.setValue(Asc.c_oAscDataConsolidateFunction.Sum);
             this.cmbSummarize.on('selected', _.bind(this.onSummarizeSelect, this));
-
-
             this.cmbShowAs = new Common.UI.ComboBox({
                 el: $('#value-field-settings-showas'),
                 cls: 'input-group-nr',

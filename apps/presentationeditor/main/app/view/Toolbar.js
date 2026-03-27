@@ -1761,8 +1761,6 @@ define([
                 this.btnEditHeader.updateHint(this.tipEditHeaderFooter);
                 this.btnInsDateTime.updateHint(this.tipDateTime);
                 this.btnInsSlideNum.updateHint(this.tipSlideNum);
-
-
                 PE.getController('Common.Controllers.Shortcuts').updateShortcutHints(this.shortcutHints);
             },
 

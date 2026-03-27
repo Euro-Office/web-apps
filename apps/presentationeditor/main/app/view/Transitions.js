@@ -38,8 +38,6 @@
  *
  */
 
-
-
 define([
     'common/main/lib/util/utils',
     'common/main/lib/component/Button',

@@ -37,8 +37,6 @@
  *  Created on 4/16/14
  *
  */
-
-
 define([
     'core',
     'common/main/lib/component/Window',

@@ -50,8 +50,6 @@ define([
             targetApp       = '',
             externalEditor  = null,
             isAppFirstOpened = true;
-
-
         var createExternalEditor = function() {
             Common.UI.HintManager.setInternalEditorLoading(true);
             !!customization && (customization.uiTheme = Common.localStorage.getItem("ui-theme-id", "theme-light"));

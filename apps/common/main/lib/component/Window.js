@@ -87,7 +87,6 @@
  *      @method getChild
  *      @params {String} selector
  *
- *
  *      Events
  *
  *      @event close
@@ -102,7 +101,6 @@
  *
  *      win.on('close', onClose);
  *      win.show()
- *
  *
  *      ****************************************
  *      Extends
@@ -122,7 +120,6 @@
  *               console.log('button was pressed: ' + btn);
  *           }
  *       });
- *
  *
  *      @window Common.UI.error
  *      @window Common.UI.info

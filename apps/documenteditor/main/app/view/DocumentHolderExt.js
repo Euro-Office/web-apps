@@ -555,8 +555,6 @@ define([], function () {
                     ]
                 })
             });
-
-
             me.mnuGroup = new Common.UI.MenuItem({
                 caption : this.txtGroup,
                 iconCls : 'menu__icon btn-shape-group'
@@ -1442,8 +1440,6 @@ define([], function () {
                 iconCls: 'menu__icon btn-print',
                 caption : me.txtPrintSelection
             });
-
-
             var menuEquationSeparatorInTable = new Common.UI.MenuItem({
                 caption     : '--'
             });
@@ -2318,8 +2314,6 @@ define([], function () {
                         me.menuParagraphHCenter.setChecked(halign == 2);
                         me.menuParagraphRight.setChecked(halign == 0);
                         me.menuParagraphJust.setChecked(halign == 3);
-                        
-
                         var dir = value.imgProps.value.get_Vert();
                         var cls = '';
                         switch (dir) {

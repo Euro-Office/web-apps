@@ -143,8 +143,6 @@ function patchDropDownKeyDown(e) {
         if (!~index) index=0;
         if ($parent.hasClass('dropdown-submenu') && $parent.hasClass('over'))
             $parent.addClass('focused-submenu'); // for Safari. When focus go from parent menuItem to it's submenu don't hide this submenu
-
-
         checkFocusedItem($this, $items.eq(index));
         $items.eq(index).focus();
     }

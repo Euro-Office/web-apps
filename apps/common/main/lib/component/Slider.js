@@ -45,12 +45,10 @@
  *          value       : 100
  *      });
  *
- *
  *  @property {Boolean} enableKeyEvents
  *  If true slider increase/decrease its value by {@link #step} when arrow key Up/Down or Right/Left is pressed.
  *
  *  enableKeyEvents: false,
- *
  *
  *
  *  Example usage:
@@ -464,8 +462,6 @@ define([
                 $(document).on('mouseup', null, e.data, me.binding.onMouseUp);
                 $(document).on('mousemove', null, e.data, me.binding.onMouseMove);
             };
-
-
             var onTrackMouseUp = function (e) {
                 if ( me.disabled || !_.isUndefined(me._dragstart) || me.thumbs.length > 9) return;
 

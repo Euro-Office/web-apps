@@ -91,8 +91,6 @@ define([
             panelThumbnails.buttonSettings.menu.on('show:before', _.bind(function () {
                 this.panelThumbnails.sldrThumbnailsSize.setValue(this.thumbnailsSize);
             }, this));
-
-
             var viewport = DE.getController('Viewport').getView('Viewport');
             viewport.hlayout.on('layout:resizedrag',  _.bind(function () {
                 if (!this.firstShow) {

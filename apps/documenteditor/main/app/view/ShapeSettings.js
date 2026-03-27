@@ -1234,8 +1234,6 @@ define([
                     Common.Utils.ThemeColor.selectPickerColorByEffect(color, this.colorsGrad);
                     this._state.GradColor = color;
                 }
-
-
                 var shadow = shapeprops.asc_getShadow(),
                 shadowPresetRecord = null;
                 if(shadow) {
@@ -1273,8 +1271,6 @@ define([
                 }
 
                 this.btnShadowShape.menu.items[1].setChecked(!shadow, true)
-
-                
                 this._noApply = false;
             }
             this.hideNoFormSettings(control_props);
@@ -1731,8 +1727,6 @@ define([
                 { icon: 'btn-wrap-infront',     data: Asc.c_oAscWrapStyle2.InFront,     tip: this.txtInFront },
                 { icon: 'btn-wrap-behind',      data: Asc.c_oAscWrapStyle2.Behind,      tip: this.txtBehind }
             ];
-
-
             this.cmbWrapType = new Common.UI.ComboDataView({
                 itemWidth: 50,
                 itemHeight: 50,

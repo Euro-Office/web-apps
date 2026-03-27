@@ -1125,8 +1125,6 @@ define([
                     var timer_sl = setInterval(function(){
                         if (window.styles_loaded || me.appOptions.isEditDiagram || me.appOptions.isEditMailMerge || me.appOptions.isEditOle) {
                             clearInterval(timer_sl);
-
-                            
                             Common.NotificationCenter.trigger('comments:updatefilter', ['doc', 'sheet' + me.api.asc_getActiveWorksheetId()]);
                             documentHolderView.createDelayedElements();
                             toolbarController.createDelayedElements();

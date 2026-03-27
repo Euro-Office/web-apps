@@ -54,7 +54,6 @@
  *          autoText    : 'Auto'
  *      });
  *
- *
  *  @property {String} defaultUnit
  *  Name of the unit of measurement. Can be px|em|%|en|ex|pt|"|cm|mm|pc|s|ms|см|мм|пт|сек|мс.
  *

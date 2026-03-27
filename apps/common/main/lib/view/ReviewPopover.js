@@ -191,8 +191,6 @@ define([
                             scrollPos = 0,
                             oldHeight = 0,
                             newHeight = 0;
-
-
                         function updateTextBoxHeight() {
                             scrollPos = parentView.scroller.getScrollTop();
                             if (domTextBox.scrollHeight > domTextBox.clientHeight) {
@@ -225,8 +223,6 @@ define([
                             updateTextBoxHeight();
                             view.disableTextBoxButton($(event.target));
                         }
-
-
                         if (textBox && textBox.length && parentView.scroller) {
                             domTextBox = textBox.get(0);
 

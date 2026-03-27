@@ -365,7 +365,5 @@ define([
                 this.view.btnViewNormal && this.view.btnViewNormal.toggle(value===Asc.c_oAscESheetViewType.normal, true);
             }
         }
-
-
     }, SSE.Controllers.ViewTab || {}));
 });

@@ -704,8 +704,6 @@ define([
                     ]
                 });
             }
-
-
             var recIndex = (record != undefined) ? record.get('index') : -1,
                 len = picker.store.length,
                 pivotIndex = record.get('pivotIndex');

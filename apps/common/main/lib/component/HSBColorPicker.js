@@ -85,13 +85,9 @@ define([], function () {
                 hueVal          = 0,
                 saturationVal   = 100,
                 brightnessVal   = 100;
-
-
             me.allowEmptyColor = me.options.allowEmptyColor;
             me.changeSaturation = me.options.changeSaturation;
             me.showCurrentColor = me.options.showCurrentColor;
-
-
             var onUpdateColor = function(hsb, transparent){
                 var rgbColor = new Common.Utils.RGBColor('hsb(' + hsb.h + ',' + hsb.s + ',' + hsb.b + ')'),
                     hexColor = rgbColor.toHex();

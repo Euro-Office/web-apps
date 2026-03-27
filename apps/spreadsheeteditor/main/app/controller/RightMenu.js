@@ -35,8 +35,6 @@
  *  Created on 3/27/14
  *
  */
-
-
 define([
     'core',
     'spreadsheeteditor/main/app/view/RightMenu'

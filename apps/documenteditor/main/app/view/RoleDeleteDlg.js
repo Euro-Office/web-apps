@@ -89,8 +89,6 @@ define([], function () { 'use strict';
                 editable: false,
                 takeFocusOnClose: true
             });
-
-            
             this.afterRender();
         },
 

@@ -51,8 +51,6 @@ PE.ApplicationController = new(function(){
     // -------------------------
 
 //    Common.Analytics.initialize('UA-12442749-13', 'Embedded Presentation Editor');
-
-
     // Check browser
     // -------------------------
 

@@ -1059,8 +1059,6 @@ define([
                 } else {
                     this.api.zoom(zf > 0 ? zf : 100);
                 }
-
-
                 value = Common.localStorage.getBool("pdfe-settings-compatible", false);
                 Common.Utils.InternalSettings.set("pdfe-settings-compatible", value);
                 Common.Utils.InternalSettings.set("pdfe-settings-showsnaplines", me.api.get_ShowSnapLines());
@@ -1107,8 +1105,6 @@ define([
                     chatController              = application.getController('Common.Controllers.Chat'),
                     pluginsController           = application.getController('Common.Controllers.Plugins'),
                     navigationController        = application.getController('Navigation');
-
-
                 leftmenuController.getView('LeftMenu').getMenu('file').loadDocument({doc:me.document});
                 leftmenuController.createDelayedElements().setApi(me.api);
 

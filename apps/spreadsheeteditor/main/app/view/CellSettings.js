@@ -934,8 +934,6 @@ define([
                         }
 
                         var me = this;
-
-
                         var gradientStops;
                         gradientStops = this.gradient.asc_getGradientStops();
                         var length = gradientStops.length;

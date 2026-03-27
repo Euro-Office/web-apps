@@ -129,8 +129,6 @@ define([
 
             this.fillComponents(this.printSettings);
             this.registerControlEvents(this.printSettings);
-
-
             Common.NotificationCenter.on('window:resize', _.bind(function () {
                 if (this._isPreviewVisible) {
                     this.notUpdateSheetSettings = true;

@@ -51,8 +51,6 @@ define([
 
         initialize : function(options) {
             var me = this;
-
-
             this.api            = options.api;
             this.isEdit         = options.isEdit;
             this.editableItem   = options.editableItem;
@@ -160,8 +158,6 @@ define([
         show: function() {
             Common.Views.AdvancedSettingsWindow.prototype.show.apply(this, arguments);
         },
-
-
         onEnterValueItemsList: function(listView, record, event) {
             this.onAddItemInFormula(record.get('name'));
         },

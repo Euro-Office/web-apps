@@ -333,8 +333,6 @@ define([
                     item.set('keys', keys);
                     $item.find('input').val(keys.join(' + '));
                 });
-
-
                 const removeKeysIfOnlyModifiers = function(removedKeys) {
                     const modifierKeys = [
                         me._shortcutsController.keyCodeToKeyName(Common.UI.Keys.CTRL),

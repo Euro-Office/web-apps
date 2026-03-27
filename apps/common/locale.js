@@ -198,5 +198,3 @@ Common.Locale = new(function() {
     };
     
 })();
-
-

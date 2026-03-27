@@ -114,8 +114,6 @@ define([
             this.oldSize = this.shadowProps.getSize();
             this.oldAngle = this.shadowProps.getAngle();
             this.oldDistance = this._mm2pt(this.shadowProps.getDistance());
-
-
             Common.Views.AdvancedSettingsWindow.prototype.initialize.call(this, this.options);
         },
         render: function () {
@@ -152,8 +150,6 @@ define([
             });
             this.spinTransparency.setValue(this.oldTransparency, true);
             this.spinTransparency.on('change', _.bind(this.onSpinnerTransparencyChange, this));
-
-
             this.sldrSize = new Common.UI.SingleSlider({
                 el: $('#shape-shadow-size-slider'),
                 width: 128,
@@ -178,8 +174,6 @@ define([
             });
             this.spinSize.setValue(this.oldSize, true);
             this.spinSize.on('change', _.bind(this.onSpinnerSizeChange, this));
-
-
             this.sldrAngle = new Common.UI.SingleSlider({
                 el: $('#shape-shadow-angle-slider'),
                 width: 128,
@@ -188,8 +182,6 @@ define([
                 value: this.oldAngle
             });
             this.sldrAngle.on('change', _.bind(this.onSliderAngleChange, this));
-
-
             this.spinAngle = new Common.UI.MetricSpinner({
                 el: $('#shape-shadow-angle-spin'),
                 step: 1,
@@ -205,8 +197,6 @@ define([
             });
             this.spinAngle.setValue(this.oldAngle, true);
             this.spinAngle.on('change', _.bind(this.onSpinnerAngleChange, this));
-
-
             this.sldrDistance = new Common.UI.SingleSlider({
                 el: $('#shape-shadow-distance-slider'),
                 width: 128,
@@ -233,8 +223,6 @@ define([
             });
             this.spinDistance.setValue(this.oldDistance, true);
             this.spinDistance.on('change', _.bind(this.onSpinnerDistanceChange, this));
-
-
             this.on('close', _.bind(this.handleCancelClose, this));
         },
 
@@ -255,8 +243,6 @@ define([
             shapeProps.asc_putShadow(this.shadowProps);
             this.methodApplySettings && this.methodApplySettings.call(this, shapeProps);
         },
-
-
         onSliderSizeChange: function (field, newValue, oldValue) {
             this.spinSize.setValue(newValue, true);
             this.setSize(newValue);
@@ -274,8 +260,6 @@ define([
             shapeProps.asc_putShadow(this.shadowProps);
             this.methodApplySettings && this.methodApplySettings.call(this, shapeProps);
         },
-
-
         onSliderAngleChange: function (field, newValue, oldValue) {
             this.spinAngle.setValue(newValue, true);
             this.setAngle(newValue);
@@ -293,8 +277,6 @@ define([
             shapeProps.asc_putShadow(this.shadowProps);
             this.methodApplySettings && this.methodApplySettings.call(this, shapeProps);
         },
-
-
         onSliderDistanceChange: function (field, newValue, oldValue) {
             this.spinDistance.setValue(newValue, true);
             this.setDistance(newValue);
@@ -312,8 +294,6 @@ define([
             shapeProps.asc_putShadow(this.shadowProps);
             this.methodApplySettings && this.methodApplySettings.call(this, shapeProps);
         },
-
-
         setAllProperties: function(transparency, size, angle, distance) {
             var shapeProps = new Asc.asc_CShapeProperty();
             this.shadowProps.putTransparency(transparency);
@@ -380,8 +360,6 @@ define([
             this.api.setEndPointHistory();
             this.handler && this.handler.call(this, 'cancel');
         },
-
-
         txtTitle: 'Adjust Shadow',
         txtTransparency: 'Transparency',
         txtSize: 'Size',

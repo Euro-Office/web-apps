@@ -263,8 +263,6 @@ module.exports = function(grunt) {
     }
 
     require('./appforms')(grunt, replaceDeployPaths);
-
-
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-less');
@@ -733,8 +731,6 @@ module.exports = function(grunt) {
             },
             copy: packageFile.main.reporter.copy
         });
-
-
         grunt.task.run(['terser', 'copy', 'inline']);
     });
 
@@ -749,8 +745,6 @@ module.exports = function(grunt) {
                 'deploy': packageFile['mobile']['clean']['deploy'],
                 'template-backup': packageFile.mobile.copy['template-backup'][0].dest
             },
-
-
             concat: {
                 options: {
                     stripBanners: true,
@@ -834,8 +828,6 @@ module.exports = function(grunt) {
                 //     }]
                 // }
             // },
-
-
             exec: {
                 webpack_app_build: {
                     options: {

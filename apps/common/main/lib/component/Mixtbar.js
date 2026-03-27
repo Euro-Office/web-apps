@@ -34,7 +34,6 @@
  *
  *  Combined component for toolbar's and header's elements
  *
- *
  *  Created on 4/11/2017.
  *
  */

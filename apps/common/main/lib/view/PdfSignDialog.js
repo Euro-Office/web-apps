@@ -35,8 +35,6 @@
  *  Created on 26/08/24
  *
  */
-
-
 define([], function () { 'use strict';
     Common.Views.PdfSignDialog = Common.UI.Window.extend(_.extend({
         options: {
@@ -387,8 +385,6 @@ define([], function () { 'use strict';
                 }
             };
             Common.NotificationCenter.on('storage:image-insert', insertImageFromStorage);
-
-              
             me.keydownHandler = function(e) {
                 if (!(me.$window && me.$window.is(':visible'))) return;
                 if (me.mode !== 1) return;

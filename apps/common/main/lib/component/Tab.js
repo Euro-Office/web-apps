@@ -35,8 +35,6 @@
  *    Created on 01 April 2014
  *
  */
-
-
 if (Common === undefined)
     var Common = {};
 

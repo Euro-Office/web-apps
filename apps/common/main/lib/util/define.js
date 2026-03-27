@@ -465,8 +465,6 @@ define(function(){ 'use strict';
             textRadar: 'Radar',
             textRadarMarker: 'Radar with markers',
             textRadarFilled: 'Filled radar',
-
-
             getChartGroupData: function(headername) {
                 return [
                     {id: 'menu-chart-group-bar', caption: this.textColumn, headername: (headername) ? this.textCharts : undefined},

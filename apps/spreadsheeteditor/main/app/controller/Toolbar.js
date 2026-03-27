@@ -252,8 +252,6 @@ define([
                     }
                 }
             };
-
-
             this.onApiEndAddShape = function() {
                 if (this.toolbar.btnInsertShape.pressed) this.toolbar.btnInsertShape.toggle(false, true);
                 if (this.toolbar.btnInsertText.pressed) {
@@ -2248,8 +2246,6 @@ define([
             var collectionIcons = SSE.getCollection('ConditionalFormatIcons');
             if (collectionIcons.length<1)
                 SSE.getController('Main').fillCondFormatIcons(this.api.asc_getFullCFIcons());
-
-
             var me = this;
             var menuItem = cmp.mnuDataBars;
             menuItem.menu.addItem(new Common.UI.MenuItem({
@@ -2732,8 +2728,6 @@ define([
                         bNum = b.numInGroup;
                     return aNum - bNum;
                 };
-
-                
                 groups[1].templates.sort(sortFunc);
                 groups[2].templates.sort(sortFunc);
                 groups[3].templates.sort(sortFunc);
@@ -2751,8 +2745,6 @@ define([
                 store.reset(templates);
             }
         },
-
-
         onCellStyleMenuOpen: function(menu) {
             if (menu && this.toolbar.mnuCellStylePicker) {
                 var picker = this.toolbar.mnuCellStylePicker,
@@ -3015,8 +3007,6 @@ define([
         },
 
         onApiZoomChange: function(zf, type){},
-
-
         onApiSheetChanged: function() {
             if (!this.toolbar.mode || !this.toolbar.mode.isEdit || this.toolbar.mode.isEditDiagram || this.toolbar.mode.isEditMailMerge || this.toolbar.mode.isEditOle) return;
 

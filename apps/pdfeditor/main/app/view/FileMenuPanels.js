@@ -182,8 +182,6 @@ define([], function () {
             {name: 'JPG',   imgCls: 'jpg',  type: Asc.c_oAscFileType.JPG, ext: '.zip'},
             {name: 'PNG',   imgCls: 'png',  type: Asc.c_oAscFileType.PNG, ext: '.zip'}
         ]],
-
-
         template: _.template([
             '<div class="content-container">',
                 '<div class="header"><%= header %></div>',

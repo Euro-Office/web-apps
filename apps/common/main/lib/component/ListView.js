@@ -152,8 +152,6 @@ define([
                         curCaretEl.addClass('sort-desc');
                     else 
                         curCaretEl.removeClass('sort-desc');
-                    
-
                     me.trigger('header:click', me.activeSortType, me.sortDirection);
                 });
 

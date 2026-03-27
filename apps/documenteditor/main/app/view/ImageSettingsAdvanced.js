@@ -1005,8 +1005,6 @@ define([
                     this._changedShapeProps.get_stroke().put_linejoin(record.value);
                 }
             }, this));
-
-
             var _arrStyles = [], _arrSize = [];
             _arrStyles.push({type: Asc.c_oAscLineBeginType.None, idsvg: 'no-'});
             _arrStyles.push({type: Asc.c_oAscLineBeginType.Triangle, idsvg: ''});
@@ -3004,8 +3002,6 @@ define([
 
             this.chVertHide[index].setValue(!props.getShow());
             this.cmbVertGrid[index].setValue(props.getGridlines());
-
-
             this.cmbVertTitle[index].setData(hor ? this._arrHorTitle : this._arrVertTitle);
             this.cmbVertTitle[index].setValue(props.getLabel());
             this.cmbVertTitle[index].setDisabled(!!props.isRadarAxis());

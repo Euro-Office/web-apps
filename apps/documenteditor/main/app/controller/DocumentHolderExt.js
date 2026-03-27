@@ -197,8 +197,6 @@ define([], function () {
                 view.menuPDFFormsPaste.on('click', _.bind(me.onCutCopyPaste, me));
                 return;
             }
-
-
             // type == 'edit'
 
             view.menuEditObject.on('click', _.bind(me.onEditObject, me));

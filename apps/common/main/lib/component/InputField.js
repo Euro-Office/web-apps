@@ -44,8 +44,6 @@
  *  </div>
  *
  */
-
-
 if (Common === undefined)
     var Common = {};
 

@@ -1216,8 +1216,6 @@ define([
             this.BordersImage.setTableColor(colorstr);
             this.BordersImage.redrawTable();
         },
-
-
         _ApplyBorderPreset: function(btn){
             var border = btn.options.strId;
             this.ChangedBorders = null;

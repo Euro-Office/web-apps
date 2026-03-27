@@ -245,8 +245,6 @@ define([], function () {
         getDefaultFocusableComponent: function () {
             return this.rbPrev;
         },
-
-
         afterRender: function() {
             this._setDefaults(this.props);
         },

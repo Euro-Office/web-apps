@@ -35,8 +35,6 @@
  *  Created on 2/10/14
  *
  */
-
-
 define([
     'backbone'
 ], function(Backbone){ 'use strict';

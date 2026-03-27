@@ -34,7 +34,6 @@
  *
  *    Created on 10 February 2014
  *
- *
  *      Configuration
  *      -------------
  *
@@ -43,7 +42,6 @@
  *
  *      @selector layout-item
  *      css class selector for the layout item
- *
  *
  *      @cfg {Object} box
  *      Contains the layout container object
@@ -71,13 +69,11 @@
  *
  *      If @stretch is true, @width and @height will be ignored.
  *
- *
  *      Methods
  *      -------
  *
  *      @method doLayout
  *      Makes rearrangement of the layout items
- *
  *
  *      Example of usage
  *      ----------------
@@ -411,8 +407,6 @@ define([
 
             value < resize.fmin() && (value = resize.fmin());
             value > resize.fmax() && (value = resize.fmax());
-
-
             if (resize.el.hasClass('after')) {
                 panel = resize.el.prev();
                 next = resize.el.next();

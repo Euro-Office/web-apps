@@ -35,8 +35,6 @@
  *  Created on 10/11/18
  *
  */
-
-
 define([], function () { 'use strict';
 
     SSE.Views.HeaderFooterDialog = Common.UI.Window.extend(_.extend({

@@ -341,8 +341,6 @@ define([
                     this._changedProps.asc_getShapeProperties().asc_getStroke().asc_putLinejoin(record.value);
                 }
             }, this));
-
-
             var _arrStyles = [], _arrSize = [];
             _arrStyles.push({type: Asc.c_oAscLineBeginType.None, idsvg: 'no-'});
             _arrStyles.push({type: Asc.c_oAscLineBeginType.Triangle, idsvg: ''});
@@ -366,8 +364,6 @@ define([
             _arrSize[6].type = Asc.c_oAscLineBeginSize.large_small;
             _arrSize[7].type = Asc.c_oAscLineBeginSize.large_mid;
             _arrSize[8].type = Asc.c_oAscLineBeginSize.large_large;
-
-
             this.btnBeginStyle = new Common.UI.ComboBoxDataView({
                 el: $('#shape-advanced-begin-style'),
                 additionalAlign: this.menuAddAlign,

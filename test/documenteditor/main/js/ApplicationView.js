@@ -34,8 +34,6 @@ if (DE === undefined) {
 }
 
 DE.ApplicationView = new(function(){
-
-
     // Initialize view
 
     function createView(){

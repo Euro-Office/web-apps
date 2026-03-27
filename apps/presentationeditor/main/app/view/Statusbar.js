@@ -129,8 +129,6 @@ define([
                         label: this.tipZoomOut
                     }
                 });
-                
-
                 this.btnZoomUp = new Common.UI.Button({
                     el: $('#btn-zoom-up',this.el),
                     hint: this.tipZoomIn,

@@ -130,8 +130,6 @@ SSE.ApplicationController = new(function(){
         Common.Gateway.on('processmouse',       onProcessMouse);
         Common.Gateway.on('downloadas',         onDownloadAs);
         Common.Gateway.on('requestclose',       onRequestClose);
-
-
         $('#editor_sdk').on('click', function(e) {
             if ( e.target.localName == 'canvas' ) {
                 e.currentTarget.focus();

@@ -146,8 +146,6 @@ define([
                     me.resizeCanvas();
                     $(window).resize(_.bind(me.resizeCanvas,me));
                     (!Common.Utils.isIE) && Common.NotificationCenter.on('uitheme:changed', me.changeColors.bind(me));
-
-
                     if (me.direction === 'right') {
                         me.areaUnHighLighted.css({left: 'auto', right: '0'});
                     }
@@ -160,8 +158,6 @@ define([
                 }));
                 return this;
             },
-
-
             changeColors: function (){
                 this.borderColor = Common.UI.Themes.currentThemeColor('--canvas-high-contrast');
                 this.fillColor = Common.UI.Themes.currentThemeColor('--background-normal');
@@ -269,8 +265,6 @@ define([
                             }
                         }
                     }
-
-
 
                     this.drawTable(this.curColumns, this.curRows, this.fillColorHighlighted, this.borderColorHighlighted);
 

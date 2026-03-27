@@ -1281,8 +1281,6 @@ define([
                         dataHintOffset: 'small'
                     });
                     this.toolbarControls.push(this.btnPageOrient);
-
-
                     var pageMarginsTemplate = _.template('<a id="<%= id %>" tabindex="-1" type="menuitem"><div><b><%= caption %></b></div>' +
                         '<% if (options.value !== null) { %><div class="margin-vertical">' +
                         '<label>' + this.textTop + '<%= parseFloat(Common.Utils.Metric.fnRecalcFromMM(options.value[0]).toFixed(2)) %> <%= Common.Utils.Metric.getCurrentMetricName() %></label>' +
@@ -3390,8 +3388,6 @@ define([
                     this.lockToolbar(Common.enumLock.cantPrint, !mode.canPrint, {array: [this.btnPrint]});
                     !mode.canPrint && this.btnPrint && this.btnPrint.hide();
                 }
-
-
                 this.mode = mode;
 
                 this.listStylesAdditionalMenuItem && this.listStylesAdditionalMenuItem.setVisible(mode.canEditStyles);

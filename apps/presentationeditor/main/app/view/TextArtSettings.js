@@ -1461,8 +1461,6 @@ define([
             this.BorderType = Asc.c_oDashType.solid;
             this.cmbBorderType.setValue(this.BorderType);
             this.lockedControls.push(this.cmbBorderType);
-
-
             this.numLineTransparency = new Common.UI.MetricSpinner({
                 el: $('#textart-line-spin-transparency'),
                 step: 1,

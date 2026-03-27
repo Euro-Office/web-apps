@@ -52,8 +52,6 @@ define([
             externalEditor  = null,
             isAppFirstOpened = true,
             isChartUpdating = false;
-
-
         var createExternalEditor = function() {
             Common.UI.HintManager.setInternalEditorLoading(true);
             !!customization && (customization.uiTheme = Common.localStorage.getItem("ui-theme-id", "theme-light"));

@@ -964,8 +964,6 @@ define([
             var sStyle = 'style=\'border-bottom: none\'';
             var sCellStyle;
             for(var i = 0; i < nDivCount; ++i){
-
-
                 if(((i / nColsCount) >> 0) === (nRowsCount - 1)){
                     sCellStyle = sStyle;
                 }

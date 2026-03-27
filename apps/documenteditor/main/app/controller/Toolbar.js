@@ -1398,8 +1398,6 @@ define([
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
             Common.component.Analytics.trackEvent('ToolBar', 'Align');
         },
-
-
         onMarkers: function(btn, e) {
             var record = {
                 numberingInfo: btn.pressed ? '{"Type":"bullet"}' : '{"Type":"remove"}'
@@ -2763,8 +2761,6 @@ define([
                 if (menu.isVisible()) {
                     $(menu).toggleClass('open').trigger('shown.bs.dropdown');
                 }
-
-
                 this.toolbar.listStyles.isStylesNotClosable = true;
                 menu.show();
             }
@@ -3141,8 +3137,6 @@ define([
                             }
                         });
                     }
-
-
                     var properties = new Asc.asc_CParagraphProperty();
                     properties.put_Borders(borders);
                     me.api.paraApply(properties);

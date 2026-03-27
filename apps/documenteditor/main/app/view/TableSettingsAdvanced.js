@@ -945,8 +945,6 @@ define([
                 _btn.on('click', _.bind(this._ApplyBorderPreset, this));
                 this._btnsBorderPosition.push( _btn );
             }, this);
-
-
             var _arrTableBorderPresets = [
                 ['cm', '',          'toolbar__icon toolbar__icon-big btn-borders-twin-none-inner',    'tableadv-button-border-inner-none',    this.tipCellInner],
                 ['lrtb', '',        'toolbar__icon toolbar__icon-big btn-borders-twin-none-outer',    'tableadv-button-border-outer-none',    this.tipCellOuter],

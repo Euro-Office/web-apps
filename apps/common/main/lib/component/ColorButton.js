@@ -235,8 +235,6 @@ define([
         textEyedropper: 'Eyedropper'
 
     }, Common.UI.ButtonColored || {}));
-
-
     Common.UI.ColorButton = Common.UI.ButtonColored.extend(_.extend({
         options : {
             id              : null,

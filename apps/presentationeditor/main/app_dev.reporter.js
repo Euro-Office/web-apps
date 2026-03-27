@@ -61,8 +61,6 @@ require.config({
         }
     }
 });
-
-
 require([
     'underscore',
     'socketio',

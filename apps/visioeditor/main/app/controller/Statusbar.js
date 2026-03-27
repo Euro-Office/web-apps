@@ -77,8 +77,6 @@ define([
                 'click .cnt-zoom': _.bind(this.onZoomShow, this)
             };
         },
-
-
         onLaunch: function() {
             this.statusbar = this.createView('Statusbar').render();
             this.statusbar.$el.css('z-index', 10);

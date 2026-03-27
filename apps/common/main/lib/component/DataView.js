@@ -51,18 +51,14 @@
  *          itemTemplate: _.template(['<li id="<%= id %>"><a href="#"><%= value %></a></li>'].join(''))
  *      });
  *
- *
  *  @property {Object} el
  *  Backbone el
- *
  *
  *  @property {Object} store
  *  The Store class encapsulates a client side cache of Model objects.
  *
- *
  *  @property {String} emptyText
  *  The text to display in the view when there is no data to display.
- *
  *
  *  @cfg {Object} itemTemplate
  *  The inner portion of the item template to be rendered.

@@ -1015,8 +1015,6 @@ define([], function () {
         _user.guest = !_user.name;
         return _user;
     };
-
-
     Common.Utils.createXhr = function () {
         var xmlhttp;
 

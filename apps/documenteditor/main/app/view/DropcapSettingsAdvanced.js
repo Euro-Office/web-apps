@@ -660,8 +660,6 @@ define([
             var colorstr = (typeof(this.paragraphShade) == 'object') ? this.paragraphShade.color : this.paragraphShade;
             this.tableStyler.setTableColor(colorstr);
             (colorstr!='transparent') && this.tableStyler.redrawTable();
-
-
             if (this.borderProps !== undefined) {
                 this.btnBorderColor.setColor(this.borderProps.borderColor);
                 this.btnBorderColor.setAutoColor(this.borderProps.borderColor=='auto');
@@ -1129,8 +1127,6 @@ define([
                 }
             }
         },
-
-
         textTitle:      'Drop Cap - Advanced Settings',
         strBorders:             'Borders & Fill',
         textBorderWidth:        'Border Size',

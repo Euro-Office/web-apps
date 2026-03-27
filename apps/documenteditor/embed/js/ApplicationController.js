@@ -54,8 +54,6 @@ DE.ApplicationController = new(function(){
     // -------------------------
 
 //    Common.Analytics.initialize('UA-12442749-13', 'Embedded Document Editor');
-
-
     // Check browser
     // -------------------------
 
@@ -77,8 +75,6 @@ DE.ApplicationController = new(function(){
 
         common.controller.modals.init(embedConfig);
         common.controller.SearchBar.init(embedConfig);
-
-
         // Docked toolbar
         if (embedConfig.toolbarDocked === 'bottom') {
             $('#toolbar').addClass('bottom');

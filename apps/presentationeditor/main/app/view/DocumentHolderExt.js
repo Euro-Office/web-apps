@@ -2319,8 +2319,6 @@ define([], function () {
                     me.menuChartAdvanced.setDisabled(disabled);
                     if (me.menuChartEdit.isVisible())
                         me.menuChartEdit.setDisabled(disabled);
-
-
                     var cancopy = me.api && me.api.can_CopyCut();
                     me.menuImgCopy.setDisabled(!cancopy);
                     me.menuImgCut.setDisabled(disabled || !cancopy);

@@ -391,8 +391,6 @@ define([
                     tabindex: 1
                 });
                 this.exceptionsList.on('item:select', _.bind(this.onSelectExceptionItem, this));
-
-
                 this.exceptionsFindInput = new Common.UI.InputField({
                     el               : $window.find('#auto-correct-exceptions-find'),
                     allowBlank       : true,
@@ -429,8 +427,6 @@ define([
                     el: $window.find('#auto-correct-btn-exceptions-delete')
                 });
                 this.btnDeleteExceptions.on('click', _.bind(this.onDeleteException, this, false));
-
-                
                 this.chkSentenceExceptions = new Common.UI.CheckBox({
                     el: $window.find('#auto-correct-exceptions-chk-sentence'),
                     labelText: this.textFLSentence,

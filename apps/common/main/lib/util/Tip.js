@@ -282,8 +282,6 @@ const tip = function ($) {
         }
     });
 
-
-
  /* TOOLTIP EXTRA PLUGIN DEFINITION
   * ========================= */
 
@@ -300,8 +298,6 @@ const tip = function ($) {
   };
 
   $.fn.tooltip.Constructor = Tip;
-
-  
  /* TOOLTIP EXTRA NO CONFLICT
   * =================== */
 

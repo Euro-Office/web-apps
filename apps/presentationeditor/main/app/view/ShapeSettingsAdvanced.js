@@ -383,8 +383,6 @@ define([
                     this._changedProps.get_stroke().put_linejoin(record.value);
                 }
             }, this));
-
-
             var _arrStyles = [], _arrSize = [];
             _arrStyles.push({type: Asc.c_oAscLineBeginType.None, idsvg: 'no-'});
             _arrStyles.push({type: Asc.c_oAscLineBeginType.Triangle, idsvg: ''});

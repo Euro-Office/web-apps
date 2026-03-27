@@ -35,8 +35,6 @@
  *  Created on 20/03/24
  *
  */
-
-
 define([
     'core',
     'pdfeditor/main/app/view/RightMenu'
