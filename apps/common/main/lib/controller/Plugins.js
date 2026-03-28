@@ -254,6 +254,8 @@ define([
                 arr.push(plugin);
             });
             this.api.asc_pluginsRegister('', arr);
+            if (storePlugins.hasVisible())
+                Common.NotificationCenter.trigger('tab:visible', 'plugins', Common.UI.LayoutManager.isElementVisible('toolbar-plugins'));
             Common.Gateway.pluginsReady();
         },
 
