@@ -149,6 +149,12 @@ define([
 
                 if (this.configPlugins.config.options)
                     this.api.setPluginsOptions(this.configPlugins.config.options);
+
+                if (this.api.setPluginsDisabled) {
+                    const exclude_guids = this.configPlugins.config.disabled instanceof Array ? this.configPlugins.config.disabled : [];
+                    if (exclude_guids.length)
+                        this.api.setPluginsDisabled(exclude_guids);
+                }
             } else
                 this.configPlugins.plugins = false;
 
@@ -248,8 +254,6 @@ define([
                 arr.push(plugin);
             });
             this.api.asc_pluginsRegister('', arr);
-            if (storePlugins.hasVisible())
-                Common.NotificationCenter.trigger('tab:visible', 'plugins', Common.UI.LayoutManager.isElementVisible('toolbar-plugins'));
             Common.Gateway.pluginsReady();
         },
 
