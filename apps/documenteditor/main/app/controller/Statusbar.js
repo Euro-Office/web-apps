@@ -87,44 +87,48 @@ define([
                 // storeUsers: this.getApplication().getCollection('Common.Collections.Users')
             });
 
-            var me = this;
-            Common.NotificationCenter.on('app:face', function (cfg) {
-                me.statusbar.render(cfg);
-                me.statusbar.$el.css('z-index', 1);
-
-                var lblzoom = $('.statusbar #label-zoom');
-                lblzoom.css('min-width', 80);
-                lblzoom.text(Common.Utils.String.format(me.zoomText, 100));
-
-                if ( cfg.isEdit ) {
-                    var review = me.getApplication().getController('Common.Controllers.ReviewChanges').getView();
-                    if (cfg.canReview) {
-                        me.btnTurnReview = review.getButton('turn', 'statusbar');
-                        me.btnTurnReview.render(me.statusbar.$layout.find('#btn-doc-review'));
-                        me.statusbar.btnTurnReview = me.btnTurnReview;
-                    } else {
-                        me.statusbar.$el.find('.el-review').hide();
-                    }
-
-                    me.btnSpelling = review.getButton('spelling', 'statusbar');
-                    me.btnSpelling.render( me.statusbar.$layout.find('#btn-doc-spell') );
-                    me.btnDocLang = review.getButton('doclang', 'statusbar');
-                    me.btnDocLang.render( me.statusbar.$layout.find('#btn-doc-lang') );
-
-                    var isVisible = (Common.UI.LayoutManager.isElementVisible('statusBar-textLang') || Common.UI.LayoutManager.isElementVisible('statusBar-docLang'))
-                                    && Common.UI.FeaturesManager.canChange('spellcheck');
-                    me.btnDocLang.$el.find('+.separator.space')[isVisible?'show':'hide']();
-                    isVisible = Common.UI.LayoutManager.isElementVisible('statusBar-textLang') || Common.UI.LayoutManager.isElementVisible('statusBar-docLang')
-                                || Common.UI.FeaturesManager.canChange('spellcheck');
-                    me.statusbar.$el.find('.el-lang')[isVisible?'show':'hide']();
-                } else {
-                    me.statusbar.$el.find('.el-edit, .el-review').hide();
-                }
-                if (cfg.canUseSelectHandTools) {
-                    me.statusbar.$el.find('.hide-select-tools').removeClass('hide-select-tools');
-                }
+            Common.NotificationCenter.on({
+                'app:face': this.onAppShowed.bind(this),
+                'app:ready': this.onAppReady.bind(this),
             });
-            Common.NotificationCenter.on('app:ready', me.onAppReady.bind(me));
+        },
+
+        onAppShowed: function (cfg) {
+            const me = this;
+            me.statusbar.render(cfg);
+            me.statusbar.$el.css('z-index', 1);
+
+            var lblzoom = $('.statusbar #label-zoom');
+            lblzoom.css('min-width', 80);
+            lblzoom.text(Common.Utils.String.format(me.zoomText, 100));
+
+            if ( cfg.isEdit ) {
+                var review = me.getApplication().getController('Common.Controllers.ReviewChanges').getView();
+                if (cfg.canReview) {
+                    me.btnTurnReview = review.getButton('turn', 'statusbar');
+                    me.btnTurnReview.render(me.statusbar.$layout.find('#btn-doc-review'));
+                    me.statusbar.btnTurnReview = me.btnTurnReview;
+                } else {
+                    me.statusbar.$el.find('.el-review').hide();
+                }
+
+                me.btnSpelling = review.getButton('spelling', 'statusbar');
+                me.btnSpelling.render( me.statusbar.$layout.find('#btn-doc-spell') );
+                me.btnDocLang = review.getButton('doclang', 'statusbar');
+                me.btnDocLang.render( me.statusbar.$layout.find('#btn-doc-lang') );
+
+                var isVisible = (Common.UI.LayoutManager.isElementVisible('statusBar-textLang') || Common.UI.LayoutManager.isElementVisible('statusBar-docLang'))
+                    && Common.UI.FeaturesManager.canChange('spellcheck');
+                me.btnDocLang.$el.find('+.separator.space')[isVisible?'show':'hide']();
+                isVisible = Common.UI.LayoutManager.isElementVisible('statusBar-textLang') || Common.UI.LayoutManager.isElementVisible('statusBar-docLang')
+                    || Common.UI.FeaturesManager.canChange('spellcheck');
+                me.statusbar.$el.find('.el-lang')[isVisible?'show':'hide']();
+            } else {
+                me.statusbar.$el.find('.el-edit, .el-review').hide();
+            }
+            if (cfg.canUseSelectHandTools) {
+                me.statusbar.$el.find('.hide-select-tools').removeClass('hide-select-tools');
+            }
         },
 
         onAppReady: function (config) {
