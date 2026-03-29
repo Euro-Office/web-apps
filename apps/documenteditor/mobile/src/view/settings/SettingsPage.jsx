@@ -24,6 +24,8 @@ import IconPrint from '@common-icons/icon-print.svg';
 import IconInfo from '@common-icons/icon-info.svg';
 import IconHelp from '@common-icons/icon-help.svg';
 import IconAbout from '@common-icons/icon-about.svg';
+import IconSave from '@common-icons/icon-save.svg';
+import IconAutosave from '@common-icons/icon-autosave.svg';
 import IconFeedbackForIos from '@common-ios-icons/icon-feedback.svg?ios';
 import IconFeedbackForAndroid from '@common-android-icons/icon-feedback.svg';
 import IconReturnIos from '@common-ios-icons/icon-return.svg?ios';
@@ -134,10 +136,7 @@ const SettingsPage = inject("storeAppOptions", "storeReview", "storeDocumentInfo
                     ] : null}
                     {!appOptions.canLiveView &&
                         <ListItem title={_t.textAutoSaveDocument}>
-                            {Device.ios ?
-                                <SvgIcon slot="media" symbolId={IconReturnIos.id} className={'icon icon-svg'} /> :
-                                <SvgIcon slot="media" symbolId={IconReturnAndroid.id} className={'icon icon-svg'} />
-                            }
+                            <SvgIcon slot="media" symbolId={IconAutosave.id} className={'icon icon-svg'} />
                             <Toggle checked={isAutosave}
                                 onToggleChange={() => {
                                     appOptions.changeAutosave(!isAutosave);
@@ -148,10 +147,7 @@ const SettingsPage = inject("storeAppOptions", "storeReview", "storeDocumentInfo
                     }
                     {!appOptions.canLiveView &&
                         <ListItem title={_t.textSaveDocument}  className={`no-indicator${appOptions.isSaveBadgeShown ? ' notify' : ''}`} onClick={settingsContext.tryToSave}>
-                            {Device.ios ?
-                                <SvgIcon slot="media" symbolId={IconReturnIos.id} className={'icon icon-svg'} /> :
-                                <SvgIcon slot="media" symbolId={IconReturnAndroid.id} className={'icon icon-svg'} />
-                            }
+                            <SvgIcon slot="media" symbolId={IconSave.id} className={'icon icon-svg'} />
                         </ListItem>
                     }
                 </List>
