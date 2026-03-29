@@ -719,8 +719,9 @@ define([
                 return this;
             },
 
-            onAppReady: function (config) {
+            onAppReady: function (cfg) {
                 var me = this;
+                const config = me.appConfig;
                 (new Promise(function (accept, reject) {
                     accept();
                 })).then(function(){

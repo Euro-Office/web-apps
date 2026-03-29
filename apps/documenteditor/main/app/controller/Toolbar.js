@@ -171,7 +171,9 @@ define([
                         _main.api.asc_DownloadAs(new Asc.asc_CDownloadOptions(_format));
                     },
                     'go:editor': function() {
-                        Common.Gateway.requestEditRights();
+                        // Common.Gateway.requestEditRights();
+                        const ctrl = this.getApplication().getController('OpenFormWrapper');
+                        ctrl.unlockEdit();
                     }
                 },
                 'ViewTab': {
@@ -3925,7 +3927,7 @@ define([
             var $panel = me.application.getController('Common.Controllers.ReviewChanges').createToolbarPanel();
             if ( $panel ) {
                 me.toolbar.addTab(tab, $panel, 6);
-                me.toolbar.setVisible('review', (config.isEdit || config.canCoAuthoring && config.canComments) && Common.UI.LayoutManager.isElementVisible('toolbar-collaboration') ); // use config.canViewReview in review controller. set visible review tab in view mode only when asc_HaveRevisionsChanges
+                // me.toolbar.setVisible('review', (config.isEdit || config.canCoAuthoring && config.canComments) && Common.UI.LayoutManager.isElementVisible('toolbar-collaboration') ); // use config.canViewReview in review controller. set visible review tab in view mode only when asc_HaveRevisionsChanges
             }
 
             if ( config.isEdit ) {
@@ -3961,7 +3963,7 @@ define([
                 if ($panel) {
                     tab = {action: 'draw', caption: me.toolbar.textTabDraw, extcls: 'canedit', layoutname: 'toolbar-draw', dataHintTitle: 'C'};
                     me.toolbar.addTab(tab, $panel, 2);
-                    me.toolbar.setVisible('draw', Common.UI.LayoutManager.isElementVisible('toolbar-draw'));
+                    // me.toolbar.setVisible('draw', Common.UI.LayoutManager.isElementVisible('toolbar-draw'));
                     Array.prototype.push.apply(me.toolbar.lockControls, drawtab.getView().getButtons());
                     Array.prototype.push.apply(me.toolbar.paragraphControls, drawtab.getView().getButtons());
                 }
@@ -3971,7 +3973,7 @@ define([
                 headerfootertab.setApi(me.api).setConfig({toolbar: me, mode: config});
                 $panel = headerfootertab.createToolbarPanel();
                 if ($panel) {
-                    var visible = Common.UI.LayoutManager.isElementVisible('toolbar-headerfooter');
+                    // var visible = Common.UI.LayoutManager.isElementVisible('toolbar-headerfooter');
                     me.toolbar.addTab(tab, $panel, 12);
                 }
                 Array.prototype.push.apply(me.toolbar.lockControls, headerfootertab.getView('HeaderFooterTab').getButtons());
@@ -4000,7 +4002,7 @@ define([
                         }
                         $panel.append(doctabController.createToolbarPanel());
                         me.toolbar.addTab(tab, $panel, 7);
-                        me.toolbar.setVisible('protect', Common.UI.LayoutManager.isElementVisible('toolbar-protect'));
+                        // me.toolbar.setVisible('protect', Common.UI.LayoutManager.isElementVisible('toolbar-protect'));
                         Array.prototype.push.apply(me.toolbar.lockControls, doctabButtons);
                     }
                 }

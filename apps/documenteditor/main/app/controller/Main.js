@@ -1023,6 +1023,10 @@ define([
             },
 
             markFavorite: function(favorite) {
+                const formsctrl = this.getApplication().getController('OpenFormWrapper');
+                formsctrl.unlockEdit();
+                return;
+
                 if ( !Common.Controllers.Desktop.process('markfavorite') ) {
                     Common.Gateway.metaChange({
                         favorite: favorite
@@ -1709,6 +1713,9 @@ define([
                                                  (this.editorConfig.canRequestEditRights || this.editorConfig.mode !== 'view') && // if mode=="view" -> canRequestEditRights must be defined
                                                  (!this.appOptions.isReviewOnly || this.appOptions.canLicense); // if isReviewOnly==true -> canLicense must be true
                 this.appOptions.isEdit         = this.appOptions.canLicense && this.appOptions.canEdit && this.editorConfig.mode !== 'view';
+
+                this.getApplication().getController('OpenFormWrapper').getIsEdit(this.appOptions.isEdit);
+
                 this.appOptions.canReview      = this.permissions.review === true && this.appOptions.canLicense && this.appOptions.isEdit;
                 this.appOptions.canViewReview  = true;
                 this.appOptions.canUseHistory  = this.appOptions.canLicense && this.editorConfig.canUseHistory && this.appOptions.canCoAuthoring && !this.appOptions.isOffline;
@@ -2078,6 +2085,11 @@ define([
                         rightmenuView.setMode(me.appOptions);
                     }
 
+                    const formsctrl = this.getApplication().getController('OpenFormWrapper');
+                    if ( formsctrl && !formsctrl.getIsEdit() ) {
+                        rightmenuView.hide();
+                    }
+
                     application.getController('Common.Controllers.ChartTab').setMode(me.appOptions);
 
                     var toolbarView = (toolbarController) ? toolbarController.getView() : null;
@@ -2122,6 +2134,12 @@ define([
                     window.onunload = _.bind(me.onUnload, me);
                 } else
                     window.onbeforeunload = _.bind(me.onBeforeUnloadView, me);
+            },
+
+            applyModePseudoViewerElements: function() {
+                const me = this;
+                const toolbarController   = application.getController('Toolbar');
+                toolbarController   && toolbarController.setApi(me.api);
             },
 
             onExternalMessage: function(msg, options) {

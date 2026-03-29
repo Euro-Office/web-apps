@@ -619,7 +619,7 @@ define([
                 if (!mode.enableDownload)
                     this.mode.canPrint = this.mode.canDownload = this.mode.canDownloadOrigin = false;
             } else {
-                this.mode = mode;
+                this.mode = {...mode};
             }
 
             if (!delay) {

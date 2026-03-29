@@ -138,6 +138,7 @@ require([
             'Search',
             'DocProtection',
             'Print',
+            'OpenFormWrapper',
             'Common.Controllers.Fonts',
             'Common.Controllers.ChartTab',
             'Common.Controllers.History'
@@ -184,6 +185,7 @@ require([
                 'documenteditor/main/app/controller/Search',
                 'documenteditor/main/app/controller/DocProtection',
                 'documenteditor/main/app/controller/Print',
+                'documenteditor/main/app/controller/FormsPreview',
                 'common/main/lib/util/utils',
                 'common/main/lib/controller/Fonts',
                 'common/main/lib/controller/ChartTab',
