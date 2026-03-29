@@ -2821,7 +2821,7 @@ define([
 
         textWarning: 'Warning',
         notcriticalErrorTitle: 'Warning',
-        txtNeedCommentMode: 'To save changes to the file, switch to Сommenting mode. Or you can download a copy of the modified file.',
+        txtNeedCommentMode: 'To save changes to the file, switch to Commenting mode. Or you can download a copy of the modified file.',
         txtNeedDownload: 'At the moment, PDF viewer can only save new changes in separate file copies. It doesn\'t support co-editing and other users won\'t see your changes unless you share a new file version.',
         txtDownload: 'Download',
         txtSaveCopy: 'Save copy',

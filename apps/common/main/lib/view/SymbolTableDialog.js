@@ -323,9 +323,9 @@ define([
     var aFontSelects = [];
     var aRanges = [];
     var aRecents = [];
-    var nCurrentFont = -1;// индекс в aFontSelects
+    var nCurrentFont = -1;// index in aFontSelects
     var nCurrentSymbol = -1;// code
-    var bMainFocus = true;//фокус в основной таблице
+    var bMainFocus = true;// focus in main table
     var nFontNameRecent = -1;
 
     var nMaxRecent = 36;
@@ -882,7 +882,7 @@ define([
                 hi = code;
                 low = str.charCodeAt(idx + 1);
                 if (isNaN(low)) {
-                    throw 'Старшая часть суррогатной пары без следующей младшей в fixedCharCodeAt()';
+                    throw 'High surrogate without following low surrogate in fixedCharCodeAt()';
                 }
                 return ((hi - 0xD800) * 0x400) + (low - 0xDC00) + 0x10000;
             }

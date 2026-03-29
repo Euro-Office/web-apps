@@ -118,7 +118,7 @@ module.exports = function(grunt) {
     var helpreplacements = [
                 {
                     from: /\{\{COEDITING_DESKTOP\}\}/g,
-                    to: _encode(process.env.COEDITING_DESKTOP) || 'Подключиться к облаку'
+                    to: _encode(process.env.COEDITING_DESKTOP) || 'Connect to cloud'
                 },{
                     from: /\{\{PLUGIN_LINK\}\}/g,
                     to: _encode(process.env.PLUGIN_LINK) || 'https://api.onlyoffice.com/plugin/basic'

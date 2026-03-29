@@ -101,17 +101,17 @@ define([
             this._locked = false;
 
             this.OriginalFillType = Asc.c_oAscFill.FILL_TYPE_SOLID;
-            this.ShapeColor = {Value: 1, Color: 'transparent'};  // value=1 - цвет определен - прозрачный или другой, value=0 - цвет не определен, рисуем прозрачным
+            this.ShapeColor = {Value: 1, Color: 'transparent'};  // value=1 - color is defined (transparent or other), value=0 - color is undefined, draw as transparent
             this.BlipFillType = Asc.c_oAscFillBlipType.STRETCH;
             this.GradFillType = Asc.c_oAscFillGradType.GRAD_LINEAR;
             this.GradColor = { values: [0, 100], colors: ['000000', 'ffffff'], currentIdx: 0};
             this.GradRadialDirectionIdx = 0;
             this.GradLinearDirectionType = 0;
             this.PatternFillType = 0;
-            this.FGColor = {Value: 1, Color: '000000'};  // value=1 - цвет определен - прозрачный или другой, value=0 - цвет не определен, рисуем прозрачным
-            this.BGColor = {Value: 1, Color: 'ffffff'};  // value=1 - цвет определен - прозрачный или другой, value=0 - цвет не определен, рисуем прозрачным
+            this.FGColor = {Value: 1, Color: '000000'};  // value=1 - color is defined (transparent or other), value=0 - color is undefined, draw as transparent
+            this.BGColor = {Value: 1, Color: 'ffffff'};  // value=1 - color is defined (transparent or other), value=0 - color is undefined, draw as transparent
 
-            this.BorderColor = {Value: 1, Color: 'transparent'};  // value=1 - цвет определен - прозрачный или другой, value=0 - цвет не определен, рисуем прозрачным
+            this.BorderColor = {Value: 1, Color: 'transparent'};  // value=1 - color is defined (transparent or other), value=0 - color is undefined, draw as transparent
             this.BorderSize = 0;
             this.BorderType = Asc.c_oDashType.solid;
 
@@ -794,9 +794,9 @@ define([
                     }
                 }
 
-                if (fill===null || fill===undefined || fill_type===null) { // заливка не совпадает у неск. фигур
+                if (fill===null || fill===undefined || fill_type===null) { // fill doesn't match across multiple shapes
                     this.OriginalFillType = null;
-                } else if (fill_type==Asc.c_oAscFill.FILL_TYPE_NOFILL) { // заливки нет
+                } else if (fill_type==Asc.c_oAscFill.FILL_TYPE_NOFILL) { // no fill
                     this.OriginalFillType = Asc.c_oAscFill.FILL_TYPE_NOFILL;
                 } else if (fill_type==Asc.c_oAscFill.FILL_TYPE_SOLID) {
                     fill = fill.asc_getFill();
@@ -817,7 +817,7 @@ define([
                     this.GradColor.colors[this.GradColor.colors.length-1] = 'ffffff';
                 }  else if (fill_type==Asc.c_oAscFill.FILL_TYPE_BLIP) {
                     fill = fill.asc_getFill();
-                    this.BlipFillType = fill.asc_getType(); // null - не совпадают у нескольких фигур
+                    this.BlipFillType = fill.asc_getType(); // null - values don't match across multiple shapes
                     if (this._state.BlipFillType !== this.BlipFillType) {
                         if (this.BlipFillType == Asc.c_oAscFillBlipType.STRETCH || this.BlipFillType == Asc.c_oAscFillBlipType.TILE) {
                             this.cmbFillType.setValue(this.BlipFillType);
@@ -828,7 +828,7 @@ define([
                     this.OriginalFillType = Asc.c_oAscFill.FILL_TYPE_BLIP;
                 } else if (fill_type==Asc.c_oAscFill.FILL_TYPE_PATT) {
                     fill = fill.asc_getFill();
-                    this.PatternFillType = fill.asc_getPatternType(); // null - не совпадают у нескольких фигур
+                    this.PatternFillType = fill.asc_getPatternType(); // null - values don't match across multiple shapes
                     if (this._state.PatternFillType !== this.PatternFillType) {
                         this.cmbPattern.suspendEvents();
                         var rec = this.cmbPattern.menuPicker.store.findWhere({
@@ -865,7 +865,7 @@ define([
                     this.GradColor.colors[this.GradColor.colors.length-1] = 'ffffff';
                 } else if (fill_type==Asc.c_oAscFill.FILL_TYPE_GRAD) {
                     fill = fill.asc_getFill();
-                    var gradfilltype = fill.asc_getGradType();  // null - не совпадают у нескольких фигур
+                    var gradfilltype = fill.asc_getGradType();  // null - values don't match across multiple shapes
                     if (this._state.GradFillType !== gradfilltype || this.GradFillType !== gradfilltype) {
                         this.GradFillType = gradfilltype;
                         rec = undefined;
