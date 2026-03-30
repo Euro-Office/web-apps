@@ -282,7 +282,7 @@ define([
                 'signature' : {name:'de-help-tip-signature', placement: 'bottom-right', text: this.helpSignature, header: this.helpSignatureHeader, target: '#slot-btn-form-signature', maxwidth: 300, 
                                     automove: true, closable: false, isNewFeature: true}
             });
-            // TODO: Добавить name
+            // TODO: Add name
             Common.UI.TooltipManager.addTips({
                 'refreshFile' : {text: _main.textUpdateVersion, header: _main.textUpdating, target: '#toolbar', maxwidth: 'none', showButton: false, automove: true, noHighlight: true, noArrow: true, multiple: true},
                 'disconnect' : {text: _main.textConnectionLost, header: _main.textDisconnect, target: '#toolbar', maxwidth: 'none', showButton: false, automove: true, noHighlight: true, noArrow: true, multiple: true},
