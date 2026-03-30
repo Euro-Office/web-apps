@@ -67,14 +67,6 @@ const PageBreak = props => {
                         <SvgIcon slot="media" symbolId={IconStringBreakAndroid.id} className={'icon icon-svg'} />
                     }
                 </ListItem>
-                <ListItem title={_t.textSectionBreak} link={'/add-section-break/'} routeProps={{
-                    onInsertSectionBreak: props.onInsertSectionBreak
-                }}>
-                    {Device.ios ? 
-                        <SvgIcon slot="media" symbolId={IconSectionBreakIos.id} className={'icon icon-svg'} /> :
-                        <SvgIcon slot="media" symbolId={IconSectionBreakAndroid.id} className={'icon icon-svg'} />
-                    }
-                </ListItem>
             </List>
             <BlockTitle>{_t.textSectionBreak}</BlockTitle>
             <List>
