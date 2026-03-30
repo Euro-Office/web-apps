@@ -172,7 +172,7 @@ define([
                     },
                     'go:editor': function() {
                         // Common.Gateway.requestEditRights();
-                        const ctrl = this.getApplication().getController('OpenFormWrapper');
+                        const ctrl = this.getApplication().getController('FormsStarter');
                         ctrl.unlockEdit();
                     }
                 },

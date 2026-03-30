@@ -1023,7 +1023,7 @@ define([
             },
 
             markFavorite: function(favorite) {
-                const formsctrl = this.getApplication().getController('OpenFormWrapper');
+                const formsctrl = this.getApplication().getController('FormsStarter');
                 formsctrl.unlockEdit();
                 return;
 
@@ -1714,7 +1714,7 @@ define([
                                                  (!this.appOptions.isReviewOnly || this.appOptions.canLicense); // if isReviewOnly==true -> canLicense must be true
                 this.appOptions.isEdit         = this.appOptions.canLicense && this.appOptions.canEdit && this.editorConfig.mode !== 'view';
 
-                this.getApplication().getController('OpenFormWrapper').getIsEdit(this.appOptions.isEdit);
+                this.getApplication().getController('FormsStarter').initIsEdit(this.appOptions.isEdit);
 
                 this.appOptions.canReview      = this.permissions.review === true && this.appOptions.canLicense && this.appOptions.isEdit;
                 this.appOptions.canViewReview  = true;
@@ -2085,7 +2085,7 @@ define([
                         rightmenuView.setMode(me.appOptions);
                     }
 
-                    const formsctrl = this.getApplication().getController('OpenFormWrapper');
+                    const formsctrl = this.getApplication().getController('FormsStarter');
                     if ( formsctrl && !formsctrl.getIsEdit() ) {
                         rightmenuView.hide();
                     }

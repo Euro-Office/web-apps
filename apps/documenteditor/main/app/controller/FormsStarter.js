@@ -1,14 +1,14 @@
 define([ 'core'], function () {
     'use strict';
 
-    DE.Controllers.OpenFormWrapper = Backbone.Controller.extend({
+    DE.Controllers.FormsStarter = Backbone.Controller.extend({
         initialize: function () {
             this.isPDFForm = !!window.isPDFForm;
             this.init = {};
         },
         onLaunch: function () {
             this.api = this.getApplication().getController('Viewport').getApi();
-            this.api.asc_registerCallback('asc_onGetEditorPermissions', this.onEditorPermissions.bind(this));
+            // this.api.asc_registerCallback('asc_onGetEditorPermissions', this.onEditorPermissions.bind(this));
             Common.NotificationCenter.on('app:face', this.onAppShowed.bind(this));
             Common.NotificationCenter.on('app:ready', this.onAppReady.bind(this));
             Common.NotificationCenter.on('document:ready', this.onDocumentReady.bind(this));
@@ -21,6 +21,7 @@ define([ 'core'], function () {
             this.appOptions = options;
             if (this.isPDFForm && this.appOptions.isEdit) {
                 this.api.asc_setViewMode(true);
+                this.api.asc_setRestriction(Asc.c_oAscRestrictionType.OnlyForms);
 
                 const app = DE;
                 const opts = {...this.appOptions};
@@ -46,40 +47,83 @@ define([ 'core'], function () {
                 this.toolbar.setVisible('layout', false);
                 this.toolbar.setVisible('links', false);
                 this.toolbar.setVisible = this.setTabVisible.bind(this);
+                // this.toolbar.$el.html(this.toolbar.rendererComponentsRestrictedEditForms(this.toolbar.$layout));
 
                 if (opts.canFeatureContentControl && opts.canFeatureForms || opts.isRestrictedEdit && opts.canFillForms) {
                     if (opts.isFormCreator) {
-                        const forms = app.getController('FormsTab');
+                        const forms = app.getController('FormsTabSec');
+                        forms.setConfig({toolbar: this.toolbar, config: opts});
 
-                        // Common.NotificationCenter.off('app:ready', forms.view.onAppReady);
-                        // delete forms.view;
-
-                        this.formsTabView = forms.createView('FormsTab', {
-                            toolbar: this.toolbar,
-                            config: opts,
-                            api: this.api
-                        });
-                        // const func_app_ready_orig = forms.view.onAppReady;
-                        // Common.NotificationCenter.off('app:ready', forms.view.onAppReady);
-                        // forms.view.onAppReady = cfg => {
-                        //     console.log('custom on forms app ready');
-                        //     // func_app_ready_orig(config);
-                        // };
-                        // forms.setApi(this.api).setConfig({toolbar: me, config: config});
-                        const $panel = this.formsTabView.getPanel();
+                        const $panel = forms.createToolbarPanel();
                         if (1 && $panel) {
-                            const tab = {caption: this.toolbar.textTabHome, action: 'forms1', dataHintTitle: 'M'};
+                            const tab = {caption: this.toolbar.textTabHome, action: 'formshome', dataHintTitle: 'M'};
                             this.toolbar.addTab(tab, $panel, 5);
-                            this.toolbar.setVisible('forms1', true);
-                            // Array.prototype.push.apply(this.toolbar.lockControls, forms.getView('FormsTab').getButtons());
-                            // !compactview && (config.isFormCreator || config.isRestrictedEdit && config.canFillForms) && me.toolbar.setTab('forms');
+                            this.toolbar.setVisible('formshome', true);
+                            Array.prototype.push.apply(this.toolbar.lockControls, forms.getView('FormsTabSec').getButtons());
+
+                            const editmode = opts.isEdit || opts.isRestrictedEdit && opts.canFillForms && opts.isFormCreator;
+                            let compactview = !editmode;
+                            if ( Common.localStorage.itemExists(editmode ? "de-compact-toolbar" : "de-view-compact-toolbar") ) {
+                                compactview = Common.localStorage.getBool(editmode ? "de-compact-toolbar" : "de-view-compact-toolbar");
+                            } else if (opts.customization) {
+                                compactview = editmode ? !!config.customization.compactToolbar : config.customization.compactToolbar!==false;
+                            }
+
+                            !compactview && (opts.isFormCreator || opts.isRestrictedEdit && opts.canFillForms) &&
+                                this.toolbar.setTab('formshome');
+
+                            const btnSelectTool = new Common.UI.Button({
+                                id: 'tlbtn-selecttool',
+                                cls: 'btn-toolbar x-huge icon-top',
+                                iconCls: 'toolbar__icon btn-select',
+                                lock: [Common.enumLock.disableOnStart],
+                                caption: this.toolbar.capBtnSelect,
+                                toggleGroup: 'select-tools-tb',
+                                enableToggle: true,
+                                allowDepress: false,
+                                dataHint: '1',
+                                dataHintDirection: 'bottom',
+                                dataHintOffset: 'small'
+                            });
+                            this.toolbar.toolbarControls.push(btnSelectTool);
+                            Common.Utils.injectComponent($panel.find('#slot-btn-select-tool'), btnSelectTool);
+
+                            const btnHandTool = new Common.UI.Button({
+                                id: 'tlbtn-handtool',
+                                cls: 'btn-toolbar x-huge icon-top',
+                                iconCls: 'toolbar__icon btn-big-hand-tool',
+                                lock: [Common.enumLock.disableOnStart],
+                                caption: this.toolbar.capBtnHand,
+                                toggleGroup: 'select-tools-tb',
+                                enableToggle: true,
+                                allowDepress: false,
+                                dataHint: '1',
+                                dataHintDirection: 'bottom',
+                                dataHintOffset: 'small'
+                            });
+                            this.toolbar.toolbarControls.push(btnHandTool);
+                            Common.Utils.injectComponent($panel.find('#slot-btn-hand-tool'), btnHandTool);
+
+                            // this.api.asc_registerCallback('asc_onChangeViewerTargetType', _.bind(this.onChangeViewerTargetType, this));
+                            btnSelectTool.updateHint(this.toolbar.tipSelectTool);
+                            btnHandTool.updateHint(this.toolbar.tipHandTool);
+                            btnSelectTool.toggle(true, true);
+
+                            const on_select_tool = function (type, btn, state) {
+                                if (state) {
+                                    this.api.asc_setViewerTargetType(type);
+                                    Common.NotificationCenter.trigger('edit:complete', this.toolbar);
+                                }
+                            }
+
+                            btnSelectTool.on('toggle', on_select_tool.bind(this, 'select'));
+                            btnHandTool.on('toggle', on_select_tool.bind( this, 'hand'));
                         }
                     }
                 }
 
                 this.toolbar.setVisible('home', false);
-                // const $panel = this.toolbar.getTab('home');
-                // $panel.hide();
+                this.toolbar.setVisible('forms', false);
             }
         },
 
@@ -144,6 +188,10 @@ define([ 'core'], function () {
                 this.toolbar.setVisible('ins', true);
                 this.toolbar.setVisible('layout', true);
                 this.toolbar.setVisible('links', true);
+                this.toolbar.setVisible('home', true);
+                this.toolbar.setVisible('forms', true);
+                this.toolbar.setVisible('formshome', false);
+                this.toolbar.setTab('forms');
 
                 view = DE.getController('Common.Controllers.ReviewChanges').getView('Common.Views.ReviewChanges');
                 const is_review_visible = (this.appOptions.isEdit || this.appOptions.canViewReview || view.canComments) && Common.UI.LayoutManager.isElementVisible('toolbar-collaboration');
@@ -157,19 +205,22 @@ define([ 'core'], function () {
                 Common.NotificationCenter.trigger('form:startedit', {});
             }
         },
-        isFormEmulateView: function () {},
-        turnOffViewEmulation: function () {},
-        getIsEdit: function (initvalue) {
-            if (this.isPDFForm) {
-                if (initvalue !== undefined) {
-                    this.init.isEdit = initvalue;
-                }
 
+        getIsEdit: function () {
+            return this.initIsEdit();
+        },
+
+        initIsEdit: function (initvalue) {
+            if (initvalue !== undefined) {
+                this.init.isEdit = initvalue;
+            }
+
+            if (this.isPDFForm) {
                 if (this.editUnlocked !== true)
                     return false;
                 else return !!this.appOptions ? this.appOptions.isEdit : this.init.isEdit;
             }
-            else return initvalue;
+            else return initvalue == undefined && this.init.isEdit;
         },
     });
 });
