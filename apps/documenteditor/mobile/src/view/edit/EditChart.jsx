@@ -207,7 +207,7 @@ const PageChartType = props => {
                                                                 className={curType === type.type ? ' active' : ''}
                                                                 onClick={() => {props.onType(type.type)}}>
                                                                 <div className={'thumb'}
-                                                                    style={{backgroundImage: `url('resources/img/charts/${type.thumb}')`}}>
+                                                                    style={{backgroundImage: `url('../../common/mobile/resources/img/charts/${type.thumb}')`}}>
                                                                 </div>
                                                             </li>
                                                         )
