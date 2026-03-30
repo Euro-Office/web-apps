@@ -83,6 +83,20 @@
     .icon-back {
         color: @toolbar-icons;
     }
+    .link {
+        &.notify {
+                &::before {
+                    content: ' ';
+                    position: absolute;
+                    width: 10px;
+                    height: 10px;
+                    bottom: 8px;
+                    right: 10px;
+                    background-color: @background-notification-badge;
+                    border-radius: 6px;
+                }
+        }
+    }
 }
 
 .page.page-with-subnavbar {
@@ -150,6 +164,21 @@
                 padding-right: 15px;
                 &:before {
                     content: none;
+                }
+            }
+        }
+
+        &.notify {
+            .item-media {
+                &::before {
+                    content: ' ';
+                    position: absolute;
+                    width: 10px;
+                    height: 10px;
+                    bottom: 8px;
+                    right: 1px;
+                    background-color: @background-notification-badge;
+                    border-radius: 6px;
                 }
             }
         }
