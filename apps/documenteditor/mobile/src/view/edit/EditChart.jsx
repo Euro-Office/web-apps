@@ -170,7 +170,7 @@ const PageChartType = props => {
     const { t } = useTranslation();
     const storeChartSettings = props.storeChartSettings;
     const types = storeChartSettings.types;
-    const countSlides = Math.floor(types.length / 3);
+    const countSlides = Math.ceil(types.length / 3);
     const arraySlides = Array(countSlides).fill(countSlides);
     const storeFocusObjects = props.storeFocusObjects;
     const chartProperties = storeFocusObjects.chartObject && storeFocusObjects.chartObject.get_ChartProperties();
@@ -198,7 +198,7 @@ const PageChartType = props => {
                                                                 className={curType === type.type ? ' active' : ''}
                                                                 onClick={() => {props.onType(type.type)}}>
                                                                 <div className={'thumb'}
-                                                                    style={{backgroundImage: `url('resources/img/charts/${type.thumb}')`}}>
+                                                                    style={{backgroundImage: `url('../../common/mobile/resources/img/charts/${type.thumb}')`}}>
                                                                 </div>
                                                             </li>
                                                         )

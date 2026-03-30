@@ -171,7 +171,7 @@ const PageChartType = props => {
     const { t } = useTranslation();
     const storeChartSettings = props.storeChartSettings;
     const types = storeChartSettings.types;
-    const countSlides = Math.floor(types.length / 3);
+    const countSlides = Math.ceil(types.length / 3);
     const arraySlides = Array(countSlides).fill(countSlides);
     const storeFocusObjects = props.storeFocusObjects;
     const chartProperties = storeFocusObjects.chartObject && storeFocusObjects.chartObject.get_ChartProperties();

@@ -74,7 +74,7 @@ const PageTheme = props => {
                     {arrayThemes.map(theme => {
                         return (
                             <ListItem key={theme.themeId} className={theme.themeId === slideThemeIndex ? "item-theme active" : "item-theme"} 
-                                style={{backgroundPosition: `0 -${theme.offsety}px`, backgroundImage: theme.imageUrl && `url(${theme.imageUrl})`}}
+                                style={{backgroundImage: theme.imageUrl && `url(${theme.imageUrl})`}}
                                 onClick={() => {
                                     storeSlideSettings.changeSlideThemeIndex(theme.themeId);
                                     props.onThemeClick(theme.themeId);

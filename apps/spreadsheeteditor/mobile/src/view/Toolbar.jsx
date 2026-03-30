@@ -74,7 +74,8 @@ const ToolbarView = props => {
                     </Link>
                 }
                 {(!props.isDrawMode && props.isEdit && EditorUIController.toolbarOptions && !isVersionHistoryMode) && EditorUIController.toolbarOptions.getEditOptions({
-                    disabled: props.disabledEditControls || props.disabledControls || isDisconnected || isOpenModal,
+                    disabledEdit: props.disabledEditControls || props.disabledControls || isDisconnected || isOpenModal,
+                    disabledAdd: props.disabledEditControls || props.disabledControls || isDisconnected || isOpenModal,
                     wsProps,
                     focusOn,
                     isShapeLocked,
