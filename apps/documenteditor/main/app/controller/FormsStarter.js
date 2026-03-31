@@ -37,6 +37,35 @@ define([ 'core'], function () {
                 if (options.showSaveButton) {
                     const appHeader = app.getController('Viewport').getView('Common.Views.Header');
                     appHeader.btnSave.hide();
+
+                    // const isPDFEditor = true;
+                    // if (config.canRequestEditRights &&
+                    //         (!config.twoLevelHeader && config.canEdit && !isPDFEditor ||
+                    //         config.isPDFForm && config.canFillForms && config.isRestrictedEdit ||
+                    //     isPDFEditor && (config.canPDFEdit && !config.isPDFEdit && !config.isPDFAnnotate || config.isPDFFill)))
+                    {
+                        const createTitleButton = function (iconid, slot, disabled, hintDirection, hintOffset, hintTitle, lock) {
+                            return (new Common.UI.Button({
+                                cls: 'btn-header',
+                                iconCls: iconid,
+                                disabled: disabled === true,
+                                lock: lock,
+                                dataHint:'0',
+                                dataHintDirection: hintDirection ? hintDirection : (config.isDesktopApp ? 'right' : 'left'),
+                                dataHintOffset: hintOffset ? hintOffset : (config.isDesktopApp ? '10, -18' : '10, 10'),
+                                dataHintTitle: hintTitle
+                            })).render(slot);
+                        }
+
+                        const toolbar = app.getController('Toolbar').getView('Toolbar');
+                        this.headerBtnEdit = createTitleButton('toolbar__icon icon--inverse btn-edit', toolbar.$el.findById('#slot-hbtn-edit'), undefined, 'bottom', 'big');
+                        this.headerBtnEdit.updateHint(appHeader.tipGoEdit);
+                        this.headerBtnEdit.on('click', function (e) {
+                            appHeader.fireEvent('go:editor', appHeader);
+                        });
+                    }
+
+                    appHeader.btnDocMode && appHeader.btnDocMode.hide();
                 }
 
                 view = app.getController('Statusbar').getView('Statusbar');
@@ -118,6 +147,13 @@ define([ 'core'], function () {
 
                             btnSelectTool.on('toggle', on_select_tool.bind(this, 'select'));
                             btnHandTool.on('toggle', on_select_tool.bind( this, 'hand'));
+
+                            view = app.getController('ViewTab').getView('ViewTab');
+                            view.chRulers.$el.closest('.group').hide();
+                            view.chRulers.$el.hide();
+                            view.$el.find('.separator-rulers').hide();
+                            view.chRightMenu.$el.hide();
+                            this.toolbar.$el.find('.macro').hide();
                         }
                     }
                 }
@@ -183,14 +219,19 @@ define([ 'core'], function () {
                 view.setMode(this.appOptions);
 
                 // quick access title button save
+                const appHeader = DE.getController('Viewport').getView('Common.Views.Header');
                 if (this.appOptions.showSaveButton) {
-                    const appHeader = DE.getController('Viewport').getView('Common.Views.Header');
                     appHeader.btnQuickAccess.menu.items.forEach(function (item) {
                         if (item.value === 'save')
                             item.setVisible(true);
                     });
                     if ( Common.localStorage.getBool('de-quick-access-save', true) )
                         appHeader.btnSave.show();
+                }
+
+                this.headerBtnEdit.hide();
+                if (this.appOptions.isEdit && this.appOptions.canSwitchMode) {
+                    appHeader.btnDocMode.show();
                 }
 
                 Common.NotificationCenter.trigger('layout:changed', 'rightmenu');
@@ -218,6 +259,27 @@ define([ 'core'], function () {
                 const plugins = DE.getController('Common.Controllers.Plugins');
                 plugins.setMode(this.appOptions, this.api);
                 plugins.loadPlugins();
+
+                view = app.getController('ViewTab').getView('ViewTab');
+                if (this.appOptions.isEdit) {
+                    view.chRulers.$el.closest('.group').show();
+                    view.chRulers.$el.show();
+                    view.$el.find('.separator-rulers').show();
+                }
+
+                if (!this.appOptions.isEdit || this.appOptions.canBrandingExt &&
+                    this.appOptions.customization && this.appOptions.customization.rightMenu === false ||
+                    !Common.UI.LayoutManager.isElementVisible('rightMenu'))
+                {} else {
+                    view.chRightMenu.$el.show();
+                }
+
+                if (!this.appOptions.isEdit ||
+                    this.appOptions.customization && this.appOptions.customization.macros===false ||
+                    (Common.Controllers.Desktop && Common.Controllers.Desktop.isWinXp()) )
+                {} else {
+                    this.toolbar.$el.find('.macro').show();
+                }
 
                 Common.NotificationCenter.trigger('form:startedit', {});
             }
