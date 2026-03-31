@@ -3741,6 +3741,8 @@
   "DE.Views.RightMenu.txtSignatureSettings": "Signature settings",
   "DE.Views.RightMenu.txtTableSettings": "Table settings",
   "DE.Views.RightMenu.txtTextArtSettings": "Text Art settings",
+  "DE.Views.RightMenu.txtSendForSigning": "Send for signing",
+  "DE.Views.RightMenu.txtFillingStatus": "Filling status",
   "DE.Views.RoleDeleteDlg.textLabel": "To delete this recipient, you  need to move the fields associated with it to another recipient.",
   "DE.Views.RoleDeleteDlg.textSelect": "Select recipient for field merger",
   "DE.Views.RoleDeleteDlg.textTitle": "Delete recipient",

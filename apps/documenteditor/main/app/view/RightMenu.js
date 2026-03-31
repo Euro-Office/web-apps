@@ -256,13 +256,13 @@ define([
                 this.formSettings = new DE.Views.FormSettings();
             }
 
-            if (false) {
+            if (mode && mode.isPDFForm && !mode.canRequestFillingStatus) {
                 this.btnFillingStatus = new Common.UI.Button({
-                    hint: this.txtFormSettings,
+                    hint: this.txtFillingStatus,
                     asctype: Common.Utils.documentSettingsType.FillingStatus,
                     enableToggle: true,
-                    disabled: true,
-                    iconCls: 'btn-field',
+                    disabled: false,
+                    iconCls: 'icon--inverse  btn-filling-status',
                     toggleGroup: 'tabpanelbtnsGroup',
                     allowMouseEventsOnDisabled: true
                 });
@@ -475,6 +475,7 @@ define([
         txtSignatureSettings:       'Signature Settings',
         txtFormSettings:            'Form Settings',
         txtSendForSigning:          'Send for signing',
+        txtFillingStatus:           'Filling status',
         ariaRightMenu:              'Right menu'
     }, DE.Views.RightMenu || {}));
 });
