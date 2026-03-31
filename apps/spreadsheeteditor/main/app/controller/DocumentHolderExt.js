@@ -4087,7 +4087,13 @@ define([], function () {
                     }
                 }
                 var lastSelected = specialPasteShowOptions.asc_getLastSelectedPasteProperty();
-                (menu.items.length>0) && !lastSelected && menu.items[0].setChecked(true, true);
+                if (!lastSelected) {
+                    var first = _.find(menu.items, function(item) {
+                        return item.checkable;
+                    });
+
+                    first && first.setChecked(true, true);
+                }
                 me._state.lastSpecPasteChecked = (menu.items.length>0) ? menu.items[0] : null;
                 if (lastSelected) {
                     var foundItem = null;
