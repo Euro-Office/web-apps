@@ -128,18 +128,29 @@ define([ 'core'], function () {
         },
 
         onAppReady: function (options) {
-            const app = DE;
-            let view = app.getController('Toolbar').getView('Toolbar');
-            view.setVisible('protect', false);
+            if (this.isPDFForm && this.appOptions.isEdit) {
+                const app = DE;
+                let view = app.getController('Toolbar').getView('Toolbar');
+                view.setVisible('protect', false);
+            }
         },
 
         onDocumentReady: function () {
-            if (this.appOptions.showSaveButton) {
-                const appHeader = DE.getController('Viewport').getView('Common.Views.Header');
-                appHeader.btnQuickAccess.menu.items.forEach(function (item) {
-                    if (item.value === 'save')
-                        item.setVisible(false);
-                });
+            if (this.isPDFForm && this.appOptions.isEdit) {
+                if (this.appOptions.showSaveButton) {
+                    const appHeader = DE.getController('Viewport').getView('Common.Views.Header');
+                    appHeader.btnQuickAccess.menu.items.forEach(function (item) {
+                        if (item.value === 'save')
+                            item.setVisible(false);
+                    });
+                }
+
+                const opts = {...this.appOptions};
+                opts.isEdit = false;
+
+                const plugins = DE.getController('Common.Controllers.Plugins');
+                plugins.setMode(opts, this.api);
+                plugins.loadPlugins();
             }
         },
 
@@ -201,6 +212,12 @@ define([ 'core'], function () {
                 if (this.appOptions.canProtect) {
                     Common.NotificationCenter.trigger('tab:visible', 'protect', Common.UI.LayoutManager.isElementVisible('toolbar-protect'));
                 }
+
+                // plugins
+                DE.getCollection('Common.Collections.Plugins').reset([]);
+                const plugins = DE.getController('Common.Controllers.Plugins');
+                plugins.setMode(this.appOptions, this.api);
+                plugins.loadPlugins();
 
                 Common.NotificationCenter.trigger('form:startedit', {});
             }
