@@ -893,10 +893,12 @@ define([
                         !updatedItem && (updatedItem = pluginStore.findWhere({baseUrl: item.baseUrl}));
                         !updatedItem && (updatedItem = pluginStore.findWhere({guid: item.guid}));
                     } else {
-                        if ( arr.some(function(i) {
-                            return (i.get('baseUrl') == item.baseUrl || i.get('guid') == item.guid);
-                        }) || pluginStore.findWhere({baseUrl: item.baseUrl}) || pluginStore.findWhere({guid: item.guid}) )
-                        {
+                        // const m = arr.some(function(i) {
+                        //     return (i.get('baseUrl') == item.baseUrl || i.get('guid') == item.guid);
+                        // });
+                        let model = pluginStore.findWhere({baseUrl: item.baseUrl});
+                        !model && (model = pluginStore.findWhere({guid: item.guid}));
+                        if ( model ) {
                             return;
                         }
                     }
