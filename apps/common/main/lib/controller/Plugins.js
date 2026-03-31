@@ -201,6 +201,8 @@ define([
                 this.api.asc_registerCallback("asc_onPluginWindowClose", _.bind(this.onPluginWindowClose, this));
                 this.api.asc_registerCallback("asc_onPluginWindowResize", _.bind(this.onPluginWindowResize, this));
                 this.api.asc_registerCallback("asc_onPluginWindowActivate", _.bind(this.openUIPlugin, this));
+                this.api.asc_registerCallback("asc_onPluginSetButtonDisabled", _.bind(this.onPluginSetButtonDisabled, this, true));
+                this.api.asc_registerCallback("asc_onPluginSetButtonEnabled", _.bind(this.onPluginSetButtonDisabled, this, false));
 
                 this.loadPlugins();
             }
@@ -1391,6 +1393,14 @@ define([
                 }, this);
                 this.backgroundPluginsTip.show();
             }
+        },
+
+        onPluginSetButtonDisabled: function (disable, index) {
+            var me = this;
+            if (me.pluginDlg) {
+                var btns = me.pluginDlg.getFooterButtons();
+                btns[index].setDisabled(disable);
+            };
         },
 
         onActiveTab: function (tab) {
