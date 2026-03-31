@@ -805,6 +805,8 @@ define([
             const rightMenuController = DE.getController('RightMenu');
             const rightMenuView = rightMenuController.getView('RightMenu');
             rightMenuView.render(this.appOptions);
+            rightMenuView.setApi(this.api);
+            rightMenuView.setMode(this.appOptions);
             if(rightMenuView.$el.find('.tool-menu-btns > button').length == 0) {
                 rightMenuController.onRightMenuHide(null, false, true);
             }

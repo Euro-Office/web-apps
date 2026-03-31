@@ -256,7 +256,7 @@ define([
                 this.formSettings = new DE.Views.FormSettings();
             }
 
-            if (mode && mode.isPDFForm && !mode.canRequestFillingStatus) {
+            if (mode && mode.isPDFForm && !mode.canRequestFillingStatus && (mode.user && mode.user.roles != null)) {
                 this.btnFillingStatus = new Common.UI.Button({
                     hint: this.txtFillingStatus,
                     asctype: Common.Utils.documentSettingsType.FillingStatus,

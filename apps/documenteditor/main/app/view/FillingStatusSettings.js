@@ -60,6 +60,7 @@ define([
         },
 
         initialize: function () {
+            this._initSettings = true;
             this._state = {};
             this._locked = false;
 
@@ -67,17 +68,22 @@ define([
         },
 
         render: function () {
-            const items = [
-                { email: 'user333@gmail.com', name: 'Anyone', date: '1/20/2026 9:00 PM', status: 'done' },
-                { email: 'test@yandex.ru', name: 'User1', date: null, status: 'done' },
-                { email: 'test@yandex.ru', name: 'User2', date: null, status: 'done' }
-            ];
             const el = this.$el || $(this.el);
             el.html(this.template({
-                scope: this,
-                items: items,
-                isAllDone: items.every(function(item) { return item.status == 'done'})
+                scope: this
             }));
+        },
+
+        createDelayedElements: function() {
+            this._initSettings = false;
+
+            const me = this;
+            const oForm = this.api.asc_GetOForm();
+            this.rolesCollection = new Backbone.Collection();
+            this.rolesCollection.on('reset', function(newCollection, details) {
+                me._renderRolesList();
+            }, this);
+            this.setRoles(oForm ? oForm.asc_getAllRoles() : []);
         },
 
         setApi: function(api) {
@@ -86,7 +92,9 @@ define([
         },
 
         ChangeSettings: function(props) {
-
+            if (this._initSettings) {
+                this.createDelayedElements();
+            }
         },
 
         setLocked: function (locked) {
@@ -101,7 +109,113 @@ define([
 
         },
 
-        txtTitle: 'Filling status',
+        setRoles: function(roles) {
+            const me = this;
+            let needFindActive = true;
+            const resultArray = (roles).map(function(role, index) {
+                role = role.asc_getSettings();
+                let color = role.asc_getColor();
+                color && (color = Common.Utils.ThemeColor.getHexColor(color.get_r(), color.get_g(), color.get_b()));
+
+                let item;
+                if(index == 0) {
+                    item = {
+                        name: role.asc_getName(),
+                        color: color,
+                        user: {
+                            id: 1,
+                            email: 'example@test.com',
+                            name: 'Basher'
+                        },
+                        date: '1/20/2026 9:00 PM',
+                        status: 'done'  //'done' | 'active' | 'wait'
+                    }
+                } else {
+                    item = {
+                        name: role.asc_getName(),
+                        color: color,
+                        user: {
+                            id: null,
+                            email: null,
+                            name: null
+                        },
+                        date: null,
+                        status: 'wait'  //'done' | 'active' | 'wait'
+                    }
+                }
+                
+                if(needFindActive && item.status == 'wait') {
+                    item.status = 'active';
+                    if(me.mode && me.mode.user) {
+                        item.user.id = me.mode.user.id;
+                        item.user.name = me.mode.user.name;
+                    }
+                    needFindActive = false;
+                }
+                return item;
+            });
+
+            this.rolesCollection.reset(resultArray);
+        },
+
+        _renderRolesList: function() {
+            const me = this;
+            const $list = this.$el.find('#id-filling-status-settings-roles-list');
+            $list.empty();
+
+            let isAllDone = true;
+            this.rolesCollection.each(function(role, index) {
+                console.log(role);
+                const $item = $(_.template(
+                    '<div class="progress-item <%= item.status %>">' +
+                        '<div class="progress-item-left">' +
+                            '<div class="progress-item-number"><%= index + 1 %></div>' +
+                            '<div class="progress-item-dashes"></div>' +
+                        '</div>' +
+                        '<div class="progress-item-content">' +
+                            '<div class="progress-item-header">' +
+                                '<div class="progress-item-label"><%= item.name %></div>' +
+                                '<% if (item.status == "done") { %>' +
+                                    '<div class="progress-item-check"></div>' +
+                                '<% } %>' +
+                            '</div>' +
+                            '<div class="progress-item-description"><%= item.user.email || item.user.name %></div>' +
+                            '<% if (item.status == "done") { %>' +
+                                '<div class="progress-item-footer">' +
+                                    '<div class="progress-item-status"><%= scope.txtDocumentIsSigned %></div>' +
+                                    '<% if (item.date) { %>' +
+                                        '<div class="progress-item-date"><%= item.date %></div>' +
+                                    '<% } %>' +
+                                '</div>' +
+                            '<% } %>' +
+                        '</div>' +
+                    '</div>'
+                )({ scope: me, item: role.toJSON(), index: index} ));
+                $list.append($item);
+                
+                (role.get('status') != 'done') && (isAllDone = false);
+            });
+            
+            const $completeStep = $(_.template(
+                '<div class="progress-item complete <%= isAllDone ? "all-done" : "" %>">' + 
+                    '<div class="progress-item-left">' + 
+                        '<div class="progress-item-number">' + 
+                            '<div class="progress-item-check"></div>' + 
+                        '</div>' + 
+                    '</div>' + 
+                    '<div class="progress-item-content">' + 
+                        '<div class="progress-item-header">' + 
+                            '<div class="progress-item-label"><%= scope.txtComplete %></div>' + 
+                        '</div>' + 
+                    '</div>' + 
+                '</div>'
+            )({ scope: this, isAllDone: isAllDone }));
+            $list.append($completeStep);
+        },
+
+        txtFillingStatus: 'Filling status',
+        txtDocumentIsSigned: 'Document is signed',
+        txtComplete: 'Complete'
 
     }, DE.Views.FillingStatusSettings || {}));
 });

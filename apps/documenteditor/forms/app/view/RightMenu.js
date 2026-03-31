@@ -77,7 +77,8 @@ define([
             const showFillingStatus = !mode.canRequestFillingStatus && (mode.user && mode.user.roles != null);
 
             this.defaultHideRightMenu = !(mode.customization && (mode.customization.hideRightMenu===false));
-            var open = !Common.localStorage.getBool("de-hide-right-settings", this.defaultHideRightMenu);
+            // var open = !Common.localStorage.getBool("de-hide-right-settings", this.defaultHideRightMenu);
+            var open = false; // Only for forms mode
             Common.Utils.InternalSettings.set("de-hide-right-settings", !open);
 
             Common.NotificationCenter.on('app:repaint', _.bind(function() {
@@ -136,11 +137,6 @@ define([
 
             // this.$el.html($markup);
             this.trigger('render:after', this);
-
-            //Open filling status when right panel is open after opening the document
-            if(this.btnFillingStatus && open) {
-                this.btnFillingStatus.$el.click();
-            }
 
             return this;
         },
