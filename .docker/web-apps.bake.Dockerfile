@@ -35,6 +35,9 @@ FROM web-base AS web-apps
     ENV PRODUCT_VERSION=${PRODUCT_VERSION}
     ENV BUILD_ROOT=${BUILD_ROOT}
 
+    RUN cd app/translation && \
+        python3 merge_and_check.py
+
     ARG TARGETARCH
     RUN cd app/build && \
         THEME=euro-office grunt $(if [ "$TARGETARCH" = "arm64" ]; then echo "--skip-imagemin"; fi)
