@@ -200,7 +200,7 @@ require([
             /** coauthoring end **/
             'common/main/lib/controller/ExternalLinks',
             'common/main/lib/controller/Plugins',
-            'presentationeditor/main/app/view/ChartSettings',
+            // 'presentationeditor/main/app/view/ChartSettings',
             'common/main/lib/controller/ExternalDiagramEditor'
             ,'common/main/lib/controller/ExternalOleEditor'
             ,'common/main/lib/controller/ReviewChanges'
