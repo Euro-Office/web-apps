@@ -151,7 +151,7 @@ define([
                     this.api.setPluginsOptions(this.configPlugins.config.options);
 
                 if (this.api.setPluginsDisabled) {
-                    const exclude_guids = this.configPlugins.config.disabled instanceof Array ? this.configPlugins.config.disabled : [];
+                    const exclude_guids = !!this.configPlugins.config && this.configPlugins.config.disable instanceof Array ? this.configPlugins.config.disabled : [];
                     if (exclude_guids.length)
                         this.api.setPluginsDisabled(exclude_guids);
                 }
@@ -890,7 +890,7 @@ define([
             if ( pluginsdata instanceof Array ) {
                 var arr = [], arrUI = [],
                     lang = me.appOptions.lang.split(/[\-_]/)[0];
-                const exclude_guids = me.configPlugins.config.disabled instanceof Array ? me.configPlugins.config.disabled : [];
+                const exclude_guids = !!me.configPlugins.config && me.configPlugins.config.disable instanceof Array ? me.configPlugins.config.disable : [];
                 pluginsdata.forEach(function(item){
                     if ( exclude_guids.length && exclude_guids.includes(item.guid) )
                         return;
