@@ -16,6 +16,7 @@ import FileEncryptionController from '../../controller/settings/FileEncryption';
 import SettingsPage from './SettingsPage';
 import { MainContext } from '../../page/main';
 import VersionHistoryController from '../../../../../common/mobile/lib/controller/VersionHistory';
+import HelpFeedbackView from './HelpFeedback';
 
 const routes = [
     {
@@ -77,6 +78,10 @@ const routes = [
     {
         path: '/protection',
         component: ProtectionController
+    },
+    {
+        path: '/help-feedback/',
+        component: HelpFeedbackView
     },
     {
         path: '/protect',

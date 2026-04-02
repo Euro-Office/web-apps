@@ -26,8 +26,6 @@ import IconHelp from '@common-icons/icon-help.svg';
 import IconAbout from '@common-icons/icon-about.svg';
 import IconSave from '@common-icons/icon-save.svg';
 import IconAutosave from '@common-icons/icon-autosave.svg';
-import IconFeedbackForIos from '@common-ios-icons/icon-feedback.svg?ios';
-import IconFeedbackForAndroid from '@common-android-icons/icon-feedback.svg';
 import IconReturnIos from '@common-ios-icons/icon-return.svg?ios';
 import IconReturnAndroid from '@common-android-icons/icon-return.svg';
 import IconDraw from '../../../../../common/mobile/resources/icons/draw.svg'
@@ -120,15 +118,6 @@ const SettingsPage = inject("storeAppOptions", "storeReview", "storeDocumentInfo
                             }
                         </ListItem>
                     }
-                    {isEditableForms && isFavorite !== undefined && isFavorite !== null &&
-                        <ListItem key='add-to-favorites-link' title={isFavorite ? t('Settings.textRemoveFromFavorites') : t('Settings.textAddToFavorites')} link='#' className='no-indicator' onClick={settingsContext.toggleFavorite}>
-                            {isFavorite ?
-                                <SvgIcon slot="media" symbolId={IconRemoveFavorites.id} className={'icon icon-svg'} />
-                            :
-                                <SvgIcon slot="media" symbolId={IconAddFavorites.id} className={'icon icon-svg'} />
-                            }
-                        </ListItem>
-                    }
                     {!appOptions.canLiveView &&
                         <ListItem title={_t.textAutoSaveDocument}>
                             <SvgIcon slot="media" symbolId={IconAutosave.id} className={'icon icon-svg'} />
@@ -150,25 +139,9 @@ const SettingsPage = inject("storeAppOptions", "storeReview", "storeDocumentInfo
                         <SvgIcon slot="media" symbolId={IconDocSetup.id} className={'icon icon-svg'} />
                         </ListItem>
                     }
-                    <ListItem title={_t.textApplicationSettings} link="/application-settings/">
-                        <SvgIcon slot="media" symbolId={IconAppSettings.id} className={'icon icon-svg'} />
-                    </ListItem>
-                    {_canDownload &&
-                        <ListItem title={isEditableForms ? t('Settings.textExport') : _t.textDownload} link="/download/">
-                            {isEditableForms ?
-                                <SvgIcon slot="media" symbolId={IconExport.id} className={'icon icon-svg'} /> :
-                                <SvgIcon slot="media" symbolId={IconDownload.id} className={'icon icon-svg'} />
-                            }
-                        </ListItem>
-                    }
                     {_canDownloadOrigin &&
                         <ListItem title={_t.textDownload} link="#" onClick={settingsContext.onDownloadOrigin} className='no-indicator'>
                             <SvgIcon slot="media" symbolId={IconDownload.id} className={'icon icon-svg'} />
-                        </ListItem>
-                    }
-                    {_canPrint &&
-                        <ListItem title={_t.textPrint} onClick={settingsContext.onPrint} link='#' className='no-indicator'>
-                            <SvgIcon slot="media" symbolId={IconPrint.id} className={'icon icon-svg'} />
                         </ListItem>
                     }
                     {(appOptions.isMobileViewAvailable  && ((Device.phone && !isViewer) || isEditableForms)) &&
@@ -178,19 +151,6 @@ const SettingsPage = inject("storeAppOptions", "storeReview", "storeDocumentInfo
                                 onOpenOptions('snackbar');
                                 settingsContext.onChangeMobileView();
                             }} />
-                        </ListItem>
-                    }
-                </List>
-                <BlockTitle>{_t.textTools}</BlockTitle>
-                <List>
-                    {isEditableForms &&
-                        <ListItem key='clear-all-fields-link' title={t('Settings.textClearAllFields')} link='#' className='no-indicator' onClick={settingsContext.clearAllFields}  disabled={isSignatureForm}>
-                            <SvgIcon slot="media" symbolId={IconClearFields.id} className={'icon icon-svg'} />
-                        </ListItem>
-                    }
-                    {(Device.phone || isEditableForms) &&
-                        <ListItem title={!_isEdit || isViewer ? _t.textFind : _t.textFindAndReplace} link='#' searchbarEnable='.searchbar' onClick={settingsContext.closeModal} className='no-indicator'>
-                            <SvgIcon slot="media" symbolId={IconSearch.id} className={'icon icon-svg'} />
                         </ListItem>
                     }
                     {(_isEdit && canProtect) &&
@@ -205,6 +165,41 @@ const SettingsPage = inject("storeAppOptions", "storeReview", "storeDocumentInfo
                             }
                         }}>
                             <SvgIcon slot="media" symbolId={IconVersionHistory.id} className={'icon icon-svg'} />
+                        </ListItem>
+                    }
+                    {isEditableForms && isFavorite !== undefined && isFavorite !== null &&
+                        <ListItem key='add-to-favorites-link' title={isFavorite ? t('Settings.textRemoveFromFavorites') : t('Settings.textAddToFavorites')} link='#' className='no-indicator' onClick={settingsContext.toggleFavorite}>
+                            {isFavorite ?
+                                <SvgIcon slot="media" symbolId={IconRemoveFavorites.id} className={'icon icon-svg'} />
+                            :
+                                <SvgIcon slot="media" symbolId={IconAddFavorites.id} className={'icon icon-svg'} />
+                            }
+                        </ListItem>
+                    }
+                    {_canDownload &&
+                        <ListItem title={isEditableForms ? t('Settings.textExport') : _t.textDownload} link="/download/">
+                            {isEditableForms ?
+                                <SvgIcon slot="media" symbolId={IconExport.id} className={'icon icon-svg'} /> :
+                                <SvgIcon slot="media" symbolId={IconDownload.id} className={'icon icon-svg'} />
+                            }
+                        </ListItem>
+                    }
+                    {_canPrint &&
+                        <ListItem title={_t.textPrint} onClick={settingsContext.onPrint} link='#' className='no-indicator'>
+                            <SvgIcon slot="media" symbolId={IconPrint.id} className={'icon icon-svg'} />
+                        </ListItem>
+                    }
+                </List>
+                <BlockTitle>{_t.textTools}</BlockTitle>
+                <List>
+                    {isEditableForms &&
+                        <ListItem key='clear-all-fields-link' title={t('Settings.textClearAllFields')} link='#' className='no-indicator' onClick={settingsContext.clearAllFields}  disabled={isSignatureForm}>
+                            <SvgIcon slot="media" symbolId={IconClearFields.id} className={'icon icon-svg'} />
+                        </ListItem>
+                    }
+                    {(Device.phone || isEditableForms) &&
+                        <ListItem title={!_isEdit || isViewer ? _t.textFind : _t.textFindAndReplace} link='#' searchbarEnable='.searchbar' onClick={settingsContext.closeModal} className='no-indicator'>
+                            <SvgIcon slot="media" symbolId={IconSearch.id} className={'icon icon-svg'} />
                         </ListItem>
                     }
                     {!isEditableForms ?
@@ -229,6 +224,12 @@ const SettingsPage = inject("storeAppOptions", "storeReview", "storeDocumentInfo
                         </ListItem>
                     }
                 </List>
+                <BlockTitle></BlockTitle>
+                <List>
+                    <ListItem title={_t.textApplicationSettings} link="/application-settings/">
+                        <SvgIcon slot="media" symbolId={IconAppSettings.id} className={'icon icon-svg'} />
+                    </ListItem>
+                </List>                
                 <BlockTitle>{_t.textAbout}</BlockTitle>
                 <List>
                     {!(!_canDisplayInfo && isBranding) &&
@@ -236,22 +237,14 @@ const SettingsPage = inject("storeAppOptions", "storeReview", "storeDocumentInfo
                             <SvgIcon slot="media" symbolId={IconInfo.id} className={'icon icon-svg'} />
                         </ListItem>
                     }
-                    {_canHelp &&
-                        <ListItem title={_t.textHelp} link="#" className='no-indicator' onClick={settingsContext.showHelp}>
+                    {(_canHelp || _canFeedback) &&
+                        <ListItem title={_t.textHelpFeedback} link="/help-feedback/">
                             <SvgIcon slot="media" symbolId={IconHelp.id} className={'icon icon-svg'} />
                         </ListItem>
                     }
                     {_canAbout &&
                         <ListItem title={_t.textAbout} link="/about/">
                             <SvgIcon slot="media" symbolId={IconAbout.id} className={'icon icon-svg'} />
-                        </ListItem>
-                    }
-                    {_canFeedback &&
-                        <ListItem title={t('Settings.textFeedback')} link="#" className='no-indicator' onClick={settingsContext.showFeedback}>
-                            {Device.ios ? 
-                                <SvgIcon slot="media" symbolId={IconFeedbackForIos.id} className={'icon icon-svg'} /> :
-                                <SvgIcon slot="media" symbolId={IconFeedbackForAndroid.id} className={'icon icon-svg'} />
-                            }
                         </ListItem>
                     }
                     {canCloseEditor &&
