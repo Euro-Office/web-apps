@@ -262,10 +262,16 @@ define([
                 this.cmbBaseField.setValue(disabled && defValue ? defValue.asc_getBaseField() : field.asc_getBaseField() , '');
 
                 data = [];
-                var baseitems = this.pivot_names[field.asc_getBaseField()].asc_getBaseItemObject(this.cache_names[field.asc_getBaseField()]);
-                baseitems.forEach(function(item, index){
-                    data.push({value: item["baseItem"], displayValue: index===0 ? me.textPrev : (index===1 ? me.textNext : item["name"])});
-                });
+                const obj = this.pivot_names[field.asc_getBaseField()];
+                if ( !!obj ) {
+                    const baseitems = obj.asc_getBaseItemObject(this.cache_names[field.asc_getBaseField()]);
+                    baseitems.forEach(function (item, index) {
+                        data.push({
+                            value: item["baseItem"],
+                            displayValue: index === 0 ? me.textPrev : (index === 1 ? me.textNext : item["name"])
+                        });
+                    });
+                }
                 this.cmbBaseItem.setData(data);
                 this.cmbBaseItem.setDisabled(data.length<1 || show_as !== Asc.c_oAscShowDataAs.Difference && show_as !== Asc.c_oAscShowDataAs.Percent && show_as !== Asc.c_oAscShowDataAs.PercentDiff);
                 this.cmbBaseItem.setValue((data.length>0) && (show_as === Asc.c_oAscShowDataAs.Difference || show_as === Asc.c_oAscShowDataAs.Percent || show_as === Asc.c_oAscShowDataAs.PercentDiff) ? field.asc_getBaseItem() : '', '');
