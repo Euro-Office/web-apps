@@ -5,7 +5,6 @@
             <div id="id-table-settings" class="settings-panel"></div>
             <div id="id-image-settings" class="settings-panel"></div>
             <div id="id-shape-settings" class="settings-panel"></div>
-            <div id="id-chart-settings" class="settings-panel"></div>
             <div id="id-mail-merge-settings" class="settings-panel"></div>
             <div id="id-textart-settings" class="settings-panel"></div>
             <div id="id-signature-settings" class="settings-panel"></div>
@@ -18,7 +17,6 @@
         <button id="id-right-menu-table" class="btn btn-category arrow-left" data-hint="0" data-hint-direction="left" data-hint-offset="big" content-target="id-table-settings"><i class="icon toolbar__icon btn-menu-table">&nbsp;</i></button>
         <button id="id-right-menu-image" class="btn btn-category arrow-left" data-hint="0" data-hint-direction="left" data-hint-offset="big" content-target="id-image-settings"><i class="icon toolbar__icon btn-menu-image">&nbsp;</i></button>
         <button id="id-right-menu-shape" class="btn btn-category arrow-left" data-hint="0" data-hint-direction="left" data-hint-offset="big" content-target="id-shape-settings"><i class="icon toolbar__icon btn-menu-shape">&nbsp;</i></button>
-        <button id="id-right-menu-chart" class="btn btn-category arrow-left" data-hint="0" data-hint-direction="left" data-hint-offset="big" content-target="id-chart-settings"><i class="icon toolbar__icon btn-menu-chart">&nbsp;</i></button>
         <button id="id-right-menu-textart" class="btn btn-category arrow-left" data-hint="0" data-hint-direction="left" data-hint-offset="big" content-target="id-textart-settings"><i class="icon toolbar__icon btn-menu-textart">&nbsp;</i></button>
         <button id="id-right-menu-mail-merge" class="btn btn-category arrow-left hidden" data-hint="0" data-hint-direction="left" data-hint-offset="big" content-target="id-mail-merge-settings"><i class="icon toolbar__icon btn-mailmerge">&nbsp;</i></button>
         <button id="id-right-menu-signature" class="btn btn-category arrow-left hidden" data-hint="0" data-hint-direction="left" data-hint-offset="big" content-target="id-signature-settings"><i class="icon toolbar__icon btn-menu-signature">&nbsp;</i></button>

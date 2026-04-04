@@ -151,7 +151,7 @@ define([
                     this.api.setPluginsOptions(this.configPlugins.config.options);
 
                 if (this.api.setPluginsDisabled) {
-                    const exclude_guids = !!this.configPlugins.config && this.configPlugins.config.disable instanceof Array ? this.configPlugins.config.disabled : [];
+                    const exclude_guids = !!this.configPlugins.config && this.configPlugins.config.disable instanceof Array ? this.configPlugins.config.disable : [];
                     if (exclude_guids.length)
                         this.api.setPluginsDisabled(exclude_guids);
                 }
