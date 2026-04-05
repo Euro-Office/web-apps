@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useState} from 'react';
+﻿import React, {Fragment, useEffect, useState} from 'react';
 import {observer, inject} from "mobx-react";
 import {f7, Page, Navbar, List, ListItem, Row, BlockTitle, Link, Toggle, Icon, View, NavRight, ListItemCell, Range, Button, Segmented, ListButton} from 'framework7-react';
 import { ThemeColorPalette, CustomColorPicker } from '../../../../../common/mobile/lib/component/ThemeColorPalette.jsx';
@@ -9,11 +9,53 @@ import IconExpandDownIos from '@common-ios-icons/icon-expand-down.svg?ios';
 import IconExpandDownAndroid from '@common-android-icons/icon-expand-down.svg';
 import IconExpandUp from '@common-android-icons/icon-expand-up.svg';
 
+const getEffectOptions = _t => [
+    {displayValue: _t.textNone,       value: Asc.c_oAscSlideTransitionTypes.None,      thumb: 'btn-transition-none.png'},
+    {displayValue: _t.textMorph,      value: Asc.c_oAscSlideTransitionTypes.Morph,     thumb: 'btn-transition-morph.png'},
+    {displayValue: _t.textFade,       value: Asc.c_oAscSlideTransitionTypes.Fade,      thumb: 'btn-transition-fade.png'},
+    {displayValue: _t.textPush,       value: Asc.c_oAscSlideTransitionTypes.Push,      thumb: 'btn-transition-push.png'},
+    {displayValue: _t.textWipe,       value: Asc.c_oAscSlideTransitionTypes.Wipe,      thumb: 'btn-transition-wipe.png'},
+    {displayValue: _t.textSplit,      value: Asc.c_oAscSlideTransitionTypes.Split,     thumb: 'btn-transition-split.png'},
+    {displayValue: _t.textCut,        value: Asc.c_oAscSlideTransitionTypes.Cut,       thumb: 'btn-transition-cut.png'},
+    {displayValue: _t.textRandomBars, value: Asc.c_oAscSlideTransitionTypes.RandomBar, thumb: 'btn-transition-randombars.png'},
+    {displayValue: _t.textShape,      value: Asc.c_oAscSlideTransitionTypes.Circle,    thumb: 'btn-transition-shape.png'},
+    {displayValue: _t.textUnCover,    value: Asc.c_oAscSlideTransitionTypes.UnCover,   thumb: 'btn-transition-uncover.png'},
+    {displayValue: _t.textCover,      value: Asc.c_oAscSlideTransitionTypes.Cover,     thumb: 'btn-transition-cover.png'},
+    {displayValue: _t.textDissolve,   value: Asc.c_oAscSlideTransitionTypes.Dissolve,  thumb: 'btn-transition-dissolve.png'},
+    {displayValue: _t.textChecker,    value: Asc.c_oAscSlideTransitionTypes.Checker,   thumb: 'btn-transition-checker.png'},
+    {displayValue: _t.textBlinds,     value: Asc.c_oAscSlideTransitionTypes.Blinds,    thumb: 'btn-transition-blinds.png'},
+    {displayValue: _t.textClock,      value: Asc.c_oAscSlideTransitionTypes.Clock,     thumb: 'btn-transition-clock.png'},
+    {displayValue: _t.textRipple,     value: Asc.c_oAscSlideTransitionTypes.Ripple,    thumb: 'btn-transition-ripple.png'},
+    {displayValue: _t.textHoneycomb,  value: Asc.c_oAscSlideTransitionTypes.Honeycomb, thumb: 'btn-transition-honeycomb.png'},
+    {displayValue: _t.textVortex,     value: Asc.c_oAscSlideTransitionTypes.Vortex,    thumb: 'btn-transition-vortex.png'},
+    {displayValue: _t.textSwitch,     value: Asc.c_oAscSlideTransitionTypes.Switch,    thumb: 'btn-transition-switch.png'},
+    {displayValue: _t.textFlip,       value: Asc.c_oAscSlideTransitionTypes.Flip,      thumb: 'btn-transition-flip.png'},
+    {displayValue: _t.textGallery,    value: Asc.c_oAscSlideTransitionTypes.Gallery,   thumb: 'btn-transition-gallery.png'},
+    {displayValue: _t.textCube,       value: Asc.c_oAscSlideTransitionTypes.Prism,     thumb: 'btn-transition-cube.png',   prismId: 'prism-cube'},
+    {displayValue: _t.textDoors,      value: Asc.c_oAscSlideTransitionTypes.Doors,     thumb: 'btn-transition-doors.png'},
+    {displayValue: _t.textBox,        value: Asc.c_oAscSlideTransitionTypes.Prism,     thumb: 'btn-transition-box.png',    prismId: 'prism-box'},
+    {displayValue: _t.textComb,       value: Asc.c_oAscSlideTransitionTypes.Comb,      thumb: 'btn-transition-comb.png'},
+    {displayValue: _t.textZoom,       value: Asc.c_oAscSlideTransitionTypes.Zoom,      thumb: 'btn-transition-zoom.png'},
+    {displayValue: _t.textRandom,     value: Asc.c_oAscSlideTransitionTypes.Random,    thumb: 'btn-transition-random.png'},
+    {displayValue: _t.textFerris,     value: Asc.c_oAscSlideTransitionTypes.Ferris,    thumb: 'btn-transition-ferris.png'},
+    {displayValue: _t.textRotate,     value: Asc.c_oAscSlideTransitionTypes.Prism,     thumb: 'btn-transition-rotate.png', prismId: 'prism-rotate'},
+    {displayValue: _t.textWindow,     value: Asc.c_oAscSlideTransitionTypes.Window,    thumb: 'btn-transition-window.png'},
+    {displayValue: _t.textOrbit,      value: Asc.c_oAscSlideTransitionTypes.Prism,     thumb: 'btn-transition-orbit.png',  prismId: 'prism-orbit',  }
+];
+
 const EditSlide = props => {
     const { t } = useTranslation();
     const _t = t('View.Edit', {returnObjects: true}); 
     const storeFocusObjects = props.storeFocusObjects;  
     const isLockResetBackground = storeFocusObjects.slideObject.get_LockResetBackground();
+    const _arrEffect = getEffectOptions(_t);
+    const transitionObj = storeFocusObjects.slideObject.get_transition();
+    const _effect = transitionObj.get_TransitionType();
+    const _effectType = transitionObj.get_TransitionOption();
+    const prismId = getPrismId(_effectType);
+    const effectItem = getEffectItem(_effect, prismId, _arrEffect);
+    const nameEffect = effectItem ? effectItem.displayValue : '';
+    const thumbEffect = effectItem ? effectItem.thumb : '';
 
     return (
         <Fragment>
@@ -32,7 +74,9 @@ const EditSlide = props => {
                     onDelayCheck: props.onDelayCheck,
                     onDelay: props.onDelay,
                     onApplyAll: props.onApplyAll
-                }}></ListItem>
+                }}>
+                    {getEffectPreview(nameEffect, thumbEffect)}
+                </ListItem>
             </List>
             <List>
                 <ListItem title={_t.textBackground} link="/style/" routeProps={{
@@ -163,43 +207,28 @@ const getShapeType = value => {
     return Asc.c_oAscSlideTransitionTypes.Circle;
 };
 
+const getEffectItem = (effect, prismId, _arrEffect) => {
+    if (isShape(effect))
+        effect = Asc.c_oAscSlideTransitionTypes.Circle;
+    for (var i=0; i < _arrEffect.length; i++) {
+        if (_arrEffect[i].value == effect &&
+            (effect != Asc.c_oAscSlideTransitionTypes.Prism || _arrEffect[i].prismId == prismId)) return _arrEffect[i];
+    }
+    return _arrEffect[0];
+};
+
+const getEffectPreview = (nameEffect, thumbEffect) => (
+    <span slot="after" className="transition-effect-preview"
+        style={{backgroundImage: thumbEffect ? `url('resources/img/transitions/${thumbEffect}')` : 'none'}}>
+        {nameEffect}
+    </span>
+);
+
 const PageTransition = props => {
     const { t } = useTranslation();
     const _t = t("View.Edit", { returnObjects: true });
     const isAndroid = Device.android;
-    const _arrEffect = [
-        {displayValue: _t.textNone,    value: Asc.c_oAscSlideTransitionTypes.None},
-        {displayValue: _t.textMorph,   value: Asc.c_oAscSlideTransitionTypes.Morph},
-        {displayValue: _t.textFade,    value: Asc.c_oAscSlideTransitionTypes.Fade},
-        {displayValue: _t.textPush,    value: Asc.c_oAscSlideTransitionTypes.Push},
-        {displayValue: _t.textWipe,    value: Asc.c_oAscSlideTransitionTypes.Wipe},
-        {displayValue: _t.textSplit,   value: Asc.c_oAscSlideTransitionTypes.Split},
-        {displayValue: _t.textCut,     value: Asc.c_oAscSlideTransitionTypes.Cut},
-        {displayValue: _t.textRandomBars, value: Asc.c_oAscSlideTransitionTypes.RandomBar},
-        {displayValue: _t.textShape,   value: Asc.c_oAscSlideTransitionTypes.Circle},
-        {displayValue: _t.textUnCover, value: Asc.c_oAscSlideTransitionTypes.UnCover},
-        {displayValue: _t.textCover,   value: Asc.c_oAscSlideTransitionTypes.Cover},
-        {displayValue: _t.textDissolve, value: Asc.c_oAscSlideTransitionTypes.Dissolve},
-        {displayValue: _t.textChecker, value: Asc.c_oAscSlideTransitionTypes.Checker},
-        {displayValue: _t.textBlinds,  value: Asc.c_oAscSlideTransitionTypes.Blinds},
-        {displayValue: _t.textClock,   value: Asc.c_oAscSlideTransitionTypes.Clock},
-        {displayValue: _t.textRipple,  value: Asc.c_oAscSlideTransitionTypes.Ripple},
-        {displayValue: _t.textHoneycomb, value: Asc.c_oAscSlideTransitionTypes.Honeycomb},
-        {displayValue: _t.textVortex,  value: Asc.c_oAscSlideTransitionTypes.Vortex},
-        {displayValue: _t.textSwitch,  value: Asc.c_oAscSlideTransitionTypes.Switch},
-        {displayValue: _t.textFlip,    value: Asc.c_oAscSlideTransitionTypes.Flip},
-        {displayValue: _t.textGallery, value: Asc.c_oAscSlideTransitionTypes.Gallery},
-        {displayValue: _t.textCube,    value: Asc.c_oAscSlideTransitionTypes.Prism, prismId: 'prism-cube'},
-        {displayValue: _t.textDoors,   value: Asc.c_oAscSlideTransitionTypes.Doors},
-        {displayValue: _t.textBox,     value: Asc.c_oAscSlideTransitionTypes.Prism, prismId: 'prism-box'},
-        {displayValue: _t.textComb,    value: Asc.c_oAscSlideTransitionTypes.Comb},
-        {displayValue: _t.textZoom,    value: Asc.c_oAscSlideTransitionTypes.Zoom},
-        {displayValue: _t.textRandom,  value: Asc.c_oAscSlideTransitionTypes.Random},
-        {displayValue: _t.textFerris,  value: Asc.c_oAscSlideTransitionTypes.Ferris},
-        {displayValue: _t.textRotate,  value: Asc.c_oAscSlideTransitionTypes.Prism, prismId: 'prism-rotate'},
-        {displayValue: _t.textWindow,  value: Asc.c_oAscSlideTransitionTypes.Window},
-        {displayValue: _t.textOrbit,   value: Asc.c_oAscSlideTransitionTypes.Prism, prismId: 'prism-orbit'}
-    ];
+    const _arrEffect = getEffectOptions(_t);
     const _arrEffectType = [
         {displayValue: _t.textSmoothly,           value: Asc.c_oAscSlideTransitionParams.Fade_Smoothly},
         {displayValue: _t.textBlack,              value: Asc.c_oAscSlideTransitionParams.Fade_Through_Black},
@@ -378,15 +407,6 @@ const PageTransition = props => {
         return (_arrCurrentEffectTypes.length > 0) ? _arrCurrentEffectTypes[0].value : -1;
     };
 
-    const getEffectName = (effect, prismId) => {
-        if (isShape(effect))
-            effect = Asc.c_oAscSlideTransitionTypes.Circle;
-        for (var i=0; i < _arrEffect.length; i++) {
-            if (_arrEffect[i].value == effect &&
-                (effect != Asc.c_oAscSlideTransitionTypes.Prism || _arrEffect[i].prismId == prismId)) return _arrEffect[i].displayValue;
-        }
-        return '';
-    };
     
     const getEffectTypeName = type => {
         for (var i=0; i < _arrCurrentEffectTypes.length; i++) {
@@ -407,7 +427,9 @@ const PageTransition = props => {
     const _effect = transitionObj.get_TransitionType();
     const _effectType = transitionObj.get_TransitionOption();
     const prismId = getPrismId(_effectType);
-    const nameEffect = getEffectName(_effect, prismId);
+    const effectItem = getEffectItem(_effect, prismId, _arrEffect);
+    const nameEffect = effectItem ? effectItem.displayValue : '';
+    const thumbEffect = effectItem ? effectItem.thumb : '';
     if(_effect != Asc.c_oAscSlideTransitionTypes.None) fillEffectTypes(_effect, prismId);
     const nameEffectType = getEffectTypeName(_effectType);
 
@@ -436,13 +458,15 @@ const PageTransition = props => {
                 }
             </Navbar>
             <List>
-                <ListItem link="/effect/" title={_t.textEffect} after={nameEffect} routeProps={{
+                <ListItem link="/effect/" title={_t.textEffect} routeProps={{
                     _arrEffect,
                     onEffectClick: props.onEffectClick,
                     fillEffectTypes,
                     _effect,
                     _prismId: prismId
-                }}></ListItem>
+                }}>
+                    {getEffectPreview(nameEffect, thumbEffect)}
+                </ListItem>
                 <ListItem link="/type/" title={_t.textType} 
                     after={!noParameters ? nameEffectType : ''} 
                     disabled={noParameters} routeProps={{
@@ -483,7 +507,7 @@ const PageTransition = props => {
             </List>
             <List>
                 <ListItem>
-                    <span>{_t.textStartOnClick}</span>
+                    <span>{_t.textStartOnTap}</span>
                     <Toggle checked={isStartOnClick} onToggleChange={() => {props.onStartClick(!isStartOnClick)}} />
                 </ListItem>
                 <ListItem>
@@ -548,7 +572,11 @@ const PageEffect = props => {
                                     let valueEffectTypes = props.fillEffectTypes(elem.value, selectedPrismId);
                                     let effect = isShape(elem.value) ? getShapeType(valueEffectTypes) : elem.value;
                                     props.onEffectClick(effect, valueEffectTypes);
-                                }}></ListItem>
+                                }}>
+                                    <span slot="media" className="transition-effect-icon"
+                                        style={{backgroundImage: `url('resources/img/transitions/${elem.thumb}')`}}>
+                                    </span>
+                                </ListItem>
                         )
                     })}
                 </List>
