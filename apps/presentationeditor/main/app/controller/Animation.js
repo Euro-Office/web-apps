@@ -617,6 +617,10 @@ define([
         },
 
         setLocked: function() {
+            this.view.listEffects &&
+                this.view.listEffects.openButton &&
+                this.view.listEffects.openButton.menu &&
+                this.view.listEffects.openButton.menu.hide();
             if (this._state.noGraphic != undefined)
                 this.lockToolbar(Common.enumLock.noGraphic, this._state.noGraphic);
             if (this._state.noAnimation != undefined)
