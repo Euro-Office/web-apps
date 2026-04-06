@@ -586,6 +586,7 @@ define([], function () { 'use strict';
                     break;
                 case 2:
                     this.props.clearType();
+                    this.inputName.setValue('');
                     break;
             }
         },
