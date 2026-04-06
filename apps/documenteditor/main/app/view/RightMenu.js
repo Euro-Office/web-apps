@@ -60,7 +60,6 @@ define([
     'documenteditor/main/app/view/TextArtSettings',
     'documenteditor/main/app/view/SignatureSettings',
     'documenteditor/main/app/view/FormSettings',
-    'documenteditor/main/app/view/FillingStatusSettings',
     'documenteditor/main/app/view/SendForSigningSettings',
     'common/main/lib/component/Scroller',
     'common/main/lib/component/ListView',
@@ -256,23 +255,6 @@ define([
                 this.formSettings = new DE.Views.FormSettings();
             }
 
-            if (mode && mode.isPDFForm && !mode.canRequestFillingStatus && (mode.user && mode.user.roles != null)) {
-                this.btnFillingStatus = new Common.UI.Button({
-                    hint: this.txtFillingStatus,
-                    asctype: Common.Utils.documentSettingsType.FillingStatus,
-                    enableToggle: true,
-                    disabled: false,
-                    iconCls: 'icon--inverse  btn-filling-status',
-                    toggleGroup: 'tabpanelbtnsGroup',
-                    allowMouseEventsOnDisabled: true
-                });
-                this._settings[Common.Utils.documentSettingsType.FillingStatus]   = {panel: "id-filling-status-settings", btn: this.btnFillingStatus};
-                this.btnFillingStatus.setElement($markup.findById('#id-right-menu-filling-status'), false); 
-                this.btnFillingStatus.render().setVisible(true);
-                this.btnFillingStatus.on('click', this.onBtnMenuClick.bind(this));
-                this.fillingStatusSettings = new DE.Views.FillingStatusSettings();
-            }
-
             if (!mode.canRequestStartFilling) {
                 this.btnSendForSigning = new Common.UI.Button({
                     hint: this.txtSendForSigning,
@@ -325,7 +307,6 @@ define([
             if (this.mergeSettings) this.mergeSettings.setApi(api).on('editcomplete', _fire_editcomplete);
             if (this.signatureSettings) this.signatureSettings.setApi(api).on('editcomplete', _fire_editcomplete);
             if (this.formSettings) this.formSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('updatescroller', _updateScroller);
-            if (this.fillingStatusSettings) this.fillingStatusSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('updatescroller', _updateScroller);
             if (this.sendForSigningSettings) this.sendForSigningSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('updatescroller', _updateScroller);
         },
 
@@ -338,7 +319,6 @@ define([
             this.chartSettings && this.chartSettings.setMode(mode);
             // this.headerSettings && this.headerSettings.setMode(mode);
             this.signatureSettings && this.signatureSettings.setMode(mode);
-            this.fillingStatusSettings && this.fillingStatusSettings.setMode(mode);
             this.sendForSigningSettings && this.sendForSigningSettings.setMode(mode);
         },
 
@@ -442,7 +422,7 @@ define([
 
         setButtons: function () {
             var allButtons = [this.btnText, this.btnTable, this.btnImage, this.btnShape, this.btnChart, this.btnTextArt,
-                    this.btnMailMerge, this.btnSignature, this.btnForm, this.btnFillingStatus, this.btnSendForSigning];
+                    this.btnMailMerge, this.btnSignature, this.btnForm, this.btnSendForSigning];
             Common.UI.SideMenu.prototype.setButtons.apply(this, [allButtons]);
         },
 
@@ -475,7 +455,6 @@ define([
         txtSignatureSettings:       'Signature Settings',
         txtFormSettings:            'Form Settings',
         txtSendForSigning:          'Send for signing',
-        txtFillingStatus:           'Filling status',
         ariaRightMenu:              'Right menu'
     }, DE.Views.RightMenu || {}));
 });
