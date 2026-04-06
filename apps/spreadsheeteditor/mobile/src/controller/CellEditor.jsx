@@ -107,7 +107,7 @@ const CellEditor = inject("storeFunctions")(observer(props => {
         const left = editorRect.left + coord.asc_getX() + coord.asc_getWidth() - 3;
         const top = editorRect.top + coord.asc_getY() - buttonSize + 4;
 
-        if (left < editorRect.left || left > editorRect.right - buttonSize || top < editorRect.top || top > editorRect.bottom - buttonSize) {
+        if (left < editorRect.left || left > editorRect.right - buttonSize || top < editorRect.top - 20 || top > editorRect.bottom - buttonSize) {
             hideCommentButton();
             return;
         }
