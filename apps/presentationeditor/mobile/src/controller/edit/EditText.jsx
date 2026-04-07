@@ -332,9 +332,9 @@ class EditTextController extends Component {
         if (!api || typeof api.put_TextPrFontSize !== 'function') return;
 
         let fontSize = Number(size);
-        if (!Number.isFinite(fontSize)) return;
+        if (!Number.isFinite(fontSize) || fontSize < 1) return;
 
-        fontSize = Math.max(1, Math.min(300, Math.round(fontSize)));
+        fontSize = Math.min(300, Math.round(fontSize));
         api.put_TextPrFontSize(fontSize);
     }
 

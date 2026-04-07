@@ -32,12 +32,20 @@ import IconTextItalic from '@common-icons/icon-text-italic.svg'
 import IconTextUnderline from '@common-icons/icon-text-underline.svg'
 import IconTextStrikethrough from '@common-icons/icon-text-strikethrough.svg'
 
+const normalizeFontSize = value => {
+    const size = Number(value);
+    return Number.isFinite(size) && size > 0 ? size : 0;
+};
+
+const formatFontSize = (size, ptText) => `${normalizeFontSize(size)} ${ptText}`;
+
 const PageFonts = props => {
     const isAndroid = Device.android;
     const { t } = useTranslation();
     const storeTextSettings = props.storeTextSettings;
     const size = storeTextSettings.fontSize;
-    const [displaySize, setDisplaySize] = useState(storeTextSettings.fontSize ?? 0);
+    const currentSize = normalizeFontSize(size);
+    const [displaySize, setDisplaySize] = useState(currentSize);
     const curFontName = storeTextSettings.fontName;
     const fonts = storeTextSettings.fontsArray;
     const iconWidth = storeTextSettings.iconWidth;
@@ -51,8 +59,8 @@ const PageFonts = props => {
     const arrayRecentFonts = storeTextSettings.arrayRecentFonts;
     
     useEffect(() => {
-        setDisplaySize(storeTextSettings.fontSize ?? 0);
-    }, [storeTextSettings.fontSize]);
+        setDisplaySize(currentSize);
+    }, [currentSize]);
 
     const addRecentStorage = () => {
         setRecent(getImageUri(arrayRecentFonts));
@@ -121,7 +129,7 @@ const PageFonts = props => {
                         <Link className="item-link size-label" onClick={() => props.f7router.navigate('/edit-text-size-custom/', {props: {
                             initialValue: displaySize,
                             applyFontSize: props.applyFontSize},})}>
-                            {displaySize + ' ' + t('Edit.textPt')}
+                            {formatFontSize(displaySize, t('Edit.textPt'))}
                         </Link>
                     </div>}
                     <div slot='after'>
@@ -135,7 +143,7 @@ const PageFonts = props => {
                                     <Link outline className="item-link size-label" onClick={() => props.f7router.navigate('/edit-text-size-custom/', { props: {
                                         initialValue: displaySize,              
                                         applyFontSize: props.applyFontSize},})}>
-                                        {displaySize + ' ' + t('Edit.textPt')}
+                                        {formatFontSize(displaySize, t('Edit.textPt'))}
                                     </Link>
                                 }
                             <Button outline className='increment item-link' onClick={() => {props.changeFontSize(size, false)}}>
@@ -148,8 +156,8 @@ const PageFonts = props => {
                 </ListItem>
                 <ListItem>
                     <div slot="inner" style={{ width: '100%' }}>
-                        <Range min={1} max={300} step={1} value={displaySize} onRangeChange={(value) => setDisplaySize(value)} 
-                            onRangeChanged={(value) => {if (value !== storeTextSettings.fontSize) props.applyFontSize(value);}}
+                        <Range min={0} max={300} step={1} value={displaySize} onRangeChange={(value) => setDisplaySize(value)} 
+                            onRangeChanged={(value) => {if (value > 0 && value !== currentSize) props.applyFontSize(value);}}
                         />
                     </div>
                 </ListItem>
@@ -203,7 +211,7 @@ const PageFonts = props => {
 
 const PageCustomFontSize = (props) => {
     const { t } = useTranslation();
-    const displaySize = props.initialValue ?? 0;
+    const displaySize = normalizeFontSize(props.initialValue);
     const [value, setValue] = useState(String(displaySize));
 
     const valueRef = useRef(value);
@@ -220,10 +228,6 @@ const PageCustomFontSize = (props) => {
         if (el) el.classList.toggle('edit-custom-font-size', on);
     };
 
-    const focusInput = () => {
-        const el = document.querySelector('.page-custom-font-size input');
-        if (el) el.focus();
-    };
 
     useEffect(() => {
         customFont.current = apply;
@@ -233,7 +237,7 @@ const PageCustomFontSize = (props) => {
     }, [apply]);
 
     return (
-        <Page className="page-custom-font-size" onPageBeforeIn={() => toggleCustomClass(true)} onPageAfterIn={focusInput} onPageBeforeOut={() => { toggleCustomClass(false); apply();}}>
+        <Page className="page-custom-font-size" onPageBeforeIn={() => toggleCustomClass(true)} onPageBeforeOut={() => { toggleCustomClass(false); apply();}}>
             <Navbar title={t('Edit.txtCustom')} backLink="Back">
                 {Device.phone && 
                     <NavRight>
@@ -247,7 +251,7 @@ const PageCustomFontSize = (props) => {
                 }
             </Navbar>
             <List className="input-list">
-                <ListInput label={t('Edit.textSize')} type="number" inputmode="numeric" min={1} max={300} value={value} onChange={(e) => setValue(e.target.value)} />
+                <ListInput autofocus label={t('Edit.textSize')} type="number" inputmode="numeric" min={1} max={300} value={value} onChange={(e) => setValue(e.target.value)} />
             </List>
         </Page>
     );
@@ -805,7 +809,7 @@ const EditText = props => {
     const fontSize = storeTextSettings.fontSize;
     const fontColor = storeTextSettings.textColor;
     const highlightColor = storeTextSettings.highlightColor;
-    const displaySize = typeof fontSize === 'undefined' ? t('Edit.textAuto') : fontSize + ' ' + t('Edit.textPt');
+    const displaySize = formatFontSize(fontSize, t('Edit.textPt'));
     const isBold = storeTextSettings.isBold;
     const isItalic = storeTextSettings.isItalic;
     const isUnderline = storeTextSettings.isUnderline;

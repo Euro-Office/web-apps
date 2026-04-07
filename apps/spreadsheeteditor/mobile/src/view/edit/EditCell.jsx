@@ -1,4 +1,4 @@
-import React, {Fragment, useState, useEffect, useMemo, useRef, useCallback} from 'react';
+import React, {Fragment, useState, useEffect, useMemo} from 'react';
 import {observer, inject} from "mobx-react";
 import {f7, List, ListItem, Icon, Button, Page, Navbar, Segmented, BlockTitle, NavRight, Link, Toggle, ListInput, Block, Range} from 'framework7-react';
 import { useTranslation } from 'react-i18next';
@@ -60,6 +60,13 @@ import IconTextItalic from '@common-icons/icon-text-italic.svg'
 import IconTextUnderline from '@common-icons/icon-text-underline.svg'
 import IconTextStrikethrough from '@common-icons/icon-text-strikethrough.svg'
 
+const normalizeFontSize = value => {
+    const size = Number(value);
+    return Number.isFinite(size) && size > 0 ? size : 0;
+};
+
+const formatFontSize = (size, ptText) => `${normalizeFontSize(size)} ${ptText}`;
+
 const EditCell = props => {
     const isAndroid = Device.android;
     const { t } = useTranslation();
@@ -75,7 +82,7 @@ const EditCell = props => {
     const fontName = fontInfo.name || _t.textFonts;
     const fontSize = fontInfo.size;
     const fontColor = storeCellSettings.fontColor;
-    const displaySize = typeof fontSize === 'undefined' ? _t.textAuto : fontSize + ' ' + _t.textPt;
+    const displaySize = formatFontSize(fontSize, _t.textPt);
     const fillColor = storeCellSettings.fillColor;
 
     const isBold = storeCellSettings.isBold;
@@ -246,7 +253,8 @@ const PageFontsCell = props => {
     const storeCellSettings = props.storeCellSettings;
     const fontInfo = storeCellSettings.fontInfo;
     const size = fontInfo.size;
-    const [displaySize, setDisplaySize] = useState(storeTextSettings.fontSize ?? 0);
+    const currentSize = normalizeFontSize(size);
+    const [displaySize, setDisplaySize] = useState(currentSize);
     const curFontName = fontInfo.name;
     const fonts = storeCellSettings.fontsArray;
     const arrayRecentFonts = storeTextSettings.arrayRecentFonts;
@@ -260,8 +268,8 @@ const PageFontsCell = props => {
     const spriteThumbs = storeTextSettings.spriteThumbs;
 
     useEffect(() => {
-        setDisplaySize(storeTextSettings.fontSize ?? 0);
-    }, [storeTextSettings.fontSize]);
+        setDisplaySize(currentSize);
+    }, [currentSize]);
 
     const addRecentStorage = () => {
         setRecent(getImageUri(arrayRecentFonts));
@@ -336,7 +344,7 @@ const PageFontsCell = props => {
                         <Link className="item-link size-label" onClick={() => props.f7router.navigate('/edit-text-size-custom/', {props: {
                             initialValue: displaySize,
                             applyFontSize: props.applyFontSize},})}>
-                            {displaySize + ' ' + _t.textPt}
+                            {formatFontSize(displaySize, _t.textPt)}
                         </Link>
                     </div>}
                     <div slot='after'>
@@ -350,7 +358,7 @@ const PageFontsCell = props => {
                                 <Link outline className="item-link size-label" onClick={() => props.f7router.navigate('/edit-text-size-custom/', { props: {
                                     initialValue: displaySize,              
                                     applyFontSize: props.applyFontSize},})}>
-                                    {displaySize + ' ' + _t.textPt}
+                                    {formatFontSize(displaySize, _t.textPt)}
                                 </Link>
                             }
                             <Button outline className='increment item-link' onClick={() => {props.onFontSize(size, false)}}>
@@ -363,8 +371,8 @@ const PageFontsCell = props => {
                 </ListItem>
                 <ListItem>
                     <div slot="inner" style={{ width: '100%' }}>
-                        <Range min={1} max={300} step={1} value={displaySize} onRangeChange={(value) => setDisplaySize(value)} 
-                            onRangeChanged={(value) => {if (value !== storeTextSettings.fontSize) props.applyFontSize(value);}}
+                        <Range min={0} max={300} step={1} value={displaySize} onRangeChange={(value) => setDisplaySize(value)} 
+                            onRangeChanged={(value) => {if (value > 0 && value !== currentSize) props.applyFontSize(value);}}
                         />
                     </div>
                 </ListItem>
@@ -410,62 +418,6 @@ const PageFontsCell = props => {
                         )
                     })}
                 </ul>
-            </List>
-        </Page>
-    );
-};
-
-const PageCustomFontSize = (props) => {
-    const { t } = useTranslation();
-    const _t = t('View.Edit', {returnObjects: true});
-    const displaySize = props.initialValue ?? 0;
-    const [value, setValue] = useState(String(displaySize));
-
-
-    const valueRef = useRef(value);
-    useEffect(() => { valueRef.current = value; }, [value]);
-
-    const apply = useCallback(() => {
-        const size = valueRef.current;
-        if (size === '' || Number(size) === displaySize) return;
-        props.applyFontSize(size);
-    }, [displaySize, props.applyFontSize]);
-
-    const toggleCustomClass = (on) => {
-        const el = document.querySelector(Device.phone ? '#edit-sheet' : '#edit-popover');
-        if (el) el.classList.toggle('edit-custom-font-size', on);
-    };
-   
-    const focusInput = () => {
-        const el = document.querySelector('.page-custom-font-size input');
-        if (el) el.focus();
-    };
-
-    useEffect(() => {
-        customFont.current = apply;
-        return () => {
-            if (customFont.current === apply)  customFont.current = null;
-        };
-    }, [apply]);
-
-    return (
-        <Page className="page-custom-font-size"  onPageBeforeIn={() => toggleCustomClass(true)} onPageAfterIn={focusInput} onPageBeforeOut={() => { toggleCustomClass(false); apply();}}>
-            <Navbar title={_t.txtCustom} backLink="Back">
-                {Device.phone && 
-                    <NavRight>
-                        <Link sheetClose="#edit-sheet">
-                            {Device.ios ? 
-                                <SvgIcon symbolId={IconExpandDownIos.id} className={'icon icon-svg'} /> :
-                                <SvgIcon symbolId={IconExpandDownAndroid.id} className={'icon icon-svg white'} />
-                            }
-                        </Link>
-                    </NavRight>
-                }
-            </Navbar>
-            <List className="input-list">
-                <ListInput label={_t.textSize} type="number" inputmode="numeric" min={1} max={300} value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                />
             </List>
         </Page>
     );
@@ -1459,7 +1411,6 @@ const PageCellDirection = props => {
     )
 }
 
-const customFont = { current: null };
 const PageEditCell = inject("storeCellSettings", "storeWorksheets")(observer(EditCell));
 const TextColorCell = inject("storeCellSettings", "storePalette", "storeFocusObjects")(observer(PageTextColorCell));
 const FillColorCell = inject("storeCellSettings", "storePalette", "storeFocusObjects")(observer(PageFillColorCell));
@@ -1475,7 +1426,6 @@ const BorderSizeCell = inject("storeCellSettings")(observer(PageBorderSizeCell))
 const CellStyle = inject("storeCellSettings")(observer(PageCellStyle));
 const CustomFormats = inject("storeCellSettings")(observer(PageCustomFormats));
 const PageCellTextDirection = inject("storeCellSettings")(observer(PageCellDirection));
-const PageTextCustomFontSize = inject('storeTextSettings')(observer(PageCustomFontSize));
 
 export {
     PageEditCell as EditCell,
@@ -1484,7 +1434,6 @@ export {
     CustomFillColorCell,
     CustomTextColorCell,
     FontsCell,
-    PageTextCustomFontSize,
     TextFormatCell,
     TextOrientationCell,
     BorderStyleCell,
@@ -1499,6 +1448,5 @@ export {
     CellStyle,
     CustomFormats,
     PageCreationCustomFormat,
-    PageCellTextDirection,
-    customFont
+    PageCellTextDirection
 };
