@@ -698,8 +698,14 @@ define([
         onApiAddComments: function (data) {
             var requestObj = {};
             for (var i = 0; i < data.length; ++i) {
-                var comment = this.readSDKComment(data[i].asc_getId(), data[i], requestObj);
-                comment.get('groupName') ? this.addCommentToGroupCollection(comment) : this.collection.push(comment);
+                const comment = this.readSDKComment(data[i].asc_getId(), data[i], requestObj);
+                const guid = comment.get('guid');
+                const duplicateComment = (this.findCommentByGuid(guid) || this.findCommentInGroupByGuid(guid));
+                if(duplicateComment) {
+                    duplicateComment.set('uid', comment.get('uid'));
+                } else {
+                    comment.get('groupName') ? this.addCommentToGroupCollection(comment) : this.collection.push(comment);
+                }
             }
             this.updateComments(true, this.getComparator() === 'position-asc' || this.getComparator() === 'position-desc');
             requestObj.arrIds && requestObj.arrIds.length && Common.UI.ExternalUsers.get('info', requestObj.arrIds);

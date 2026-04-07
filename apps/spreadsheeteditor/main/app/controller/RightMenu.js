@@ -154,7 +154,8 @@ define([
                 cellInfo = info,
                 pivotInfo = info.asc_getPivotTableInfo();
 
-            if (selectType == Asc.c_oAscSelectionType.RangeImage || selectType == Asc.c_oAscSelectionType.RangeShape || selectType == Asc.c_oAscSelectionType.RangeSlicer
+            if (selectType == Asc.c_oAscSelectionType.RangeImage || selectType == Asc.c_oAscSelectionType.RangeShape || selectType == Asc.c_oAscSelectionType.RangeSlicer ||
+                selectType == Asc.c_oAscSelectionType.RangeChart || selectType == Asc.c_oAscSelectionType.RangeChartText
                 || selectType == Asc.c_oAscSelectionType.RangeShapeText) {
                 SelectedObjects = this.api.asc_getGraphicObjectProps();
             }
@@ -197,10 +198,7 @@ define([
                 var value = SelectedObjects[i].asc_getObjectValue();
                 if (settingsType == Common.Utils.documentSettingsType.Image) {
                     locktext = locktext || value.asc_getProtectionLockText();
-                    // if (value.asc_getChartProperties() !== null) {
-                    //     settingsType = Common.Utils.documentSettingsType.Chart;
-                    //     this._settings[settingsType].btn.updateHint(this.rightmenu.txtChartSettings);
-                    // } else
+                    if (value.asc_getChartProperties() !== null) continue;
                     if (value.asc_getShapeProperties() !== null) {
                         settingsType = Common.Utils.documentSettingsType.Shape;
                         if (value.asc_getShapeProperties().asc_getTextArtProperties()) {

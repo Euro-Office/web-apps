@@ -416,7 +416,7 @@ define([
                     $('#id-toolbar-menu-auto-bordercolor').on('click',  _.bind(this.onAutoBorderColor, this));
                 }
             $('#id-toolbar-menu-new-bordercolor').on('click',           _.bind(this.onNewBorderColor, this));    
-            $('#id-toolbar-menu-item-horizontal-line').on('click',      _.bind(this.onHorizontalLine, this));
+            toolbar.horizontalLine.on('click',                          _.bind(this.onHorizontalLine, this));
             this.mode.isEdit && Common.NotificationCenter.on('eyedropper:start', _.bind(this.eyedropperStart, this));
             toolbar.mnuHighlightColorPicker.on('select',                _.bind(this.onSelectHighlightColor, this));
             toolbar.mnuHighlightTransparent.on('click',                 _.bind(this.onHighlightTransparentClick, this));
@@ -905,7 +905,7 @@ define([
             this.toolbar.lockToolbar(Common.enumLock.inSmartart,    in_smart_art,       {array: toolbar.textOnlyControls.concat([toolbar.btnClearStyle, toolbar.btnContentControls])});
             this.toolbar.lockToolbar(Common.enumLock.inSmartartInternal, in_smart_art_internal,    {array: toolbar.textOnlyControls.concat([toolbar.btnClearStyle, toolbar.btnDecLeftOffset, toolbar.btnIncLeftOffset, toolbar.btnContentControls])});
             this.toolbar.lockToolbar(Common.enumLock.inEquation,    in_equation,        {array: toolbar.btnsPageBreak.concat([toolbar.btnDropCap, toolbar.btnInsertTable, toolbar.btnBlankPage, toolbar.btnInsertShape,
-                    toolbar.btnInsertText, toolbar.btnInsertTextArt, toolbar.btnInsertSmartArt, toolbar.btnSuperscript, toolbar.btnSubscript])});
+                    toolbar.btnInsertText, toolbar.btnInsertTextArt, toolbar.btnInsertSmartArt, toolbar.btnSuperscript, toolbar.btnSubscript, toolbar.horizontalLine])});
 
             in_control = this.api.asc_IsContentControl();
             var control_props = in_control ? this.api.asc_GetContentControlProperties() : null,

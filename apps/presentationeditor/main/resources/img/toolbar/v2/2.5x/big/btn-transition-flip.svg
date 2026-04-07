@@ -1,1 +1,4 @@
-<svg width="28" height="28" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M24 5H4v17h20V5zM4 4a1 1 0 0 0-1 1v17a1 1 0 0 0 1 1h20a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H4z" fill="#000"/><path opacity=".2" d="M4 5h20v17H4V5z" fill="#000"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="m10.5 9.237-5.206 1.096a1 1 0 0 0-.794.979v5.377a1 1 0 0 0 .794.978l5.206 1.096m6-10.79 5.794-1.219a1 1 0 0 1 1.206.979v12.535a1 1 0 0 1-1.206.978l-5.794-1.22M13.5 6.5v3m0 3v3m0 3v3" class="icon-stroke-gray-primary"/>
+    <path d="M21.418 9.097A.5.5 0 0 1 22 9.59v8.82a.5.5 0 0 1-.582.493l-5-.833a.5.5 0 0 1-.418-.493v-7.154a.5.5 0 0 1 .418-.493l5-.833ZM10.402 11.12a.5.5 0 0 1 .598.49v4.78a.5.5 0 0 1-.598.49l-4-.8A.5.5 0 0 1 6 15.59v-3.18a.5.5 0 0 1 .402-.49l4-.8Z" fill="currentColor" stroke="none" class="icon-fill-blue-primary"/>
+</svg>
