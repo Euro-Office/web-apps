@@ -221,7 +221,7 @@ define([], function () { 'use strict';
             this.btnBold = new Common.UI.Button({
                 parentEl: $window.find('#pdf-sign-bold'),
                 cls: 'btn-toolbar',
-                iconCls: 'toolbar__icon btn-bold',
+                iconCls: is_svg_icon ? 'svg-icon bold scaling-off' : 'toolbar__icon btn-bold',
                 enableToggle: true,
                 hint: this.textBold
             });
@@ -233,7 +233,7 @@ define([], function () { 'use strict';
             this.btnItalic = new Common.UI.Button({
                 parentEl: $window.find('#pdf-sign-italic'),
                 cls: 'btn-toolbar',
-                iconCls: 'toolbar__icon btn-italic',
+                iconCls: is_svg_icon ? 'svg-icon italic scaling-off' : 'toolbar__icon btn-italic',
                 enableToggle: true,
                 hint: this.textItalic
             });
@@ -586,6 +586,7 @@ define([], function () { 'use strict';
                     break;
                 case 2:
                     this.props.clearType();
+                    this.inputName.setValue('');
                     break;
             }
         },

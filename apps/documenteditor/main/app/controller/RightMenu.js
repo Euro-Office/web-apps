@@ -205,6 +205,7 @@ define([
                     var lock_type = (control_props) ? control_props.get_Lock() : Asc.c_oAscSdtLockType.Unlocked;
                     content_locked = lock_type==Asc.c_oAscSdtLockType.SdtContentLocked || lock_type==Asc.c_oAscSdtLockType.ContentLocked;
 
+                    if (value.get_ChartProperties() !== null) continue;
                     if (value.get_ShapeProperties() !== null) {
                         isShape = true;
                         // isChart = value.get_ShapeProperties().get_FromChart();
