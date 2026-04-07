@@ -217,7 +217,7 @@ const config = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(env),
       'process.env.TARGET': JSON.stringify(target),
-      __PRODUCT_VERSION__: JSON.stringify(process.env.PRODUCT_VERSION ? `${process.env.PRODUCT_VERSION}.${process.env.BUILD_NUMBER}` : '6.2.0.123d'),
+      __PRODUCT_VERSION__: JSON.stringify(process.env.PRODUCT_VERSION ? (process.env.BUILD_NUMBER ? `${process.env.PRODUCT_VERSION}.${process.env.BUILD_NUMBER}` : process.env.PRODUCT_VERSION) : '6.2.0.123d'),
       ...themeDefines(),
     }),
     new webpack.BannerPlugin(`\n* Version: ${process.env.PRODUCT_VERSION} (build: ${process.env.BUILD_NUMBER})\n`),
