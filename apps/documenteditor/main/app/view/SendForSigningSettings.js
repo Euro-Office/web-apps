@@ -178,7 +178,7 @@ define([
         },
 
         onUsersListLoad: function(type, users, isPaginated) {
-            if (this._state.isUsersListLoading && type!=='filler') return;
+            if (!this._state.isUsersListLoading || type !== 'filler') return;
             
             this._state.isUsersListLoading = false;
             this.users = (users || []).map(function(user) {
@@ -247,9 +247,15 @@ define([
                     cls: 'input-group-nr',
                     menuCls: 'role-item-user-cmb-menu',
                     restoreMenuHeightAndTop: true,
+                    menuAlignEl: (me.$el || $(me.el)).find('#id-send-for-signing-settings-roles-list'),
                     editable: false,
                     data: userCmbOptions,
                     placeHolder: me.txtSelectUser,
+                    itemsTemplate: userCmbOptions.length == 0 ? 
+                        _.template(
+                            '<li><a class="text-dropdown-item" onclick="event.stopPropagation();">' + me.txtNoUsersFound + '</a></li>'
+                        ) 
+                        : null,
                     itemTemplate: _.template(
                         '<li id="<%= id %>" class="item">' + 
                             '<a tabindex="-1" type="menuitem" role="menuitemcheckbox" aria-checked="false">' + 
@@ -295,6 +301,7 @@ define([
         txtTitle: 'Send for signing',
         txtDescription: 'Please check the order of filling before sending.',
         txtSelectUser: 'Select user',
+        txtNoUsersFound: 'No users found',
         txtSend: 'Send',
         txtCancel: 'Cancel',
 
