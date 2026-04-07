@@ -78,12 +78,11 @@ define([
             this._initSettings = false;
 
             const me = this;
-            const oForm = this.api.asc_GetOForm();
             this.rolesCollection = new Backbone.Collection();
             this.rolesCollection.on('reset', function(newCollection, details) {
                 me._renderRolesList();
             }, this);
-            this.setRoles(oForm ? oForm.asc_getAllRoles() : []);
+            this.updateRoles();
         },
 
         setApi: function(api) {
@@ -117,45 +116,71 @@ define([
                 let color = role.asc_getColor();
                 color && (color = Common.Utils.ThemeColor.getHexColor(color.get_r(), color.get_g(), color.get_b()));
 
-                let item;
-                if(index == 0) {
-                    item = {
-                        name: role.asc_getName(),
-                        color: color,
-                        user: {
-                            id: 1,
-                            email: 'example@test.com',
-                            name: 'Basher'
-                        },
-                        date: '1/20/2026 9:00 PM',
-                        status: 'done'  //'done' | 'active' | 'wait'
-                    }
-                } else {
-                    item = {
-                        name: role.asc_getName(),
-                        color: color,
-                        user: {
-                            id: null,
-                            email: null,
-                            name: null
-                        },
-                        date: null,
-                        status: 'wait'  //'done' | 'active' | 'wait'
-                    }
-                }
+                const isFilled = role.asc_getFilled();
+                let date = isFilled ? role.asc_getDate() : null;
+                date && (date = new Date(date));
+
+                const item = {
+                    name: role.asc_getName(),
+                    color: color,
+                    user: {
+                        id: isFilled ? role.asc_getUserId() : null,
+                        name: isFilled ? role.asc_getUserName() : null
+                    },
+                    date: date ? me.dateToLocaleTimeString(date) : null,
+                    status: isFilled ? 'done' : 'wait'  //'done' | 'active' | 'wait'
+                };
                 
                 if(needFindActive && item.status == 'wait') {
                     item.status = 'active';
-                    if(me.mode && me.mode.user) {
+                    needFindActive = false;
+
+                    // If the user can fill form, display their name in the active role
+                    const oForm = me.api.asc_GetOForm();
+                    const canFillRole = me.mode && me.mode.user.roles[0] && oForm.asc_canFillRole(me.mode.user.roles[0]);
+                    if(canFillRole) {
                         item.user.id = me.mode.user.id;
                         item.user.name = me.mode.user.name;
                     }
-                    needFindActive = false;
                 }
                 return item;
             });
 
             this.rolesCollection.reset(resultArray);
+        },
+
+        updateRoles: function() {
+            if(!this.api && this._initSettings) return;
+            const oForm = this.api.asc_GetOForm();
+            this.setRoles(oForm ? oForm.asc_getAllRoles() : []);
+        },
+
+        dateToLocaleTimeString: function (date) {
+            function format(date) {
+                var strTime,
+                    hours = date.getHours(),
+                    minutes = date.getMinutes(),
+                    ampm = hours >= 12 ? 'pm' : 'am';
+
+                hours = hours % 12;
+                hours = hours ? hours : 12; // the hour '0' should be '12'
+                minutes = minutes < 10 ? '0'+minutes : minutes;
+                strTime = hours + ':' + minutes + ' ' + ampm;
+
+                return strTime;
+            }
+
+            var lang = (this.mode ? this.mode.lang || 'en' : 'en').replace('_', '-').toLowerCase();
+            try {
+                if ( lang == 'ar-SA'.toLowerCase() ) lang = lang + '-u-nu-latn-ca-gregory';
+                return date.toLocaleString(lang, {dateStyle: 'short', timeStyle: 'short'});
+            } catch (e) {
+                lang = 'en';
+                return date.toLocaleString(lang, {dateStyle: 'short', timeStyle: 'short'});
+            }
+
+            // MM/dd/yyyy hh:mm AM
+            return (date.getMonth() + 1) + '/' + (date.getDate()) + '/' + date.getFullYear() + ' ' + format(date);
         },
 
         _renderRolesList: function() {
@@ -179,10 +204,10 @@ define([
                                     '<div class="progress-item-check"></div>' +
                                 '<% } %>' +
                             '</div>' +
-                            '<div class="progress-item-description"><%= item.user.email || item.user.name %></div>' +
+                            '<div class="progress-item-name"><%= item.user.name %></div>' +
                             '<% if (item.status == "done") { %>' +
                                 '<div class="progress-item-footer">' +
-                                    '<div class="progress-item-status"><%= scope.txtDocumentIsSigned %></div>' +
+                                    '<div class="progress-item-description"><%= scope.txtDocumentIsSigned %></div>' +
                                     '<% if (item.date) { %>' +
                                         '<div class="progress-item-date"><%= item.date %></div>' +
                                     '<% } %>' +
