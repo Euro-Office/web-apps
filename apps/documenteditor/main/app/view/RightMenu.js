@@ -39,7 +39,6 @@
 var SCALE_MIN = 40;
 var MENU_SCALE_PART = 260;
 var MENU_BASE_WIDTH = 220;
-// var MENU_BASE_WIDTH = 360;
 
 define([
     'text!documenteditor/main/app/template/RightMenu.template',
@@ -269,7 +268,16 @@ define([
                 this.btnSendForSigning.setElement($markup.findById('#id-right-menu-send-for-signing'), false); 
                 this.btnSendForSigning.render().setVisible(true);
                 this.btnSendForSigning.on('click', this.onBtnMenuClick.bind(this));
-                this.sendForSigningSettings = new DE.Views.SendForSigningSettings();
+                this.sendForSigningSettings = new DE.Views.SendForSigningSettings({
+                    handler: function(state, options) {
+                        if(state == 'submit') {
+                            DE.getController('Main').onStartFilling(true, options);
+                        } else if(state == 'cancel') {
+                            const rightmenuController = DE.getController('RightMenu');
+                            rightmenuController.closeSendForSigning();
+                        }
+                    }
+                });
             }
 
             if (_.isUndefined(this.scroller)) {

@@ -60,6 +60,7 @@ define([
         },
 
         initialize: function (options) {
+            this.handler = options.handler;
             this._initSettings = true;
             this._state = {
                 isUsersListLoading: false
@@ -70,7 +71,6 @@ define([
             this.render();
 
 
-            // TODO: if (config.canRequestUsers)???
             this._state.isUsersListLoading = true;
             Common.UI.ExternalUsers.get('filler');
             Common.NotificationCenter.on('mentions:setusers',   _.bind(this.onUsersListLoad, this));
@@ -200,13 +200,11 @@ define([
                     user: role.get('user')
                 }
             });
-            DE.getController('Main').onStartFilling(true, roles);
+            this.handler && this.handler.call(this, 'submit', roles);
         },
 
         onCancel: function() {
-            // TODO: Move this out of the component by emitting an event
-            const rightmenuController = DE.getController('RightMenu');
-            rightmenuController.closeSendForSigning();
+            this.handler && this.handler.call(this, 'cancel');
         },
 
         onRefreshRolesList: function(roles) {

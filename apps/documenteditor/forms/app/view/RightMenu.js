@@ -39,7 +39,6 @@
 var SCALE_MIN = 40;
 var MENU_SCALE_PART = 260;
 var MENU_BASE_WIDTH = 220;
-// var MENU_BASE_WIDTH = 360;
 
 define([
     'text!documenteditor/forms/app/template/RightMenu.template',
