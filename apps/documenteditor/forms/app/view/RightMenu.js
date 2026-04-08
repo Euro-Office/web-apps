@@ -73,7 +73,8 @@ define([
         render: function (mode) {
             this.trigger('render:before', this);
             
-            const showFillingStatus = !mode.canRequestFillingStatus && (mode.user && mode.user.roles != null);
+            const showFillingStatus = !mode.canRequestFillingStatus && 
+                (mode.user && mode.user.roles && mode.user.roles.length > 0);
 
             this.defaultHideRightMenu = !(mode.customization && (mode.customization.hideRightMenu===false));
             // var open = !Common.localStorage.getBool("de-hide-right-settings", this.defaultHideRightMenu);
