@@ -190,7 +190,6 @@ define([
 
             let isAllDone = true;
             this.rolesCollection.each(function(role, index) {
-                console.log(role);
                 const $item = $(_.template(
                     '<div class="progress-item <%= item.status %>">' +
                         '<div class="progress-item-left">' +
