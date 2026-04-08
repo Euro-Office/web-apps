@@ -43,6 +43,11 @@ jobs:
             run: |
               cd web-apps/build
               npm install
+        
+          - name: Merge missing translations keys
+            run: |
+              cd web-apps/translation
+              python3 merge_and_check.py
 
           - name: Run grunt
             run: |
