@@ -294,8 +294,8 @@ define([
                     { displayValue: this.textPercent,  value: AscPDF.FormatType.PERCENTAGE },
                     { displayValue: this.textDate,  value: AscPDF.FormatType.DATE },
                     { displayValue: this.textTime,  value: AscPDF.FormatType.TIME },
-                    { displayValue: this.textSpecial,  value: AscPDF.FormatType.SPECIAL },
-                    { displayValue: this.textReg,  value: AscPDF.FormatType.REGULAR }],
+                    { displayValue: this.textSpecial,  value: AscPDF.FormatType.SPECIAL }
+                ],
                 dataHint: '1',
                 dataHintDirection: 'bottom',
                 dataHintOffset: 'big'
@@ -1295,9 +1295,6 @@ define([
                 case AscPDF.FormatType.SPECIAL:
                     (_p.special===-1) ? this.api.SetFieldMask(_p.mask) : this.api.SetFieldSpecialFormat(_p.special);
                     break;
-                case AscPDF.FormatType.REGULAR:
-                    this.api.SetFieldRegularExp(_p.regexp);
-                    break;
             }
         },
 
@@ -1315,9 +1312,7 @@ define([
         onMaskChanged: function(input, newValue, oldValue, e) {
             if (this.api && !this._noApply && (newValue!==oldValue)) {
                 this._state.MaskStr = undefined;
-                if (this._state.FormatType===AscPDF.FormatType.REGULAR)
-                    this.api.SetFieldRegularExp(newValue)
-                else if (this._state.FormatType===AscPDF.FormatType.SPECIAL)
+                if (this._state.FormatType===AscPDF.FormatType.SPECIAL)
                     this.api.SetFieldMask(newValue);
                 if (!e.relatedTarget || (e.relatedTarget.localName != 'input' && e.relatedTarget.localName != 'textarea') || !/form-control/.test(e.relatedTarget.className))
                     this.fireEvent('editcomplete', this);
@@ -1358,7 +1353,8 @@ define([
 
                 var forceShowHide = false,
                     type = props.asc_getType(),
-                    specProps = props.asc_getFieldProps();
+                    specProps = props.asc_getFieldProps(),
+                    actionsProps = props.asc_getActionsProps();
                 this._originalSpecProps = specProps;
 
                 // common props
@@ -1470,7 +1466,7 @@ define([
                         isMulti = specProps.asc_getMultiline(),
                         isPwd = specProps.asc_getPassword(),
                         isScroll = specProps.asc_getScrollLongText(),
-                        isFormatSelected = specProps.asc_getFormat() && specProps.asc_getFormat().asc_getType() !== AscPDF.FormatType.NONE;
+                        isFormatSelected = actionsProps.asc_getFormat() && actionsProps.asc_getFormat().asc_getType() !== AscPDF.FormatType.NONE;
 
                     var combChanged = false;
                     if ( this._state.Comb!==isComb ) {
@@ -1525,8 +1521,9 @@ define([
                             this._state.AutoFit=val;
                         }
                         this.chAutofit.setDisabled(isComb || this._state.DisabledControls);
-
-                        let format = specProps.asc_getFormat();
+                    }
+                    if(actionsProps) {
+                        let format = actionsProps.asc_getFormat();
                         val = format===undefined ? AscPDF.FormatType.NONE : format===null ? null : format.asc_getType(); // undefined - none, null - different types
                         if ( this._state.FormatType!==val ) {
                             this.cmbFormat.setValue((val !== null && val !== undefined) ? val : '', '');
@@ -1534,9 +1531,6 @@ define([
                             forceShowHide = true;
                         }
                         switch (this._state.FormatType) {
-                            case AscPDF.FormatType.REGULAR:
-                                val = format.asc_getRegExp();
-                                break;
                             case AscPDF.FormatType.SPECIAL:
                                 val = format.asc_getFormat();
                                 (val===undefined) && (val = -1);
@@ -1563,7 +1557,7 @@ define([
                                 break;
                         }
 
-                        if ((this._state.FormatType===AscPDF.FormatType.REGULAR || this._state.FormatType===AscPDF.FormatType.SPECIAL) && this._state.MaskStr !== val) {
+                        if (this._state.FormatType===AscPDF.FormatType.SPECIAL && this._state.MaskStr !== val) {
                             this.txtMask.setValue(val ? val : '');
                             this._state.MaskStr = val;
                         }
@@ -1903,8 +1897,8 @@ define([
             this.ImageOnlySettings.toggleClass('hidden', !isImage);
             this.ButtonTextOnlySettings.toggleClass('hidden', !isButtonText);
             this.TextSpecialSettings.toggleClass('hidden', !(isCombobox || isText) || this._state.FormatType!==AscPDF.FormatType.SPECIAL);
-            this.MaskSettings.toggleClass('hidden', !(isCombobox || isText) || !(this._state.FormatType===AscPDF.FormatType.REGULAR ||
-                                                                                 this._state.FormatType===AscPDF.FormatType.SPECIAL && this._state.SpecialType===-1));
+            this.MaskSettings.toggleClass('hidden', !(isCombobox || isText) || 
+                !(this._state.FormatType===AscPDF.FormatType.SPECIAL && this._state.SpecialType===-1));
             this.DateSettings.toggleClass('hidden', !(isCombobox || isText) || this._state.FormatType!==AscPDF.FormatType.DATE);
             this.TimeSettings.toggleClass('hidden', !(isCombobox || isText) || this._state.FormatType!==AscPDF.FormatType.TIME);
             this.NotCheckSettings.toggleClass('hidden', isCheck || isRadio);
