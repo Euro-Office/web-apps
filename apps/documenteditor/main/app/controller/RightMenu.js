@@ -505,7 +505,6 @@ define([
                     disabled && this.rightmenu.btnMailMerge.setDisabled(disabled);
                 }
                 // this.rightmenu.chartSettings.disableControls(disabled);
-                this.rightmenu.fillingStatusSettings && this.rightmenu.fillingStatusSettings.disableControls(disabled);
                 this.rightmenu.sendForSigningSettings && this.rightmenu.sendForSigningSettings.disableControls(disabled);
 
                 if (this.rightmenu.signatureSettings) {
