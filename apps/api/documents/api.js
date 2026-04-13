@@ -617,6 +617,8 @@
                 _msgDispatcher && _msgDispatcher.unbindEvents();
                 _detachMouseEvents();
                 iframe.parentNode && iframe.parentNode.replaceChild(target, iframe);
+                iframe.src = 'about:blank';
+                iframe = null;
             }
         };
 

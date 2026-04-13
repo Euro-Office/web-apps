@@ -96,7 +96,7 @@ define([
             // this._settings[Common.Utils.documentSettingsType.Header] =    {panelId: "id-header-settings",     panel: rightMenu.headerSettings,   btn: rightMenu.btnHeaderFooter,hidden: 1, locked: false, needShow: true};
             this._settings[Common.Utils.documentSettingsType.Shape] =     {panelId: "id-shape-settings",      panel: rightMenu.shapeSettings,    btn: rightMenu.btnShape,       hidden: 1, locked: false};
             this._settings[Common.Utils.documentSettingsType.TextArt] =   {panelId: "id-textart-settings",    panel: rightMenu.textartSettings,  btn: rightMenu.btnTextArt,     hidden: 1, locked: false};
-            this._settings[Common.Utils.documentSettingsType.Chart] = {panelId: "id-chart-settings",          panel: rightMenu.chartSettings,    btn: rightMenu.btnChart,       hidden: 1, locked: false};
+            // this._settings[Common.Utils.documentSettingsType.Chart] = {panelId: "id-chart-settings",          panel: rightMenu.chartSettings,    btn: rightMenu.btnChart,       hidden: 1, locked: false};
             this._settings[Common.Utils.documentSettingsType.MailMerge] = {panelId: "id-mail-merge-settings", panel: rightMenu.mergeSettings,    btn: rightMenu.btnMailMerge,   hidden: 1, props: {}, locked: false};
             this._settings[Common.Utils.documentSettingsType.Signature] = {panelId: "id-signature-settings",  panel: rightMenu.signatureSettings, btn: rightMenu.btnSignature,  hidden: 1, props: {}, locked: false};
             this._settings[Common.Utils.documentSettingsType.Form] = {panelId: "id-form-settings",  panel: rightMenu.formSettings, btn: rightMenu.btnForm,  hidden: 1, props: {}, locked: false};
@@ -175,8 +175,7 @@ define([
             this._settings[Common.Utils.documentSettingsType.MailMerge].locked = false;
             this._settings[Common.Utils.documentSettingsType.Signature].locked = false;
 
-            var isChart = false,
-                isShape = false,
+            var isShape = false,
                 isSmartArtInternal = false,
                 isProtected = this._state.docProtection.isReadOnly || this._state.docProtection.isFormsOnly || this._state.docProtection.isCommentsOnly,
                 unprotectedRegion = {};
@@ -207,12 +206,10 @@ define([
                     var lock_type = (control_props) ? control_props.get_Lock() : Asc.c_oAscSdtLockType.Unlocked;
                     content_locked = lock_type==Asc.c_oAscSdtLockType.SdtContentLocked || lock_type==Asc.c_oAscSdtLockType.ContentLocked;
 
-                    if (value.get_ChartProperties() !== null) {
-                        isChart = true;
-                        settingsType = Common.Utils.documentSettingsType.Chart;
-                    } else if (value.get_ShapeProperties() !== null) {
+                    if (value.get_ChartProperties() !== null) continue;
+                    if (value.get_ShapeProperties() !== null) {
                         isShape = true;
-                        isChart = value.get_ShapeProperties().get_FromChart();
+                        // isChart = value.get_ShapeProperties().get_FromChart();
                         isSmartArtInternal = value.get_ShapeProperties().get_FromSmartArtInternal();
                         settingsType = Common.Utils.documentSettingsType.Shape;
                         if (value.get_ShapeProperties().asc_getTextArtProperties()) {
@@ -223,7 +220,7 @@ define([
                     }
                     control_lock = control_lock || value.get_Locked();
                 } else if (settingsType == Common.Utils.documentSettingsType.Paragraph && !(is_form && is_form.get_Fixed())) {
-                    this._settings[settingsType].panel.isChart = isChart;
+                    // this._settings[settingsType].panel.isChart = isChart;
                     this._settings[settingsType].panel.isSmartArtInternal = isSmartArtInternal;
                     can_add_table = value.get_CanAddTable();
                     control_lock = control_lock || value.get_Locked();
@@ -359,8 +356,8 @@ define([
             }
 
             this._settings[Common.Utils.documentSettingsType.Image].needShow = false;
-            this._settings[Common.Utils.documentSettingsType.Chart].needShow = false;
-
+            // this._settings[Common.Utils.documentSettingsType.Chart].needShow = false;
+            
             this.rightmenu.btnSendForSigning && this.rightmenu.btnSendForSigning.setDisabled(false);
         },
 
@@ -376,9 +373,9 @@ define([
             this._settings[Common.Utils.documentSettingsType.Image].needShow = true;
         },
 
-        onInsertChart:  function() {
-            this._settings[Common.Utils.documentSettingsType.Chart].needShow = true;
-        },
+        // onInsertChart:  function() {
+        //     this._settings[Common.Utils.documentSettingsType.Chart].needShow = true;
+        // },
 
         onInsertShape:  function() {
             this._settings[Common.Utils.documentSettingsType.Shape].needShow = true;
@@ -404,7 +401,7 @@ define([
         updateMetricUnit: function() {
             // this.rightmenu.headerSettings.updateMetricUnit();
             this.rightmenu.paragraphSettings.updateMetricUnit();
-            this.rightmenu.chartSettings.updateMetricUnit();
+            // this.rightmenu.chartSettings.updateMetricUnit();
             this.rightmenu.imageSettings.updateMetricUnit();
             this.rightmenu.tableSettings.updateMetricUnit();
             this.rightmenu.formSettings && this.rightmenu.formSettings.updateMetricUnit();
@@ -444,9 +441,10 @@ define([
 
             var value = obj.get_ObjectValue();
             if (settingsType == Common.Utils.documentSettingsType.Image) {
-                if (value.get_ChartProperties() !== null) {
-                    settingsType = Common.Utils.documentSettingsType.Chart;
-                } else if (value.get_ShapeProperties() !== null) {
+                // if (value.get_ChartProperties() !== null) {
+                //     settingsType = Common.Utils.documentSettingsType.Chart;
+                // }
+                if (value.get_ShapeProperties() !== null) {
                     settingsType = Common.Utils.documentSettingsType.Shape;
                 }
             }
@@ -506,7 +504,7 @@ define([
                     this.rightmenu.mergeSettings.disableControls(disabled);
                     disabled && this.rightmenu.btnMailMerge.setDisabled(disabled);
                 }
-                this.rightmenu.chartSettings.disableControls(disabled);
+                // this.rightmenu.chartSettings.disableControls(disabled);
                 this.rightmenu.fillingStatusSettings && this.rightmenu.fillingStatusSettings.disableControls(disabled);
                 this.rightmenu.sendForSigningSettings && this.rightmenu.sendForSigningSettings.disableControls(disabled);
 
@@ -522,7 +520,7 @@ define([
                     // this.rightmenu.btnHeaderFooter.setDisabled(disabled);
                     this.rightmenu.btnShape.setDisabled(disabled);
                     this.rightmenu.btnTextArt.setDisabled(disabled);
-                    this.rightmenu.btnChart.setDisabled(disabled);
+                    // this.rightmenu.btnChart.setDisabled(disabled);
                     this.rightmenu.btnForm && this.rightmenu.btnForm.setDisabled(disabled);
                     this.rightmenu.btnFillingStatus && this.rightmenu.btnFillingStatus.setDisabled(disabled);
                     this.rightmenu.btnSendForSigning && this.rightmenu.btnSendForSigning.setDisabled(disabled);

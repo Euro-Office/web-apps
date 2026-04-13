@@ -52,7 +52,7 @@ define([
     'documenteditor/main/app/view/ParagraphSettings',
     // 'documenteditor/main/app/view/HeaderFooterSettings',
     'documenteditor/main/app/view/ImageSettings',
-    'documenteditor/main/app/view/ChartSettings',
+    // 'documenteditor/main/app/view/ChartSettings',
     'documenteditor/main/app/view/TableSettings',
     'documenteditor/main/app/view/ShapeSettings',
     'documenteditor/main/app/view/MailMergeSettings',
@@ -115,15 +115,15 @@ define([
             //     toggleGroup: 'tabpanelbtnsGroup',
             //     allowMouseEventsOnDisabled: true
             // });
-            this.btnChart = new Common.UI.Button({
-                hint: this.txtChartSettings,
-                asctype: Common.Utils.documentSettingsType.Chart,
-                enableToggle: true,
-                disabled: true,
-                iconCls: 'btn-menu-chart',
-                toggleGroup: 'tabpanelbtnsGroup',
-                allowMouseEventsOnDisabled: true
-            });
+            // this.btnChart = new Common.UI.Button({
+            //     hint: this.txtChartSettings,
+            //     asctype: Common.Utils.documentSettingsType.Chart,
+            //     enableToggle: true,
+            //     disabled: true,
+            //     iconCls: 'btn-menu-chart',
+            //     toggleGroup: 'tabpanelbtnsGroup',
+            //     allowMouseEventsOnDisabled: true
+            // });
             this.btnShape = new Common.UI.Button({
                 hint: this.txtShapeSettings,
                 asctype: Common.Utils.documentSettingsType.Shape,
@@ -150,7 +150,7 @@ define([
             this._settings[Common.Utils.documentSettingsType.Image]       = {panel: "id-image-settings",      btn: this.btnImage};
             // this._settings[Common.Utils.documentSettingsType.Header]      = {panel: "id-header-settings",     btn: this.btnHeaderFooter};
             this._settings[Common.Utils.documentSettingsType.Shape]       = {panel: "id-shape-settings",      btn: this.btnShape};
-            this._settings[Common.Utils.documentSettingsType.Chart]       = {panel: "id-chart-settings",      btn: this.btnChart};
+            // this._settings[Common.Utils.documentSettingsType.Chart]       = {panel: "id-chart-settings",      btn: this.btnChart};
             this._settings[Common.Utils.documentSettingsType.TextArt]     = {panel: "id-textart-settings",    btn: this.btnTextArt};
 
             return this;
@@ -186,7 +186,7 @@ define([
             this.btnTable.setElement($markup.findById('#id-right-menu-table'), false);         this.btnTable.render();
             this.btnImage.setElement($markup.findById('#id-right-menu-image'), false);         this.btnImage.render();
             // this.btnHeaderFooter.setElement($markup.findById('#id-right-menu-header'), false); this.btnHeaderFooter.render();
-            this.btnChart.setElement($markup.findById('#id-right-menu-chart'), false);         this.btnChart.render();
+            // this.btnChart.setElement($markup.findById('#id-right-menu-chart'), false);         this.btnChart.render();
             this.btnShape.setElement($markup.findById('#id-right-menu-shape'), false);         this.btnShape.render();
             this.btnTextArt.setElement($markup.findById('#id-right-menu-textart'), false);     this.btnTextArt.render();
 
@@ -194,14 +194,14 @@ define([
             this.btnTable.on('click',           this.onBtnMenuClick.bind(this));
             this.btnImage.on('click',           this.onBtnMenuClick.bind(this));
             // this.btnHeaderFooter.on('click',    this.onBtnMenuClick.bind(this));
-            this.btnChart.on('click',           this.onBtnMenuClick.bind(this));
+            // this.btnChart.on('click',           this.onBtnMenuClick.bind(this));
             this.btnShape.on('click',           this.onBtnMenuClick.bind(this));
             this.btnTextArt.on('click',         this.onBtnMenuClick.bind(this));
 
             this.paragraphSettings = new DE.Views.ParagraphSettings();
             // this.headerSettings = new DE.Views.HeaderFooterSettings();
             this.imageSettings = new DE.Views.ImageSettings();
-            this.chartSettings = new DE.Views.ChartSettings();
+            // this.chartSettings = new DE.Views.ChartSettings();
             this.tableSettings = new DE.Views.TableSettings();
             this.shapeSettings = new DE.Views.ShapeSettings();
             this.textartSettings = new DE.Views.TextArtSettings();
@@ -308,7 +308,7 @@ define([
             this.paragraphSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('eyedropper', _.bind(_isEyedropperStart, this));
             // this.headerSettings.setApi(api).on('editcomplete', _fire_editcomplete);
             this.imageSettings.setApi(api).on('editcomplete', _fire_editcomplete);
-            this.chartSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('updatescroller', _updateScroller);
+            // this.chartSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('updatescroller', _updateScroller);
             this.tableSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('eyedropper', _.bind(_isEyedropperStart, this));
             this.shapeSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('eyedropper', _.bind(_isEyedropperStart, this)).on('updatescroller', _updateScroller);
             this.textartSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('eyedropper', _.bind(_isEyedropperStart, this)).on('updatescroller', _updateScroller);
@@ -324,7 +324,7 @@ define([
             this.imageSettings && this.imageSettings.setMode(mode);
             this.shapeSettings && this.shapeSettings.setMode(mode);
             this.formSettings && this.formSettings.setMode(mode);
-            this.chartSettings && this.chartSettings.setMode(mode);
+            // this.chartSettings && this.chartSettings.setMode(mode);
             // this.headerSettings && this.headerSettings.setMode(mode);
             this.signatureSettings && this.signatureSettings.setMode(mode);
             this.sendForSigningSettings && this.sendForSigningSettings.setMode(mode);
@@ -429,7 +429,7 @@ define([
         },
 
         setButtons: function () {
-            var allButtons = [this.btnText, this.btnTable, this.btnImage, this.btnShape, this.btnChart, this.btnTextArt,
+            var allButtons = [this.btnText, this.btnTable, this.btnImage, this.btnShape, this.btnTextArt,
                     this.btnMailMerge, this.btnSignature, this.btnForm, this.btnSendForSigning];
             Common.UI.SideMenu.prototype.setButtons.apply(this, [allButtons]);
         },
@@ -449,7 +449,9 @@ define([
             var pane = $(this.el).find('.right-panel'),
                 paddings = parseInt(pane.css('padding-left')) + parseInt(pane.css('padding-right'));
             MENU_SCALE_PART = MENU_BASE_WIDTH + paddings;
-            this.$el.css('width', (!Common.Utils.InternalSettings.get("de-hide-right-settings") ? MENU_SCALE_PART : SCALE_MIN) + 'px');
+            if ( !this.isPluginButtonPressed() ) {
+                this.$el.css('width', (!Common.Utils.InternalSettings.get("de-hide-right-settings") ? MENU_SCALE_PART : SCALE_MIN) + 'px');
+            }
         },
 
         txtParagraphSettings:       'Paragraph Settings',

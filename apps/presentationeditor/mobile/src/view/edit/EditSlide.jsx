@@ -135,21 +135,70 @@ const PageLayout = props => {
     );
 };
 
+const getPrismId = value => {
+    var prismId = 'prism-cube';
+    if (value >= Asc.c_oAscSlideTransitionParams.Prism_Left_Inverted && value <= Asc.c_oAscSlideTransitionParams.Prism_Down_Inverted)
+        prismId = 'prism-box';
+    else if (value >= Asc.c_oAscSlideTransitionParams.Prism_Left_Content && value <= Asc.c_oAscSlideTransitionParams.Prism_Down_Content)
+        prismId = 'prism-rotate';
+    else if (value >= Asc.c_oAscSlideTransitionParams.Prism_Left_ContentInv && value <= Asc.c_oAscSlideTransitionParams.Prism_Down_ContentInv)
+        prismId = 'prism-orbit';
+    return prismId;
+};
+
+const isShape = effect => {
+    return effect == Asc.c_oAscSlideTransitionTypes.Circle ||
+        effect == Asc.c_oAscSlideTransitionTypes.Diamond ||
+        effect == Asc.c_oAscSlideTransitionTypes.Plus ||
+        effect == Asc.c_oAscSlideTransitionTypes.BoxZoom;
+};
+
+const getShapeType = value => {
+    if (value == Asc.c_oAscSlideTransitionParams.Diamond_Default)
+        return Asc.c_oAscSlideTransitionTypes.Diamond;
+    if (value == Asc.c_oAscSlideTransitionParams.Plus_Default)
+        return Asc.c_oAscSlideTransitionTypes.Plus;
+    if (value == Asc.c_oAscSlideTransitionParams.BoxZoom_In || value == Asc.c_oAscSlideTransitionParams.BoxZoom_Out)
+        return Asc.c_oAscSlideTransitionTypes.BoxZoom;
+    return Asc.c_oAscSlideTransitionTypes.Circle;
+};
+
 const PageTransition = props => {
     const { t } = useTranslation();
     const _t = t("View.Edit", { returnObjects: true });
     const isAndroid = Device.android;
     const _arrEffect = [
         {displayValue: _t.textNone,    value: Asc.c_oAscSlideTransitionTypes.None},
+        {displayValue: _t.textMorph,   value: Asc.c_oAscSlideTransitionTypes.Morph},
         {displayValue: _t.textFade,    value: Asc.c_oAscSlideTransitionTypes.Fade},
         {displayValue: _t.textPush,    value: Asc.c_oAscSlideTransitionTypes.Push},
         {displayValue: _t.textWipe,    value: Asc.c_oAscSlideTransitionTypes.Wipe},
         {displayValue: _t.textSplit,   value: Asc.c_oAscSlideTransitionTypes.Split},
+        {displayValue: _t.textCut,     value: Asc.c_oAscSlideTransitionTypes.Cut},
+        {displayValue: _t.textRandomBars, value: Asc.c_oAscSlideTransitionTypes.RandomBar},
+        {displayValue: _t.textShape,   value: Asc.c_oAscSlideTransitionTypes.Circle},
         {displayValue: _t.textUnCover, value: Asc.c_oAscSlideTransitionTypes.UnCover},
         {displayValue: _t.textCover,   value: Asc.c_oAscSlideTransitionTypes.Cover},
+        {displayValue: _t.textDissolve, value: Asc.c_oAscSlideTransitionTypes.Dissolve},
+        {displayValue: _t.textChecker, value: Asc.c_oAscSlideTransitionTypes.Checker},
+        {displayValue: _t.textBlinds,  value: Asc.c_oAscSlideTransitionTypes.Blinds},
         {displayValue: _t.textClock,   value: Asc.c_oAscSlideTransitionTypes.Clock},
+        {displayValue: _t.textRipple,  value: Asc.c_oAscSlideTransitionTypes.Ripple},
+        {displayValue: _t.textHoneycomb, value: Asc.c_oAscSlideTransitionTypes.Honeycomb},
+        {displayValue: _t.textVortex,  value: Asc.c_oAscSlideTransitionTypes.Vortex},
+        {displayValue: _t.textSwitch,  value: Asc.c_oAscSlideTransitionTypes.Switch},
+        {displayValue: _t.textFlip,    value: Asc.c_oAscSlideTransitionTypes.Flip},
+        {displayValue: _t.textGallery, value: Asc.c_oAscSlideTransitionTypes.Gallery},
+        {displayValue: _t.textCube,    value: Asc.c_oAscSlideTransitionTypes.Prism, prismId: 'prism-cube'},
+        {displayValue: _t.textDoors,   value: Asc.c_oAscSlideTransitionTypes.Doors},
+        {displayValue: _t.textBox,     value: Asc.c_oAscSlideTransitionTypes.Prism, prismId: 'prism-box'},
+        {displayValue: _t.textComb,    value: Asc.c_oAscSlideTransitionTypes.Comb},
         {displayValue: _t.textZoom,    value: Asc.c_oAscSlideTransitionTypes.Zoom},
-        {displayValue: _t.textMorph,    value: Asc.c_oAscSlideTransitionTypes.Morph}
+        {displayValue: _t.textRandom,  value: Asc.c_oAscSlideTransitionTypes.Random},
+        {displayValue: _t.textFerris,  value: Asc.c_oAscSlideTransitionTypes.Ferris},
+        {displayValue: _t.textRotate,  value: Asc.c_oAscSlideTransitionTypes.Prism, prismId: 'prism-rotate'},
+        {displayValue: _t.textWindow,  value: Asc.c_oAscSlideTransitionTypes.Window},
+        {displayValue: _t.textOrbit,   value: Asc.c_oAscSlideTransitionTypes.Prism, prismId: 'prism-orbit'}
     ];
     const _arrEffectType = [
         {displayValue: _t.textSmoothly,           value: Asc.c_oAscSlideTransitionParams.Fade_Smoothly},
@@ -173,13 +222,67 @@ const PageTransition = props => {
         {displayValue: _t.textZoomOut,            value: Asc.c_oAscSlideTransitionParams.Zoom_Out},
         {displayValue: _t.textZoomRotate,         value: Asc.c_oAscSlideTransitionParams.Zoom_AndRotate},
         {displayValue: _t.textMorphObjects,       value: Asc.c_oAscSlideTransitionParams.Morph_Objects},
-        {displayValue: _t.textMorphWords,          value: Asc.c_oAscSlideTransitionParams.Morph_Words},
-        {displayValue: _t.textMorphLetters,       value: Asc.c_oAscSlideTransitionParams.Morph_Letters}
+        {displayValue: _t.textMorphWords,         value: Asc.c_oAscSlideTransitionParams.Morph_Words},
+        {displayValue: _t.textMorphLetters,       value: Asc.c_oAscSlideTransitionParams.Morph_Letters},
+        {displayValue: _t.textSmoothly,           value: Asc.c_oAscSlideTransitionParams.Cut_Default},
+        {displayValue: _t.textBlack,              value: Asc.c_oAscSlideTransitionParams.Cut_ThroughBlack},
+        {displayValue: _t.textHorizontal,         value: Asc.c_oAscSlideTransitionParams.Blinds_Horizontal},
+        {displayValue: _t.textVertical,           value: Asc.c_oAscSlideTransitionParams.Blinds_Vertical},
+        {displayValue: _t.textHorizontal,         value: Asc.c_oAscSlideTransitionParams.Checker_Horizontal},
+        {displayValue: _t.textVertical,           value: Asc.c_oAscSlideTransitionParams.Checker_Vertical},
+        {displayValue: _t.textHorizontal,         value: Asc.c_oAscSlideTransitionParams.Comb_Horizontal},
+        {displayValue: _t.textVertical,           value: Asc.c_oAscSlideTransitionParams.Comb_Vertical},
+        {displayValue: _t.textCircle,             value: Asc.c_oAscSlideTransitionParams.Circle_Default},
+        {displayValue: _t.textDiamond,            value: Asc.c_oAscSlideTransitionParams.Diamond_Default},
+        {displayValue: _t.textDissolve,           value: Asc.c_oAscSlideTransitionParams.Dissolve_Default},
+        {displayValue: _t.textPlus,               value: Asc.c_oAscSlideTransitionParams.Plus_Default},
+        {displayValue: _t.textHorizontal,         value: Asc.c_oAscSlideTransitionParams.RandomBar_Horizontal},
+        {displayValue: _t.textVertical,           value: Asc.c_oAscSlideTransitionParams.RandomBar_Vertical},
+        {displayValue: _t.textIn,                 value: Asc.c_oAscSlideTransitionParams.BoxZoom_In},
+        {displayValue: _t.textOut,                value: Asc.c_oAscSlideTransitionParams.BoxZoom_Out},
+        {displayValue: _t.textFromLeft,           value: Asc.c_oAscSlideTransitionParams.Vortex_Left},
+        {displayValue: _t.textFromRight,          value: Asc.c_oAscSlideTransitionParams.Vortex_Right},
+        {displayValue: _t.textFromTop,            value: Asc.c_oAscSlideTransitionParams.Vortex_Up},
+        {displayValue: _t.textFromBottom,         value: Asc.c_oAscSlideTransitionParams.Vortex_Down},
+        {displayValue: _t.textLeft,               value: Asc.c_oAscSlideTransitionParams.Switch_Left},
+        {displayValue: _t.textRight,              value: Asc.c_oAscSlideTransitionParams.Switch_Right},
+        {displayValue: _t.textLeft,               value: Asc.c_oAscSlideTransitionParams.Flip_Left},
+        {displayValue: _t.textRight,              value: Asc.c_oAscSlideTransitionParams.Flip_Right},
+        {displayValue: _t.textCenter,             value: Asc.c_oAscSlideTransitionParams.Ripple_Center},
+        {displayValue: _t.textFromTopLeft,        value: Asc.c_oAscSlideTransitionParams.Ripple_LeftUp},
+        {displayValue: _t.textFromTopRight,       value: Asc.c_oAscSlideTransitionParams.Ripple_RightUp},
+        {displayValue: _t.textFromBottomLeft,     value: Asc.c_oAscSlideTransitionParams.Ripple_LeftDown},
+        {displayValue: _t.textFromBottomRight,    value: Asc.c_oAscSlideTransitionParams.Ripple_RightDown},
+        {displayValue: _t.textHoneycomb,         value: Asc.c_oAscSlideTransitionParams.Honeycomb_Default},
+        {displayValue: _t.textFromLeft,           value: Asc.c_oAscSlideTransitionParams.Prism_Left},
+        {displayValue: _t.textFromRight,          value: Asc.c_oAscSlideTransitionParams.Prism_Right},
+        {displayValue: _t.textFromTop,            value: Asc.c_oAscSlideTransitionParams.Prism_Up},
+        {displayValue: _t.textFromBottom,         value: Asc.c_oAscSlideTransitionParams.Prism_Down},
+        {displayValue: _t.textFromLeft,           value: Asc.c_oAscSlideTransitionParams.Prism_Left_Inverted},
+        {displayValue: _t.textFromRight,          value: Asc.c_oAscSlideTransitionParams.Prism_Right_Inverted},
+        {displayValue: _t.textFromTop,            value: Asc.c_oAscSlideTransitionParams.Prism_Up_Inverted},
+        {displayValue: _t.textFromBottom,         value: Asc.c_oAscSlideTransitionParams.Prism_Down_Inverted},
+        {displayValue: _t.textFromLeft,           value: Asc.c_oAscSlideTransitionParams.Prism_Left_Content},
+        {displayValue: _t.textFromRight,          value: Asc.c_oAscSlideTransitionParams.Prism_Right_Content},
+        {displayValue: _t.textFromTop,            value: Asc.c_oAscSlideTransitionParams.Prism_Up_Content},
+        {displayValue: _t.textFromBottom,         value: Asc.c_oAscSlideTransitionParams.Prism_Down_Content},
+        {displayValue: _t.textFromLeft,           value: Asc.c_oAscSlideTransitionParams.Prism_Left_ContentInv},
+        {displayValue: _t.textFromRight,          value: Asc.c_oAscSlideTransitionParams.Prism_Right_ContentInv},
+        {displayValue: _t.textFromTop,            value: Asc.c_oAscSlideTransitionParams.Prism_Up_ContentInv},
+        {displayValue: _t.textFromBottom,         value: Asc.c_oAscSlideTransitionParams.Prism_Down_ContentInv},
+        {displayValue: _t.textHorizontal,         value: Asc.c_oAscSlideTransitionParams.Doors_Horizontal},
+        {displayValue: _t.textVertical,           value: Asc.c_oAscSlideTransitionParams.Doors_Vertical},
+        {displayValue: _t.textHorizontal,         value: Asc.c_oAscSlideTransitionParams.Window_Horizontal},
+        {displayValue: _t.textVertical,           value: Asc.c_oAscSlideTransitionParams.Window_Vertical},
+        {displayValue: _t.textLeft,               value: Asc.c_oAscSlideTransitionParams.Ferris_Left},
+        {displayValue: _t.textRight,              value: Asc.c_oAscSlideTransitionParams.Ferris_Right},
+        {displayValue: _t.textLeft,               value: Asc.c_oAscSlideTransitionParams.Gallery_Left},
+        {displayValue: _t.textRight,              value: Asc.c_oAscSlideTransitionParams.Gallery_Right}
     ];
 
     let _arrCurrentEffectTypes = [];
 
-    const fillEffectTypes = type => {
+    const fillEffectTypes = (type, prismId) => {
         _arrCurrentEffectTypes = [];
         switch (type) {
             case Asc.c_oAscSlideTransitionTypes.Fade:
@@ -207,15 +310,80 @@ const PageTransition = props => {
                 _arrCurrentEffectTypes = _arrEffectType.slice(17,20);
                 break;
             case Asc.c_oAscSlideTransitionTypes.Morph:
-                _arrCurrentEffectTypes = _arrEffectType.slice(20);
+                _arrCurrentEffectTypes = _arrEffectType.slice(20, 23);
+                break;
+            case Asc.c_oAscSlideTransitionTypes.Cut:
+                _arrCurrentEffectTypes = _arrEffectType.slice(23, 25);
+                break;
+            case Asc.c_oAscSlideTransitionTypes.Blinds:
+                _arrCurrentEffectTypes = _arrEffectType.slice(25, 27);
+                break;
+            case Asc.c_oAscSlideTransitionTypes.Checker:
+                _arrCurrentEffectTypes = _arrEffectType.slice(27, 29);
+                break;
+            case Asc.c_oAscSlideTransitionTypes.Comb:
+                _arrCurrentEffectTypes = _arrEffectType.slice(29, 31);
+                break;
+            case Asc.c_oAscSlideTransitionTypes.RandomBar:
+                _arrCurrentEffectTypes = _arrEffectType.slice(35, 37);
+                break;
+            case Asc.c_oAscSlideTransitionTypes.Circle:
+            case Asc.c_oAscSlideTransitionTypes.Diamond:
+            case Asc.c_oAscSlideTransitionTypes.Plus:
+            case Asc.c_oAscSlideTransitionTypes.BoxZoom:
+                _arrCurrentEffectTypes.push(_arrEffectType[31], _arrEffectType[32], _arrEffectType[34], _arrEffectType[37], _arrEffectType[38]);
+                break;
+            case Asc.c_oAscSlideTransitionTypes.Vortex:
+                _arrCurrentEffectTypes = _arrEffectType.slice(39, 43);
+                break;
+            case Asc.c_oAscSlideTransitionTypes.Switch:
+                _arrCurrentEffectTypes = _arrEffectType.slice(43, 45);
+                break;
+            case Asc.c_oAscSlideTransitionTypes.Flip:
+                _arrCurrentEffectTypes = _arrEffectType.slice(45, 47);
+                break;
+            case Asc.c_oAscSlideTransitionTypes.Ripple:
+                _arrCurrentEffectTypes = _arrEffectType.slice(47, 52);
+                break;
+            case Asc.c_oAscSlideTransitionTypes.Prism:
+                var currentPrismId = prismId || 'prism-cube';
+                switch (currentPrismId) {
+                    case 'prism-box':
+                        _arrCurrentEffectTypes = _arrEffectType.slice(57, 61);
+                        break;
+                    case 'prism-rotate':
+                        _arrCurrentEffectTypes = _arrEffectType.slice(61, 65);
+                        break;
+                    case 'prism-orbit':
+                        _arrCurrentEffectTypes = _arrEffectType.slice(65, 69);
+                        break;
+                    default:
+                        _arrCurrentEffectTypes = _arrEffectType.slice(53, 57);
+                        break;
+                }
+                break;
+            case Asc.c_oAscSlideTransitionTypes.Doors:
+                _arrCurrentEffectTypes = _arrEffectType.slice(69, 71);
+                break;
+            case Asc.c_oAscSlideTransitionTypes.Window:
+                _arrCurrentEffectTypes = _arrEffectType.slice(71, 73);
+                break;
+            case Asc.c_oAscSlideTransitionTypes.Ferris:
+                _arrCurrentEffectTypes = _arrEffectType.slice(73, 75);
+                break;
+            case Asc.c_oAscSlideTransitionTypes.Gallery:
+                _arrCurrentEffectTypes = _arrEffectType.slice(75, 77);
                 break;
         }
         return (_arrCurrentEffectTypes.length > 0) ? _arrCurrentEffectTypes[0].value : -1;
     };
 
-    const getEffectName = effect => {
+    const getEffectName = (effect, prismId) => {
+        if (isShape(effect))
+            effect = Asc.c_oAscSlideTransitionTypes.Circle;
         for (var i=0; i < _arrEffect.length; i++) {
-            if (_arrEffect[i].value == effect) return _arrEffect[i].displayValue;
+            if (_arrEffect[i].value == effect &&
+                (effect != Asc.c_oAscSlideTransitionTypes.Prism || _arrEffect[i].prismId == prismId)) return _arrEffect[i].displayValue;
         }
         return '';
     };
@@ -237,13 +405,17 @@ const PageTransition = props => {
     const isStartOnClick = transitionObj.get_SlideAdvanceOnMouseClick();
 
     const _effect = transitionObj.get_TransitionType();
-    const nameEffect = getEffectName(_effect);
-    if(_effect != Asc.c_oAscSlideTransitionTypes.None) fillEffectTypes(_effect);
-
     const _effectType = transitionObj.get_TransitionOption();
+    const prismId = getPrismId(_effectType);
+    const nameEffect = getEffectName(_effect, prismId);
+    if(_effect != Asc.c_oAscSlideTransitionTypes.None) fillEffectTypes(_effect, prismId);
     const nameEffectType = getEffectTypeName(_effectType);
 
     const _effectDuration = transitionObj.get_TransitionDuration();
+    const noParameters = _effect == Asc.c_oAscSlideTransitionTypes.None ||
+                        _effect == Asc.c_oAscSlideTransitionTypes.Random ||
+                        _effect == Asc.c_oAscSlideTransitionTypes.Dissolve ||
+                        _effect == Asc.c_oAscSlideTransitionTypes.Honeycomb;
 
     useEffect(() => {
         changeRange((_effectDelay !== null && _effectDelay !== undefined) ? parseInt(_effectDelay / 1000.) : 0);
@@ -269,10 +441,11 @@ const PageTransition = props => {
                     onEffectClick: props.onEffectClick,
                     fillEffectTypes,
                     _effect,
+                    _prismId: prismId
                 }}></ListItem>
                 <ListItem link="/type/" title={_t.textType} 
-                    after={_effect != Asc.c_oAscSlideTransitionTypes.None ? nameEffectType : ''} 
-                    disabled={_effect == Asc.c_oAscSlideTransitionTypes.None} routeProps={{
+                    after={!noParameters ? nameEffectType : ''} 
+                    disabled={noParameters} routeProps={{
                         _arrCurrentEffectTypes, 
                         onEffectTypeClick: props.onEffectTypeClick,
                         _effect,
@@ -343,6 +516,7 @@ const PageEffect = props => {
     const { t } = useTranslation();
     const _t = t("View.Edit", { returnObjects: true });
     const [currentEffect, setEffect] = useState(props._effect);
+    const [currentPrismId, setPrismId] = useState(props._prismId);
     const _arrEffect = props._arrEffect;
 
     return (
@@ -362,12 +536,18 @@ const PageEffect = props => {
             {_arrEffect.length ? (
                 <List mediaList>
                     {_arrEffect.map((elem, index) => {
+                        const prismId = elem.value == Asc.c_oAscSlideTransitionTypes.Prism ? elem.prismId : undefined;
+                        const checked = (elem.value == currentEffect || (elem.value == Asc.c_oAscSlideTransitionTypes.Circle && isShape(currentEffect))) &&
+                            (elem.value != Asc.c_oAscSlideTransitionTypes.Prism || prismId == currentPrismId);
                         return (
                             <ListItem key={index} radio name="editslide-effect" title={elem.displayValue} value={elem.value} 
-                                checked={elem.value === currentEffect} onChange={() => {
+                                checked={checked} onChange={() => {
+                                    const selectedPrismId = elem.value == Asc.c_oAscSlideTransitionTypes.Prism ? prismId : undefined;
                                     setEffect(elem.value);
-                                    let valueEffectTypes = props.fillEffectTypes(elem.value);
-                                    props.onEffectClick(elem.value, valueEffectTypes);
+                                    setPrismId(selectedPrismId);
+                                    let valueEffectTypes = props.fillEffectTypes(elem.value, selectedPrismId);
+                                    let effect = isShape(elem.value) ? getShapeType(valueEffectTypes) : elem.value;
+                                    props.onEffectClick(effect, valueEffectTypes);
                                 }}></ListItem>
                         )
                     })}
@@ -404,7 +584,8 @@ const PageType= props => {
                             <ListItem key={index} radio name="editslide-effect-type" title={elem.displayValue} value={elem.value}
                                 checked={elem.value === currentType} onChange={() => {
                                     setType(elem.value);
-                                    props.onEffectTypeClick(elem.value, props._effect);
+                                    let effect = isShape(props._effect) ? getShapeType(elem.value) : props._effect;
+                                    props.onEffectTypeClick(elem.value, effect);
                                 }}>
                             </ListItem>
                         )

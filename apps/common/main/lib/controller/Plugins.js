@@ -149,6 +149,12 @@ define([
 
                 if (this.configPlugins.config.options)
                     this.api.setPluginsOptions(this.configPlugins.config.options);
+
+                if (this.api.setPluginsDisabled) {
+                    const exclude_guids = !!this.configPlugins.config && this.configPlugins.config.disable instanceof Array ? this.configPlugins.config.disable : [];
+                    if (exclude_guids.length)
+                        this.api.setPluginsDisabled(exclude_guids);
+                }
             } else
                 this.configPlugins.plugins = false;
 
@@ -884,7 +890,11 @@ define([
             if ( pluginsdata instanceof Array ) {
                 var arr = [], arrUI = [],
                     lang = me.appOptions.lang.split(/[\-_]/)[0];
+                const exclude_guids = !!me.configPlugins.config && me.configPlugins.config.disable instanceof Array ? me.configPlugins.config.disable : [];
                 pluginsdata.forEach(function(item){
+                    if ( exclude_guids.length && exclude_guids.includes(item.guid) )
+                        return;
+
                     var updatedItem;
                     if (forceUpdate) {
                         updatedItem = arr.find(function (i){
@@ -1296,7 +1306,7 @@ define([
 
         onPluginPanelShow: function (frameId, variation, lang) {
             var guid = variation.guid,
-                menu = this.isPDFEditor ? 'left' : (variation.type == 'panelRight' ? 'right' : 'left');
+                menu = this.isPDFEditor ? 'left' : ((variation.dockedPlace||variation.type) == 'panelRight' ? 'right' : 'left');
             !menu && (menu = 'left');
 
             var description = variation.description;
