@@ -1826,7 +1826,7 @@ define([
             if (this.linkAdvanced.hasClass('disabled')) return;
 
             var me = this;
-            (new PDFE.Views.FormatSettingsDialog({
+            (new PDFE.Views.FormSettingsAdvanced({
                 api: me.api,
                 handler: function(result, settings) {
                     settings && me.applyFormatSettings(settings);

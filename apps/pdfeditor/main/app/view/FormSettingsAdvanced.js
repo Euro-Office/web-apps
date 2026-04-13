@@ -31,7 +31,7 @@
  */
 
 /**
- *  FormatSettingsDialog.js
+ *  FormSettingsAdvanced.js
  *
  *  Created on 25.03.2025
  *
@@ -41,7 +41,7 @@ define([
     'common/main/lib/view/AdvancedSettingsWindow',
 ], function () { 'use strict';
 
-    PDFE.Views.FormatSettingsDialog = Common.Views.AdvancedSettingsWindow.extend(_.extend({
+    PDFE.Views.FormSettingsAdvanced = Common.Views.AdvancedSettingsWindow.extend(_.extend({
         options: {
             contentWidth: 300,
             contentHeight: 345
@@ -553,5 +553,5 @@ define([
         textBefore: 'Before no space',
         textAfter: 'After no space'
 
-    }, PDFE.Views.FormatSettingsDialog || {}))
+    }, PDFE.Views.FormSettingsAdvanced || {}))
 });

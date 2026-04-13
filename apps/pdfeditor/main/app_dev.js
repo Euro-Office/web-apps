@@ -237,7 +237,7 @@ require([
                     'pdfeditor/main/app/view/HyperlinkSettingsDialog',
                     'pdfeditor/main/app/view/ShapeSettingsAdvanced',
                     'pdfeditor/main/app/view/TableSettingsAdvanced',
-                    'pdfeditor/main/app/view/FormatSettingsDialog',
+                    'pdfeditor/main/app/view/FormSettingsAdvanced',
                     'pdfeditor/main/app/view/ChartSettingsAdvanced'
                 ];
 
