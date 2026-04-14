@@ -59,6 +59,7 @@ define([
     'documenteditor/main/app/view/TextArtSettings',
     'documenteditor/main/app/view/SignatureSettings',
     'documenteditor/main/app/view/FormSettings',
+    'documenteditor/main/app/view/SendForSigningSettings',
     'common/main/lib/component/Scroller',
     'common/main/lib/component/ListView',
 ], function (menuTemplate, $, _, Backbone) {
@@ -253,6 +254,31 @@ define([
                 this.formSettings = new DE.Views.FormSettings();
             }
 
+            if (!mode.canRequestStartFilling && mode.canRequestUsers) {
+                this.btnSendForSigning = new Common.UI.Button({
+                    hint: this.txtSendForSigning,
+                    asctype: Common.Utils.documentSettingsType.SendForSigning,
+                    enableToggle: true,
+                    disabled: false,
+                    iconCls: 'btn-field',
+                    toggleGroup: 'tabpanelbtnsGroup',
+                    allowMouseEventsOnDisabled: true
+                });
+                this._settings[Common.Utils.documentSettingsType.SendForSigning]   = {panel: "id-send-for-signing-settings", btn: this.btnSendForSigning};
+                this.btnSendForSigning.setElement($markup.findById('#id-right-menu-send-for-signing'), false); 
+                this.btnSendForSigning.render().setVisible(true);
+                this.btnSendForSigning.on('click', this.onBtnMenuClick.bind(this));
+                this.sendForSigningSettings = new DE.Views.SendForSigningSettings({
+                    handler: function(state, options) {
+                        if(state == 'submit') {
+                            DE.getController('Main').onStartFilling(true, options);
+                        } else if(state == 'cancel') {
+                            const rightmenuController = DE.getController('RightMenu');
+                            rightmenuController.closeSendForSigning();
+                        }
+                    }
+                });
+            }
 
             if (_.isUndefined(this.scroller)) {
                 this.scroller = new Common.UI.Scroller({
@@ -289,6 +315,7 @@ define([
             if (this.mergeSettings) this.mergeSettings.setApi(api).on('editcomplete', _fire_editcomplete);
             if (this.signatureSettings) this.signatureSettings.setApi(api).on('editcomplete', _fire_editcomplete);
             if (this.formSettings) this.formSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('updatescroller', _updateScroller);
+            if (this.sendForSigningSettings) this.sendForSigningSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('updatescroller', _updateScroller);
         },
 
         setMode: function(mode) {
@@ -300,6 +327,7 @@ define([
             // this.chartSettings && this.chartSettings.setMode(mode);
             // this.headerSettings && this.headerSettings.setMode(mode);
             this.signatureSettings && this.signatureSettings.setMode(mode);
+            this.sendForSigningSettings && this.sendForSigningSettings.setMode(mode);
         },
 
         onBtnMenuClick: function(btn, e) {
@@ -402,7 +430,7 @@ define([
 
         setButtons: function () {
             var allButtons = [this.btnText, this.btnTable, this.btnImage, this.btnShape, this.btnTextArt,
-                    this.btnMailMerge, this.btnSignature, this.btnForm];
+                    this.btnMailMerge, this.btnSignature, this.btnForm, this.btnSendForSigning];
             Common.UI.SideMenu.prototype.setButtons.apply(this, [allButtons]);
         },
 
@@ -436,6 +464,7 @@ define([
         txtMailMergeSettings:       'Mail Merge Settings',
         txtSignatureSettings:       'Signature Settings',
         txtFormSettings:            'Form Settings',
+        txtSendForSigning:          'Send for signing',
         ariaRightMenu:              'Right menu'
     }, DE.Views.RightMenu || {}));
 });

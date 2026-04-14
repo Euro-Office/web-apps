@@ -131,6 +131,7 @@ require([
             'ApplicationController',
             'Plugins',
             'SearchBar',
+            'RightMenu',
             'Common.Controllers.Fonts',
             'Common.Controllers.Shortcuts'
         ],
@@ -148,6 +149,7 @@ require([
                 'documenteditor/forms/app/controller/Plugins',
                 'documenteditor/forms/app/controller/SearchBar',
                 'documenteditor/forms/app/view/ApplicationView',
+                'documenteditor/forms/app/controller/RightMenu',
                 'common/main/lib/util/utils',
                 'common/main/lib/controller/Fonts',
                 'common/main/lib/util/LocalStorage',
