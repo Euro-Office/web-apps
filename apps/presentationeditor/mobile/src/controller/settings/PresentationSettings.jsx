@@ -7,6 +7,7 @@ class PresentationSettingsController extends Component {
         super(props);
         this.initSlideSize = this.initSlideSize.bind(this);
         this.onSlideSize = this.onSlideSize.bind(this);
+        this.onSlideOrientation = this.onSlideOrientation.bind(this);
         this.onColorSchemeChange = this.onColorSchemeChange.bind(this);
         this.onToggleLoopSlideshow = this.onToggleLoopSlideshow.bind(this);
         this.slideObject = this.props.storeFocusObjects.slideObject;
@@ -41,6 +42,13 @@ class PresentationSettingsController extends Component {
         api.changeSlideSize(currentPageSize.width, currentPageSize.height, slideSizeArr[2]);
     }
 
+    onSlideOrientation(orientation) {
+        const api = Common.EditorApi.get();
+        const [height, width] = [this.props.storePresentationSettings.currentPageSize.height, this.props.storePresentationSettings.currentPageSize.width]
+
+        api.changeSlideSize(height, width);
+    }
+
     // Color Schemes
 
     initPageColorSchemes() {
@@ -70,6 +78,7 @@ class PresentationSettingsController extends Component {
             <PresentationSettings
                 initSlideSize={this.initSlideSize}
                 onSlideSize={this.onSlideSize}
+                onSlideOrientation={this.onSlideOrientation}
                 onColorSchemeChange={this.onColorSchemeChange}
                 initPageColorSchemes={this.initPageColorSchemes}
                 onToggleLoopSlideshow={this.onToggleLoopSlideshow}
