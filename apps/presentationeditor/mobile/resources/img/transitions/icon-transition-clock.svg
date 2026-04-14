@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-  <g class="icon-transition-clock">
-    <path fill="#BE6650" d="m20 9.496-8 3 8-7v4Z" class="icon-fill-red-brend-transition-primary" opacity=".3"/>
-    <path fill="#BE6650" d="M20 12.496h-8l8-3v3Z" class="icon-fill-red-brend-transition-primary" opacity=".5"/>
-    <path fill="#BE6650" d="M12 5.496v7h8v6H4v-13h8Z" class="icon-fill-red-brend-transition-primary" opacity=".6"/>
-    <path fill="#444" d="M20.311 3.245c.465 0 .918.133 1.274.385.354.251.664.668.664 1.207v14.318c0 .54-.31.955-.664 1.207a2.21 2.21 0 0 1-1.274.385H3.688a2.21 2.21 0 0 1-1.274-.385c-.354-.252-.664-.667-.664-1.207V4.837c0-.54.31-.956.664-1.207a2.21 2.21 0 0 1 1.273-.385h16.624Zm-16.623 1.5a.721.721 0 0 0-.406.109c-.015.011-.025.022-.032.028V19.11c.007.006.016.017.032.028a.72.72 0 0 0 .405.108h16.624a.72.72 0 0 0 .407-.108c.015-.011.024-.022.031-.028V4.882c-.007-.006-.016-.017-.031-.028a.724.724 0 0 0-.407-.109H3.688Z" class="icon-stroke-gray-primary"/>
-  </g>
-</svg>

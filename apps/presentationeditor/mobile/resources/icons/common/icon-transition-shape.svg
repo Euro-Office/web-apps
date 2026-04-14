@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+  <g class="icon-transition-shape">
+    <path fill="var(--transition-fill)" d="M20.5 3.25c.966 0 1.75.784 1.75 1.75v14a1.75 1.75 0 0 1-1.75 1.75h-17A1.75 1.75 0 0 1 1.75 19V5c0-.966.784-1.75 1.75-1.75h17Zm-17 1.5a.25.25 0 0 0-.25.25v14c0 .138.112.25.25.25h17a.25.25 0 0 0 .25-.25V5a.25.25 0 0 0-.25-.25h-17Z" class="icon-stroke-gray-primary"/>
+    <path fill="var(--transition-stroke)" d="M11.999 6.25a5.75 5.75 0 1 1 0 11.498 5.75 5.75 0 0 1 0-11.498Zm0 2a3.749 3.749 0 1 0 0 7.498 3.749 3.749 0 0 0 0-7.498Z" class="icon-fill-red-brend-transition-primary" opacity=".8"/>
+    <path fill="var(--transition-icon-fill)" d="M11.998 8.157a3.842 3.842 0 1 1 0 7.684 3.842 3.842 0 0 1 0-7.684Zm0 2A1.842 1.842 0 1 0 12 13.841a1.842 1.842 0 0 0-.002-3.684Z" class="icon-fill-red-brend-transition-secondary"/>
+  </g>
+</svg>

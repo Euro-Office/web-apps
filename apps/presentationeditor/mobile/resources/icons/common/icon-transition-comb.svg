@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+  <g class="icon-transition-comb">
+    <path fill="var(--transition-stroke)" d="M13.25 6.75a1 1 0 0 1-1 1h-9v-3h10v2Z" class="icon-fill-red-brend-transition-primary"/>
+    <path fill="var(--transition-stroke)" d="M12.25 13.75a1 1 0 0 1 0 2h-9v-2h9Z" class="icon-fill-red-brend-transition-primary" opacity=".6"/>
+    <path fill="var(--transition-stroke)" fill-rule="evenodd" d="M20.751 19.25h-10v-1a1 1 0 0 1 .999-1h9.001v2Z" class="icon-fill-red-brend-transition-primary" clip-rule="evenodd" opacity=".4"/>
+    <path fill="var(--transition-stroke)" fill-rule="evenodd" d="M20.75 12.25h-9a1 1 0 0 1-1-1v-1a1 1 0 0 1 .999-1h9.001v3Z" class="icon-fill-red-brend-transition-primary" clip-rule="evenodd" opacity=".8"/>
+    <path fill="var(--transition-fill)" d="M1.75 5c0-.966.784-1.75 1.75-1.75h17c.966 0 1.75.784 1.75 1.75v14a1.75 1.75 0 0 1-1.75 1.75h-17A1.75 1.75 0 0 1 1.75 19V5Zm1.5 14c0 .138.112.25.25.25h17a.25.25 0 0 0 .25-.25V5a.25.25 0 0 0-.25-.25h-17a.25.25 0 0 0-.25.25v14Z" class="icon-stroke-gray-primary"/>
+  </g>
+</svg>

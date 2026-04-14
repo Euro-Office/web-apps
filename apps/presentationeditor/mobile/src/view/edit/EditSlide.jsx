@@ -8,39 +8,76 @@ import SvgIcon from '@common/lib/component/SvgIcon';
 import IconExpandDownIos from '@common-ios-icons/icon-expand-down.svg?ios';
 import IconExpandDownAndroid from '@common-android-icons/icon-expand-down.svg';
 import IconExpandUp from '@common-android-icons/icon-expand-up.svg';
+import IconTransitionNone from '@icons/icon-transition-none.svg';
+import IconTransitionMorph from '@icons/icon-transition-morph.svg';
+import IconTransitionFade from '@icons/icon-transition-fade.svg';
+import IconTransitionPush from '@icons/icon-transition-push.svg';
+import IconTransitionWipe from '@icons/icon-transition-wipe.svg';
+import IconTransitionSplit from '@icons/icon-transition-split.svg';
+import IconTransitionCut from '@icons/icon-transition-cut.svg';
+import IconTransitionRandomBars from '@icons/icon-transition-randombars.svg';
+import IconTransitionShape from '@icons/icon-transition-shape.svg';
+import IconTransitionUncover from '@icons/icon-transition-uncover.svg';
+import IconTransitionCover from '@icons/icon-transition-cover.svg';
+import IconTransitionDissolve from '@icons/icon-transition-dissolve.svg';
+import IconTransitionChecker from '@icons/icon-transition-checker.svg';
+import IconTransitionBlinds from '@icons/icon-transition-blinds.svg';
+import IconTransitionClock from '@icons/icon-transition-clock.svg';
+import IconTransitionRipple from '@icons/icon-transition-ripple.svg';
+import IconTransitionHoneycomb from '@icons/icon-transition-honeycomb.svg';
+import IconTransitionVortex from '@icons/icon-transition-vortex.svg';
+import IconTransitionSwitch from '@icons/icon-transition-switch.svg';
+import IconTransitionFlip from '@icons/icon-transition-flip.svg';
+import IconTransitionGallery from '@icons/icon-transition-gallery.svg';
+import IconTransitionCube from '@icons/icon-transition-cube.svg';
+import IconTransitionDoors from '@icons/icon-transition-doors.svg';
+import IconTransitionBox from '@icons/icon-transition-box.svg';
+import IconTransitionComb from '@icons/icon-transition-comb.svg';
+import IconTransitionZoom from '@icons/icon-transition-zoom.svg';
+import IconTransitionRandom from '@icons/icon-transition-random.svg';
+import IconTransitionFerris from '@icons/icon-transition-ferris.svg';
+import IconTransitionRotate from '@icons/icon-transition-rotate.svg';
+import IconTransitionWindow from '@icons/icon-transition-window.svg';
+import IconTransitionOrbit from '@icons/icon-transition-orbit.svg';
 
 const getEffectOptions = _t => [
-    {displayValue: _t.textNone,       value: Asc.c_oAscSlideTransitionTypes.None,      thumb: 'btn-transition-none.png'},
-    {displayValue: _t.textMorph,      value: Asc.c_oAscSlideTransitionTypes.Morph,     thumb: 'btn-transition-morph.png'},
-    {displayValue: _t.textFade,       value: Asc.c_oAscSlideTransitionTypes.Fade,      thumb: 'btn-transition-fade.png'},
-    {displayValue: _t.textPush,       value: Asc.c_oAscSlideTransitionTypes.Push,      thumb: 'btn-transition-push.png'},
-    {displayValue: _t.textWipe,       value: Asc.c_oAscSlideTransitionTypes.Wipe,      thumb: 'btn-transition-wipe.png'},
-    {displayValue: _t.textSplit,      value: Asc.c_oAscSlideTransitionTypes.Split,     thumb: 'btn-transition-split.png'},
-    {displayValue: _t.textCut,        value: Asc.c_oAscSlideTransitionTypes.Cut,       thumb: 'btn-transition-cut.png'},
-    {displayValue: _t.textRandomBars, value: Asc.c_oAscSlideTransitionTypes.RandomBar, thumb: 'btn-transition-randombars.png'},
-    {displayValue: _t.textShape,      value: Asc.c_oAscSlideTransitionTypes.Circle,    thumb: 'btn-transition-shape.png'},
-    {displayValue: _t.textUnCover,    value: Asc.c_oAscSlideTransitionTypes.UnCover,   thumb: 'btn-transition-uncover.png'},
-    {displayValue: _t.textCover,      value: Asc.c_oAscSlideTransitionTypes.Cover,     thumb: 'btn-transition-cover.png'},
-    {displayValue: _t.textDissolve,   value: Asc.c_oAscSlideTransitionTypes.Dissolve,  thumb: 'btn-transition-dissolve.png'},
-    {displayValue: _t.textChecker,    value: Asc.c_oAscSlideTransitionTypes.Checker,   thumb: 'btn-transition-checker.png'},
-    {displayValue: _t.textBlinds,     value: Asc.c_oAscSlideTransitionTypes.Blinds,    thumb: 'btn-transition-blinds.png'},
-    {displayValue: _t.textClock,      value: Asc.c_oAscSlideTransitionTypes.Clock,     thumb: 'btn-transition-clock.png'},
-    {displayValue: _t.textRipple,     value: Asc.c_oAscSlideTransitionTypes.Ripple,    thumb: 'btn-transition-ripple.png'},
-    {displayValue: _t.textHoneycomb,  value: Asc.c_oAscSlideTransitionTypes.Honeycomb, thumb: 'btn-transition-honeycomb.png'},
-    {displayValue: _t.textVortex,     value: Asc.c_oAscSlideTransitionTypes.Vortex,    thumb: 'btn-transition-vortex.png'},
-    {displayValue: _t.textSwitch,     value: Asc.c_oAscSlideTransitionTypes.Switch,    thumb: 'btn-transition-switch.png'},
-    {displayValue: _t.textFlip,       value: Asc.c_oAscSlideTransitionTypes.Flip,      thumb: 'btn-transition-flip.png'},
-    {displayValue: _t.textGallery,    value: Asc.c_oAscSlideTransitionTypes.Gallery,   thumb: 'btn-transition-gallery.png'},
-    {displayValue: _t.textCube,       value: Asc.c_oAscSlideTransitionTypes.Prism,     thumb: 'btn-transition-cube.png',   prismId: 'prism-cube'},
-    {displayValue: _t.textDoors,      value: Asc.c_oAscSlideTransitionTypes.Doors,     thumb: 'btn-transition-doors.png'},
-    {displayValue: _t.textBox,        value: Asc.c_oAscSlideTransitionTypes.Prism,     thumb: 'btn-transition-box.png',    prismId: 'prism-box'},
-    {displayValue: _t.textComb,       value: Asc.c_oAscSlideTransitionTypes.Comb,      thumb: 'btn-transition-comb.png'},
-    {displayValue: _t.textZoom,       value: Asc.c_oAscSlideTransitionTypes.Zoom,      thumb: 'btn-transition-zoom.png'},
-    {displayValue: _t.textRandom,     value: Asc.c_oAscSlideTransitionTypes.Random,    thumb: 'btn-transition-random.png'},
-    {displayValue: _t.textFerris,     value: Asc.c_oAscSlideTransitionTypes.Ferris,    thumb: 'btn-transition-ferris.png'},
-    {displayValue: _t.textRotate,     value: Asc.c_oAscSlideTransitionTypes.Prism,     thumb: 'btn-transition-rotate.png', prismId: 'prism-rotate'},
-    {displayValue: _t.textWindow,     value: Asc.c_oAscSlideTransitionTypes.Window,    thumb: 'btn-transition-window.png'},
-    {displayValue: _t.textOrbit,      value: Asc.c_oAscSlideTransitionTypes.Prism,     thumb: 'btn-transition-orbit.png',  prismId: 'prism-orbit',  }
+    {group: 'subtle',          displayValue: _t.textNone,       value: Asc.c_oAscSlideTransitionTypes.None,      thumb: IconTransitionNone},
+    {group: 'subtle',          displayValue: _t.textMorph,      value: Asc.c_oAscSlideTransitionTypes.Morph,     thumb: IconTransitionMorph},
+    {group: 'subtle',          displayValue: _t.textFade,       value: Asc.c_oAscSlideTransitionTypes.Fade,      thumb: IconTransitionFade},
+    {group: 'subtle',          displayValue: _t.textPush,       value: Asc.c_oAscSlideTransitionTypes.Push,      thumb: IconTransitionPush},
+    {group: 'subtle',          displayValue: _t.textWipe,       value: Asc.c_oAscSlideTransitionTypes.Wipe,      thumb: IconTransitionWipe},
+    {group: 'subtle',          displayValue: _t.textSplit,      value: Asc.c_oAscSlideTransitionTypes.Split,     thumb: IconTransitionSplit},
+    {group: 'subtle',          displayValue: _t.textCut,        value: Asc.c_oAscSlideTransitionTypes.Cut,       thumb: IconTransitionCut},
+    {group: 'subtle',          displayValue: _t.textRandomBars, value: Asc.c_oAscSlideTransitionTypes.RandomBar, thumb: IconTransitionRandomBars},
+    {group: 'subtle',          displayValue: _t.textShape,      value: Asc.c_oAscSlideTransitionTypes.Circle,    thumb: IconTransitionShape},
+    {group: 'subtle',          displayValue: _t.textUnCover,    value: Asc.c_oAscSlideTransitionTypes.UnCover,   thumb: IconTransitionUncover},
+    {group: 'subtle',          displayValue: _t.textCover,      value: Asc.c_oAscSlideTransitionTypes.Cover,     thumb: IconTransitionCover},
+    {group: 'exciting',        displayValue: _t.textDissolve,   value: Asc.c_oAscSlideTransitionTypes.Dissolve,  thumb: IconTransitionDissolve},
+    {group: 'exciting',        displayValue: _t.textChecker,    value: Asc.c_oAscSlideTransitionTypes.Checker,   thumb: IconTransitionChecker},
+    {group: 'exciting',        displayValue: _t.textBlinds,     value: Asc.c_oAscSlideTransitionTypes.Blinds,    thumb: IconTransitionBlinds},
+    {group: 'exciting',        displayValue: _t.textClock,      value: Asc.c_oAscSlideTransitionTypes.Clock,     thumb: IconTransitionClock},
+    {group: 'exciting',        displayValue: _t.textRipple,     value: Asc.c_oAscSlideTransitionTypes.Ripple,    thumb: IconTransitionRipple},
+    {group: 'exciting',        displayValue: _t.textHoneycomb,  value: Asc.c_oAscSlideTransitionTypes.Honeycomb, thumb: IconTransitionHoneycomb},
+    {group: 'exciting',        displayValue: _t.textVortex,     value: Asc.c_oAscSlideTransitionTypes.Vortex,    thumb: IconTransitionVortex},
+    {group: 'exciting',        displayValue: _t.textSwitch,     value: Asc.c_oAscSlideTransitionTypes.Switch,    thumb: IconTransitionSwitch},
+    {group: 'exciting',        displayValue: _t.textFlip,       value: Asc.c_oAscSlideTransitionTypes.Flip,      thumb: IconTransitionFlip},
+    {group: 'exciting',        displayValue: _t.textGallery,    value: Asc.c_oAscSlideTransitionTypes.Gallery,   thumb: IconTransitionGallery},
+    {group: 'exciting',        displayValue: _t.textCube,       value: Asc.c_oAscSlideTransitionTypes.Prism,     thumb: IconTransitionCube,  prismId: 'prism-cube'},
+    {group: 'exciting',        displayValue: _t.textDoors,      value: Asc.c_oAscSlideTransitionTypes.Doors,     thumb: IconTransitionDoors},
+    {group: 'exciting',        displayValue: _t.textBox,        value: Asc.c_oAscSlideTransitionTypes.Prism,     thumb: IconTransitionBox,   prismId: 'prism-box'},
+    {group: 'exciting',        displayValue: _t.textComb,       value: Asc.c_oAscSlideTransitionTypes.Comb,      thumb: IconTransitionComb},
+    {group: 'exciting',        displayValue: _t.textZoom,       value: Asc.c_oAscSlideTransitionTypes.Zoom,      thumb: IconTransitionZoom},
+    {group: 'exciting',        displayValue: _t.textRandom,     value: Asc.c_oAscSlideTransitionTypes.Random,    thumb: IconTransitionRandom},
+    {group: 'dynamic-content', displayValue: _t.textFerris,     value: Asc.c_oAscSlideTransitionTypes.Ferris,    thumb: IconTransitionFerris},
+    {group: 'dynamic-content', displayValue: _t.textRotate,     value: Asc.c_oAscSlideTransitionTypes.Prism,     thumb: IconTransitionRotate, prismId: 'prism-rotate'},
+    {group: 'dynamic-content', displayValue: _t.textWindow,     value: Asc.c_oAscSlideTransitionTypes.Window,    thumb: IconTransitionWindow},
+    {group: 'dynamic-content', displayValue: _t.textOrbit,      value: Asc.c_oAscSlideTransitionTypes.Prism,     thumb: IconTransitionOrbit,  prismId: 'prism-orbit'}
+];
+
+const getEffectGroups = _t => [
+    {id: 'subtle', displayValue: _t.textSubtle},
+    {id: 'exciting', displayValue: _t.textExciting},
+    {id: 'dynamic-content', displayValue: _t.textDynamicContent}
 ];
 
 const EditSlide = props => {
@@ -218,8 +255,10 @@ const getEffectItem = (effect, prismId, _arrEffect) => {
 };
 
 const getEffectPreview = (nameEffect, thumbEffect) => (
-    <span slot="after" className="transition-effect-preview"
-        style={{backgroundImage: thumbEffect ? `url('resources/img/transitions/${thumbEffect}')` : 'none'}}>
+    <span slot="after" className="transition-effect-preview">
+        {thumbEffect && (
+            <SvgIcon symbolId={thumbEffect.id} className="icon icon-svg transition"/>
+        )}
         {nameEffect}
     </span>
 );
@@ -542,6 +581,7 @@ const PageEffect = props => {
     const [currentEffect, setEffect] = useState(props._effect);
     const [currentPrismId, setPrismId] = useState(props._prismId);
     const _arrEffect = props._arrEffect;
+    const _arrEffectGroups = getEffectGroups(_t);
 
     return (
         <Page className="style-effect">
@@ -558,28 +598,36 @@ const PageEffect = props => {
                 }
             </Navbar>
             {_arrEffect.length ? (
-                <List mediaList>
-                    {_arrEffect.map((elem, index) => {
-                        const prismId = elem.value == Asc.c_oAscSlideTransitionTypes.Prism ? elem.prismId : undefined;
-                        const checked = (elem.value == currentEffect || (elem.value == Asc.c_oAscSlideTransitionTypes.Circle && isShape(currentEffect))) &&
-                            (elem.value != Asc.c_oAscSlideTransitionTypes.Prism || prismId == currentPrismId);
-                        return (
-                            <ListItem key={index} radio name="editslide-effect" title={elem.displayValue} value={elem.value} 
-                                checked={checked} onChange={() => {
-                                    const selectedPrismId = elem.value == Asc.c_oAscSlideTransitionTypes.Prism ? prismId : undefined;
-                                    setEffect(elem.value);
-                                    setPrismId(selectedPrismId);
-                                    let valueEffectTypes = props.fillEffectTypes(elem.value, selectedPrismId);
-                                    let effect = isShape(elem.value) ? getShapeType(valueEffectTypes) : elem.value;
-                                    props.onEffectClick(effect, valueEffectTypes);
-                                }}>
-                                    <span slot="media" className="transition-effect-icon"
-                                        style={{backgroundImage: `url('resources/img/transitions/${elem.thumb}')`}}>
-                                    </span>
-                                </ListItem>
-                        )
-                    })}
-                </List>
+                _arrEffectGroups.map(group => {
+                    const groupItems = _arrEffect.filter(elem => elem.group == group.id);
+                    return groupItems.length ? (
+                        <Fragment key={group.id}>
+                            <BlockTitle>{group.displayValue}</BlockTitle>
+                            <List mediaList>
+                                {groupItems.map((elem, index) => {
+                                    const prismId = elem.value == Asc.c_oAscSlideTransitionTypes.Prism ? elem.prismId : undefined;
+                                    const checked = (elem.value == currentEffect || (elem.value == Asc.c_oAscSlideTransitionTypes.Circle && isShape(currentEffect))) &&
+                                        (elem.value != Asc.c_oAscSlideTransitionTypes.Prism || prismId == currentPrismId);
+                                    return (
+                                        <ListItem key={index} radio name="editslide-effect" title={elem.displayValue} value={elem.value} 
+                                            checked={checked} onChange={() => {
+                                                const selectedPrismId = elem.value == Asc.c_oAscSlideTransitionTypes.Prism ? prismId : undefined;
+                                                setEffect(elem.value);
+                                                setPrismId(selectedPrismId);
+                                                let valueEffectTypes = props.fillEffectTypes(elem.value, selectedPrismId);
+                                                let effect = isShape(elem.value) ? getShapeType(valueEffectTypes) : elem.value;
+                                                props.onEffectClick(effect, valueEffectTypes);
+                                            }}>
+                                                <span slot="media" className="transition-effect-icon">
+                                                    <SvgIcon symbolId={elem.thumb.id} className="icon icon-svg transition"/>
+                                                </span>
+                                            </ListItem>
+                                    )
+                                })}
+                            </List>
+                            </Fragment>
+                    ) : null;
+                })
             ) : null}
         </Page>
     );

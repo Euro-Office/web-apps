@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+  <g class="icon-transition-cube">
+    <path fill="var(--transition-stroke)" d="M19 8.5v7L13 18V6l6 2.5Z" class="icon-fill-red-brend-transition-primary" opacity=".8"/>
+    <path fill="var(--transition-icon-fill)" d="m10 18-5-2.5v-7L10 6v12Z" class="icon-fill-red-brend-transition-secondary"/>
+    <path fill="var(--transition-fill)" fill-rule="evenodd" d="M11.546 2.752a.747.747 0 0 1 .17.03l.021.008c.023.008.046.015.068.024l9 4c.27.12.445.39.445.686v9a.75.75 0 0 1-.445.686l-8.993 3.996c-.002 0-.004.002-.005.003h-.002a.748.748 0 0 1-.545.025l-.04-.016a.531.531 0 0 1-.055-.023l-8-4a.75.75 0 0 1-.415-.671v-9c0-.284.161-.544.415-.67l8-4 .007-.005.028-.01a.744.744 0 0 1 .346-.063Zm.704 16.594 7.5-3.334V7.987l-7.5-3.333v14.692Zm-8-11.383v8.073l6.5 3.25V4.713l-6.5 3.25Z" class="icon-stroke-gray-primary" clip-rule="evenodd"/>
+  </g>
+</svg>

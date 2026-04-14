@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-  <g class="icon-transition-dissolve">
-    <path fill="#444" d="M20.5 3.25c.966 0 1.75.784 1.75 1.75v14a1.75 1.75 0 0 1-1.75 1.75h-17A1.75 1.75 0 0 1 1.75 19V5c0-.966.784-1.75 1.75-1.75h17Zm-17 1.5a.25.25 0 0 0-.25.25v14c0 .138.112.25.25.25h17a.25.25 0 0 0 .25-.25V5a.25.25 0 0 0-.25-.25h-17Z" class="icon-stroke-gray-primary"/>
-    <path fill="#BE6650" d="M17.25 19.254H9.375v-3.411h5.25v-2.56h2.625v5.97Zm-10.5-5.97h2.625v2.559H3.25v-5.97h3.5v3.41Zm7.875 0h-5.25v-2.56h5.25v2.56Zm1.75-5.118h4.375v2.559h-6.125V8.166h-3.5V4.754h5.25v3.412Zm-9.625 0h-3.5V4.994a.24.24 0 0 1 .24-.24h3.26v3.412Z" class="icon-fill-red-brend-transition-primary" opacity=".8"/>
-  </g>
-</svg>

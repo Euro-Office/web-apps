@@ -548,7 +548,10 @@
       "textZoomOut": "Zoom Out",
       "textZoomRotate": "Zoom and Rotate",
       "txtHeight": "Height",
-      "txtWidth": "Width"
+      "txtWidth": "Width",
+      "textSubtle": "Subtle",
+      "textExciting": "Exciting",
+      "textDynamicContent": "Dynamic Content"
     },
     "Settings": {
       "mniSlideStandard": "Standard (4:3)",
