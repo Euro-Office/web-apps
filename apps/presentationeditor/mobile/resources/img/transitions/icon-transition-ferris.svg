@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+  <g class="icon-transition-ferris">
+    <path fill="#444" d="M20.5 3.246c.966 0 1.75.783 1.75 1.75v14a1.75 1.75 0 0 1-1.75 1.75h-17a1.75 1.75 0 0 1-1.75-1.75v-14c0-.967.784-1.75 1.75-1.75h17Zm-17 1.5a.25.25 0 0 0-.25.25v14c0 .138.112.25.25.25h17a.25.25 0 0 0 .25-.25v-14a.25.25 0 0 0-.25-.25h-17Z" class="icon-stroke-gray-primary"/>
+    <path fill="#BE6650" d="M19.75 5.496a.25.25 0 0 1 .25.25v10.293l-6.354-.752a1 1 0 0 0-.902.372L10.5 18.494h9.27l-.02.002H4.25a.25.25 0 0 1-.25-.25v-12.5a.25.25 0 0 1 .25-.25h15.5ZM5 5.5l2.299 3.832a1 1 0 0 0 .957.48l7.682-.768a1 1 0 0 0 .7-.395L19 5.5H5Z" class="icon-fill-red-brend-transition-primary"/>
+    <path fill="#FBE4DE" d="m13.646 15.287 6.354.754V18.5h-9.5l2.244-2.84a1 1 0 0 1 .902-.373Zm2.993-6.639a1.001 1.001 0 0 1-.7.396l-7.683.768a1 1 0 0 1-.957-.481L5 5.5h14l-2.361 3.148Z" class="icon-fill-red-brend-transition-secondary"/>
+  </g>
+</svg>
