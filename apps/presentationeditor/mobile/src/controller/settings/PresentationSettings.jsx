@@ -42,11 +42,9 @@ class PresentationSettingsController extends Component {
         api.changeSlideSize(currentPageSize.width, currentPageSize.height, slideSizeArr[2]);
     }
 
-    onSlideOrientation(orientation) {
+    onSlideOrientation() {
         const api = Common.EditorApi.get();
-        const [height, width] = [this.props.storePresentationSettings.currentPageSize.height, this.props.storePresentationSettings.currentPageSize.width]
-
-        api.changeSlideSize(height, width);
+        api.changeSlideSize(this.props.storePresentationSettings.currentPageSize.height, this.props.storePresentationSettings.currentPageSize.width);
     }
 
     // Color Schemes

@@ -26,6 +26,8 @@ export class storePresentationSettings {
     changeSizeIndex(width, height) {
         this.currentPageSize = {width, height};
         let ratio = height / width;
+        this.slideSizeIndex = -1;
+
         this.slideSizes.forEach((array, index) => {
             if(Math.abs(array[1] / array[0] - ratio) < 0.001) {
                 this.slideSizeIndex = index;
