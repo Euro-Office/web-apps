@@ -5,6 +5,7 @@ import { Device } from '../../../../../common/mobile/utils/device';
 import { observer, inject } from "mobx-react";
 import { MainContext } from '../../page/main';
 import { SettingsContext } from '../../controller/settings/Settings';
+import { ThemesContext } from '../../../../../common/mobile/lib/controller/Themes';
 import SvgIcon from '@common/lib/component/SvgIcon';
 import IconSearch from '@common-icons/icon-search.svg';
 import IconCollaboration from '@common-icons/icon-collaboration.svg';
@@ -30,6 +31,7 @@ const SettingsPage = inject('storeAppOptions', 'storeSpreadsheetInfo', 'storeToo
     const canUseHistory = appOptions.canUseHistory;
     const {openOptions, isBranding} = useContext(MainContext);
     const settingsContext = useContext(SettingsContext);
+    const themesContext = useContext(ThemesContext);
     const _t = t('View.Settings', {returnObjects: true});
     const docTitle = storeSpreadsheetInfo.dataDoc?.title ?? '';
     const canCloseEditor = appOptions.canCloseEditor;
@@ -117,6 +119,14 @@ const SettingsPage = inject('storeAppOptions', 'storeSpreadsheetInfo', 'storeToo
                     }
                 </List>
                 <List>
+                    {themesContext.isDarkTheme &&
+                        <ListItem title={_t.textDarkDocument}>
+                            <SvgIcon slot="media" symbolId={IconSave.id} className={'icon icon-svg'} />
+                            <Toggle checked={themesContext.isContentThemeDark}
+                                onToggleChange={() => themesContext.changeContentTheme(!themesContext.isContentThemeDark)}
+                            />
+                        </ListItem>
+                    }
                     {!props.inPopover &&
                         <ListItem disabled={appOptions.readerMode ? true : false} title={!_isEdit ? _t.textFind : _t.textFindAndReplace} link="#" searchbarEnable='.searchbar' onClick={settingsContext.closeModal} className='no-indicator'>
                             <SvgIcon slot="media" symbolId={IconSearch.id} className={'icon icon-svg'} />
