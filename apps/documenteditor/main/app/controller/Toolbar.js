@@ -3659,13 +3659,15 @@ define([
             updateColors(this.toolbar.mnuPageColorPicker, 1);
 
             if (this.toolbar.mnuBorderColorPicker) {
-                updateColors(this.toolbar.mnuBorderColorPicker, { color: Common.Utils.ThemeColor.getRgbColor('#000000'), isAuto: true });
-                var currentColor = { color: Common.Utils.ThemeColor.getRgbColor('#000000'), isAuto: true };
-                if (currentColor.isAuto) {
-                    var clr_item = this.toolbar.btnBorders.menu.$el.find('#id-toolbar-menu-auto-bordercolor > a');
-                    !clr_item.hasClass('selected') && clr_item.addClass('selected');
-                }
-                this.toolbar.btnBorders.options.borderscolor = currentColor.color;
+                updateColors(this.toolbar.mnuBorderColorPicker, 0);
+
+                const clr_item = this.toolbar.btnBorders.menu.$el.find('#id-toolbar-menu-auto-bordercolor > a');
+                !clr_item.hasClass('selected') && clr_item.addClass('selected');
+
+                const color = new Asc.asc_CColor();
+                color.put_auto(true);
+                this.toolbar.btnBorders.options.borderscolor = color;
+
                 $('#id-toolbar-mnu-item-border-color > a .menu-item-icon').css('border-color', '#' + this.toolbar.btnBorders.options.borderscolor);
             }
         },
