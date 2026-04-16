@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
   <g class="icon-table-contents">
-    <path stroke="#446ECA" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.414" stroke-width="1.5" d="m3.724 6.522 2.171-2.023v5.393m.724 9.16H4.235c-.282 0-.511-.213-.511-.476a.46.46 0 0 1 .15-.337l2.32-2.162c.272-.253.425-.596.425-.953v-.116c0-.745-.648-1.348-1.448-1.348-.8 0-1.447.603-1.447 1.348" class="icon-stroke-blue-primary"/>
+    <path stroke="#446ECA" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.414" stroke-width="1.5" d="M3.724 6.522 5.895 4.5v5.392m.724 9.16H4.235c-.282 0-.511-.212-.511-.476a.46.46 0 0 1 .15-.337l2.32-2.162c.272-.253.425-.596.425-.953v-.116c0-.744-.648-1.348-1.448-1.348-.8 0-1.447.604-1.447 1.348" class="icon-stroke-blue-primary"/>
     <path stroke="#444" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 6H10m0 6h10m-10 6h10" class="icon-stroke-gray-primary"/>
   </g>
 </svg>
