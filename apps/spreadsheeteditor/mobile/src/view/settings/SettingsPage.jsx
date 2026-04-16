@@ -23,6 +23,7 @@ import IconFeedbackAndroid from '@common-android-icons/icon-feedback.svg';
 import IconTableSettings from '@icons/icon-table-settings.svg';
 import IconReturnIos from '@common-ios-icons/icon-return.svg?ios';
 import IconReturnAndroid from '@common-android-icons/icon-return.svg';
+import IconDark from '@common-icons/icon-dark-bg.svg'
 
 const SettingsPage = inject('storeAppOptions', 'storeSpreadsheetInfo', 'storeToolbarSettings')(observer(props => {
     const { t } = useTranslation();
@@ -121,7 +122,7 @@ const SettingsPage = inject('storeAppOptions', 'storeSpreadsheetInfo', 'storeToo
                 <List>
                     {themesContext.isDarkTheme &&
                         <ListItem title={_t.textDarkDocument}>
-                            <SvgIcon slot="media" symbolId={IconSave.id} className={'icon icon-svg'} />
+                            <SvgIcon slot="media" symbolId={IconDark.id} className={'icon icon-svg dark'} />
                             <Toggle checked={themesContext.isContentThemeDark}
                                 onToggleChange={() => themesContext.changeContentTheme(!themesContext.isContentThemeDark)}
                             />
