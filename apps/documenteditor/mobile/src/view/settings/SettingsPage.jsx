@@ -4,6 +4,7 @@ import { Device } from "../../../../../common/mobile/utils/device";
 import { observer, inject } from "mobx-react";
 import { useTranslation } from 'react-i18next';
 import { SettingsContext } from '../../controller/settings/Settings';
+import { ThemesContext } from '../../../../../common/mobile/lib/controller/Themes';
 import { MainContext } from '../../page/main';
 import SvgIcon from '@common/lib/component/SvgIcon';
 import IconAddFavorites from '@icons/icon-add-favorites.svg';
@@ -30,12 +31,14 @@ import IconFeedbackForIos from '@common-ios-icons/icon-feedback.svg?ios';
 import IconFeedbackForAndroid from '@common-android-icons/icon-feedback.svg';
 import IconReturnIos from '@common-ios-icons/icon-return.svg?ios';
 import IconReturnAndroid from '@common-android-icons/icon-return.svg';
-import IconDraw from '../../../../../common/mobile/resources/icons/draw.svg'
+import IconDraw from '../../../../../common/mobile/resources/icons/draw.svg' 
+import IconDark from '@common-icons/icon-dark-bg.svg'
 
 const SettingsPage = inject("storeAppOptions", "storeReview", "storeDocumentInfo",  "storeToolbarSettings")(observer(props => {
     const { t } = useTranslation();
     const _t = t('Settings', {returnObjects: true});
     const settingsContext = useContext(SettingsContext);
+    const themesContext = useContext(ThemesContext);
     const {openOptions, isBranding} = useContext(MainContext);
     const appOptions = props.storeAppOptions;
     const canProtect = appOptions.canProtect;
@@ -152,6 +155,14 @@ const SettingsPage = inject("storeAppOptions", "storeReview", "storeDocumentInfo
                     }
                 </List>
                 <List>
+                    {themesContext.isDarkTheme &&
+                        <ListItem title={_t.textDarkDocument}>
+                            <SvgIcon slot="media" symbolId={IconDark.id} className={'icon icon-svg dark'} />
+                            <Toggle checked={themesContext.isContentThemeDark}
+                                onToggleChange={() => themesContext.changeContentTheme(!themesContext.isContentThemeDark)}
+                            />
+                        </ListItem>
+                    }
                     {(Device.phone || isEditableForms) &&
                         <ListItem title={!_isEdit || isViewer ? _t.textFind : _t.textFindAndReplace} link='#' searchbarEnable='.searchbar' onClick={settingsContext.closeModal} className='no-indicator'>
                             <SvgIcon slot="media" symbolId={IconSearch.id} className={'icon icon-svg'} />

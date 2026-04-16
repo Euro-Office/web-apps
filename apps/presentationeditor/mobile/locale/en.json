@@ -556,6 +556,8 @@
     "Settings": {
       "mniSlideStandard": "Standard (4:3)",
       "mniSlideWide": "Widescreen (16:9)",
+      "mniSlidePortrait": "Portrait",
+      "mniSlideLandscape": "Landscape",
       "notcriticalErrorTitle": "Warning",
       "textAbout": "About",
       "textAddress": "address:",
@@ -615,6 +617,7 @@
       "textSettings": "Settings",
       "textShowNotification": "Show Notification",
       "textSlideSize": "Slide Size",
+      "textSlideOrientation": "Slide orientation",
       "textSpellcheck": "Spell Checking",
       "textSubject": "Subject",
       "textTel": "tel:",
