@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
   <g class="icon-transition-fade">
-    <path fill="var(--transition-icon-fill)" d="M17.5 7.496v7.5a1 1 0 0 1-1 1H6v-7.5a1 1 0 0 1 1-1h10.5Z" class="icon-fill-red-brend-transition-secondary"/>
-    <path fill="var(--transition-fill)" d="M20.5 7.246c.966 0 1.75.783 1.75 1.75v10a1.75 1.75 0 0 1-1.75 1.75h-13a1.75 1.75 0 0 1-1.75-1.75v-.5a.75.75 0 0 1 1.5 0v.5c0 .138.112.25.25.25h13a.25.25 0 0 0 .25-.25v-10a.25.25 0 0 0-.25-.25H20a.75.75 0 0 1 0-1.5h.5Zm-4-4c.966 0 1.75.783 1.75 1.75v10a1.75 1.75 0 0 1-1.75 1.75h-13a1.75 1.75 0 0 1-1.75-1.75v-10c0-.967.784-1.75 1.75-1.75h13Zm-13 1.5a.25.25 0 0 0-.25.25v10c0 .138.112.25.25.25h13a.25.25 0 0 0 .25-.25v-10a.25.25 0 0 0-.25-.25h-13Z" class="icon-stroke-gray-primary"/>
+    <path fill="#FBE4DE" d="M17.5 7.496v7.5a1 1 0 0 1-1 1H6v-7.5a1 1 0 0 1 1-1h10.5Z" class="icon-fill-red-brend-transition-secondary"/>
+    <path stroke="#444" stroke-linecap="round" stroke-width="1.5" d="M20 7.996h.5a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1v-.5m11-13.5a1 1 0 0 0-1-1h-13a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1v-10Z" class="icon-stroke-gray-primary"/>
   </g>
 </svg>
