@@ -6,9 +6,9 @@
     @text-normal: var(--text-normal);
     @background-warning: #FF9F0A;
 
-    --f7-navbar-link-color: @brandColor;
-    --f7-subnavbar-link-color: @brandColor;
-    --f7-navbar-text-color: @text-normal;
+    --f7-navbar-link-color: @toolbar-icons;
+    --f7-subnavbar-link-color: @toolbar-icons;
+    --f7-navbar-text-color: @toolbar-icons;
     --f7-navbar-title-line-height: 44px;
     --f7-navbar-link-line-height: 44px;
     --f7-navbar-title-font-size: 17px;
@@ -16,13 +16,14 @@
     --f7-list-bg-color: @background-primary;
     --f7-navbar-bg-color: @toolbar-background;
 
-    --f7-tabbar-link-inactive-color: @toolbar-segment;
+    --f7-tabbar-link-inactive-color: @toolbar-icons;
 
-    --f7-radio-active-color: @brandColor;
-    --f7-toggle-active-color: @brandColor;
-    --f7-range-bar-active-bg-color: @brandColor;
+    --f7-radio-active-color: @toolbar-icons;
+    --f7-toggle-active-color: @toolbar-icons;
+    --f7-toggle-active-knob-bg-color: @brand-text-on-brand;
+    --f7-range-bar-active-bg-color: @toolbar-icons;
 
-    --f7-list-button-text-color: @brandColor;
+    --f7-list-button-text-color: @toolbar-icons;
 
     --f7-list-item-border-color: @background-menu-divider;
 
@@ -48,7 +49,7 @@
     --f7-dialog-bg-color-rgb: @background-secondary;
     --f7-dialog-title-text-color: @text-normal;
     --f7-dialog-text-color: @text-normal;
-    --f7-dialog-button-text-color: @brandColor;
+    --f7-dialog-button-text-color: @toolbar-icons;
     --f7-dialog-border-divider-color: @background-menu-divider;
 
     --f7-subnavbar-border-color: @background-menu-divider;
@@ -289,7 +290,7 @@
             position: relative;
             overflow: hidden;
             -webkit-box-flex: 1;
-            border: 1px solid @toolbar-segment;
+            border: 1px solid @toolbar-icons;
             text-decoration: none;
             text-align: center;
             margin: 0;
@@ -302,7 +303,7 @@
             cursor: pointer;
             outline: 0;
             font-weight: 600;
-            color: @brandColor;
+            color: @toolbar-icons;
             &:first-child {
                 border-radius: 5px 0 0 5px;
                 border-left-width: 1px;
@@ -314,7 +315,7 @@
             &.tab-link-active {
                 // background: @brandColor;
                 // color: @fill-white;
-                background: @toolbar-segment;
+                background: @toolbar-icons;
                 color: @brand-text-on-brand;
                 i.icon {
                     background-color: @brand-text-on-brand;
@@ -687,7 +688,7 @@
         font-size: 17px;
         line-height: 22px;
         letter-spacing: -0.41px;
-        color: @brandColor;
+        color: @toolbar-icons;
         margin-left: 10px;
     }
 

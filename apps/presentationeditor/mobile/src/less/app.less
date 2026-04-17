@@ -9,15 +9,6 @@
 
 .device-ios {
     --toolbar-background: var(--background-primary, #fff);
-    --toolbar-segment: var(--brand-slide, #BE664F);
-    --toolbar-icons: var(--brand-slide, #BE664F);
-}
-.device-android {
-    --toolbar-background: var(--brand-slide, #BE664F);
-
-    .theme-type-dark {
-        --toolbar-icons: var(--brand-slide, #BE664F);
-    }
 }
 
 @toolbar-background: var(--toolbar-background);
@@ -158,10 +149,10 @@
         width: 88px;
         height: 40px;
         margin-top: 14px;
+        background-image: ~"url(@{app-image-path}/themes/themes.png)";
         display: block;
         background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center;
+        background-size: cover;
     }
     .item-theme.active:before {
         content: '';

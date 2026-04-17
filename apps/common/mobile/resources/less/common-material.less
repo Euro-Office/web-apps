@@ -13,20 +13,21 @@
     --f7-theme-color: @brandColor;
 
     --f7-navbar-bg-color: @toolbar-background;
-    --f7-navbar-link-color: @fill-white;
-    --f7-navbar-text-color: @fill-white;
+    --f7-navbar-link-color: @toolbar-icons;
+    --f7-navbar-text-color: @toolbar-icons;
     --f7-navbar-height: 56px;
 
     --f7-list-bg-color: @background-primary;
     --f7-subnavbar-bg-color: @toolbar-background;
     --f7-subnavbar-link-color: @toolbar-icons;
-    --f7-subnavbar-text-color: @fill-white;
+    --f7-subnavbar-text-color: @toolbar-icons;
     --f7-subnavbar-height: 56px;
 
-    --f7-radio-active-color: @brandColor;
-    --f7-range-bar-active-bg-color: @brandColor;
-    --f7-range-knob-color: @brandColor;
+    --f7-radio-active-color: @toolbar-icons;
+    --f7-range-bar-active-bg-color: @toolbar-icons;
+    --f7-range-knob-color: @toolbar-icons;
     --f7-range-knob-size: 16px;
+    --f7-toggle-active-knob-bg-color: @brand-text-on-brand;
 
     --f7-list-item-after-text-color: @text-normal;
 
@@ -40,7 +41,7 @@
     --f7-dialog-bg-color: @background-secondary;
     --f7-dialog-text-color: @text-secondary;
     --f7-dialog-title-text-color: @text-normal;
-    --f7-dialog-button-text-color: @brandColor;
+    --f7-dialog-button-text-color: @toolbar-icons;
 
     --f7-picker-item-text-color: rgba(var(--text-normal), 0.45);
     --f7-picker-item-selected-text-color: @text-normal;
@@ -57,8 +58,8 @@
     --f7-box-shadow: 0px 5px 5px -3px rgba(0,0,0,.2),0px 8px 10px 1px rgba(0,0,0,.14),0px 3px 14px 2px rgba(0,0,0,.12);
     --f7-popover-box-shadow: var(--f7-box-shadow);
 
-    --f7-toggle-active-bg-color: @brandColor;
-    --f7-toggle-active-border-color: @brandColor;
+    --f7-toggle-active-bg-color: @toolbar-icons;
+    --f7-toggle-active-border-color: @toolbar-icons;
 
     --f7-navbar-title-margin-left: 20px;
     --f7-navbar-title-margin-right: 20px;
@@ -73,8 +74,8 @@
         }
     }
 
-    --f7-input-focused-border-color: @brandColor;
-    --f7-label-focused-text-color: @brandColor;
+    --f7-input-focused-border-color: @toolbar-icons;
+    --f7-label-focused-text-color: @toolbar-icons;
 
     .navbar {
         --f7-touch-ripple-color: @touchColor;
@@ -248,13 +249,15 @@
             font-weight: 500;
             text-transform: uppercase;
             align-items: center;
-            color: @tabLinkColor;
+            color: @toolbar-icons;
             white-space: nowrap;
+            opacity: 0.5;
             .icon-svg {
                 opacity: 0.5;
             }
             &.tab-link-active {
-                color: @fill-white;
+                color: @toolbar-icons;
+                opacity: 1;
                 .icon-svg {
                     opacity: 1;
                     fill:  @fill-white;
@@ -689,7 +692,7 @@
             font-weight: 500;
             font-size: 14px;
             line-height: 20px;
-            color: @brandColor;
+            color: @toolbar-icons;
             margin-top: 16px;
             margin-bottom: 4px;
         }

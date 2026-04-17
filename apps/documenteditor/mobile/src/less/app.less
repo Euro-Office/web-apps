@@ -8,19 +8,9 @@
 
 .device-ios {
     --toolbar-background: var(--background-primary, #FFF);
-    --toolbar-segment: var(--brand-word, #446995);
-    --toolbar-icons: var(--brand-word, #446995);
     --f7-toolbar-border-color: var(--background-menu-divider);
     --f7-bars-border-color: var(--background-menu-divider);
     --f7-calendar-row-border-color: var(--background-menu-divider);
-}
-
-.device-android {
-    --toolbar-background: var(--brand-word, #446995);
-
-    .theme-type-dark {
-        --toolbar-icons: var(--brand-word, #446995);
-    }
 }
 
 @toolbar-background: var(--toolbar-background);
@@ -84,7 +74,7 @@
 
 // Review
 .page-review {
-    --f7-toolbar-link-color: @brandColor;
+    --f7-toolbar-link-color: @toolbar-icons;
     
     .toolbar {
         background-color: @background-secondary;
@@ -187,7 +177,7 @@
         max-height: 150px;
         overflow: hidden;
         &_active {
-            border: 1.5px solid @brandColor;
+            border: 1.5px solid @toolbar-icons;
         }
     }
 }
@@ -290,14 +280,14 @@
     }
     .calendar-day-selected .calendar-day-number, .calendar-day-today.calendar-day-selected .calendar-day-number {
         border: 1px solid transparent;
-        background-color: @brandColor;
+        background-color: @toolbar-icons;
         color: @fill-white;
     }
     .calendar-day-selected.calendar-day-weekend .calendar-day-number {
         color: @fill-white;
     }
     .calendar-day-today .calendar-day-number {
-        border: 1px solid @brandColor;
+        border: 1px solid @toolbar-icons;
         background-color: transparent;
     }
     .calendar-day-weekend .calendar-day-number {
@@ -336,7 +326,7 @@
         background: @background-secondary;
     }
     .calendar-month-picker-item-current, .calendar-year-picker-item-current {
-        color: @brandColor;
+        color: @toolbar-icons;
     }
 }
 
@@ -351,7 +341,7 @@
         display: none;
     }
     .item-title {
-        color: @brandColor;
+        color: @toolbar-icons;
     }
 }
 
