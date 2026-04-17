@@ -92,7 +92,7 @@ define([
 
                 this.btnRemoveHidden = new Common.UI.Button({
                     cls: 'btn-toolbar x-huge icon-top',
-                    iconCls: 'toolbar__icon btn-big-text-comment',
+                    iconCls: 'toolbar__icon btn-clear-metadata',
                     style: 'min-width: 45px;',
                     lock: [_set.lostConnect, _set.disableOnStart],
                     caption: me.capRemoveHiddenInfo,
