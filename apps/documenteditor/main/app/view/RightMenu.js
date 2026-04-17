@@ -254,7 +254,7 @@ define([
                 this.formSettings = new DE.Views.FormSettings();
             }
 
-            if (!mode.canRequestStartFilling && mode.canRequestUsers) {
+            if (mode && mode.isPDFForm && !mode.canRequestStartFilling && mode.canRequestUsers) {
                 this.btnSendForSigning = new Common.UI.Button({
                     hint: this.txtSendForSigning,
                     asctype: Common.Utils.documentSettingsType.SendForSigning,
