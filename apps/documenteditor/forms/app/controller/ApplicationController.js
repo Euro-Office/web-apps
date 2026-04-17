@@ -1702,6 +1702,7 @@ define([
 
             this.attachUIEvents();
 
+            Common.Gateway.sendInfo({mode:'view'});
             Common.Gateway.documentReady();
             Common.Analytics.trackEvent('Load', 'Complete');
             Common.NotificationCenter.trigger('document:ready');
