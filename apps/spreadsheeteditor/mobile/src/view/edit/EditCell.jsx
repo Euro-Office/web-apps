@@ -68,10 +68,10 @@ import IconCheck from '@common-android-icons/icon-check.svg';
 import IconTextDirectionContext from '@common-icons/icon-text-direction-context.svg';
 import IconTextDirectionRtl from '@common-icons/icon-text-direction-rtl.svg';
 import IconTextDirectionLtr from '@common-icons/icon-text-direction-ltr.svg';
-import IconTextBold from '@common-icons/icon-text-bold.svg'
-import IconTextItalic from '@common-icons/icon-text-italic.svg'
-import IconTextUnderline from '@common-icons/icon-text-underline.svg'
-import IconTextStrikethrough from '@common-icons/icon-text-strikethrough.svg'
+import IconTextBold from '@common-icons/icon-bold.svg'
+import IconTextItalic from '@common-icons/icon-italic.svg'
+import IconTextUnderline from '@common-icons/icon-underline.svg'
+import IconTextStrikethrough from '@common-icons/icon-strikethrough.svg'
 
 const getFormatIcon = (cellFormat, cellFormatType) => {
     const exactFormatMap = {
