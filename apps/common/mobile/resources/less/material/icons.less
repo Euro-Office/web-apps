@@ -45,12 +45,35 @@
             }
             &.inactive {
                 fill: @text-tertiary;
+                --icon-stroke-gray-primary: @brandColor;
+                opacity: 0.5;
             }
             &.active {
                 fill: @brandColor;
+                --icon-stroke-gray-primary: @brandColor;
             }
             &.close {
                 fill: @brandColor;
+                --icon-stroke-gray-primary: @brandColor;
+            }
+        }
+
+        i.icon {
+            &.icon-back {
+                color: @brandColor;
+            }
+        }
+    }
+}
+
+.theme-type-dark {
+    .navbar {
+        .icon-svg {
+            &.inactive,
+            &.active,
+            &.close {
+                fill: @toolbar-icons;
+                --icon-stroke-gray-primary: @toolbar-icons;
             }
         }
 

@@ -4,7 +4,7 @@ import { f7, Popup, Sheet, Popover, Page, Toolbar, Navbar, NavLeft, NavRight, Na
 import { useTranslation } from 'react-i18next';
 import {Device} from '../../../utils/device';
 import SvgIcon from '@common/lib/component/SvgIcon';
-import IconDoneCommentWhite from '@common-android-icons/icon-done-comment-white.svg';
+import IconDoneComment from '@common-android-icons/icon-done-comment.svg';
 import IconExpandDownIos from '@common-ios-icons/icon-expand-down.svg?ios';
 import IconExpandDownAndroid from '@common-android-icons/icon-expand-down.svg';
 import IconResolveCommentAndroid from '@common-android-icons/icon-resolve-comment.svg';
@@ -31,7 +31,7 @@ const sliceQuote = (text) => {
 };
 
 function svgIcon(symbolId) {
-    return `<svg class="icon icon-svg icon-svg__white">
+    return `<svg class="icon icon-svg">
         <use href="#${symbolId}"></use>
     </svg>`;
 };
@@ -66,7 +66,7 @@ const AddCommentPopup = inject("storeComments")(observer(props => {
                 </NavLeft>
                 <NavTitle>{_t.textAddComment}</NavTitle>
                 <NavRight>
-                    <Link className={stateText.length === 0 && 'disabled'}
+                    <Link className={`done${stateText.length === 0 ? ' disabled' : ''}`}
                           onClick={() => {
                               f7.popup.close('.add-comment-popup');
                               setTimeout(() => {
@@ -74,7 +74,7 @@ const AddCommentPopup = inject("storeComments")(observer(props => {
                                   props.onAddNewComment(stateText, false)
                               }, 500);
                     }}>
-                        {Device.android ? <SvgIcon symbolId={IconDoneCommentWhite.id} className={'icon icon-svg icon icon-svg__white'} /> : _t.textDone}
+                        {Device.android ? <SvgIcon symbolId={IconDoneComment.id} className={'icon icon-svg'} /> : _t.textDone}
                     </Link>
                 </NavRight>
             </Navbar>
@@ -113,7 +113,7 @@ const AddCommentDialog = inject("storeComments")(observer(props => {
                         </div>
                         <div class="title">${_t.textAddComment}</div>
                         <div class="right">
-                            <a href="#" class="done" id="comment-done">${ Device.android ? svgIcon(IconDoneCommentWhite.id)  : _t.textDone}</a>
+                            <a href="#" class="done" id="comment-done">${ Device.android ? svgIcon(IconDoneComment.id)  : _t.textDone}</a>
                         </div>
                     </div>
                 </div>
@@ -247,7 +247,7 @@ const EditCommentPopup = inject("storeComments")(observer(({storeComments, comme
                 </NavLeft>
                 <NavTitle>{_t.textEditComment}</NavTitle>
                 <NavRight>
-                    <Link className={stateText.length === 0 && 'disabled'}
+                    <Link className={`done${stateText.length === 0 ? ' disabled' : ''}`}
                           onClick={() => {
                               f7.popup.close('.edit-comment-popup');
                               setTimeout(() => {
@@ -256,7 +256,7 @@ const EditCommentPopup = inject("storeComments")(observer(({storeComments, comme
                               }, 500);
                           }}
                     >
-                        {Device.android ? <SvgIcon symbolId={IconDoneCommentWhite.id} className={'icon icon-svg icon icon-svg__white'} /> : _t.textDone}
+                        {Device.android ? <SvgIcon symbolId={IconDoneComment.id} className={'icon icon-svg'} /> : _t.textDone}
                     </Link>
                 </NavRight>
             </Navbar>
@@ -297,7 +297,7 @@ const EditCommentDialog = inject("storeComments")(observer(({storeComments, comm
                         </div>
                         <div class="title">${_t.textEditComment}</div>
                         <div class="right">
-                            <a href="#" class="done" id="comment-done">${ Device.android ? svgIcon(IconDoneCommentWhite.id) : _t.textDone}</a>
+                            <a href="#" class="done" id="comment-done">${ Device.android ? svgIcon(IconDoneComment.id) : _t.textDone}</a>
                         </div>
                     </div>
                 </div>
@@ -393,7 +393,7 @@ const AddReplyPopup = inject("storeComments")(observer(({storeComments, userInfo
                 </NavLeft>
                 <NavTitle>{_t.textAddReply}</NavTitle>
                 <NavRight>
-                    <Link className={stateText.length === 0 && 'disabled'}
+                    <Link className={`done${stateText.length === 0 ? ' disabled' : ''}`}
                           onClick={() => {
                               f7.popup.close('.add-reply-popup');
                               setTimeout(() => {
@@ -401,7 +401,7 @@ const AddReplyPopup = inject("storeComments")(observer(({storeComments, userInfo
                                   onAddReply(comment, stateText);
                               }, 500);
                           }}>
-                        {Device.android ? <SvgIcon symbolId={IconDoneCommentWhite.id} className={'icon icon-svg icon icon-svg__white'} /> : _t.textDone}
+                        {Device.android ? <SvgIcon symbolId={IconDoneComment.id} className={'icon icon-svg'} /> : _t.textDone}
                     </Link>
                 </NavRight>
             </Navbar>
@@ -439,7 +439,7 @@ const AddReplyDialog = inject("storeComments")(observer(({storeComments, userInf
                         </div>
                         <div class="title">${_t.textAddReply}</div>
                         <div class="right">
-                            <a href="#" class="done" id="reply-done">${ Device.android ? svgIcon(IconDoneCommentWhite.id) : _t.textDone}</a>
+                            <a href="#" class="done" id="reply-done">${ Device.android ? svgIcon(IconDoneComment.id) : _t.textDone}</a>
                         </div>
                     </div>
                 </div>
@@ -533,7 +533,7 @@ const EditReplyPopup = inject("storeComments")(observer(({storeComments, comment
                 </NavLeft>
                 <NavTitle>{_t.textEditReply}</NavTitle>
                 <NavRight>
-                    <Link className={stateText.length === 0 && 'disabled'}
+                    <Link className={`done${stateText.length === 0 ? ' disabled' : ''}`}
                           onClick={() => {
                               f7.popup.close('.edit-reply-popup');
                               setTimeout(() => {
@@ -542,7 +542,7 @@ const EditReplyPopup = inject("storeComments")(observer(({storeComments, comment
                               }, 500);
                           }}
                     >
-                        {Device.android ? <SvgIcon symbolId={IconDoneCommentWhite.id} className={'icon icon-svg icon icon-svg__white'} /> : _t.textDone}
+                        {Device.android ? <SvgIcon symbolId={IconDoneComment.id} className={'icon icon-svg'} /> : _t.textDone}
                     </Link>
                 </NavRight>
             </Navbar>
@@ -583,7 +583,7 @@ const EditReplyDialog = inject("storeComments")(observer(({storeComments, commen
                         </div>
                         <div class="title">${_t.textEditReply}</div>
                         <div class="right">
-                            <a href="#" class="done" id="reply-done">${ Device.android ? svgIcon(IconDoneCommentWhite.id) : _t.textDone}</a>
+                            <a href="#" class="done" id="reply-done">${ Device.android ? svgIcon(IconDoneComment.id) : _t.textDone}</a>
                         </div>
                     </div>
                 </div>

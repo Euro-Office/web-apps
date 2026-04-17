@@ -13,7 +13,7 @@
     --f7-theme-color: @brandColor;
 
     --f7-navbar-bg-color: @toolbar-background;
-    --f7-navbar-link-color: @toolbar-icons;
+    --f7-navbar-link-color:  @brandColor;
     --f7-navbar-text-color: @toolbar-icons;
     --f7-navbar-height: 56px;
 
@@ -23,11 +23,11 @@
     --f7-subnavbar-text-color: @toolbar-icons;
     --f7-subnavbar-height: 56px;
 
-    --f7-radio-active-color: @toolbar-icons;
+    --f7-checkbox-active-color: @brandColor;
+    --f7-radio-active-color: @brandColor;
     --f7-range-bar-active-bg-color: @toolbar-icons;
     --f7-range-knob-color: @toolbar-icons;
     --f7-range-knob-size: 16px;
-    --f7-toggle-active-knob-bg-color: @brand-text-on-brand;
 
     --f7-list-item-after-text-color: @text-normal;
 
@@ -58,8 +58,8 @@
     --f7-box-shadow: 0px 5px 5px -3px rgba(0,0,0,.2),0px 8px 10px 1px rgba(0,0,0,.14),0px 3px 14px 2px rgba(0,0,0,.12);
     --f7-popover-box-shadow: var(--f7-box-shadow);
 
-    --f7-toggle-active-bg-color: @toolbar-icons;
-    --f7-toggle-active-border-color: @toolbar-icons;
+    --f7-toggle-active-bg-color: @brandColor;
+    --f7-toggle-active-border-color: @brandColor;
 
     --f7-navbar-title-margin-left: 20px;
     --f7-navbar-title-margin-right: 20px;
@@ -74,8 +74,8 @@
         }
     }
 
-    --f7-input-focused-border-color: @toolbar-icons;
-    --f7-label-focused-text-color: @toolbar-icons;
+    --f7-input-focused-border-color: @brandColor;
+    --f7-label-focused-text-color: @brandColor;
 
     .navbar {
         --f7-touch-ripple-color: @touchColor;
@@ -670,6 +670,18 @@
         box-shadow: var(--f7-box-shadow);
 
         &.popover__titled {
+            .navbar::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: 1px;
+                background: @background-menu-divider;
+                z-index: 11;
+                pointer-events: none;
+            }
+            
             .popover-arrow:after {
                 background: @toolbar-background;
             }
@@ -780,7 +792,7 @@
         font-size: 16px;
         line-height: 24px;
         letter-spacing: 0.15px;
-        color: @toolbar-icons;
+        color: @brandColor;
         margin-left: 16px;
     }
 
@@ -802,5 +814,12 @@
     .sheet-modal.calendar, .dropdown-list-popup {
         box-shadow:0 3.75px 11px 0 rgba(0, 0, 0, 0.19),
                 0 0.5px  5px  0 rgba(0, 0, 0, 0.039);
+    }
+}
+
+.theme-type-dark {
+    .app-layout {
+        --f7-input-focused-border-color: @toolbar-icons;
+        --f7-label-focused-text-color: @toolbar-icons;
     }
 }

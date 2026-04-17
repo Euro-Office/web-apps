@@ -6,7 +6,7 @@
     @text-normal: var(--text-normal);
     @background-warning: #FF9F0A;
 
-    --f7-navbar-link-color: @toolbar-icons;
+    --f7-navbar-link-color:  @brandColor;
     --f7-subnavbar-link-color: @toolbar-icons;
     --f7-navbar-text-color: @toolbar-icons;
     --f7-navbar-title-line-height: 44px;
@@ -16,11 +16,11 @@
     --f7-list-bg-color: @background-primary;
     --f7-navbar-bg-color: @toolbar-background;
 
-    --f7-tabbar-link-inactive-color: @toolbar-icons;
+    --f7-tabbar-link-inactive-color: @toolbar-segment;
 
-    --f7-radio-active-color: @toolbar-icons;
-    --f7-toggle-active-color: @toolbar-icons;
-    --f7-toggle-active-knob-bg-color: @brand-text-on-brand;
+    --f7-checkbox-active-color: @brandColor;
+    --f7-radio-active-color: @brandColor;
+    --f7-toggle-active-color: @brandColor;
     --f7-range-bar-active-bg-color: @toolbar-icons;
 
     --f7-list-button-text-color: @toolbar-icons;
@@ -688,7 +688,7 @@
         font-size: 17px;
         line-height: 22px;
         letter-spacing: -0.41px;
-        color: @toolbar-icons;
+        color: @brandColor;
         margin-left: 10px;
     }
 
@@ -706,6 +706,19 @@
     }
     
 
+}
+
+.theme-type-dark,
+.theme-dark {
+    .navbar-link-settings,
+    .navbar-dropdown-list {
+        --f7-navbar-link-color: @toolbar-icons;
+    }
+
+    .back span,
+    .icon-back {
+        color: @toolbar-icons;
+    }
 }
 
 
