@@ -38,7 +38,6 @@
 
 define([
     'common/main/lib/component/Window',
-    'common/main/lib/component/ComboBox'
 ], function () { 'use strict';
 
     PDFE.Views.RemoveMetaDlg = Common.UI.Window.extend(_.extend({
@@ -188,7 +187,6 @@ define([
 
             var $window = this.getChild();
             $window.find('.dlg-btn').on('click', _.bind(this.onBtnClick, this));
-            console.log(this.chMetadata)
         },
 
         getFocusedComponents: function() {
@@ -219,11 +217,7 @@ define([
             return false;
         },
 
-        setSettings: function (type, pagewitdh, pageheight, slidenum) {
-        },
-
         getSettings: function() {
-            console.log(this.chMetadata)
             return [this.chMetadata.isChecked(), this.chAttachedFiles.isChecked(), this.chBookmarks.isChecked(), this.chSearchIdx.isChecked(), 
                 this.chCommentsCorrections.isChecked(), this.chFormFields.isChecked(), this.chHiddenText.isChecked(), 
                 this.chHiddenLayers.isChecked(), this.chDeletedTrimmed.isChecked(), this.chLinksActions.isChecked(), 
