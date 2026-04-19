@@ -670,16 +670,17 @@
         box-shadow: var(--f7-box-shadow);
 
         &.popover__titled {
-            .navbar::after {
-                content: '';
-                position: absolute;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                height: 1px;
-                background: @background-menu-divider;
-                z-index: 11;
-                pointer-events: none;
+            .navbar {
+                .navbar-inner::after {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    height: 1px;
+                    background: @background-menu-divider;
+                    pointer-events: none;
+                }
             }
             
             .popover-arrow:after {
@@ -815,11 +816,38 @@
         box-shadow:0 3.75px 11px 0 rgba(0, 0, 0, 0.19),
                 0 0.5px  5px  0 rgba(0, 0, 0, 0.039);
     }
+
+    .popup, .sheet-modal {
+        .navbar {
+            .navbar-inner::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: 1px;
+                background: @background-menu-divider;
+                pointer-events: none;
+            }
+        }
+    }
+
+    .popup-close, .sheet-close {
+        --icon-stroke-gray-primary: @brandColor; 
+    }
 }
 
 .theme-type-dark {
     .app-layout {
         --f7-input-focused-border-color: @toolbar-icons;
         --f7-label-focused-text-color: @toolbar-icons;
+
+        .popup-close, .sheet-close {
+            --icon-stroke-gray-primary: @toolbar-icons; 
+        }
+
+        .link.popup-close {
+            --f7-navbar-link-color: @toolbar-icons;
+        }
     }
 }
