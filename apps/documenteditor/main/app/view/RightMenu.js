@@ -60,6 +60,7 @@ define([
     'documenteditor/main/app/view/SignatureSettings',
     'documenteditor/main/app/view/FormSettings',
     'documenteditor/main/app/view/SendForSigningSettings',
+    'documenteditor/main/app/view/FillingStatusSettings',
     'common/main/lib/component/Scroller',
     'common/main/lib/component/ListView',
 ], function (menuTemplate, $, _, Backbone) {
@@ -78,81 +79,6 @@ define([
         initialize: function () {
             this.minimizedMode = true;
             this.maximizedMode = false;
-
-            this.btnText = new Common.UI.Button({
-                hint: this.txtParagraphSettings,
-                asctype: Common.Utils.documentSettingsType.Paragraph,
-                enableToggle: true,
-                disabled: true,
-                iconCls: 'btn-paragraph',
-                toggleGroup: 'tabpanelbtnsGroup',
-                allowMouseEventsOnDisabled: true
-            });
-            this.btnTable = new Common.UI.Button({
-                hint: this.txtTableSettings,
-                asctype: Common.Utils.documentSettingsType.Table,
-                enableToggle: true,
-                disabled: true,
-                iconCls: 'btn-menu-table',
-                toggleGroup: 'tabpanelbtnsGroup',
-                allowMouseEventsOnDisabled: true
-            });
-            this.btnImage = new Common.UI.Button({
-                hint: this.txtImageSettings,
-                asctype: Common.Utils.documentSettingsType.Image,
-                enableToggle: true,
-                disabled: true,
-                iconCls: 'btn-menu-image',
-                toggleGroup: 'tabpanelbtnsGroup',
-                allowMouseEventsOnDisabled: true
-            });
-            // this.btnHeaderFooter = new Common.UI.Button({
-            //     hint: this.txtHeaderFooterSettings,
-            //     asctype: Common.Utils.documentSettingsType.Header,
-            //     enableToggle: true,
-            //     disabled: true,
-            //     iconCls: 'btn-menu-header',
-            //     toggleGroup: 'tabpanelbtnsGroup',
-            //     allowMouseEventsOnDisabled: true
-            // });
-            // this.btnChart = new Common.UI.Button({
-            //     hint: this.txtChartSettings,
-            //     asctype: Common.Utils.documentSettingsType.Chart,
-            //     enableToggle: true,
-            //     disabled: true,
-            //     iconCls: 'btn-menu-chart',
-            //     toggleGroup: 'tabpanelbtnsGroup',
-            //     allowMouseEventsOnDisabled: true
-            // });
-            this.btnShape = new Common.UI.Button({
-                hint: this.txtShapeSettings,
-                asctype: Common.Utils.documentSettingsType.Shape,
-                enableToggle: true,
-                disabled: true,
-                iconCls: 'btn-menu-shape',
-                toggleGroup: 'tabpanelbtnsGroup',
-                allowMouseEventsOnDisabled: true
-            });
-
-            this.btnTextArt = new Common.UI.Button({
-                hint: this.txtTextArtSettings,
-                asctype: Common.Utils.documentSettingsType.TextArt,
-                enableToggle: true,
-                disabled: true,
-                iconCls: 'btn-menu-textart',
-                toggleGroup: 'tabpanelbtnsGroup',
-                allowMouseEventsOnDisabled: true
-            });
-
-            this._settings = [];
-            this._settings[Common.Utils.documentSettingsType.Paragraph]   = {panel: "id-paragraph-settings",  btn: this.btnText};
-            this._settings[Common.Utils.documentSettingsType.Table]       = {panel: "id-table-settings",      btn: this.btnTable};
-            this._settings[Common.Utils.documentSettingsType.Image]       = {panel: "id-image-settings",      btn: this.btnImage};
-            // this._settings[Common.Utils.documentSettingsType.Header]      = {panel: "id-header-settings",     btn: this.btnHeaderFooter};
-            this._settings[Common.Utils.documentSettingsType.Shape]       = {panel: "id-shape-settings",      btn: this.btnShape};
-            // this._settings[Common.Utils.documentSettingsType.Chart]       = {panel: "id-chart-settings",      btn: this.btnChart};
-            this._settings[Common.Utils.documentSettingsType.TextArt]     = {panel: "id-textart-settings",    btn: this.btnTextArt};
-
             return this;
         },
 
@@ -161,6 +87,7 @@ define([
 
             this.defaultHideRightMenu = !(mode.customization && (mode.customization.hideRightMenu===false));
             var open = !Common.localStorage.getBool("de-hide-right-settings", this.defaultHideRightMenu);
+            (mode.isPDFForm && !mode.isEdit) && (open = false);
             Common.Utils.InternalSettings.set("de-hide-right-settings", !open);
 
             Common.NotificationCenter.on('app:repaint', _.bind(function() {
@@ -182,102 +109,198 @@ define([
             Common.UI.SideMenu.prototype.render.call(this);
             this.btnMore.menu.menuAlign = 'tr-tl';
 
-            this.btnText.setElement($markup.findById('#id-right-menu-text'), false);           this.btnText.render();
-            this.btnTable.setElement($markup.findById('#id-right-menu-table'), false);         this.btnTable.render();
-            this.btnImage.setElement($markup.findById('#id-right-menu-image'), false);         this.btnImage.render();
-            // this.btnHeaderFooter.setElement($markup.findById('#id-right-menu-header'), false); this.btnHeaderFooter.render();
-            // this.btnChart.setElement($markup.findById('#id-right-menu-chart'), false);         this.btnChart.render();
-            this.btnShape.setElement($markup.findById('#id-right-menu-shape'), false);         this.btnShape.render();
-            this.btnTextArt.setElement($markup.findById('#id-right-menu-textart'), false);     this.btnTextArt.render();
-
-            this.btnText.on('click',            this.onBtnMenuClick.bind(this));
-            this.btnTable.on('click',           this.onBtnMenuClick.bind(this));
-            this.btnImage.on('click',           this.onBtnMenuClick.bind(this));
-            // this.btnHeaderFooter.on('click',    this.onBtnMenuClick.bind(this));
-            // this.btnChart.on('click',           this.onBtnMenuClick.bind(this));
-            this.btnShape.on('click',           this.onBtnMenuClick.bind(this));
-            this.btnTextArt.on('click',         this.onBtnMenuClick.bind(this));
-
-            this.paragraphSettings = new DE.Views.ParagraphSettings();
-            // this.headerSettings = new DE.Views.HeaderFooterSettings();
-            this.imageSettings = new DE.Views.ImageSettings();
-            // this.chartSettings = new DE.Views.ChartSettings();
-            this.tableSettings = new DE.Views.TableSettings();
-            this.shapeSettings = new DE.Views.ShapeSettings();
-            this.textartSettings = new DE.Views.TextArtSettings();
-
-            if (mode && mode.canCoAuthoring && mode.canUseMailMerge && Common.UI.LayoutManager.isElementVisible('toolbar-collaboration-mailmerge')) {
-                this.btnMailMerge = new Common.UI.Button({
-                    hint: this.txtMailMergeSettings,
-                    asctype: Common.Utils.documentSettingsType.MailMerge,
+            this._settings = [];
+            if(mode && mode.isEdit)  {
+                this.btnText = new Common.UI.Button({
+                    hint: this.txtParagraphSettings,
+                    asctype: Common.Utils.documentSettingsType.Paragraph,
                     enableToggle: true,
                     disabled: true,
-                    iconCls: 'btn-mailmerge',
+                    iconCls: 'btn-paragraph',
                     toggleGroup: 'tabpanelbtnsGroup',
                     allowMouseEventsOnDisabled: true
                 });
-                this._settings[Common.Utils.documentSettingsType.MailMerge]   = {panel: "id-mail-merge-settings", btn: this.btnMailMerge};
-                this.btnMailMerge.setElement($markup.findById('#id-right-menu-mail-merge'), false); this.btnMailMerge.render().setVisible(true);
-                this.btnMailMerge.on('click', this.onBtnMenuClick.bind(this));
-                this.mergeSettings = new DE.Views.MailMergeSettings();
-            }
-
-            if (mode && (mode.isSignatureSupport || mode.isPDFSignatureSupport)) {
-                this.btnSignature = new Common.UI.Button({
-                    hint: this.txtSignatureSettings,
-                    asctype: Common.Utils.documentSettingsType.Signature,
+                this.btnTable = new Common.UI.Button({
+                    hint: this.txtTableSettings,
+                    asctype: Common.Utils.documentSettingsType.Table,
                     enableToggle: true,
                     disabled: true,
-                    iconCls: 'btn-menu-signature',
+                    iconCls: 'btn-menu-table',
                     toggleGroup: 'tabpanelbtnsGroup',
                     allowMouseEventsOnDisabled: true
                 });
-                this._settings[Common.Utils.documentSettingsType.Signature]   = {panel: "id-signature-settings", btn: this.btnSignature};
-                this.btnSignature.setElement($markup.findById('#id-right-menu-signature'), false); this.btnSignature.render().setVisible(true);
-                this.btnSignature.on('click', this.onBtnMenuClick.bind(this));
-                this.signatureSettings = new DE.Views.SignatureSettings();
-            }
-
-            if (mode && mode.canFeatureContentControl && mode.canEditContentControl && mode.isFormCreator) {
-                this.btnForm = new Common.UI.Button({
-                    hint: this.txtFormSettings,
-                    asctype: Common.Utils.documentSettingsType.Form,
+                this.btnImage = new Common.UI.Button({
+                    hint: this.txtImageSettings,
+                    asctype: Common.Utils.documentSettingsType.Image,
                     enableToggle: true,
                     disabled: true,
-                    iconCls: 'btn-field',
+                    iconCls: 'btn-menu-image',
                     toggleGroup: 'tabpanelbtnsGroup',
                     allowMouseEventsOnDisabled: true
                 });
-                this._settings[Common.Utils.documentSettingsType.Form]   = {panel: "id-form-settings", btn: this.btnForm};
-                this.btnForm.setElement($markup.findById('#id-right-menu-form'), false); this.btnForm.render().setVisible(true);
-                this.btnForm.on('click', this.onBtnMenuClick.bind(this));
-                this.formSettings = new DE.Views.FormSettings();
-            }
 
-            if (mode && mode.isPDFForm && !mode.canRequestStartFilling && mode.canRequestUsers) {
-                this.btnSendForSigning = new Common.UI.Button({
-                    hint: this.txtSendForSigning,
-                    asctype: Common.Utils.documentSettingsType.SendForSigning,
+                // this.btnHeaderFooter = new Common.UI.Button({
+                //     hint: this.txtHeaderFooterSettings,
+                //     asctype: Common.Utils.documentSettingsType.Header,
+                //     enableToggle: true,
+                //     disabled: true,
+                //     iconCls: 'btn-menu-header',
+                //     toggleGroup: 'tabpanelbtnsGroup',
+                //     allowMouseEventsOnDisabled: true
+                // });
+                // this.btnChart = new Common.UI.Button({
+                //     hint: this.txtChartSettings,
+                //     asctype: Common.Utils.documentSettingsType.Chart,
+                //     enableToggle: true,
+                //     disabled: true,
+                //     iconCls: 'btn-menu-chart',
+                //     toggleGroup: 'tabpanelbtnsGroup',
+                //     allowMouseEventsOnDisabled: true
+                // });
+                this.btnShape = new Common.UI.Button({
+                    hint: this.txtShapeSettings,
+                    asctype: Common.Utils.documentSettingsType.Shape,
+                    enableToggle: true,
+                    disabled: true,
+                    iconCls: 'btn-menu-shape',
+                    toggleGroup: 'tabpanelbtnsGroup',
+                    allowMouseEventsOnDisabled: true
+                });
+    
+                this.btnTextArt = new Common.UI.Button({
+                    hint: this.txtTextArtSettings,
+                    asctype: Common.Utils.documentSettingsType.TextArt,
+                    enableToggle: true,
+                    disabled: true,
+                    iconCls: 'btn-menu-textart',
+                    toggleGroup: 'tabpanelbtnsGroup',
+                    allowMouseEventsOnDisabled: true
+                });
+    
+                this._settings[Common.Utils.documentSettingsType.Paragraph]   = {panel: "id-paragraph-settings",  btn: this.btnText};
+                this._settings[Common.Utils.documentSettingsType.Table]       = {panel: "id-table-settings",      btn: this.btnTable};
+                this._settings[Common.Utils.documentSettingsType.Image]       = {panel: "id-image-settings",      btn: this.btnImage};
+                // this._settings[Common.Utils.documentSettingsType.Header]      = {panel: "id-header-settings",     btn: this.btnHeaderFooter};
+                this._settings[Common.Utils.documentSettingsType.Shape]       = {panel: "id-shape-settings",      btn: this.btnShape};
+                // this._settings[Common.Utils.documentSettingsType.Chart]       = {panel: "id-chart-settings",      btn: this.btnChart};
+                this._settings[Common.Utils.documentSettingsType.TextArt]     = {panel: "id-textart-settings",    btn: this.btnTextArt};
+                
+                this.btnText.setElement($markup.findById('#id-right-menu-text'), false);           this.btnText.render().setVisible(true);
+                this.btnTable.setElement($markup.findById('#id-right-menu-table'), false);         this.btnTable.render().setVisible(true);
+                this.btnImage.setElement($markup.findById('#id-right-menu-image'), false);         this.btnImage.render().setVisible(true);
+                // this.btnHeaderFooter.setElement($markup.findById('#id-right-menu-header'), false); this.btnHeaderFooter.render().setVisible(true);
+                // this.btnChart.setElement($markup.findById('#id-right-menu-chart'), false);         this.btnChart.render().setVisible(true);
+                this.btnShape.setElement($markup.findById('#id-right-menu-shape'), false);         this.btnShape.render().setVisible(true);
+                this.btnTextArt.setElement($markup.findById('#id-right-menu-textart'), false);     this.btnTextArt.render().setVisible(true);
+    
+                this.btnText.on('click',            this.onBtnMenuClick.bind(this));
+                this.btnTable.on('click',           this.onBtnMenuClick.bind(this));
+                this.btnImage.on('click',           this.onBtnMenuClick.bind(this));
+                // this.btnHeaderFooter.on('click',    this.onBtnMenuClick.bind(this));
+                // this.btnChart.on('click',           this.onBtnMenuClick.bind(this));
+                this.btnShape.on('click',           this.onBtnMenuClick.bind(this));
+                this.btnTextArt.on('click',         this.onBtnMenuClick.bind(this));
+    
+                this.paragraphSettings = new DE.Views.ParagraphSettings();
+                // this.headerSettings = new DE.Views.HeaderFooterSettings();
+                this.imageSettings = new DE.Views.ImageSettings();
+                // this.chartSettings = new DE.Views.ChartSettings();
+                this.tableSettings = new DE.Views.TableSettings();
+                this.shapeSettings = new DE.Views.ShapeSettings();
+                this.textartSettings = new DE.Views.TextArtSettings();
+
+                if (mode && mode.canCoAuthoring && mode.canUseMailMerge && Common.UI.LayoutManager.isElementVisible('toolbar-collaboration-mailmerge')) {
+                    this.btnMailMerge = new Common.UI.Button({
+                        hint: this.txtMailMergeSettings,
+                        asctype: Common.Utils.documentSettingsType.MailMerge,
+                        enableToggle: true,
+                        disabled: true,
+                        iconCls: 'btn-mailmerge',
+                        toggleGroup: 'tabpanelbtnsGroup',
+                        allowMouseEventsOnDisabled: true
+                    });
+                    this._settings[Common.Utils.documentSettingsType.MailMerge]   = {panel: "id-mail-merge-settings", btn: this.btnMailMerge};
+                    this.btnMailMerge.setElement($markup.findById('#id-right-menu-mail-merge'), false); this.btnMailMerge.render().setVisible(true);
+                    this.btnMailMerge.on('click', this.onBtnMenuClick.bind(this));
+                    this.mergeSettings = new DE.Views.MailMergeSettings();
+                }
+    
+                if (mode && (mode.isSignatureSupport || mode.isPDFSignatureSupport)) {
+                    this.btnSignature = new Common.UI.Button({
+                        hint: this.txtSignatureSettings,
+                        asctype: Common.Utils.documentSettingsType.Signature,
+                        enableToggle: true,
+                        disabled: true,
+                        iconCls: 'btn-menu-signature',
+                        toggleGroup: 'tabpanelbtnsGroup',
+                        allowMouseEventsOnDisabled: true
+                    });
+                    this._settings[Common.Utils.documentSettingsType.Signature]   = {panel: "id-signature-settings", btn: this.btnSignature};
+                    this.btnSignature.setElement($markup.findById('#id-right-menu-signature'), false); this.btnSignature.render().setVisible(true);
+                    this.btnSignature.on('click', this.onBtnMenuClick.bind(this));
+                    this.signatureSettings = new DE.Views.SignatureSettings();
+                }
+    
+                if (mode && mode.canFeatureContentControl && mode.canEditContentControl && mode.isFormCreator) {
+                    this.btnForm = new Common.UI.Button({
+                        hint: this.txtFormSettings,
+                        asctype: Common.Utils.documentSettingsType.Form,
+                        enableToggle: true,
+                        disabled: true,
+                        iconCls: 'btn-field',
+                        toggleGroup: 'tabpanelbtnsGroup',
+                        allowMouseEventsOnDisabled: true
+                    });
+                    this._settings[Common.Utils.documentSettingsType.Form]   = {panel: "id-form-settings", btn: this.btnForm};
+                    this.btnForm.setElement($markup.findById('#id-right-menu-form'), false); this.btnForm.render().setVisible(true);
+                    this.btnForm.on('click', this.onBtnMenuClick.bind(this));
+                    this.formSettings = new DE.Views.FormSettings();
+                }
+    
+                if (mode && mode.isPDFForm && !mode.canRequestStartFilling && mode.canRequestUsers) {
+                    this.btnSendForSigning = new Common.UI.Button({
+                        hint: this.txtSendForSigning,
+                        asctype: Common.Utils.documentSettingsType.SendForSigning,
+                        enableToggle: true,
+                        disabled: false,
+                        iconCls: 'btn-menu-send-to-sign',
+                        toggleGroup: 'tabpanelbtnsGroup',
+                        allowMouseEventsOnDisabled: true
+                    });
+                    this._settings[Common.Utils.documentSettingsType.SendForSigning]   = {panel: "id-send-for-signing-settings", btn: this.btnSendForSigning};
+                    this.btnSendForSigning.setElement($markup.findById('#id-right-menu-send-for-signing'), false); 
+                    this.btnSendForSigning.render().setVisible(true);
+                    this.btnSendForSigning.on('click', this.onBtnMenuClick.bind(this));
+                    this.sendForSigningSettings = new DE.Views.SendForSigningSettings({
+                        handler: function(state, options) {
+                            if(state == 'submit') {
+                                DE.getController('Main').onStartFilling(true, options);
+                            } else if(state == 'cancel') {
+                                const rightmenuController = DE.getController('RightMenu');
+                                rightmenuController.closeSendForSigning();
+                            }
+                        }
+                    });
+                }
+            }
+            
+            if(mode && !mode.isEdit && isPDFForm && !mode.canRequestFillingStatus && 
+                (mode.user && mode.user.roles && mode.user.roles.length > 0)
+            ) {
+                this.btnFillingStatus = new Common.UI.Button({
+                    hint: this.txtFillingStatus,
+                    asctype: Common.Utils.documentSettingsType.FillingStatus,
                     enableToggle: true,
                     disabled: false,
-                    iconCls: 'btn-field',
+                    iconCls: 'btn-filling-status',
                     toggleGroup: 'tabpanelbtnsGroup',
                     allowMouseEventsOnDisabled: true
                 });
-                this._settings[Common.Utils.documentSettingsType.SendForSigning]   = {panel: "id-send-for-signing-settings", btn: this.btnSendForSigning};
-                this.btnSendForSigning.setElement($markup.findById('#id-right-menu-send-for-signing'), false); 
-                this.btnSendForSigning.render().setVisible(true);
-                this.btnSendForSigning.on('click', this.onBtnMenuClick.bind(this));
-                this.sendForSigningSettings = new DE.Views.SendForSigningSettings({
-                    handler: function(state, options) {
-                        if(state == 'submit') {
-                            DE.getController('Main').onStartFilling(true, options);
-                        } else if(state == 'cancel') {
-                            const rightmenuController = DE.getController('RightMenu');
-                            rightmenuController.closeSendForSigning();
-                        }
-                    }
-                });
+                this._settings[Common.Utils.documentSettingsType.FillingStatus]   = {panel: "id-filling-status-settings", btn: this.btnFillingStatus};
+                this.btnFillingStatus.setElement($markup.findById('#id-right-menu-filling-status'), false); 
+                this.btnFillingStatus.render().setVisible(true);
+                this.btnFillingStatus.on('click', this.onBtnMenuClick.bind(this));
+                this.fillingStatusSettings = new DE.Views.FillingStatusSettings();
             }
 
             if (_.isUndefined(this.scroller)) {
@@ -305,17 +328,18 @@ define([
             var _fire_editcomplete = function() {me.fireEvent('editcomplete', me);};
             var _isEyedropperStart = function (isStart) {this._isEyedropperStart = isStart;};
             var _updateScroller = function () {me.updateScroller();};
-            this.paragraphSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('eyedropper', _.bind(_isEyedropperStart, this));
-            // this.headerSettings.setApi(api).on('editcomplete', _fire_editcomplete);
-            this.imageSettings.setApi(api).on('editcomplete', _fire_editcomplete);
-            // this.chartSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('updatescroller', _updateScroller);
-            this.tableSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('eyedropper', _.bind(_isEyedropperStart, this));
-            this.shapeSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('eyedropper', _.bind(_isEyedropperStart, this)).on('updatescroller', _updateScroller);
-            this.textartSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('eyedropper', _.bind(_isEyedropperStart, this)).on('updatescroller', _updateScroller);
+            if(this.paragraphSettings) this.paragraphSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('eyedropper', _.bind(_isEyedropperStart, this));
+            // if(this.headerSettings) this.headerSettings.setApi(api).on('editcomplete', _fire_editcomplete);
+            if(this.imageSettings) this.imageSettings.setApi(api).on('editcomplete', _fire_editcomplete);
+            // if(this.chartSettings) this.chartSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('updatescroller', _updateScroller);
+            if(this.tableSettings) this.tableSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('eyedropper', _.bind(_isEyedropperStart, this));
+            if(this.shapeSettings) this.shapeSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('eyedropper', _.bind(_isEyedropperStart, this)).on('updatescroller', _updateScroller);
+            if(this.textartSettings) this.textartSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('eyedropper', _.bind(_isEyedropperStart, this)).on('updatescroller', _updateScroller);
             if (this.mergeSettings) this.mergeSettings.setApi(api).on('editcomplete', _fire_editcomplete);
             if (this.signatureSettings) this.signatureSettings.setApi(api).on('editcomplete', _fire_editcomplete);
             if (this.formSettings) this.formSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('updatescroller', _updateScroller);
             if (this.sendForSigningSettings) this.sendForSigningSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('updatescroller', _updateScroller);
+            if (this.fillingStatusSettings) this.fillingStatusSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('updatescroller', _updateScroller);
         },
 
         setMode: function(mode) {
@@ -328,6 +352,7 @@ define([
             // this.headerSettings && this.headerSettings.setMode(mode);
             this.signatureSettings && this.signatureSettings.setMode(mode);
             this.sendForSigningSettings && this.sendForSigningSettings.setMode(mode);
+            this.fillingStatusSettings && this.fillingStatusSettings.setMode(mode);
         },
 
         onBtnMenuClick: function(btn, e) {
@@ -405,6 +430,10 @@ define([
             return (this.minimizedMode || active.length === 0) ? null : active[0].id;
         },
 
+        getVisibleButtons: function() {
+            return this.$el.find('.tool-menu-btns > button:not(.hidden)');
+        },
+
         clearSelection: function() {
             if (this.mergeSettings)
                 this.mergeSettings.disablePreviewMode();
@@ -430,7 +459,7 @@ define([
 
         setButtons: function () {
             var allButtons = [this.btnText, this.btnTable, this.btnImage, this.btnShape, this.btnTextArt,
-                    this.btnMailMerge, this.btnSignature, this.btnForm, this.btnSendForSigning];
+                    this.btnMailMerge, this.btnSignature, this.btnForm, this.btnSendForSigning, this.btnFillingStatus];
             Common.UI.SideMenu.prototype.setButtons.apply(this, [allButtons]);
         },
 

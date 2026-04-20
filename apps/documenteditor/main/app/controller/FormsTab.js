@@ -546,6 +546,11 @@ define([
                         }, this);
                     }
                     this.submitedTooltip.show();
+
+                    const rightMenuController = DE.getController('RightMenu');
+                    const rightMenuView = rightMenuController && rightMenuController.getView('RightMenu');
+                    const fillingStatusSettings = rightMenuView && rightMenuView.fillingStatusSettings;
+                    fillingStatusSettings && fillingStatusSettings.updateRoles();
                 } else
                     Common.NotificationCenter.trigger('doc:mode-apply', 'view-form', true, true);
             }

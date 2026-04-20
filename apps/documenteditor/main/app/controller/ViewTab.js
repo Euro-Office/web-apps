@@ -171,7 +171,13 @@ define([
                         emptyGroup.shift().append(me.view.chLeftMenu.$el[0]);
                     }
 
-                    if (!config.isEdit || config.canBrandingExt && config.customization && config.customization.rightMenu === false || !Common.UI.LayoutManager.isElementVisible('rightMenu')) {
+                    const rightmenuController = me.getApplication().getController('RightMenu');
+                    const rightmenuView = rightmenuController.getView('RightMenu');
+                    const isPdfWithButtons = config.isPDFForm && rightmenuView && rightmenuView.getVisibleButtons().length > 0;
+                    if (!config.isEdit && !isPdfWithButtons || 
+                        config.canBrandingExt && config.customization && config.customization.rightMenu === false || 
+                        !Common.UI.LayoutManager.isElementVisible('rightMenu')
+                    ) {
                         emptyGroup.push(me.view.chRightMenu.$el.closest('.elset'));
                         me.view.chRightMenu.$el.remove();
                     } else if (emptyGroup.length>0) {
