@@ -40,7 +40,6 @@
 define([
     'core',
     'pdfeditor/main/app/view/RedactTab',
-    'pdfeditor/main/app/view/RemoveMetaDlg',
 ], function () {
     'use strict';
 

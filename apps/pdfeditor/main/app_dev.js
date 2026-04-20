@@ -239,7 +239,8 @@ require([
                     'pdfeditor/main/app/view/ShapeSettingsAdvanced',
                     'pdfeditor/main/app/view/TableSettingsAdvanced',
                     'pdfeditor/main/app/view/FormatSettingsDialog',
-                    'pdfeditor/main/app/view/ChartSettingsAdvanced'
+                    'pdfeditor/main/app/view/ChartSettingsAdvanced',
+                    'pdfeditor/main/app/view/RemoveMetaDlg',
                 ];
 
                 window.compareVersions = true;
