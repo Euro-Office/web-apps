@@ -9,6 +9,7 @@ const PagePresentationSettings = props => {
     const storePresentationSettings = props.storePresentationSettings;
     const slideSizeArr = storePresentationSettings.slideSizes;
     const slideSizeIndex = storePresentationSettings.slideSizeIndex;
+    const slideOrientation = storePresentationSettings.slideOrientation;
     const isLoopSlideshow = storePresentationSettings.isLoopSlideshow;
 
     return (
@@ -20,6 +21,13 @@ const PagePresentationSettings = props => {
                     onChange={() => props.onSlideSize(slideSizeArr[0])} title={_t.mniSlideStandard}></ListItem>
                 <ListItem radio name="slide-size" checked={slideSizeIndex === 1}
                     onChange={() => props.onSlideSize(slideSizeArr[1])} title={_t.mniSlideWide}></ListItem>
+            </List>
+            <BlockTitle>{_t.textSlideSize}</BlockTitle>
+            <List>
+                <ListItem radio name="slide-orientation" checked={!slideOrientation}
+                    onChange={() => props.onSlideOrientation()} title={_t.mniSlidePortrait}></ListItem>
+                <ListItem radio name="slide-orientation" checked={slideOrientation}
+                    onChange={() => props.onSlideOrientation()} title={_t.mniSlideLandscape}></ListItem>
             </List>
             <List mediaList>
                 <ListItem title={_t.textColorSchemes} link="/color-schemes/" routeProps={{

@@ -109,6 +109,7 @@ define([
             Common.UI.Themes.init(this.api);
             Common.Controllers.LaunchController.init(this.api);
 
+            Common.NotificationCenter.on('layout:changed', _.bind(this.onLayoutChanged, this));
             $(window).on('resize', this.onDocumentResize.bind(this));
 
             this.boxSdk = $('#editor_sdk');
@@ -201,8 +202,12 @@ define([
             this.textNoLicenseTitle = this.textNoLicenseTitle.replace(/%1/g, '{{COMPANY_NAME}}');
         },
 
-        onDocumentResize: function() {
+        onLayoutChanged: function(area) {
             this.api && this.api.Resize();
+        },
+
+        onDocumentResize: function() {
+            this.onLayoutChanged('window');
             bodyWidth = $('body').width();
         },
 
@@ -797,6 +802,15 @@ define([
                 this.api.asc_registerCallback('asc_onUpdateSignatures', _.bind(this.onApiUpdateSignatures, this));
             }
 
+            const rightMenuController = DE.getController('RightMenu');
+            const rightMenuView = rightMenuController.getView('RightMenu');
+            rightMenuView.render(this.appOptions);
+            rightMenuView.setApi(this.api);
+            rightMenuView.setMode(this.appOptions);
+            if(rightMenuView.$el.find('.tool-menu-btns > button').length == 0) {
+                rightMenuController.onRightMenuHide(null, false, true);
+            }
+
             this._isPermissionsInited = true;
             this.onLongActionBegin(Asc.c_oAscAsyncActionType['BlockInteraction'], LoadingDocument);
             this.api.asc_LoadDocument();
@@ -1006,6 +1020,11 @@ define([
                     }
                     this.api.asc_setRestriction(Asc.c_oAscRestrictionType.View, this.api.asc_getRestrictionSettings());
                     this.onApiServerDisconnect(true);
+
+                    const rightMenuController = DE.getController('RightMenu');
+                    const rightMenuView = rightMenuController && rightMenuController.getView('RightMenu');
+                    const fillingStatusSettings = rightMenuView && rightMenuView.fillingStatusSettings;
+                    fillingStatusSettings && fillingStatusSettings.updateRoles();
                 } else
                     this.disableFillingForms(false);
             }
@@ -1683,6 +1702,7 @@ define([
 
             this.attachUIEvents();
 
+            Common.Gateway.sendInfo({mode:'view'});
             Common.Gateway.documentReady();
             Common.Analytics.trackEvent('Load', 'Complete');
             Common.NotificationCenter.trigger('document:ready');

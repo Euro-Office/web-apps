@@ -1102,8 +1102,10 @@ define([], function () {
                 vertAxes = chartProps.getVertAxesProps && chartProps.getVertAxesProps(),
                 depthAxes = chartProps.getDepthAxesProps && chartProps.getDepthAxesProps(),
                 dataLabelsPos = chartProps.getDataLabelsPos && chartProps.getDataLabelsPos(),
+                errorBarType = chartProps.getErrorBarsValueType && chartProps.getErrorBarsValueType(),
                 title = chartProps.getTitle && chartProps.getTitle(),
                 legendPos = chartProps.getLegendPos && chartProps.getLegendPos(),
+                trendlineType = chartProps.getTrendlineType && chartProps.getTrendlineType(),
                 GridMajor = Asc.c_oAscGridLinesSettings.major,
                 GridMinor = Asc.c_oAscGridLinesSettings.minor,
                 GridMajorMinor = Asc.c_oAscGridLinesSettings.majorMinor,
@@ -1120,6 +1122,47 @@ define([], function () {
                 LabelGroup3 = LabelGroup3Types.includes(comboType),
                 LabelGroup4 = LabelGroup4Types.includes(comboType),
                 LabelGroup5 = LabelGroup5Types.includes(comboType);
+
+            const getTrendlineState = function() {
+                const chartSpace = chartProps.chartSpace,
+                    ascFormat = window.AscFormat,
+                    selectedSeries = chartSpace && chartSpace.getSelectedSeries(),
+                    seriesArray = selectedSeries ? [selectedSeries] : chartSpace && chartSpace.getAllSeries();
+
+                if (!chartSpace || !ascFormat || !seriesArray || !seriesArray.length) {
+                    return {
+                        type: trendlineType,
+                        isForecast: false
+                    };
+                }
+
+                let firstState = null;
+                for (let index = 0; index < seriesArray.length; index++) {
+                    const series = seriesArray[index],
+                        trendline = series && series.getLastTrendline ? series.getLastTrendline() : null,
+                        currentType = _.isNumber(trendline && trendline.trendlineType) ? trendline.trendlineType : null,
+                        currentState = {
+                            type: currentType,
+                            isForecast: !!(trendline && currentType === ascFormat.TRENDLINE_TYPE_LINEAR && (
+                                (trendline.forward && trendline.forward > 0) ||
+                                (trendline.backward && trendline.backward > 0)
+                            ))
+                        };
+
+                    if (index === 0) {
+                        firstState = currentState;
+                    } else if (firstState.type !== currentState.type || firstState.isForecast !== currentState.isForecast) {
+                        return {
+                            type: undefined,
+                            isForecast: false
+                        };
+                    }
+                }
+
+                return firstState;
+            };
+
+            const trendlineState = getTrendlineState();
 
             const axesMenu = menu.items[0].menu;
             axesMenu.items[0].setVisible(!RadarChart);
@@ -1184,6 +1227,18 @@ define([], function () {
             // highlightSubmenuItem(tableMenu.items[1], false, 'table');
             // highlightSubmenuItem(tableMenu.items[2], false,'table');
 
+            const errorBarsMenu = menu.items[4].menu;
+            errorBarsMenu.clearAll(true);
+            if (errorBarType === null) {
+                errorBarsMenu.items[0].setChecked(true);
+            } else if (errorBarType === AscFormat.st_errvaltypeSTDERR) {
+                errorBarsMenu.items[1].setChecked(true);
+            } else if (errorBarType === AscFormat.st_errvaltypePERCENTAGE) {
+                errorBarsMenu.items[2].setChecked(true);
+            } else if (errorBarType === AscFormat.st_errvaltypeSTDDEV) {
+                errorBarsMenu.items[3].setChecked(true);
+            }
+
             const gridMenu = menu.items[5].menu;
             gridMenu.items[0].setVisible(true);
             gridMenu.items[2].setVisible(true);
@@ -1209,6 +1264,20 @@ define([], function () {
             legendMenu.items[4].setChecked(legendPos === Asc.c_oAscChartLegendShowSettings.bottom);
             legendMenu.items[5].setChecked(legendPos === Asc.c_oAscChartLegendShowSettings.leftOverlay);
             legendMenu.items[6].setChecked(legendPos === Asc.c_oAscChartLegendShowSettings.rightOverlay);
+
+            const trendlinesMenu = menu.items[7].menu;
+            trendlinesMenu.clearAll(true);
+            if (trendlineState.type === null) {
+                trendlinesMenu.items[0].setChecked(true);
+            } else if (trendlineState.isForecast) {
+                trendlinesMenu.items[3].setChecked(true);
+            } else if (trendlineState.type === AscFormat.TRENDLINE_TYPE_LINEAR) {
+                trendlinesMenu.items[1].setChecked(true);
+            } else if (trendlineState.type === AscFormat.TRENDLINE_TYPE_EXP) {
+                trendlinesMenu.items[2].setChecked(true);
+            } else if (trendlineState.type === AscFormat.TRENDLINE_TYPE_MOVING_AVG) {
+                trendlinesMenu.items[4].setChecked(true);
+            }
 
             const supportedElements = chartElementMap[type] || [];
             menu.items.forEach(function(item) {

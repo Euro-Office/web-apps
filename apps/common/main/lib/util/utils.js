@@ -119,7 +119,9 @@ define([], function () {
                 Cell: 11,
                 Slicer: 12,
                 Form: 13,
-                Annotation: 14
+                FillingStatus: 14,
+                SendForSigning: 15
+                Annotation: 16
             },
             importTextType = {
                 DRM: 0,
