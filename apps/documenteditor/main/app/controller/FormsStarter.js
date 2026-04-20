@@ -95,7 +95,7 @@ define([ 'core'], function () {
                             if ( Common.localStorage.itemExists(editmode ? "de-compact-toolbar" : "de-view-compact-toolbar") ) {
                                 compactview = Common.localStorage.getBool(editmode ? "de-compact-toolbar" : "de-view-compact-toolbar");
                             } else if (opts.customization) {
-                                compactview = editmode ? !!config.customization.compactToolbar : config.customization.compactToolbar!==false;
+                                compactview = editmode ? !!opts.customization.compactToolbar : opts.customization.compactToolbar!==false;
                             }
 
                             !compactview && (opts.isFormCreator || opts.isRestrictedEdit && opts.canFillForms) &&
