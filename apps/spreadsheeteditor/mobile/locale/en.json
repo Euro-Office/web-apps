@@ -426,7 +426,8 @@
     "txtEditingMode": "Set editing mode...",
     "uploadImageTextText": "Uploading image...",
     "uploadImageTitleText": "Uploading Image",
-    "waitText": "Please, wait..."
+    "waitText": "Please, wait...",
+    "changesSaved": "All changes saved"
   },
   "Statusbar": {
     "notcriticalErrorTitle": "Warning",
@@ -775,6 +776,7 @@
       "textCustomSize": "Custom Size",
       "textDark": "Dark",
       "textDarkTheme": "Dark Theme",
+      "textDarkDocument": "Dark Document",
       "textDelimeter": "Delimiter",
       "textDirection": "Direction",
       "textDisableAll": "Disable All",
@@ -792,6 +794,8 @@
       "textFind": "Find",
       "textFindAndReplace": "Find and Replace",
       "textFindAndReplaceAll": "Find and Replace All",
+      "textSaveDocument": "Save",
+      "textAutoSaveDocument": "Autosave",
       "textFormat": "Format",
       "textFormulaLanguage": "Formula Language",
       "textFormulas": "Formulas",

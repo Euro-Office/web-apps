@@ -20,6 +20,15 @@ export class storeAppOptions {
             isDocReady: observable,
             changeDocReady: action,
 
+            isAutosave: observable,
+            changeAutosave: action,
+
+            isSaveBadgeShown: observable,
+            changeIsSaveBadgeShown: action,
+
+            savingDocStatusText: observable,
+            changeSavingDocStatusText: action,
+
             customization: observable,
         });
     }
@@ -44,6 +53,21 @@ export class storeAppOptions {
     isDocReady = false;
     changeDocReady (value) {
         this.isDocReady = value;
+    }
+
+    isAutosave = true;
+    changeAutosave (value) {
+        this.isAutosave = value;
+    }
+
+    isSaveBadgeShown = false;
+    changeIsSaveBadgeShown (value) {
+        this.isSaveBadgeShown = value;
+    }
+
+    savingDocStatusText = '';
+    changeSavingDocStatusText (value) {
+        this.savingDocStatusText = value;
     }
 
     setConfigOptions (config, _t) {

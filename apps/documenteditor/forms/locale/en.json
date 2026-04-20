@@ -210,5 +210,10 @@
   "DE.Views.ApplicationView.txtPrint": "Print",
   "DE.Views.ApplicationView.txtSearch": "Find",
   "DE.Views.ApplicationView.txtShare": "Share",
-  "DE.Views.ApplicationView.txtTheme": "Interface theme"
+  "DE.Views.ApplicationView.txtTheme": "Interface theme",
+  "DE.Views.RightMenu.ariaRightMenu": "Right menu",
+  "DE.Views.RightMenu.txtFillingStatus": "Filling status",
+  "DE.Views.FillingStatusSettings.txtFillingStatus": "Filling status",
+  "DE.Views.FillingStatusSettings.txtDocumentIsSigned": "Document is signed",
+  "DE.Views.FillingStatusSettings.txtComplete": "Complete"
 }

@@ -533,7 +533,8 @@
     "txtEditingMode": "Set editing mode...",
     "uploadImageTextText": "Uploading image...",
     "uploadImageTitleText": "Uploading Image",
-    "waitText": "Please, wait..."
+    "waitText": "Please, wait...",
+    "changesSaved": "All changes saved"
   },
   "Main": {
     "criticalErrorTitle": "Error",
@@ -716,6 +717,7 @@
     "textCustomSize": "Custom Size",
     "textDark": "Dark",
     "textDarkTheme": "Dark Theme",
+    "textDarkDocument": "Dark Document",
     "textDialogUnprotect": "Enter a password to unprotect document",
     "textDirection": "Direction",
     "textDisableAll": "Disable All",
@@ -744,6 +746,8 @@
     "textFind": "Find",
     "textFindAndReplace": "Find and Replace",
     "textFindAndReplaceAll": "Find and Replace All",
+    "textSaveDocument": "Save",
+    "textAutoSaveDocument": "Autosave",
     "textFormat": "Format",
     "textHelp": "Help",
     "textHiddenTableBorders": "Hidden Table Borders",
@@ -826,7 +830,6 @@
     "txtDownloadTxt": "Download TXT",
     "txtIncorrectPwd": "Password is incorrect",
     "txtOk": "Ok",
-    "textOpenLocation": "Open location",
     "txtProtected": "Once you enter the password and open the file, the current password will be reset"
   },
   "Toolbar": {

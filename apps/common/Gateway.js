@@ -413,8 +413,11 @@ if (window.Common === undefined) {
                 _postMessage({event:'onSwitchEditorType', data: {type: value, restart: restart}});
             },
 
-            startFilling:  function () {
-                _postMessage({event:'onStartFilling'});
+            startFilling:  function (roles) {
+                _postMessage({
+                    event:'onStartFilling',
+                    data: roles
+                });
             },
 
             requestFillingStatus:  function (role) {

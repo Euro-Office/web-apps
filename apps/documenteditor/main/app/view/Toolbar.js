@@ -2822,6 +2822,13 @@ define([
                     borderId: 'inner',
                 });
                                            
+                this.horizontalLine = new Common.UI.MenuItem({
+                    id: 'id-toolbar-menu-item-horizontal-line',
+                    caption: this.textHorizontalLine,
+                    iconCls: 'menu__icon btn-horizontal-line',
+                    lock: [Common.enumLock.inEquation]
+                });
+
                 if (this.btnBorders && this.btnBorders.rendered) {
                     this.btnBorders.setMenu(new Common.UI.Menu({
                         cls: 'shifted-right',
@@ -2878,11 +2885,7 @@ define([
                             },
                             this.brdInnerVert,
                             { caption: '--' },
-                            {
-                                id: 'id-toolbar-menu-item-horizontal-line',
-                                caption: this.textHorizontalLine,
-                                iconCls: 'menu__icon btn-horizontal-line',
-                            },
+                            this.horizontalLine,
                             { caption: '--' },
                             {
                                 id: 'id-toolbar-menu-item-border-width',

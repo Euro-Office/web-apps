@@ -52,13 +52,14 @@ define([
     'documenteditor/main/app/view/ParagraphSettings',
     // 'documenteditor/main/app/view/HeaderFooterSettings',
     'documenteditor/main/app/view/ImageSettings',
-    'documenteditor/main/app/view/ChartSettings',
+    // 'documenteditor/main/app/view/ChartSettings',
     'documenteditor/main/app/view/TableSettings',
     'documenteditor/main/app/view/ShapeSettings',
     'documenteditor/main/app/view/MailMergeSettings',
     'documenteditor/main/app/view/TextArtSettings',
     'documenteditor/main/app/view/SignatureSettings',
     'documenteditor/main/app/view/FormSettings',
+    'documenteditor/main/app/view/SendForSigningSettings',
     'common/main/lib/component/Scroller',
     'common/main/lib/component/ListView',
 ], function (menuTemplate, $, _, Backbone) {
@@ -114,15 +115,15 @@ define([
             //     toggleGroup: 'tabpanelbtnsGroup',
             //     allowMouseEventsOnDisabled: true
             // });
-            this.btnChart = new Common.UI.Button({
-                hint: this.txtChartSettings,
-                asctype: Common.Utils.documentSettingsType.Chart,
-                enableToggle: true,
-                disabled: true,
-                iconCls: 'btn-menu-chart',
-                toggleGroup: 'tabpanelbtnsGroup',
-                allowMouseEventsOnDisabled: true
-            });
+            // this.btnChart = new Common.UI.Button({
+            //     hint: this.txtChartSettings,
+            //     asctype: Common.Utils.documentSettingsType.Chart,
+            //     enableToggle: true,
+            //     disabled: true,
+            //     iconCls: 'btn-menu-chart',
+            //     toggleGroup: 'tabpanelbtnsGroup',
+            //     allowMouseEventsOnDisabled: true
+            // });
             this.btnShape = new Common.UI.Button({
                 hint: this.txtShapeSettings,
                 asctype: Common.Utils.documentSettingsType.Shape,
@@ -149,7 +150,7 @@ define([
             this._settings[Common.Utils.documentSettingsType.Image]       = {panel: "id-image-settings",      btn: this.btnImage};
             // this._settings[Common.Utils.documentSettingsType.Header]      = {panel: "id-header-settings",     btn: this.btnHeaderFooter};
             this._settings[Common.Utils.documentSettingsType.Shape]       = {panel: "id-shape-settings",      btn: this.btnShape};
-            this._settings[Common.Utils.documentSettingsType.Chart]       = {panel: "id-chart-settings",      btn: this.btnChart};
+            // this._settings[Common.Utils.documentSettingsType.Chart]       = {panel: "id-chart-settings",      btn: this.btnChart};
             this._settings[Common.Utils.documentSettingsType.TextArt]     = {panel: "id-textart-settings",    btn: this.btnTextArt};
 
             return this;
@@ -185,7 +186,7 @@ define([
             this.btnTable.setElement($markup.findById('#id-right-menu-table'), false);         this.btnTable.render();
             this.btnImage.setElement($markup.findById('#id-right-menu-image'), false);         this.btnImage.render();
             // this.btnHeaderFooter.setElement($markup.findById('#id-right-menu-header'), false); this.btnHeaderFooter.render();
-            this.btnChart.setElement($markup.findById('#id-right-menu-chart'), false);         this.btnChart.render();
+            // this.btnChart.setElement($markup.findById('#id-right-menu-chart'), false);         this.btnChart.render();
             this.btnShape.setElement($markup.findById('#id-right-menu-shape'), false);         this.btnShape.render();
             this.btnTextArt.setElement($markup.findById('#id-right-menu-textart'), false);     this.btnTextArt.render();
 
@@ -193,14 +194,14 @@ define([
             this.btnTable.on('click',           this.onBtnMenuClick.bind(this));
             this.btnImage.on('click',           this.onBtnMenuClick.bind(this));
             // this.btnHeaderFooter.on('click',    this.onBtnMenuClick.bind(this));
-            this.btnChart.on('click',           this.onBtnMenuClick.bind(this));
+            // this.btnChart.on('click',           this.onBtnMenuClick.bind(this));
             this.btnShape.on('click',           this.onBtnMenuClick.bind(this));
             this.btnTextArt.on('click',         this.onBtnMenuClick.bind(this));
 
             this.paragraphSettings = new DE.Views.ParagraphSettings();
             // this.headerSettings = new DE.Views.HeaderFooterSettings();
             this.imageSettings = new DE.Views.ImageSettings();
-            this.chartSettings = new DE.Views.ChartSettings();
+            // this.chartSettings = new DE.Views.ChartSettings();
             this.tableSettings = new DE.Views.TableSettings();
             this.shapeSettings = new DE.Views.ShapeSettings();
             this.textartSettings = new DE.Views.TextArtSettings();
@@ -253,6 +254,31 @@ define([
                 this.formSettings = new DE.Views.FormSettings();
             }
 
+            if (mode && mode.isPDFForm && !mode.canRequestStartFilling && mode.canRequestUsers) {
+                this.btnSendForSigning = new Common.UI.Button({
+                    hint: this.txtSendForSigning,
+                    asctype: Common.Utils.documentSettingsType.SendForSigning,
+                    enableToggle: true,
+                    disabled: false,
+                    iconCls: 'btn-field',
+                    toggleGroup: 'tabpanelbtnsGroup',
+                    allowMouseEventsOnDisabled: true
+                });
+                this._settings[Common.Utils.documentSettingsType.SendForSigning]   = {panel: "id-send-for-signing-settings", btn: this.btnSendForSigning};
+                this.btnSendForSigning.setElement($markup.findById('#id-right-menu-send-for-signing'), false); 
+                this.btnSendForSigning.render().setVisible(true);
+                this.btnSendForSigning.on('click', this.onBtnMenuClick.bind(this));
+                this.sendForSigningSettings = new DE.Views.SendForSigningSettings({
+                    handler: function(state, options) {
+                        if(state == 'submit') {
+                            DE.getController('Main').onStartFilling(true, options);
+                        } else if(state == 'cancel') {
+                            const rightmenuController = DE.getController('RightMenu');
+                            rightmenuController.closeSendForSigning();
+                        }
+                    }
+                });
+            }
 
             if (_.isUndefined(this.scroller)) {
                 this.scroller = new Common.UI.Scroller({
@@ -282,13 +308,14 @@ define([
             this.paragraphSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('eyedropper', _.bind(_isEyedropperStart, this));
             // this.headerSettings.setApi(api).on('editcomplete', _fire_editcomplete);
             this.imageSettings.setApi(api).on('editcomplete', _fire_editcomplete);
-            this.chartSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('updatescroller', _updateScroller);
+            // this.chartSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('updatescroller', _updateScroller);
             this.tableSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('eyedropper', _.bind(_isEyedropperStart, this));
             this.shapeSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('eyedropper', _.bind(_isEyedropperStart, this)).on('updatescroller', _updateScroller);
             this.textartSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('eyedropper', _.bind(_isEyedropperStart, this)).on('updatescroller', _updateScroller);
             if (this.mergeSettings) this.mergeSettings.setApi(api).on('editcomplete', _fire_editcomplete);
             if (this.signatureSettings) this.signatureSettings.setApi(api).on('editcomplete', _fire_editcomplete);
             if (this.formSettings) this.formSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('updatescroller', _updateScroller);
+            if (this.sendForSigningSettings) this.sendForSigningSettings.setApi(api).on('editcomplete', _fire_editcomplete).on('updatescroller', _updateScroller);
         },
 
         setMode: function(mode) {
@@ -297,9 +324,10 @@ define([
             this.imageSettings && this.imageSettings.setMode(mode);
             this.shapeSettings && this.shapeSettings.setMode(mode);
             this.formSettings && this.formSettings.setMode(mode);
-            this.chartSettings && this.chartSettings.setMode(mode);
+            // this.chartSettings && this.chartSettings.setMode(mode);
             // this.headerSettings && this.headerSettings.setMode(mode);
             this.signatureSettings && this.signatureSettings.setMode(mode);
+            this.sendForSigningSettings && this.sendForSigningSettings.setMode(mode);
         },
 
         onBtnMenuClick: function(btn, e) {
@@ -401,8 +429,8 @@ define([
         },
 
         setButtons: function () {
-            var allButtons = [this.btnText, this.btnTable, this.btnImage, this.btnShape, this.btnChart, this.btnTextArt,
-                    this.btnMailMerge, this.btnSignature, this.btnForm];
+            var allButtons = [this.btnText, this.btnTable, this.btnImage, this.btnShape, this.btnTextArt,
+                    this.btnMailMerge, this.btnSignature, this.btnForm, this.btnSendForSigning];
             Common.UI.SideMenu.prototype.setButtons.apply(this, [allButtons]);
         },
 
@@ -436,6 +464,7 @@ define([
         txtMailMergeSettings:       'Mail Merge Settings',
         txtSignatureSettings:       'Signature Settings',
         txtFormSettings:            'Form Settings',
+        txtSendForSigning:          'Send for signing',
         ariaRightMenu:              'Right menu'
     }, DE.Views.RightMenu || {}));
 });

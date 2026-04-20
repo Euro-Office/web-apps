@@ -70,9 +70,16 @@ define([
             },
 
             setButtons: function (btns) {
+                const prevButtons = this.buttons || [];
                 this.buttons = [];
                 btns.forEach(_.bind(function (button) {
                     if (button && button.cmpEl.is(':visible')) {
+                        this.buttons.push(button);
+                    }
+                }, this));
+                // Save plugin buttons
+                prevButtons.forEach(_.bind(function (button) {
+                    if (button && button.options.type == 'plugin') {
                         this.buttons.push(button);
                     }
                 }, this));

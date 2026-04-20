@@ -1362,6 +1362,7 @@
   "PE.Controllers.Main.errorEditingDownloadas": "Hiba történt a dokumentummal végzett munka során.<br>Használja a 'Letöltés másként' opciót, hogy mentse a fájl biztonsági másolatát a számítógép merevlemezére.",
   "PE.Controllers.Main.errorEditingSaveas": "Hiba történt a dokumentummal végzett munka során.<br>Használja a 'Mentés másként...' opciót, hogy mentse a fájl biztonsági másolatát a számítógép merevlemezére.",
   "PE.Controllers.Main.errorEmailClient": "Nem található e-mail kliens.",
+  "PE.Controllers.Main.errorFileNotAssembled": "Ez a fájl egy szerverről származó biztonsági másolatból lett megnyitva, és nem kerül mentésre a tárhelyre. A „Mentés másként…” opcióval mentheti el egy meghajtóra.",
   "PE.Controllers.Main.errorFilePassProtect": "A dokumentum jelszóval védett, és nem nyitható meg.",
   "PE.Controllers.Main.errorFileSizeExceed": "A fájlméret meghaladja a kiszolgálóra beállított korlátozást.<br>Vegye fel a kapcsolatot a dokumentumkiszolgáló rendszergazdájával.",
   "PE.Controllers.Main.errorForceSave": "Hiba történt a fájl mentése közben. Kérjük, használja a 'Letöltés másként' opciót a fájl meghajtóra mentéséhez, vagy próbálja meg később újra.",

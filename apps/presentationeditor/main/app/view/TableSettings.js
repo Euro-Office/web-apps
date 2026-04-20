@@ -90,7 +90,7 @@ define([
 
             this._originalProps = null;
             this.CellBorders = {};
-            this.CellColor = {Value: 1, Color: 'transparent'};  // value=1 - цвет определен - прозрачный или другой, value=0 - цвет не определен, рисуем прозрачным
+            this.CellColor = {Value: 1, Color: 'transparent'};  // value=1 - color is defined (transparent or other), value=0 - color is undefined, draw as transparent
             this.BorderSize = 1;
             this._noApply = false;
 
