@@ -290,10 +290,11 @@ define([
 
         _updateRolesListHeight: function() {
             const $markup = this.$el || $(this.el);
-            const $listWrapper = $markup.find('.roles-list-wrapper');
-            const height = $listWrapper.height();
-            
-            $markup.find('#id-send-for-signing-settings-roles-list').height(height);
+            if($markup.is(':visible')) {
+                const $listWrapper = $markup.find('.roles-list-wrapper');
+                const height = $listWrapper.height();
+                $markup.find('#id-send-for-signing-settings-roles-list').height(height);
+            }
         },
 
         txtTitle: 'Send for signing',

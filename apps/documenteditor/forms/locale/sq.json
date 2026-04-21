@@ -210,5 +210,10 @@
   "DE.Views.ApplicationView.txtPrint": "Printo",
   "DE.Views.ApplicationView.txtSearch": "Gjej",
   "DE.Views.ApplicationView.txtShare": "Shpërndaj",
-  "DE.Views.ApplicationView.txtTheme": "Temë e ndërfaqes"
+  "DE.Views.ApplicationView.txtTheme": "Temë e ndërfaqes",
+  "DE.Views.FillingStatusSettings.txtComplete": "Përfundo",
+  "DE.Views.FillingStatusSettings.txtDocumentIsSigned": "Dokumenti është nënshkruar",
+  "DE.Views.FillingStatusSettings.txtFillingStatus": "Statusi i plotesimit",
+  "DE.Views.RightMenu.ariaRightMenu": "Menuja e djathtë",
+  "DE.Views.RightMenu.txtFillingStatus": "Statusi i plotesimit"
 }

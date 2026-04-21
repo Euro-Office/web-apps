@@ -210,5 +210,10 @@
   "DE.Views.ApplicationView.txtPrint": "Печать",
   "DE.Views.ApplicationView.txtSearch": "Поиск",
   "DE.Views.ApplicationView.txtShare": "Поделиться",
-  "DE.Views.ApplicationView.txtTheme": "Тема интерфейса"
+  "DE.Views.ApplicationView.txtTheme": "Тема интерфейса",
+  "DE.Views.FillingStatusSettings.txtComplete": "Готово",
+  "DE.Views.FillingStatusSettings.txtDocumentIsSigned": "Документ подписан",
+  "DE.Views.FillingStatusSettings.txtFillingStatus": "Статус заполнения",
+  "DE.Views.RightMenu.ariaRightMenu": "Правое меню",
+  "DE.Views.RightMenu.txtFillingStatus": "Статус заполнения"
 }

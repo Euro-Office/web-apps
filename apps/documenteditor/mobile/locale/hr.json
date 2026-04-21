@@ -499,6 +499,7 @@
   "LongActions": {
     "applyChangesTextText": "Učitavanje podataka...",
     "applyChangesTitleText": "Učitavanje podataka",
+    "changesSaved": "Sve izmjene spremljene ",
     "confirmMaxChangesSize": "Veličina radnji prelazi ograničenje postavljeno za vaš poslužitelj.<br>Pritisnite \"Vrati\" da poništite svoju posljednju\nradnju ili pritisnite \"Nastavi\" da zadržite akciju lokalno (morate preuzeti datoteku ili kopirati njen sadržaj kako biste bili sigurni da ništa nije izgubljeno).",
     "downloadMergeText": "Preuzimanje...",
     "downloadMergeTitle": "Preuzimanje",
@@ -696,6 +697,7 @@
     "textApplication": "Aplikacija",
     "textApplicationSettings": "Postavke aplikacije",
     "textAuthor": "Autor",
+    "textAutoSaveDocument": "Automatsko spremanje",
     "textBack": "Natrag",
     "textBeginningDocument": "Početak dokumenta",
     "textBottom": "Dno",
@@ -800,6 +802,7 @@
     "textRightToLeft": "Desno na lijevo",
     "textSameAsSystem": "Isto kao i sustav",
     "textSave": "Spremi",
+    "textSaveDocument": "Spremi",
     "textSearch": "Traži",
     "textSetPassword": "Postavi lozinku",
     "textSettings": "Postavke",
