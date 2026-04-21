@@ -113,7 +113,8 @@ const ToolbarView = props => {
                     (props.isEdit && isAvailableExt && !isViewer && !props.isDrawMode && EditorUIController.getToolbarOptions &&
                         <Fragment key='editing-buttons'>
                             {EditorUIController.getToolbarOptions({
-                            disabled: disableEditBtn || props.disabledControls || isOpenModal,
+                            disabledEdit: disableEditBtn || props.disabledControls || isOpenModal,
+                            disabledAdd: disableEditBtn || props.disabledControls || isOpenModal,
                                 onEditClick: e => props.openOptions('edit'),
                                 onAddClick: e => props.openOptions('add')
                             })}
