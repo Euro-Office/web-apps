@@ -210,5 +210,10 @@
   "DE.Views.ApplicationView.txtPrint": "Drucken",
   "DE.Views.ApplicationView.txtSearch": "Suche",
   "DE.Views.ApplicationView.txtShare": "Freigeben",
-  "DE.Views.ApplicationView.txtTheme": "Thema der Benutzeroberfläche"
+  "DE.Views.ApplicationView.txtTheme": "Thema der Benutzeroberfläche",
+  "DE.Views.FillingStatusSettings.txtComplete": "Fertig",
+  "DE.Views.FillingStatusSettings.txtDocumentIsSigned": "Dokument ist unterzeichnet",
+  "DE.Views.FillingStatusSettings.txtFillingStatus": "Status der Formularausfüllung",
+  "DE.Views.RightMenu.ariaRightMenu": "Rechtes Menü",
+  "DE.Views.RightMenu.txtFillingStatus": "Status der Formularausfüllung"
 }

@@ -210,5 +210,10 @@
   "DE.Views.ApplicationView.txtPrint": "Štampaj",
   "DE.Views.ApplicationView.txtSearch": "Pretraži",
   "DE.Views.ApplicationView.txtShare": "Podeli",
-  "DE.Views.ApplicationView.txtTheme": "Tema interfejsa"
+  "DE.Views.ApplicationView.txtTheme": "Tema interfejsa",
+  "DE.Views.FillingStatusSettings.txtComplete": "Završi",
+  "DE.Views.FillingStatusSettings.txtDocumentIsSigned": "Dokument je potpisan",
+  "DE.Views.FillingStatusSettings.txtFillingStatus": "Status popunjavanja",
+  "DE.Views.RightMenu.ariaRightMenu": "Desni meni",
+  "DE.Views.RightMenu.txtFillingStatus": "Status popunjavanja"
 }

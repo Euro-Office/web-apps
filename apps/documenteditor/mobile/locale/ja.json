@@ -499,6 +499,7 @@
   "LongActions": {
     "applyChangesTextText": "データの読み込み中...",
     "applyChangesTitleText": "データの読み込み中",
+    "changesSaved": "全ての変更点が保存されました",
     "confirmMaxChangesSize": "アクションのサイズがサーバーに設定された制限を超えています。<br>「元に戻す」ボタンを押して最後のアクションをキャンセルするか、「続ける」を押してローカルにアクションを維持してください（何も失われないことを確認するために、ファイルをダウンロードするか、その内容をコピーする必要があります）。",
     "downloadMergeText": "ダウンロード中...",
     "downloadMergeTitle": "ダウンロード中",
@@ -696,6 +697,7 @@
     "textApplication": "アプリ",
     "textApplicationSettings": "アプリ設定",
     "textAuthor": "作成者",
+    "textAutoSaveDocument": "オートセーブ",
     "textBack": "戻る",
     "textBeginningDocument": "文書の先頭",
     "textBottom": "最下部",
@@ -800,6 +802,7 @@
     "textRightToLeft": "右から左に",
     "textSameAsSystem": "システム設定と同じ",
     "textSave": "保存",
+    "textSaveDocument": "保存",
     "textSearch": "検索",
     "textSetPassword": "パスワードの設定",
     "textSettings": "設定",

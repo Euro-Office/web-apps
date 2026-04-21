@@ -499,6 +499,7 @@
   "LongActions": {
     "applyChangesTextText": "Adatok betöltése...",
     "applyChangesTitleText": "Adatok betöltése",
+    "changesSaved": "Minden módosítás elmentve",
     "confirmMaxChangesSize": "A műveletek mérete meghaladja a kiszolgálóra beállított korlátozást.<br> Nyomja meg a „Mégse” gombot az utolsó művelet törléséhez, vagy nyomja meg a „Folytatás” gombot a művelet helyben tartásához (a fájl letöltése vagy tartalmának másolása szükséges, hogy biztosan ne vesszen el semmi).",
     "downloadMergeText": "Letöltés...",
     "downloadMergeTitle": "Letöltés",
@@ -696,6 +697,7 @@
     "textApplication": "Alkalmazás",
     "textApplicationSettings": "Alkalmazás beállítások",
     "textAuthor": "Szerző",
+    "textAutoSaveDocument": "Automatikus mentés",
     "textBack": "Vissza",
     "textBeginningDocument": "Dokumentum kezdete",
     "textBottom": "Alul",
@@ -800,6 +802,7 @@
     "textRightToLeft": "Jobbról balra",
     "textSameAsSystem": "A rendszerrel megegyező",
     "textSave": "Mentés",
+    "textSaveDocument": "Mentés",
     "textSearch": "Keresés",
     "textSetPassword": "Jelszó Beállítása",
     "textSettings": "Beállítások",

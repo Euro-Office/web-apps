@@ -249,6 +249,7 @@
   "LongActions": {
     "applyChangesTextText": "Učitavanje podataka...",
     "applyChangesTitleText": "Učitavanje podataka",
+    "changesSaved": "Sve izmjene spremljene ",
     "confirmMaxChangesSize": "Veličina radnji prelazi ograničenje postavljeno za vaš poslužitelj.<br>Pritisnite \"Vrati\" da poništite svoju posljednju\nradnju ili pritisnite \"Nastavi\" da zadržite akciju lokalno (morate preuzeti datoteku ili kopirati njen sadržaj kako biste bili sigurni da ništa nije izgubljeno).",
     "downloadTextText": "Preuzimanje dokumenta...",
     "downloadTitleText": "Preuzimanje dokumenta",
@@ -557,6 +558,7 @@
       "textApplication": "Aplikacija",
       "textApplicationSettings": "Postavke aplikacije",
       "textAuthor": "Autor",
+      "textAutoSaveDocument": "Automatsko spremanje",
       "textBack": "Natrag",
       "textCaseSensitive": "Velika i mala slova",
       "textCentimeter": "Centimetar",
@@ -604,6 +606,7 @@
       "textReplaceAll": "Zamjeni sve",
       "textRestartApplication": "Ponovo pokrenite aplikaciju kako bi promjene imale učinka",
       "textSameAsSystem": "Isto kao i sustav",
+      "textSaveDocument": "Spremi",
       "textSearch": "Traži",
       "textSettings": "Postavke",
       "textShowNotification": "Prikaži notifikaciju",
