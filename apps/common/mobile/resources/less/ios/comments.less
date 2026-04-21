@@ -35,14 +35,16 @@
     }
   }
 
-  .theme-type-dark  {
     .add-comment-popup, .edit-comment-popup, .add-reply-popup, .edit-reply-popup,
     #add-comment-dialog, #edit-comment-dialog, #add-reply-dialog, #edit-reply-dialog {
       .navbar {
-        .done {
-          color: @toolbar-icons;
+        .right .done {
+          color: @brandColor;
+
+          &.disabled {
+            color: @toolbar-icons;
+          }
         }
       }
     }
-  }
 }

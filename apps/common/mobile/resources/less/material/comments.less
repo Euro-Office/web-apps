@@ -120,6 +120,9 @@
 
       &.disabled {
         opacity: .5;
+        .icon-svg {
+          --icon-stroke-gray-primary: @toolbar-icons;
+        }
       }
     }
   }
@@ -132,12 +135,6 @@
     .navbar {
       .left a {
         color: @toolbar-icons;
-      }
-    }
-
-    .done {
-      .icon-svg {
-        --icon-stroke-gray-primary: @toolbar-icons;
       }
     }
   }

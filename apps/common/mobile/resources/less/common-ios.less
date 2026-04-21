@@ -6,9 +6,9 @@
     @text-normal: var(--text-normal);
     @background-warning: #FF9F0A;
 
-    --f7-navbar-link-color:  @brandColor;
+    --f7-navbar-link-color: @toolbar-icons;
     --f7-subnavbar-link-color: @toolbar-icons;
-    --f7-navbar-text-color: @toolbar-icons;
+    --f7-navbar-text-color: @text-normal;
     --f7-navbar-title-line-height: 44px;
     --f7-navbar-link-line-height: 44px;
     --f7-navbar-title-font-size: 17px;
@@ -21,9 +21,9 @@
     --f7-checkbox-active-color: @brandColor;
     --f7-radio-active-color: @brandColor;
     --f7-toggle-active-color: @brandColor;
-    --f7-range-bar-active-bg-color: @toolbar-icons;
+    --f7-range-bar-active-bg-color: @brandColor;
 
-    --f7-list-button-text-color: @toolbar-icons;
+    --f7-list-button-text-color: @brandColor;
 
     --f7-list-item-border-color: @background-menu-divider;
 
@@ -49,7 +49,7 @@
     --f7-dialog-bg-color-rgb: @background-secondary;
     --f7-dialog-title-text-color: @text-normal;
     --f7-dialog-text-color: @text-normal;
-    --f7-dialog-button-text-color: @toolbar-icons;
+    --f7-dialog-button-text-color: @brandColor;
     --f7-dialog-border-divider-color: @background-menu-divider;
 
     --f7-subnavbar-border-color: @background-menu-divider;
@@ -93,7 +93,7 @@
         }
 
         .popup-close, .sheet-close {
-            --icon-stroke-gray-primary: @brandColor; 
+            --icon-stroke-gray-primary: @toolbar-icons;
         }
     }
 
@@ -704,24 +704,18 @@
         background-color: @background-warning;
         margin-left: 10px;
     }
-}
-
-.theme-type-dark {
-    .navbar-link-settings,
-    .navbar-dropdown-list, .link.popup-close {
-        --f7-navbar-link-color: @toolbar-icons;
-    }
 
     .back span,
     .icon-back {
         color: @toolbar-icons;
     }
 
-    .app-layout {
-        .navbar, .navbar-bg, .subnavbar {
-            .popup-close, .sheet-close {
-                --icon-stroke-gray-primary: @toolbar-icons; 
-            }
+    .done.link,
+    .navbar-link-settings .right .link,
+    .navbar-dropdown-list .right .link {
+        color: @brandColor;
+        &.disabled {
+            color: @toolbar-icons;
         }
     }
 }

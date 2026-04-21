@@ -74,7 +74,7 @@
 
 // Review
 .page-review {
-    --f7-toolbar-link-color: @toolbar-icons;
+    --f7-toolbar-link-color: @brandColor;
     
     .toolbar {
         background-color: @background-secondary;
@@ -177,7 +177,7 @@
         max-height: 150px;
         overflow: hidden;
         &_active {
-            border: 1.5px solid @toolbar-icons;
+            border: 1.5px solid @brandColor;
         }
     }
 }
@@ -280,14 +280,14 @@
     }
     .calendar-day-selected .calendar-day-number, .calendar-day-today.calendar-day-selected .calendar-day-number {
         border: 1px solid transparent;
-        background-color: @toolbar-icons;
+        background-color: @brandColor;
         color: @fill-white;
     }
     .calendar-day-selected.calendar-day-weekend .calendar-day-number {
         color: @fill-white;
     }
     .calendar-day-today .calendar-day-number {
-        border: 1px solid @toolbar-icons;
+        border: 1px solid @brandColor;
         background-color: transparent;
     }
     .calendar-day-weekend .calendar-day-number {
@@ -326,7 +326,8 @@
         background: @background-secondary;
     }
     .calendar-month-picker-item-current, .calendar-year-picker-item-current {
-        color: @toolbar-icons;
+        
+        color: @brandColor;
     }
 }
 
@@ -341,7 +342,7 @@
         display: none;
     }
     .item-title {
-        color: @toolbar-icons;
+        color: @brandColor;
     }
 }
 
@@ -375,7 +376,7 @@
 }
 //
 #btn-submit-form {
-    background-color: @toolbar-icons;
+    background-color: @brand-form;
     color: @toolbar-background;
     height: 2em;
     border-radius: 1em;
