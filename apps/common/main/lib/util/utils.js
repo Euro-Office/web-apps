@@ -120,8 +120,8 @@ define([], function () {
                 Slicer: 12,
                 Form: 13,
                 FillingStatus: 14,
-                SendForSigning: 15
-                Annotation: 16
+                SendForSigning: 15,
+                Annotation: 16,
             },
             importTextType = {
                 DRM: 0,
