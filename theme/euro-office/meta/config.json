@@ -9,8 +9,11 @@
   "support_url": " https://github.com/euro-office",
   "help_url": " https://github.com/euro-office",
   "app_title": "Euro Office",
+  "attribution": "Euro-Office was based on ONLYOFFICE by Ascensio System SIA",
   "mobile_logo_light": "eo_logo_light.svg",
   "mobile_logo_dark": "eo_logo_dark.svg",
+  "about_logo_light": "logo.svg",
+  "about_logo_dark": "logo.svg",
   "forms_logo_light": "eo_logo_dark.svg",
   "forms_logo_dark": "eo_logo_light.svg"
 }

@@ -93,6 +93,9 @@ module.exports = function(grunt) {
                     from: /\{\{PUBLISHER_ADDRESS\}\}/,
                     to: _themVal(process.env.PUBLISHER_ADDRESS, 'publisher_address')
                 },{
+                    from: /\{\{ATTRIBUTION\}\}/g,
+                    to: _themVal(process.env.ATTRIBUTION, 'attribution')
+                },{
                     from: /\{\{API_URL_EDITING_CALLBACK\}\}/,
                     to: _themVal(process.env.API_URL_EDITING_CALLBACK, 'api_url_editing_callback')
                 },{
@@ -205,10 +208,17 @@ module.exports = function(grunt) {
         const imgSrc = path.join(themeRoot, 'assets', 'img');
 
         if (grunt.file.isDir(imgSrc)) {
-            // Desktop + mobile common dirs
+            const editors = ['documenteditor', 'spreadsheeteditor', 'presentationeditor', 'visioeditor'];
+
+            // Desktop + mobile common dirs, plus each editor's mobile dir.
+            // The editor/mobile copy is required because mobile production URLs
+            // resolve to apps/<editor>/mobile/resources/img/ (copy:images-app
+            // flattens common/mobile into each editor's mobile dir from SOURCE,
+            // which never sees theme files — so we deploy them directly here).
             const imgDests = [
                 path.join(BUILD_ROOT, 'web-apps', 'apps', 'common', 'main', 'resources', 'img'),
-                path.join(BUILD_ROOT, 'web-apps', 'apps', 'common', 'mobile', 'resources', 'img')
+                path.join(BUILD_ROOT, 'web-apps', 'apps', 'common', 'mobile', 'resources', 'img'),
+                ...editors.map(e => path.join(BUILD_ROOT, 'web-apps', 'apps', e, 'mobile', 'resources', 'img'))
             ];
             imgDests.forEach(function(imgDest) {
                 grunt.file.expandMapping('**/*', imgDest, { cwd: imgSrc, flatten: false, filter: 'isFile' })
@@ -220,7 +230,7 @@ module.exports = function(grunt) {
             // Embed logo — copy to each editor's embed img dir
             var embedLogo = path.join(imgSrc, 'embed', 'logo.svg');
             if (grunt.file.exists(embedLogo)) {
-                ['documenteditor', 'spreadsheeteditor', 'presentationeditor', 'visioeditor'].forEach(function(editor) {
+                editors.forEach(function(editor) {
                     var dest = path.join(BUILD_ROOT, 'web-apps', 'apps', editor, 'embed', 'resources', 'img', 'logo.svg');
                     grunt.file.copy(embedLogo, dest);
                 });

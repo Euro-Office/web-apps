@@ -1,9 +1,6 @@
-// --------------------------------------------------------------------------
-// About Dialog Logo — theme override
-// Upstream: apps/common/main/resources/less/about.less:6-19
-// Overrides the default logo with the theme logo.
-// --------------------------------------------------------------------------
-
+// Desktop About dialog logo.
+// Mobile uses @theme-about-logo-light / @theme-about-logo-dark via theme.config.mjs
+// (same config.json keys drive both contexts).
 .about-dlg .asc-about-office:before {
     content: ~"url('@{common-image-const-path}/about/logo.svg')";
 
