@@ -121,6 +121,11 @@ const PageAbout = props => {
                     </div>
                 </Fragment>
             )}
+            {__ATTRIBUTION__ && (
+                <div className="about__attribution">
+                    <p className="about__text">{__ATTRIBUTION__}</p>
+                </div>
+            )}
         </Page>
     );
 };

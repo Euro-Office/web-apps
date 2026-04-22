@@ -53,5 +53,6 @@ export function themeDefines() {
     __COMPANY_NAME__: JSON.stringify(process.env.COMPANY_NAME || meta.company_name || 'ONLYOFFICE'),
     __HELP_URL__: JSON.stringify(process.env.HELP_URL || meta.help_url || 'https://helpcenter.onlyoffice.com'),
     __SALES_EMAIL__: JSON.stringify(process.env.SALES_EMAIL || meta.sales_email || 'sales@onlyoffice.com'),
+    __ATTRIBUTION__: JSON.stringify(process.env.ATTRIBUTION || meta.attribution || ''),
   };
 }
