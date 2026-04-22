@@ -391,8 +391,8 @@ define([
                     {caption: this.textVertical, value: Asc.c_oAscSlideTransitionParams.Doors_Vertical},
                     {caption: this.textHorizontal, value: Asc.c_oAscSlideTransitionParams.Window_Horizontal},
                     {caption: this.textVertical, value: Asc.c_oAscSlideTransitionParams.Window_Vertical},
-                    {caption: this.textLeftShort, value: Asc.c_oAscSlideTransitionParams.Ferris_Left},
-                    {caption: this.textRightShort, value: Asc.c_oAscSlideTransitionParams.Ferris_Right},
+                    {caption: this.textLeft, value: Asc.c_oAscSlideTransitionParams.Ferris_Left},
+                    {caption: this.textRight, value: Asc.c_oAscSlideTransitionParams.Ferris_Right},
                     {caption: this.textLeftShort, value: Asc.c_oAscSlideTransitionParams.Gallery_Left},
                     {caption: this.textRightShort, value: Asc.c_oAscSlideTransitionParams.Gallery_Right}
                 ];
