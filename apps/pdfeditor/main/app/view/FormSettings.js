@@ -1368,6 +1368,9 @@ define([
                 this._originalSpecProps = specProps;
                 this._originalActionsProps = actionsProps;
 
+                console.log("%cФокус элемента формы", "font-weight: bold;");
+                console.log("asc_getActionsProps():", actionsProps);
+
                 // common props
                 var data = this.api.GetAvailableFieldsNames(type);
                 if (!this._state.arrName || this._state.arrName.length!==data.length || _.difference(this._state.arrName, data).length>0) {
@@ -1844,6 +1847,8 @@ define([
                         if(settings.FormatType == AscPDF.FormatType.NONE) {
                             this.api.ClearFieldFormat();
                         } else {
+                            console.log("Вызов %cSetFieldActions", "font-weight: bold;");
+                            console.log("Аргументы:", settings.actionsProps);
                             this.api.SetFieldActions(settings.actionsProps);
                         }
                     }
