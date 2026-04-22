@@ -66,6 +66,7 @@ define([
             this.lockedControls = [];
             this._locked = true;
             this._originalSpecProps = null;
+            this._originalActionsProps = null;
             this._originalProps = null;
             this.defFormat = {FormatType: AscPDF.FormatType.NONE, decimal: 2, separator: AscPDF.SeparatorStyle.COMMA_DOT, negative: AscPDF.NegativeStyle.BLACK_MINUS,
                               symbol: '', location: true, dateformat: 'm/d/yy', timeformat: 0, special: AscPDF.SpecialFormatType.PHONE, regexp: '.'};
@@ -107,7 +108,9 @@ define([
             this.labelFormName = $markup.findById('#form-settings-name');
             this.labelStyleName = $markup.findById('#form-settings-lbl-style');
             this.labelExportName = $markup.findById('#form-settings-lbl-export');
-            $markup.findById('#form-advanced-link').on('click', _.bind(this.openAdvancedSettings, this));
+            $markup.findById('#form-advanced-link').on('click', _.bind(function() { 
+                me.openAdvancedSettings();
+            }, this));
 
             // Common props
             this.cmbName = new Common.UI.ComboBox({
@@ -294,7 +297,8 @@ define([
                     { displayValue: this.textPercent,  value: AscPDF.FormatType.PERCENTAGE },
                     { displayValue: this.textDate,  value: AscPDF.FormatType.DATE },
                     { displayValue: this.textTime,  value: AscPDF.FormatType.TIME },
-                    { displayValue: this.textSpecial,  value: AscPDF.FormatType.SPECIAL }
+                    { displayValue: this.textSpecial,  value: AscPDF.FormatType.SPECIAL },
+                    { displayValue: this.textCustom,  value: AscPDF.FormatType.CUSTOM }
                 ],
                 dataHint: '1',
                 dataHintDirection: 'bottom',
@@ -1268,9 +1272,15 @@ define([
 
         onFormatSelect: function(combo, record) {
             if (this.api && !this._noApply) {
-                this._state.FormatType = undefined;
-                this.defFormat.FormatType = record.value;
-                this.applyFormatSettings(this.defFormat);
+                const prevFormatType = this._state.FormatType;
+                if(record.value == AscPDF.FormatType.CUSTOM) {
+                    this.openAdvancedSettings(AscPDF.FormatType.CUSTOM);
+                    if(prevFormatType != null) this.cmbFormat.setValue(prevFormatType);
+                } else {
+                    this._state.FormatType = undefined;
+                    this.defFormat.FormatType = record.value;
+                    this.applyFormatSettings(this.defFormat);
+                }
                 this.fireEvent('editcomplete', this);
             }
         },
@@ -1356,6 +1366,7 @@ define([
                     specProps = props.asc_getFieldProps(),
                     actionsProps = props.asc_getActionsProps();
                 this._originalSpecProps = specProps;
+                this._originalActionsProps = actionsProps;
 
                 // common props
                 var data = this.api.GetAvailableFieldsNames(type);
@@ -1822,18 +1833,27 @@ define([
             }
         },
 
-        openAdvancedSettings: function(e) {
+        openAdvancedSettings: function(typeAfterOpen) {
             if (this.linkAdvanced.hasClass('disabled')) return;
 
             var me = this;
-            (new PDFE.Views.FormSettingsAdvanced({
+            const win = new PDFE.Views.FormSettingsAdvanced({
                 api: me.api,
                 handler: function(result, settings) {
-                    settings && me.applyFormatSettings(settings);
+                    if(settings) {
+                        if(settings.FormatType == AscPDF.FormatType.NONE) {
+                            this.api.ClearFieldFormat();
+                        } else {
+                            this.api.SetFieldActions(settings.actionsProps);
+                        }
+                    }
                     this.fireEvent('editcomplete', this);
                 },
-                props: this._originalSpecProps
-            })).show();
+                props: this._originalSpecProps,
+                actionsProps: this._originalActionsProps,
+            });
+            win.show();
+            typeAfterOpen && win.setFormatType(typeAfterOpen);
         },
 
         onHideMenus: function(menu, e, isFromInputControl){
@@ -1902,7 +1922,9 @@ define([
             this.DateSettings.toggleClass('hidden', !(isCombobox || isText) || this._state.FormatType!==AscPDF.FormatType.DATE);
             this.TimeSettings.toggleClass('hidden', !(isCombobox || isText) || this._state.FormatType!==AscPDF.FormatType.TIME);
             this.NotCheckSettings.toggleClass('hidden', isCheck || isRadio);
-        }
+        },
+
+        textCustom: 'Custom'
 
     }, PDFE.Views.FormSettings || {}));
 });

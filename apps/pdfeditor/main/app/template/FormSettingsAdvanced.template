@@ -1,0 +1,100 @@
+<div id="id-adv-form-format" class="settings-panel active">
+    <div class="inner-content">
+        <table cols="2" style="width: 100%;">
+            <tr>
+                <td colspan="2" style="width:170px;" class="padding-large">
+                    <label class="header"><%= scope.textCategory %></label>
+                    <div id="format-settings-combo-format" class="input-group-nr"></div>
+                </td>
+            </tr>
+            <tr class="format-decimal">
+                <td colspan="2" class="padding-medium" style="vertical-align: bottom;">
+                    <label class="header"><%= scope.textDecimal %></label>
+                    <div id="format-settings-spin-decimal"></div>
+                </td>
+            </tr>
+            <tr class="format-separator">
+                <td colspan="2" class="padding-medium">
+                    <label class="header"><%= scope.textSeparator %></label>
+                    <div id="format-settings-combo-separator" class="input-group-nr"</div>
+                </td>
+            </tr>
+            <tr class="format-number">
+                <td class="padding-medium padding-right-5" style="width:50%;">
+                    <label class="header"><%= scope.textSymbol %></label>
+                    <div id="format-settings-combo-symbols" class="input-group-nr" ></div>
+                </td>
+                <td class="padding-medium padding-left-5">
+                    <label class="header"><%= scope.textLocation %></label>
+                    <div id="format-settings-combo-location" class="input-group-nr" ></div>
+                </td>
+            </tr>
+            <tr class="format-number">
+                <td colspan="2" class="padding-very-small">
+                    <label class="header"><%= scope.textNegative %></label>
+                </td>
+            </tr>
+            <tr class="format-number">
+                <td colspan="2" class="padding-very-small">
+                    <div id="format-settings-chk-parens"></div>
+                </td>
+            </tr>
+            <tr class="format-number">
+                <td colspan="2" >
+                    <div id="format-settings-chk-red"></div>
+                </td>
+            </tr>
+            <tr class="form-special">
+                <td colspan="2" class="padding-small">
+                    <div id="format-settings-special" style="width: 100%;"></div>
+                </td>
+            </tr>
+            <tr class="form-special-mask">
+                <td colspan="2" class="padding-small">
+                    <div id="format-settings-mask" style="width: 100%;"></div>
+                </td>
+            </tr>
+            <tr class="format-date-time">
+                <td colspan="2" class="padding-large">
+                    <label class="header"><%= scope.textFormat %></label>
+                    <div id="format-settings-list-format" style="height: 116px;margin-bottom: 8px;"></div>
+                    <div id="format-settings-txt-custom" class="input-group-nr"></div>
+                </td>
+            </tr>
+            <tr class="format-custom">
+                <td colspan="2" class="padding-medium">
+                    <label class="header"><%= scope.textScriptFormat %></label>
+                    <div id="format-settings-textarea-format"></div>
+                </td>
+            </tr>
+            <tr class="format-custom">
+                <td colspan="2" class="padding-medium">
+                    <label class="header"><%= scope.textScriptKeystroke %></label>
+                    <div id="format-settings-textarea-keystroke"></div>
+                </td>
+            </tr>
+        </table>
+        <div class="format-example" style="white-space: nowrap;position:absolute; bottom: 4px;width:280px;">
+            <label class="format-sample margin-right-4" style="vertical-align: middle;"><%= scope.txtSample %></label>
+            <label class="format-sample" id="format-settings-label-example" style="vertical-align: middle; max-width: 220px; overflow: hidden; text-overflow: ellipsis;">100</label>
+        </div>
+    </div>
+</div>
+<div id="id-adv-form-validate" class="settings-panel">
+    <div class="inner-content">
+        <table cols="1" width="100%">
+            <tr>
+                validate
+            </tr>
+        </table>
+    </div>
+</div>
+<div id="id-adv-form-calculate" class="settings-panel">
+    <div class="inner-content">
+        <table cols="1" width="100%">
+            <tr>
+                calculate
+            </tr>
+        </table>
+    </div>
+</div>
