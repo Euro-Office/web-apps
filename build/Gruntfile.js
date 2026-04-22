@@ -93,6 +93,9 @@ module.exports = function(grunt) {
                     from: /\{\{PUBLISHER_ADDRESS\}\}/,
                     to: _themVal(process.env.PUBLISHER_ADDRESS, 'publisher_address')
                 },{
+                    from: /\{\{ATTRIBUTION\}\}/g,
+                    to: _themVal(process.env.ATTRIBUTION, 'attribution')
+                },{
                     from: /\{\{API_URL_EDITING_CALLBACK\}\}/,
                     to: _themVal(process.env.API_URL_EDITING_CALLBACK, 'api_url_editing_callback')
                 },{

@@ -184,9 +184,12 @@ theme/euro-office/
 
 #### config.json
 
-Contains brand values that replace `{{PLACEHOLDER}}` tokens in JS and webpack `DefinePlugin` constants. Priority: environment variable > config.json > hardcoded default.
+Single source of truth for brand values used by **both desktop and mobile** editors. Contains company/publisher strings, logo filenames, help/support URLs, and the attribution line shown in the About dialog. Values flow into the built output two ways, depending on target:
 
-> **Note:** Mobile and forms logo fields (`mobile_logo_*`, `forms_logo_*`) are in this file because the mobile editors use webpack, not Grunt. `build/theme.config.mjs` reads `config.json` directly to provide LESS `globalVars` (logo paths) and `DefinePlugin` constants (brand values) for the mobile webpack builds. This makes `config.json` the shared contract between the Grunt build (desktop) and the webpack build (mobile).
+- **Desktop (Grunt):** `deploy-theme` loads the file into `global.themeMeta`, then Grunt's `replace` task substitutes `{{PLACEHOLDER}}` tokens (e.g. `{{PUBLISHER_NAME}}`, `{{ATTRIBUTION}}`) in the built JS.
+- **Mobile (webpack):** `build/theme.config.mjs` reads the file directly and exposes values as LESS `globalVars` (logo paths) and `DefinePlugin` constants (e.g. `__PUBLISHER_NAME__`) for the mobile webpack builds.
+
+Resolution priority for every field is: **environment variable > config.json > hardcoded default**. Unset or empty string values fall back to the default (desktop) or cause the row to be hidden in templates that guard on empty strings (e.g. the About dialog).
 
 ```json
 {
@@ -200,12 +203,15 @@ Contains brand values that replace `{{PLACEHOLDER}}` tokens in JS and webpack `D
   "support_url": "https://github.com/Euro-Office",
   "help_url": "https://github.com/Euro-Office",
   "app_title": "Euro Office",
+  "attribution": "Euro-Office was based on ONLYOFFICE by Ascensio System SIA",
   "mobile_logo_light": "eo_logo_light.svg",
   "mobile_logo_dark": "eo_logo_dark.svg",
   "forms_logo_light": "eo_logo_dark.svg",
   "forms_logo_dark": "eo_logo_light.svg"
 }
 ```
+
+To add a new field: add the key here, wire it in `build/Gruntfile.js` (`jsreplacements` for desktop) and/or `build/theme.config.mjs` (`themeDefines`/`themeGlobalVars` for mobile), then reference the resulting `{{TOKEN}}` or `__TOKEN__` from the view code.
 
 #### Build
 

@@ -60,6 +60,9 @@ define([
                     return '<tr>' + td +
                         '<label class="asc-about-desc-name">' + label + '</label>' +
                         '<label class="asc-about-desc" dir="ltr">' + value + '</label></td></tr>';
+                case 'attribution':
+                    return '<tr><td colspan="3" align="center" style="padding: 20px 0 10px 0;">' +
+                        '<label class="asc-about-desc">' + value + '</label></td></tr>';
                 default:
                     return '<tr>' + td +
                         '<label class="asc-about-desc-name">' + label + '</label>' +
@@ -149,6 +152,9 @@ define([
                     '</tr>',
                     '<%= scope.renderRow("heading", "", publishername) %>',
                     '<%= scope.renderRow("link", "", publisherurl) %>',
+                '</table>',
+                '<table id="id-about-attribution" cols="1" style="width: 100%;">',
+                    '<%= scope.renderRow("attribution", "", attribution) %>',
                 '</table>'
             ].join(''));
             this.menu = options.menu;
@@ -164,6 +170,7 @@ define([
                     publisherurl: '{{PUBLISHER_URL}}',
                     supportemail: '{{SUPPORT_EMAIL}}',
                     phonenum: '{{PUBLISHER_PHONE}}',
+                    attribution: '{{ATTRIBUTION}}',
                     scope: this
                 }));
 
