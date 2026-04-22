@@ -2776,6 +2776,7 @@ define([
                                 if (apiCallback)  {
                                     apiCallback(btn === 'ok');
                                 }
+                                Common.Gateway.reportWarning(id, btn === 'ok' ? 'undo' : 'continue');
                                 me.onEditComplete(me.application.getController('DocumentHolder').getView('DocumentHolder'));
                             }, this)
                         });

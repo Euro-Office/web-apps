@@ -223,11 +223,13 @@ const LongActionsController = inject('storeAppOptions')(({storeAppOptions}) => {
                     {text: _t.textUndo,
                         onClick: () => {
                             if (apiCallback) apiCallback(true);
+                            Common.Gateway.reportWarning(id, 'undo');
                         }
                     },
                     {text: _t.textContinue,
                         onClick: () => {
                             if (apiCallback) apiCallback(false);
+                            Common.Gateway.reportWarning(id, 'continue');
                         }
                     }
                 ],
