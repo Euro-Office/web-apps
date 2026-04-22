@@ -19,6 +19,15 @@ if (fs.existsSync(configPath)) {
   meta = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 }
 
+// Resolve a brand value with priority: env var > config.json > default.
+// Empty string in config.json is respected (explicit "hide this"), matching
+// build/Gruntfile.js _themVal semantics on the desktop side.
+function themeVal(envVal, metaKey, defaultVal) {
+  if (envVal != null && envVal !== '') return envVal;
+  if (metaKey in meta) return meta[metaKey];
+  return defaultVal;
+}
+
 /**
  * Returns additional LESS globalVars for theme logo paths.
  * @param {string} env - 'production' or 'development'
@@ -39,20 +48,21 @@ export function themeGlobalVars(env, editor) {
 
 /**
  * Returns DefinePlugin brand value overrides.
- * Priority: env var > config.json > stock default.
+ * Priority: env var > config.json > stock default. Empty string in config.json
+ * is respected (renders nothing / hides the row in guarded views).
  */
 export function themeDefines() {
   return {
-    __PUBLISHER_ADDRESS__: JSON.stringify(process.env.PUBLISHER_ADDRESS || meta.publisher_address || '20A-12 Ernesta Birznieka-Upisha street, Riga, Latvia, EU, LV-1050'),
-    __SUPPORT_EMAIL__: JSON.stringify(process.env.SUPPORT_EMAIL || meta.support_email || 'support@onlyoffice.com'),
-    __SUPPORT_URL__: JSON.stringify(process.env.SUPPORT_URL || meta.support_url || 'https://support.onlyoffice.com'),
-    __PUBLISHER_PHONE__: JSON.stringify(process.env.PUBLISHER_PHONE || meta.publisher_phone || '+371 633-99867'),
-    __PUBLISHER_URL__: JSON.stringify(process.env.PUBLISHER_URL || meta.publisher_url || 'https://www.onlyoffice.com'),
-    __PUBLISHER_NAME__: JSON.stringify(process.env.PUBLISHER_NAME || meta.publisher_name || 'Ascensio System SIA'),
-    __APP_TITLE_TEXT__: JSON.stringify(process.env.APP_TITLE_TEXT || meta.app_title || 'ONLYOFFICE'),
-    __COMPANY_NAME__: JSON.stringify(process.env.COMPANY_NAME || meta.company_name || 'ONLYOFFICE'),
-    __HELP_URL__: JSON.stringify(process.env.HELP_URL || meta.help_url || 'https://helpcenter.onlyoffice.com'),
-    __SALES_EMAIL__: JSON.stringify(process.env.SALES_EMAIL || meta.sales_email || 'sales@onlyoffice.com'),
-    __ATTRIBUTION__: JSON.stringify(process.env.ATTRIBUTION || meta.attribution || ''),
+    __PUBLISHER_ADDRESS__: JSON.stringify(themeVal(process.env.PUBLISHER_ADDRESS, 'publisher_address', '20A-12 Ernesta Birznieka-Upisha street, Riga, Latvia, EU, LV-1050')),
+    __SUPPORT_EMAIL__:     JSON.stringify(themeVal(process.env.SUPPORT_EMAIL,     'support_email',     'support@onlyoffice.com')),
+    __SUPPORT_URL__:       JSON.stringify(themeVal(process.env.SUPPORT_URL,       'support_url',       'https://support.onlyoffice.com')),
+    __PUBLISHER_PHONE__:   JSON.stringify(themeVal(process.env.PUBLISHER_PHONE,   'publisher_phone',   '+371 633-99867')),
+    __PUBLISHER_URL__:     JSON.stringify(themeVal(process.env.PUBLISHER_URL,     'publisher_url',     'https://www.onlyoffice.com')),
+    __PUBLISHER_NAME__:    JSON.stringify(themeVal(process.env.PUBLISHER_NAME,    'publisher_name',    'Ascensio System SIA')),
+    __APP_TITLE_TEXT__:    JSON.stringify(themeVal(process.env.APP_TITLE_TEXT,    'app_title',         'ONLYOFFICE')),
+    __COMPANY_NAME__:      JSON.stringify(themeVal(process.env.COMPANY_NAME,      'company_name',      'ONLYOFFICE')),
+    __HELP_URL__:          JSON.stringify(themeVal(process.env.HELP_URL,          'help_url',          'https://helpcenter.onlyoffice.com')),
+    __SALES_EMAIL__:       JSON.stringify(themeVal(process.env.SALES_EMAIL,       'sales_email',       'sales@onlyoffice.com')),
+    __ATTRIBUTION__:       JSON.stringify(themeVal(process.env.ATTRIBUTION,       'attribution',       '')),
   };
 }
