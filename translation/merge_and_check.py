@@ -1,6 +1,7 @@
 import sys
 import json
 import os.path
+from pathlib import Path
 
 lost_key_count, sum_key_count = 0, 0
 
@@ -89,8 +90,8 @@ def compareJsonInFolder(path):
         results = {}
         files = [f for f in os.listdir(cwd) if os.path.isfile(os.path.join(cwd, f))]
         for f in files:
-            if f != 'en.json' and f[-5:] == '.json':
-                lang = f[:-5]
+            lang = Path(f).stem
+            if lang != 'en' and Path(f).suffix == '.json':
                 locale_path = f'{cwd}/{f}'
 
                 if report_untranslated:
