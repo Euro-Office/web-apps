@@ -434,6 +434,7 @@ class MainController extends Component {
 
         this.api.asc_registerCallback('asc_onPresentationSize', (width, height) => {
             storePresentationSettings.changeSizeIndex(width, height);
+            storePresentationSettings.changeSlideOrientation(width, height);
         });
 
         this.api.asc_registerCallback('asc_onSendThemeColorSchemes', (arr) => {

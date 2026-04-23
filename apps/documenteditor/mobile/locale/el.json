@@ -499,6 +499,7 @@
   "LongActions": {
     "applyChangesTextText": "Γίνεται φόρτωση δεδομένων...",
     "applyChangesTitleText": "Γίνεται φόρτωση δεδομένων",
+    "changesSaved": "Όλες οι αλλαγές αποθηκεύτηκαν",
     "confirmMaxChangesSize": "Το μέγεθος των ενεργειών υπερβαίνει τον περιορισμό που έχει οριστεί για τον διακομιστή σας.<br>Πατήστε \"Αναίρεση\" για να ακυρώσετε την τελευταία σας ενέργεια ή πατήστε \"Συνέχεια\" για να διατηρήσετε την ενέργεια τοπικά (πρέπει να κατεβάσετε το αρχείο ή να αντιγράψετε το περιεχόμενό του για να βεβαιωθείτε ότι δεν θα χαθεί τίποτα).",
     "downloadMergeText": "Γίνεται λήψη...",
     "downloadMergeTitle": "Γίνεται λήψη",
@@ -696,6 +697,7 @@
     "textApplication": "Εφαρμογή",
     "textApplicationSettings": "Ρυθμίσεις εφαρμογής",
     "textAuthor": "Συντάκτης",
+    "textAutoSaveDocument": "Αυτόματη αποθήκευση",
     "textBack": "Πίσω",
     "textBeginningDocument": "Αρχή του εγγράφου",
     "textBottom": "Κάτω μέρος",
@@ -800,6 +802,7 @@
     "textRightToLeft": "Δεξιά προς αριστερά",
     "textSameAsSystem": "Ίδιο με το σύστημα",
     "textSave": "Αποθήκευση",
+    "textSaveDocument": "Αποθήκευση",
     "textSearch": "Εύρεση",
     "textSetPassword": "Ορισμός κωδικού πρόσβασης",
     "textSettings": "Ρυθμίσεις",

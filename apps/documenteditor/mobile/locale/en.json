@@ -499,6 +499,7 @@
   "LongActions": {
     "applyChangesTextText": "Loading data...",
     "applyChangesTitleText": "Loading Data",
+    "changesSaved": "All changes saved",
     "confirmMaxChangesSize": "The size of actions exceeds the limitation set for your server.<br>Press \"Undo\" to cancel your last action or press \"Continue\" to keep action locally (you need to download the file or copy its content to make sure nothing is lost).",
     "downloadMergeText": "Downloading...",
     "downloadMergeTitle": "Downloading",
@@ -533,8 +534,7 @@
     "txtEditingMode": "Set editing mode...",
     "uploadImageTextText": "Uploading image...",
     "uploadImageTitleText": "Uploading Image",
-    "waitText": "Please, wait...",
-    "changesSaved": "All changes saved"
+    "waitText": "Please, wait..."
   },
   "Main": {
     "criticalErrorTitle": "Error",
@@ -697,6 +697,7 @@
     "textApplication": "Application",
     "textApplicationSettings": "Application Settings",
     "textAuthor": "Author",
+    "textAutoSaveDocument": "Autosave",
     "textBack": "Back",
     "textBeginningDocument": "Beginning of document",
     "textBottom": "Bottom",
@@ -716,6 +717,7 @@
     "textCreated": "Created",
     "textCustomSize": "Custom Size",
     "textDark": "Dark",
+    "textDarkDocument": "Dark Document",
     "textDarkTheme": "Dark Theme",
     "textDialogUnprotect": "Enter a password to unprotect document",
     "textDirection": "Direction",
@@ -745,8 +747,6 @@
     "textFind": "Find",
     "textFindAndReplace": "Find and Replace",
     "textFindAndReplaceAll": "Find and Replace All",
-    "textSaveDocument": "Save",
-    "textAutoSaveDocument": "Autosave",
     "textFormat": "Format",
     "textHelp": "Help",
     "textHiddenTableBorders": "Hidden Table Borders",
@@ -803,6 +803,7 @@
     "textRightToLeft": "Right To Left",
     "textSameAsSystem": "Same as system",
     "textSave": "Save",
+    "textSaveDocument": "Save",
     "textSearch": "Find",
     "textSetPassword": "Set Password",
     "textSettings": "Settings",

@@ -10,7 +10,9 @@ export class storeThemes {
             systemColorTheme: observable,
             setSystemColorTheme: action,
             resetSystemColorTheme: action,
-            setTranslationsThemes: action
+            setTranslationsThemes: action,
+            isContentThemeDark: observable,
+            setContentThemeDark: action,
         });
     }
 
@@ -69,6 +71,11 @@ export class storeThemes {
 	isConfigSelectTheme = true;
     setConfigSelectTheme(value) {
         this.isConfigSelectTheme = value;
+    }
+
+    isContentThemeDark = false;
+    setContentThemeDark(value) {
+        this.isContentThemeDark = value;
     }
 
     colorTheme;
