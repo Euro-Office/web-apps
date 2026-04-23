@@ -1164,11 +1164,11 @@ define([], function () {
             errorBarsMenu.clearAll(true);
             if (errorBarType === null) {
                 errorBarsMenu.items[0].setChecked(true);
-            } else if (errorBarType === 4) {
+            } else if (errorBarType === AscFormat.st_errvaltypeSTDERR) {
                 errorBarsMenu.items[1].setChecked(true);
-            } else if (errorBarType === 2) {
+            } else if (errorBarType === AscFormat.st_errvaltypePERCENTAGE) {
                 errorBarsMenu.items[2].setChecked(true);
-            } else if (errorBarType === 3) {
+            } else if (errorBarType === AscFormat.st_errvaltypeSTDDEV) {
                 errorBarsMenu.items[3].setChecked(true);
             }
 
@@ -1204,11 +1204,11 @@ define([], function () {
                 trendlinesMenu.items[0].setChecked(true);
             } else if (trendlineState.isForecast) {
                 trendlinesMenu.items[3].setChecked(true);
-            } else if (trendlineState.type === 1) {
+            } else if (trendlineState.type === AscFormat.TRENDLINE_TYPE_LINEAR) {
                 trendlinesMenu.items[1].setChecked(true);
-            } else if (trendlineState.type === 0) {
+            } else if (trendlineState.type === AscFormat.TRENDLINE_TYPE_EXP) {
                 trendlinesMenu.items[2].setChecked(true);
-            } else if (trendlineState.type === 3) {
+            } else if (trendlineState.type === AscFormat.TRENDLINE_TYPE_MOVING_AVG) {
                 trendlinesMenu.items[4].setChecked(true);
             }
 
