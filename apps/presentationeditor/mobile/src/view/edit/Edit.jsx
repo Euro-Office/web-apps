@@ -58,6 +58,9 @@ const routes = [
     {
         path: '/edit-text-size-custom/',
         component: PageTextCustomFontSize,
+        options: {
+            animate: false,
+        },
     },
     {
         path: '/edit-text-font-color/',
