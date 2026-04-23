@@ -5,9 +5,9 @@
  */
 
 /**
- * @typedef {import('./config').Config} Config
- * @typedef {import('./config').ConfigNormal} ConfigNormal
- * @typedef {import('./config').ConfigEmbedded} ConfigEmbedded
+ * @typedef {import('../../../packages/config/src/config').Config} Config
+ * @typedef {import('../../../packages/config/src/config').ConfigNormal} ConfigNormal
+ * @typedef {import('../../../packages/config/src/config').ConfigEmbedded} ConfigEmbedded
  */
 
 ;(function(DocsAPI, window, document, undefined) {

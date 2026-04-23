@@ -1,0 +1,42 @@
+{
+  "name": "@onlyoffice/document-editor-config",
+  "version": "1.0.0",
+  "description": "ONLYOFFICE Document Editor configuration types and JSON schema",
+  "license": "Apache-2.0",
+  "author": "ONLYOFFICE",
+  "homepage": "https://www.onlyoffice.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ONLYOFFICE/web-apps.git",
+    "directory": "packages/config"
+  },
+  "keywords": [
+    "onlyoffice",
+    "document-editor",
+    "config",
+    "configuration",
+    "schema",
+    "json-schema",
+    "typescript"
+  ],
+  "type": "module",
+  "main": "./dist/config.d.ts",
+  "types": "./dist/config.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/config.d.ts"
+    },
+    "./schema.json": "./dist/schema.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "node scripts/build.js src/config.d.ts Config dist/schema.json --jsonforms --skip-props=events",
+    "prepublishOnly": "npm run build"
+  },
+  "sideEffects": false,
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}
