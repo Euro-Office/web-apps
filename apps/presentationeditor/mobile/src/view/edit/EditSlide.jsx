@@ -292,7 +292,7 @@ const PageTransition = props => {
         {displayValue: _t.textMorphObjects,       value: Asc.c_oAscSlideTransitionParams.Morph_Objects},
         {displayValue: _t.textMorphWords,         value: Asc.c_oAscSlideTransitionParams.Morph_Words},
         {displayValue: _t.textMorphLetters,       value: Asc.c_oAscSlideTransitionParams.Morph_Letters},
-        {displayValue: _t.textSmoothly,           value: Asc.c_oAscSlideTransitionParams.Cut_Default},
+        {displayValue: _t.textNone,               value: Asc.c_oAscSlideTransitionParams.Cut_Default},
         {displayValue: _t.textBlack,              value: Asc.c_oAscSlideTransitionParams.Cut_ThroughBlack},
         {displayValue: _t.textHorizontal,         value: Asc.c_oAscSlideTransitionParams.Blinds_Horizontal},
         {displayValue: _t.textVertical,           value: Asc.c_oAscSlideTransitionParams.Blinds_Vertical},

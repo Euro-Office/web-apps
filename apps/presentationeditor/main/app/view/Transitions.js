@@ -341,7 +341,7 @@ define([
                     {caption: this.textMorphObjects, value: Asc.c_oAscSlideTransitionParams.Morph_Objects},
                     {caption: this.textMorphWord, value: Asc.c_oAscSlideTransitionParams.Morph_Words},
                     {caption: this.textMorphLetters, value: Asc.c_oAscSlideTransitionParams.Morph_Letters},
-                    {caption: this.textSmoothly, value: Asc.c_oAscSlideTransitionParams.Cut_Default},
+                    {caption: this.textNone, value: Asc.c_oAscSlideTransitionParams.Cut_Default},
                     {caption: this.textBlack, value: Asc.c_oAscSlideTransitionParams.Cut_ThroughBlack},
                     {caption: this.textHorizontal, value: Asc.c_oAscSlideTransitionParams.Blinds_Horizontal},
                     {caption: this.textVertical, value: Asc.c_oAscSlideTransitionParams.Blinds_Vertical},
