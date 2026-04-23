@@ -494,6 +494,7 @@ define([
         txtSignatureSettings:       'Signature Settings',
         txtFormSettings:            'Form Settings',
         txtSendForSigning:          'Send for signing',
+        txtFillingStatus:           'Filling status',
         ariaRightMenu:              'Right menu'
     }, DE.Views.RightMenu || {}));
 });
