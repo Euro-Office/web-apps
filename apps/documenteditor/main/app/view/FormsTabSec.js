@@ -45,11 +45,11 @@ define([
     DE.Views.FormsTabSec = Common.UI.BaseView.extend((function(){
         var template =
         '<section class="panel" data-tab="formshome" role="tabpanel" aria-labelledby="formshome">' +
-            '<div class="group pdf-buttons" style="display: none;">' +
-                '<span class="btn-slot text x-huge" id="slot-btn-hand-tool"></span>' +
-                '<span class="btn-slot text x-huge" id="slot-btn-select-tool"></span>' +
-            '</div>' +
-            '<div class="separator long pdf-buttons" style="display: none;"></div>' +
+            // '<div class="group pdf-buttons" style="display: none;">' +
+            //     '<span class="btn-slot text x-huge" id="slot-btn-hand-tool"></span>' +
+            //     '<span class="btn-slot text x-huge" id="slot-btn-select-tool"></span>' +
+            // '</div>' +
+            // '<div class="separator long pdf-buttons" style="display: none;"></div>' +
             '<div class="group small pdf-buttons" style="display: none;">' +
                 '<div class="elset">' +
                     '<span class="btn-slot" id="slot-btn-pages" style="width: 95px;"></span>' +

@@ -171,9 +171,7 @@ define([
                         _main.api.asc_DownloadAs(new Asc.asc_CDownloadOptions(_format));
                     },
                     'go:editor': function() {
-                        // Common.Gateway.requestEditRights();
-                        const ctrl = this.getApplication().getController('FormsStarter');
-                        ctrl.unlockEdit();
+                        Common.Gateway.requestEditRights();
                     }
                 },
                 'ViewTab': {

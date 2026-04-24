@@ -5,13 +5,28 @@ define([ 'core'], function () {
         initialize: function () {
             this.isPDFForm = !!window.isPDFForm;
             this.init = {};
+            // this.disabled = true;
         },
         onLaunch: function () {
-            this.api = this.getApplication().getController('Viewport').getApi();
-            // this.api.asc_registerCallback('asc_onGetEditorPermissions', this.onEditorPermissions.bind(this));
-            Common.NotificationCenter.on('app:face', this.onAppShowed.bind(this));
-            Common.NotificationCenter.on('app:ready', this.onAppReady.bind(this));
-            Common.NotificationCenter.on('document:ready', this.onDocumentReady.bind(this));
+            if ( !this.disabled ) {
+                this.api = this.getApplication().getController('Viewport').getApi();
+                // this.api.asc_registerCallback('asc_onGetEditorPermissions', this.onEditorPermissions.bind(this));
+                const me = this;
+                const _doc_mode_apply = function (mode) {
+                    if (mode==='edit') {
+                        Common.NotificationCenter.off('doc:mode-apply', _doc_mode_apply);
+                        Common.NotificationCenter.off('pdf:mode-apply', _doc_mode_apply);
+
+                        me.unlockEdit();
+                    }
+                }
+
+                Common.NotificationCenter.on('app:face', this.onAppShowed.bind(this));
+                Common.NotificationCenter.on('app:ready', this.onAppReady.bind(this));
+                Common.NotificationCenter.on('document:ready', this.onDocumentReady.bind(this));
+                Common.NotificationCenter.on('doc:mode-apply', _doc_mode_apply);
+                Common.NotificationCenter.on('pdf:mode-apply', _doc_mode_apply);
+            }
         },
         onEditorPermissions: function(params) {
             // this.appOptions = this.getApplication().getController('Main').appOptions;
@@ -35,37 +50,8 @@ define([ 'core'], function () {
                 view.setMode(opts);
 
                 if (options.showSaveButton) {
-                    const appHeader = app.getController('Viewport').getView('Common.Views.Header');
-                    appHeader.btnSave.hide();
-
-                    // const isPDFEditor = true;
-                    // if (config.canRequestEditRights &&
-                    //         (!config.twoLevelHeader && config.canEdit && !isPDFEditor ||
-                    //         config.isPDFForm && config.canFillForms && config.isRestrictedEdit ||
-                    //     isPDFEditor && (config.canPDFEdit && !config.isPDFEdit && !config.isPDFAnnotate || config.isPDFFill)))
-                    {
-                        const createTitleButton = function (iconid, slot, disabled, hintDirection, hintOffset, hintTitle, lock) {
-                            return (new Common.UI.Button({
-                                cls: 'btn-header',
-                                iconCls: iconid,
-                                disabled: disabled === true,
-                                lock: lock,
-                                dataHint:'0',
-                                dataHintDirection: hintDirection ? hintDirection : (config.isDesktopApp ? 'right' : 'left'),
-                                dataHintOffset: hintOffset ? hintOffset : (config.isDesktopApp ? '10, -18' : '10, 10'),
-                                dataHintTitle: hintTitle
-                            })).render(slot);
-                        }
-
-                        const toolbar = app.getController('Toolbar').getView('Toolbar');
-                        this.headerBtnEdit = createTitleButton('toolbar__icon icon--inverse btn-edit', toolbar.$el.findById('#slot-hbtn-edit'), undefined, 'bottom', 'big');
-                        this.headerBtnEdit.updateHint(appHeader.tipGoEdit);
-                        this.headerBtnEdit.on('click', function (e) {
-                            appHeader.fireEvent('go:editor', appHeader);
-                        });
-                    }
-
-                    appHeader.btnDocMode && appHeader.btnDocMode.hide();
+                    app.getController('Viewport').getView('Common.Views.Header')
+                        .btnSave.hide();
                 }
 
                 view = app.getController('Statusbar').getView('Statusbar');
@@ -101,6 +87,17 @@ define([ 'core'], function () {
                             !compactview && (opts.isFormCreator || opts.isRestrictedEdit && opts.canFillForms) &&
                                 this.toolbar.setTab('formshome');
 
+                            const $static =  $('.panel.static', this.toolbar.$el);
+                            const site = `<div class="group eml-reader">
+                                              <span class="btn-slot text x-huge" id="slot-btn-tb-edit-mode1"></span>
+                                            </div>
+                                            <div class="separator long eml-reader"></div>
+                                            <div class="group eml-reader">
+                                                <span class="btn-slot text x-huge" id="slot-btn-hand-tool1"></span>
+                                                <span class="btn-slot text x-huge" id="slot-btn-select-tool1"></span>
+                                            </div>
+                                            <div class="separator long eml-reader"></div>`;
+                            $static.append(site);
                             const btnSelectTool = new Common.UI.Button({
                                 id: 'tlbtn-selecttool',
                                 cls: 'btn-toolbar x-huge icon-top',
@@ -115,7 +112,8 @@ define([ 'core'], function () {
                                 dataHintOffset: 'small'
                             });
                             this.toolbar.toolbarControls.push(btnSelectTool);
-                            Common.Utils.injectComponent($panel.find('#slot-btn-select-tool'), btnSelectTool);
+                            // Common.Utils.injectComponent($panel.find('#slot-btn-select-tool'), btnSelectTool);
+                            Common.Utils.injectComponent($static.find('#slot-btn-select-tool1'), btnSelectTool);
 
                             const btnHandTool = new Common.UI.Button({
                                 id: 'tlbtn-handtool',
@@ -131,7 +129,33 @@ define([ 'core'], function () {
                                 dataHintOffset: 'small'
                             });
                             this.toolbar.toolbarControls.push(btnHandTool);
-                            Common.Utils.injectComponent($panel.find('#slot-btn-hand-tool'), btnHandTool);
+                            // Common.Utils.injectComponent($panel.find('#slot-btn-hand-tool'), btnHandTool);
+                            Common.Utils.injectComponent($static.find('#slot-btn-hand-tool1'), btnHandTool);
+
+                            // if (config.isPDFAnnotate && config.canPDFEdit || config.isPDFEdit)
+                            {
+                                const btnEditMode = new Common.UI.Button({
+                                    cls: 'btn-toolbar x-huge icon-top',
+                                    iconCls: 'toolbar__icon btn-edit-text',
+                                    style: 'min-width: 45px;',
+                                    lock: [Common.enumLock.lostConnect, Common.enumLock.disableOnStart],
+                                    caption: this.toolbar.textEditMode,
+                                    // enableToggle: true,
+                                    dataHint: '1',
+                                    dataHintDirection: 'bottom',
+                                    dataHintOffset: 'small'
+                                });
+                                // this.toolbar.toolbarControls.push(btnEditMode);
+                                Common.Utils.injectComponent($static.find('#slot-btn-tb-edit-mode1'), btnEditMode);
+                                btnEditMode.updateHint(this.toolbar.tipEditMode);
+                                btnEditMode.on('click', () => {
+                                        const appHeader = DE.getController('Viewport').getView('Common.Views.Header');
+                                        if ( !!appHeader.btnDocMode )
+                                            Common.NotificationCenter.trigger('doc:mode-apply', 'edit', true);
+                                        else if ( !!appHeader.btnPDFMode )
+                                            Common.NotificationCenter.trigger('pdf:mode-apply', 'edit');
+                                    });
+                            }
 
                             // this.api.asc_registerCallback('asc_onChangeViewerTargetType', _.bind(this.onChangeViewerTargetType, this));
                             btnSelectTool.updateHint(this.toolbar.tipSelectTool);
@@ -229,10 +253,7 @@ define([ 'core'], function () {
                         appHeader.btnSave.show();
                 }
 
-                this.headerBtnEdit.hide();
-                if (this.appOptions.isEdit && this.appOptions.canSwitchMode) {
-                    appHeader.btnDocMode.show();
-                }
+                // this.headerBtnEdit.hide();
 
                 Common.NotificationCenter.trigger('layout:changed', 'rightmenu');
 
@@ -244,6 +265,7 @@ define([ 'core'], function () {
                 this.toolbar.setVisible('forms', true);
                 this.toolbar.setVisible('formshome', false);
                 this.toolbar.setTab('forms');
+                this.toolbar.$el.find('.eml-reader').hide();
 
                 view = DE.getController('Common.Controllers.ReviewChanges').getView('Common.Views.ReviewChanges');
                 const is_review_visible = (this.appOptions.isEdit || this.appOptions.canViewReview || view.canComments) && Common.UI.LayoutManager.isElementVisible('toolbar-collaboration');
