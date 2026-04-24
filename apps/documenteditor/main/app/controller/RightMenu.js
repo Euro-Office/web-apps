@@ -87,7 +87,9 @@ define([
         },
 
         onRightMenuAfterRender: function(rightMenu) {
-            rightMenu.imageSettings.application = rightMenu.shapeSettings.application = rightMenu.textartSettings.application = this.getApplication();
+            rightMenu.imageSettings && (rightMenu.imageSettings.application = this.getApplication());
+            rightMenu.shapeSettings && (rightMenu.shapeSettings.application = this.getApplication());
+            rightMenu.textartSettings && (rightMenu.textartSettings.application = this.getApplication());
 
             this._settings = [];
             this._settings[Common.Utils.documentSettingsType.Paragraph] = {panelId: "id-paragraph-settings",  panel: rightMenu.paragraphSettings,btn: rightMenu.btnText,        hidden: 1, locked: false};
@@ -101,6 +103,7 @@ define([
             this._settings[Common.Utils.documentSettingsType.Signature] = {panelId: "id-signature-settings",  panel: rightMenu.signatureSettings, btn: rightMenu.btnSignature,  hidden: 1, props: {}, locked: false};
             this._settings[Common.Utils.documentSettingsType.Form] = {panelId: "id-form-settings",  panel: rightMenu.formSettings, btn: rightMenu.btnForm,  hidden: 1, props: {}, locked: false};
             this._settings[Common.Utils.documentSettingsType.SendForSigning] = {panelId: "id-send-for-signing-settings",  panel: rightMenu.sendForSigningSettings, btn: rightMenu.btnSendForSigning,  hidden: 1, props: {}, locked: false};
+            this._settings[Common.Utils.documentSettingsType.FillingStatus] = {panelId: "id-filling-status-settings",  panel: rightMenu.fillingStatusSettings, btn: rightMenu.btnFillingStatus,  hidden: 1, props: {}, locked: false};
         },
 
         setApi: function(api) {
@@ -116,7 +119,7 @@ define([
         },
 
         onRightMenuClick: function(menu, type, minimized, event) {
-            if (!minimized && this.editMode) {
+            if (!minimized) {
                 if (event) { // user click event
                     if (!this._settings[Common.Utils.documentSettingsType.Form].hidden) {
                         if (type == Common.Utils.documentSettingsType.Form) {
@@ -505,6 +508,7 @@ define([
                     disabled && this.rightmenu.btnMailMerge.setDisabled(disabled);
                 }
                 // this.rightmenu.chartSettings.disableControls(disabled);
+                this.rightmenu.fillingStatusSettings && this.rightmenu.fillingStatusSettings.disableControls(disabled);
                 this.rightmenu.sendForSigningSettings && this.rightmenu.sendForSigningSettings.disableControls(disabled);
 
                 if (this.rightmenu.signatureSettings) {
@@ -561,12 +565,14 @@ define([
             }
         },
 
-        onRightMenuHide: function (view, status) { // status = true when show panel
+        onRightMenuHide: function (view, status, notSaveInStorage) { // status = true when show panel
             if (this.rightmenu) {
                 !status && this.rightmenu.clearSelection();
                 status ? this.rightmenu.show() : this.rightmenu.hide();
-                Common.localStorage.setBool('de-hidden-rightmenu', !status);
-                Common.Utils.InternalSettings.set("de-hidden-rightmenu", !status);
+                if(!notSaveInStorage) {
+                    Common.localStorage.setBool('de-hidden-rightmenu', !status);
+                    Common.Utils.InternalSettings.set("de-hidden-rightmenu", !status);
+                }
                 if (status) {
                     var selectedElements = this.api.getSelectedElements();
                     if (selectedElements.length > 0)
