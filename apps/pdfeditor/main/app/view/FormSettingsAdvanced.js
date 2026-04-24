@@ -102,7 +102,10 @@ define([
                 takeFocusOnClose: true
             });
             this.cmbFormat.setValue(this.FormatType);
-            this.cmbFormat.on('selected', _.bind(this.onFormatSelect, this));
+            this.cmbFormat.on('selected', _.bind(function(combo, record, specProps) {
+                this.onFormatSelect(combo, record, specProps);
+                this.updateChangedProps();
+            }, this));
 
             this.spnDecimal = new Common.UI.MetricSpinner({
                 el: $('#format-settings-spin-decimal'),
@@ -217,7 +220,7 @@ define([
             }).on ('changing', function (input, value) {
                 me._state.DateFormat = value;
                 me.lblExample.text(me.api.asc_getFieldDateTimeFormatExample(value));
-                this.putPropValue('asc_putFormat', value);
+                me.putPropValue('asc_putFormat', value);
             });
 
             this.cmbSpecial = new Common.UI.ComboBox({
@@ -328,9 +331,12 @@ define([
         _setDefaults: function (specProps, actionsProps) {
             if (specProps) {
                 let format = actionsProps.asc_getFormat();
+                !format && (format = actionsProps.asc_getKeystroke());
                 let val = format ? format.asc_getType() : AscPDF.FormatType.NONE;
                 this.cmbFormat.setValue((val !== null && val !== undefined) ? val : AscPDF.FormatType.NONE, '');
                 this.FormatType=val;
+                this.onFormatSelect(this.cmbFormat, this.cmbFormat.getSelectedRecord());
+                
                 if (this.FormatType===AscPDF.FormatType.SPECIAL) {
                     val = format.asc_getFormat();
                     this._state.SpecialType = (val===undefined) ? -1 : val;
@@ -374,12 +380,12 @@ define([
                         this.txtMask.setValue(this._state.Mask);
                     }
                 } if(this.FormatType===AscPDF.FormatType.CUSTOM) {
-                    const format = actionsProps.asc_getFormat();
-                    const keystroke = actionsProps.asc_getKeystroke();
-                    format && this.textareaFormat.setValue(format.asc_getScript());
-                    keystroke && this.textareaKeystroke.setValue(keystroke.asc_getScript());
+                    const origFormat = actionsProps.asc_getFormat();
+                    const origKeystroke = actionsProps.asc_getKeystroke();
+                    origFormat && this.textareaFormat.setValue(origFormat.asc_getScript());
+                    origKeystroke && this.textareaKeystroke.setValue(origKeystroke.asc_getScript());
                 }
-                this.onFormatSelect(this.cmbFormat, this.cmbFormat.getSelectedRecord());
+                this.updateChangedProps();
                 this.updateFormatExample();
             }
         },
@@ -387,6 +393,7 @@ define([
         setFormatType: function(type) {
             this.cmbFormat.setValue(type);
             this.onFormatSelect(this.cmbFormat, this.cmbFormat.getSelectedRecord());
+            this.updateChangedProps();
         },
 
         getSettings: function () {
@@ -449,48 +456,7 @@ define([
             }
         },
 
-        onNegativeChange: function(field, newValue, oldValue, eOpts){
-            var isRed = this.chRed.getValue()==='checked',
-                isParens = this.chParens.getValue()==='checked';
-            this._state.NegStyle = isRed ? (isParens ? AscPDF.NegativeStyle.PARENS_RED : AscPDF.NegativeStyle.RED_MINUS) :
-                                            isParens ? AscPDF.NegativeStyle.PARENS_BLACK : AscPDF.NegativeStyle.BLACK_MINUS;
-            this.putPropValue('asc_putNegStyle', this._state.NegStyle);
-            this.updateFormatExample();
-        },
-
-        onDateTimeListSelect: function(listView, itemView, record){
-            if (!record) return;
-            const isDate = this.FormatType===AscPDF.FormatType.DATE;
-            const isCustom = isDate && !!record.get('isCustom');
-            const value = isCustom ? this.inputCustomFormat.getValue() : record.get('value');
-
-            this.inputCustomFormat.setVisible(isCustom);
-            isCustom && this.inputCustomFormat.setValue(this._state.DateFormatCustom);
-            this._state[this.FormatType===AscPDF.FormatType.DATE ? 'DateFormat' : 'TimeFormat'] = value;
-            this.putPropValue('asc_putFormat', value);
-            this.updateFormatExample();
-        },
-
-        onSpecialChanged: function(combo, record) {
-            this._state.SpecialType = record.value;
-            this._maskPanel.toggleClass('hidden', this._state.SpecialType!==-1);
-            if(this._state.SpecialType===-1) {
-                this.txtMask.setValue(this._state.Mask);
-                this.putPropValue('asc_putMask', this._state.Mask);
-            }
-            this.putPropValue('asc_putFormat', this._state.SpecialType);
-            this.updateFormatExample();
-        },
-
-        onFormatSelect: function(combo, record, specProps) {
-            if (!record) return;
-
-            this.FormatType = record.value;
-
-            var isNumber = this.FormatType === AscPDF.FormatType.NUMBER,
-                isPercent = this.FormatType === AscPDF.FormatType.PERCENTAGE;
-
-            
+        updateChangedProps: function() {
             switch(this.FormatType) {
                 case AscPDF.FormatType.NUMBER:
                     this._changedProps.format = new Asc.asc_CFieldNumberFormatProperty();
@@ -533,6 +499,48 @@ define([
             } else if(this.FormatType===AscPDF.FormatType.SPECIAL) {
                 this.putPropValue('asc_putFormat', this._state.SpecialType);
             }
+        },
+
+        onNegativeChange: function(field, newValue, oldValue, eOpts){
+            var isRed = this.chRed.getValue()==='checked',
+                isParens = this.chParens.getValue()==='checked';
+            this._state.NegStyle = isRed ? (isParens ? AscPDF.NegativeStyle.PARENS_RED : AscPDF.NegativeStyle.RED_MINUS) :
+                                            isParens ? AscPDF.NegativeStyle.PARENS_BLACK : AscPDF.NegativeStyle.BLACK_MINUS;
+            this.putPropValue('asc_putNegStyle', this._state.NegStyle);
+            this.updateFormatExample();
+        },
+
+        onDateTimeListSelect: function(listView, itemView, record){
+            if (!record) return;
+            const isDate = this.FormatType===AscPDF.FormatType.DATE;
+            const isCustom = isDate && !!record.get('isCustom');
+            const value = isCustom ? this.inputCustomFormat.getValue() : record.get('value');
+
+            this.inputCustomFormat.setVisible(isCustom);
+            isCustom && this.inputCustomFormat.setValue(this._state.DateFormatCustom);
+            this._state[this.FormatType===AscPDF.FormatType.DATE ? 'DateFormat' : 'TimeFormat'] = value;
+            this.putPropValue('asc_putFormat', value);
+            this.updateFormatExample();
+        },
+
+        onSpecialChanged: function(combo, record) {
+            this._state.SpecialType = record.value;
+            this._maskPanel.toggleClass('hidden', this._state.SpecialType!==-1);
+            if(this._state.SpecialType===-1) {
+                this.txtMask.setValue(this._state.Mask);
+                this.putPropValue('asc_putMask', this._state.Mask);
+            }
+            this.putPropValue('asc_putFormat', this._state.SpecialType);
+            this.updateFormatExample();
+        },
+
+        onFormatSelect: function(combo, record, specProps) {
+            if (!record) return;
+
+            this.FormatType = record.value;
+
+            var isNumber = this.FormatType === AscPDF.FormatType.NUMBER,
+                isPercent = this.FormatType === AscPDF.FormatType.PERCENTAGE;
 
             this._decimalPanel.toggleClass('hidden', !(isNumber || isPercent));
             this._separatorPanel.toggleClass('hidden', !(isNumber || isPercent));
