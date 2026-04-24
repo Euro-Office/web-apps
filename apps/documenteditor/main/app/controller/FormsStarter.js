@@ -1,4 +1,4 @@
-define([ 'core'], function () {
+define(['core'], function () {
     'use strict';
 
     DE.Controllers.FormsStarter = Backbone.Controller.extend({
@@ -17,7 +17,7 @@ define([ 'core'], function () {
                         Common.NotificationCenter.off('doc:mode-apply', _doc_mode_apply);
                         Common.NotificationCenter.off('pdf:mode-apply', _doc_mode_apply);
 
-                        me.unlockEdit();
+                        me.switchToEdit();
                     }
                 }
 
@@ -34,6 +34,7 @@ define([ 'core'], function () {
 
         onAppShowed: function (options) {
             this.appOptions = options;
+
             if (this.isPDFForm && this.appOptions.isEdit) {
                 this.api.asc_setViewMode(true);
                 this.api.asc_setRestriction(Asc.c_oAscRestrictionType.OnlyForms);
@@ -53,6 +54,8 @@ define([ 'core'], function () {
                     app.getController('Viewport').getView('Common.Views.Header')
                         .btnSave.hide();
                 }
+
+                app.getController('RightMenu').getView('RightMenu').hide();
 
                 view = app.getController('Statusbar').getView('Statusbar');
                 view.$el.find('.el-edit, .el-review').hide();
@@ -221,11 +224,11 @@ define([ 'core'], function () {
             Common.UI.Mixtbar.prototype.setVisible.call(this.toolbar, tab, visible);
         },
 
-        unlockEdit: function () {
+        switchToEdit: function () {
             if ( this.isPDFForm && !this.editUnlocked ) {
                 this.editUnlocked = true;
                 // this.api.asc_setViewMode(!this.appOptions.isEdit && !this.appOptions.isRestrictedEdit);
-                this.api.asc_setViewMode(!this.init.isEdit);
+                this.api.asc_setViewMode(!this.appOptions.isEdit);
                 this.api.asc_setRestriction(Asc.c_oAscRestrictionType.None, this.api.asc_getRestrictionSettings());
 
                 const app = this.getApplication();
@@ -302,26 +305,7 @@ define([ 'core'], function () {
                 {} else {
                     this.toolbar.$el.find('.macro').show();
                 }
-
-                Common.NotificationCenter.trigger('form:startedit', {});
             }
-        },
-
-        getIsEdit: function () {
-            return this.initIsEdit();
-        },
-
-        initIsEdit: function (initvalue) {
-            if (initvalue !== undefined) {
-                this.init.isEdit = initvalue;
-            }
-
-            if (this.isPDFForm) {
-                if (this.editUnlocked !== true)
-                    return false;
-                else return !!this.appOptions ? this.appOptions.isEdit : this.init.isEdit;
-            }
-            else return initvalue == undefined && this.init.isEdit;
         },
     });
 });

@@ -1023,10 +1023,6 @@ define([
             },
 
             markFavorite: function(favorite) {
-                const formsctrl = this.getApplication().getController('FormsStarter');
-                formsctrl.unlockEdit();
-                return;
-
                 if ( !Common.Controllers.Desktop.process('markfavorite') ) {
                     Common.Gateway.metaChange({
                         favorite: favorite
@@ -1714,8 +1710,6 @@ define([
                                                  (!this.appOptions.isReviewOnly || this.appOptions.canLicense); // if isReviewOnly==true -> canLicense must be true
                 this.appOptions.isEdit         = this.appOptions.canLicense && this.appOptions.canEdit && this.editorConfig.mode !== 'view';
 
-                this.getApplication().getController('FormsStarter').initIsEdit(this.appOptions.isEdit);
-
                 this.appOptions.canReview      = this.permissions.review === true && this.appOptions.canLicense && this.appOptions.isEdit;
                 this.appOptions.canViewReview  = true;
                 this.appOptions.canUseHistory  = this.appOptions.canLicense && this.editorConfig.canUseHistory && this.appOptions.canCoAuthoring && !this.appOptions.isOffline;
@@ -2086,11 +2080,6 @@ define([
                         rightmenuView.setApi(me.api);
                         rightmenuView.on('editcomplete', _.bind(me.onEditComplete, me));
                         rightmenuView.setMode(me.appOptions);
-                    }
-
-                    const formsctrl = this.getApplication().getController('FormsStarter');
-                    if ( formsctrl && !formsctrl.getIsEdit() ) {
-                        rightmenuView.hide();
                     }
 
                     application.getController('Common.Controllers.ChartTab').setMode(me.appOptions);
