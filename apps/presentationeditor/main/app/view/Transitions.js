@@ -341,7 +341,7 @@ define([
                     {caption: this.textMorphObjects, value: Asc.c_oAscSlideTransitionParams.Morph_Objects},
                     {caption: this.textMorphWord, value: Asc.c_oAscSlideTransitionParams.Morph_Words},
                     {caption: this.textMorphLetters, value: Asc.c_oAscSlideTransitionParams.Morph_Letters},
-                    {caption: this.textSmoothly, value: Asc.c_oAscSlideTransitionParams.Cut_Default},
+                    {caption: this.textNone, value: Asc.c_oAscSlideTransitionParams.Cut_Default},
                     {caption: this.textBlack, value: Asc.c_oAscSlideTransitionParams.Cut_ThroughBlack},
                     {caption: this.textHorizontal, value: Asc.c_oAscSlideTransitionParams.Blinds_Horizontal},
                     {caption: this.textVertical, value: Asc.c_oAscSlideTransitionParams.Blinds_Vertical},
@@ -391,8 +391,8 @@ define([
                     {caption: this.textVertical, value: Asc.c_oAscSlideTransitionParams.Doors_Vertical},
                     {caption: this.textHorizontal, value: Asc.c_oAscSlideTransitionParams.Window_Horizontal},
                     {caption: this.textVertical, value: Asc.c_oAscSlideTransitionParams.Window_Vertical},
-                    {caption: this.textLeftShort, value: Asc.c_oAscSlideTransitionParams.Ferris_Left},
-                    {caption: this.textRightShort, value: Asc.c_oAscSlideTransitionParams.Ferris_Right},
+                    {caption: this.textLeft, value: Asc.c_oAscSlideTransitionParams.Ferris_Left},
+                    {caption: this.textRight, value: Asc.c_oAscSlideTransitionParams.Ferris_Right},
                     {caption: this.textLeftShort, value: Asc.c_oAscSlideTransitionParams.Gallery_Left},
                     {caption: this.textRightShort, value: Asc.c_oAscSlideTransitionParams.Gallery_Right}
                 ];

@@ -292,7 +292,7 @@ const PageTransition = props => {
         {displayValue: _t.textMorphObjects,       value: Asc.c_oAscSlideTransitionParams.Morph_Objects},
         {displayValue: _t.textMorphWords,         value: Asc.c_oAscSlideTransitionParams.Morph_Words},
         {displayValue: _t.textMorphLetters,       value: Asc.c_oAscSlideTransitionParams.Morph_Letters},
-        {displayValue: _t.textSmoothly,           value: Asc.c_oAscSlideTransitionParams.Cut_Default},
+        {displayValue: _t.textNone,               value: Asc.c_oAscSlideTransitionParams.Cut_Default},
         {displayValue: _t.textBlack,              value: Asc.c_oAscSlideTransitionParams.Cut_ThroughBlack},
         {displayValue: _t.textHorizontal,         value: Asc.c_oAscSlideTransitionParams.Blinds_Horizontal},
         {displayValue: _t.textVertical,           value: Asc.c_oAscSlideTransitionParams.Blinds_Vertical},
@@ -342,8 +342,8 @@ const PageTransition = props => {
         {displayValue: _t.textVertical,           value: Asc.c_oAscSlideTransitionParams.Doors_Vertical},
         {displayValue: _t.textHorizontal,         value: Asc.c_oAscSlideTransitionParams.Window_Horizontal},
         {displayValue: _t.textVertical,           value: Asc.c_oAscSlideTransitionParams.Window_Vertical},
-        {displayValue: _t.textLeft,               value: Asc.c_oAscSlideTransitionParams.Ferris_Left},
-        {displayValue: _t.textRight,              value: Asc.c_oAscSlideTransitionParams.Ferris_Right},
+        {displayValue: _t.textFromLeft,           value: Asc.c_oAscSlideTransitionParams.Ferris_Left},
+        {displayValue: _t.textFromRight,          value: Asc.c_oAscSlideTransitionParams.Ferris_Right},
         {displayValue: _t.textLeft,               value: Asc.c_oAscSlideTransitionParams.Gallery_Left},
         {displayValue: _t.textRight,              value: Asc.c_oAscSlideTransitionParams.Gallery_Right}
     ];
