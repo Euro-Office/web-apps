@@ -616,9 +616,14 @@
             if (iframe) {
                 _msgDispatcher && _msgDispatcher.unbindEvents();
                 _detachMouseEvents();
-                iframe.parentNode && iframe.parentNode.replaceChild(target, iframe);
+                _msgDispatcher = null;
+                _config = null;
+
                 iframe.src = 'about:blank';
-                iframe = null;
+                iframe.onload = function() {
+                    iframe.parentNode && iframe.parentNode.replaceChild(target, iframe);
+                    iframe = null;
+                }
             }
         };
 
