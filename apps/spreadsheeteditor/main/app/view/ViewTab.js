@@ -385,7 +385,7 @@ define([
 
                 this.btnInterfaceTheme = new Common.UI.Button({
                     cls: 'btn-toolbar x-huge icon-top',
-                    iconCls: 'toolbar__icon btn-day',
+                    iconCls: 'toolbar__icon btn-theme',
                     caption: this.textInterfaceTheme,
                     menu: true,
                     dataHint: '1',
@@ -397,10 +397,9 @@ define([
 
                 this.btnDarkDocument = new Common.UI.Button({
                     cls: 'btn-toolbar x-huge icon-top',
-                    iconCls: 'toolbar__icon btn-dark-mode',
+                    iconCls: `toolbar__icon ${Common.UI.Themes.isContentThemeDark() ? 'btn-night' : 'btn-day'}`,
                     lock: [_set.inLightTheme, _set.lostConnect],
                     caption: this.textDarkDocument,
-                    enableToggle: true,
                     dataHint: '1',
                     dataHintDirection: 'bottom',
                     dataHintOffset: 'small'

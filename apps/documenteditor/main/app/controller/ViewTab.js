@@ -419,19 +419,21 @@ define([
             }
         },
 
-        onChangeDarkMode: function (isdarkmode) {
+        onChangeDarkMode: function () {
             if (!this._darkModeTimer) {
                 var me = this;
                 me._darkModeTimer = setTimeout(function() {
                     me._darkModeTimer = undefined;
                 }, 500);
-                Common.UI.Themes.setContentTheme(isdarkmode?'dark':'light');
+                var isdarkmode = Common.UI.Themes.isContentThemeDark();
+                Common.UI.Themes.setContentTheme(isdarkmode ? 'light' : 'dark');
+                me.view.btnDarkDocument.setIconCls(isdarkmode ? 'toolbar__icon btn-day' : 'toolbar__icon btn-night');
             } else
                 this.onContentThemeChangedToDark(Common.UI.Themes.isContentThemeDark());
         },
 
         onContentThemeChangedToDark: function (isdark) {
-            this.view && this.view.btnDarkDocument.toggle(isdark, true);
+            this.view && this.view.btnDarkDocument.setIconCls(isdark ? 'toolbar__icon btn-night' : 'toolbar__icon btn-day', true);
         },
 
         onThemeChanged: function () {
