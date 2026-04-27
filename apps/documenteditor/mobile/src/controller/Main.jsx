@@ -665,7 +665,7 @@ class MainController extends Component {
 
     onDocumentCanSaveChanged (isCanSave) {
         const storeAppOptions = this.props.storeAppOptions;
-        storeAppOptions.changeIsSaveBadgeShown(isCanSave);
+        storeAppOptions.changeIsSaveBadgeShown(isCanSave ? !storeAppOptions.isAutosave : false);
     }
 
     onCollaborativeChanges () {
