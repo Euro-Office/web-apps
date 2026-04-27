@@ -79,6 +79,7 @@ define([
         initialize: function () {
             this.minimizedMode = true;
             this.maximizedMode = false;
+            this._settings = [];
             return this;
         },
 
@@ -109,7 +110,6 @@ define([
             Common.UI.SideMenu.prototype.render.call(this);
             this.btnMore.menu.menuAlign = 'tr-tl';
 
-            this._settings = [];
             if(mode && mode.isEdit)  {
                 this.btnText = new Common.UI.Button({
                     hint: this.txtParagraphSettings,
