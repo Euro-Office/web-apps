@@ -258,11 +258,12 @@ define([
                 }
     
                 if (mode && mode.isPDFForm && !mode.canRequestStartFilling && mode.canRequestUsers) {
+                    const me = this;
                     this.btnSendForSigning = new Common.UI.Button({
                         hint: this.txtSendForSigning,
                         asctype: Common.Utils.documentSettingsType.SendForSigning,
                         enableToggle: true,
-                        disabled: false,
+                        disabled: true,
                         iconCls: 'btn-menu-send-to-sign',
                         toggleGroup: 'tabpanelbtnsGroup',
                         allowMouseEventsOnDisabled: true
@@ -270,14 +271,49 @@ define([
                     this._settings[Common.Utils.documentSettingsType.SendForSigning]   = {panel: "id-send-for-signing-settings", btn: this.btnSendForSigning};
                     this.btnSendForSigning.setElement($markup.findById('#id-right-menu-send-for-signing'), false); 
                     this.btnSendForSigning.render().setVisible(true);
-                    this.btnSendForSigning.on('click', this.onBtnMenuClick.bind(this));
+                    this.btnSendForSigning.on('click', function(btn, e, openStatus) {
+                        if(!btn) return;
+
+                        if(openStatus === true || btn.pressed) {
+                            const oForm = this.api.asc_GetOForm();
+                            const roles = oForm ? oForm.asc_getAllRoles() : [];
+                            const hasRoleWithFields = _.some(roles, function(role) {
+                                role = role.asc_getSettings();
+                                return role && role.asc_getFieldCount() > 0;
+                            });
+
+                            if(hasRoleWithFields) {
+                                if(!this.$el.is(':visible')) {
+                                    DE.getController('RightMenu').onRightMenuHide(null, true);
+                                }
+                                this.disableUIForSendForSigning(true);
+                                const panelType = Common.Utils.documentSettingsType.SendForSigning;
+                                this._settings[panelType].btn.setDisabled(false);
+                                this._settings[panelType].btn.toggle(true);
+                                this.onBtnMenuClick(btn, e);
+                            } else {
+                                Common.UI.alert({
+                                    title: this.txtNoFieldsForFillingTitle,
+                                    msg: this.txtNoFieldsForFillingDescription,
+                                    iconCls: 'warn',
+                                    buttons: ['ok'],
+                                });
+                            }
+                        } else {
+                            btn.toggle(true);
+                            btn.$el.blur();
+                        }
+                    }.bind(this));
                     this.sendForSigningSettings = new DE.Views.SendForSigningSettings({
                         handler: function(state, options) {
                             if(state == 'submit') {
+                                me.disableUIForSendForSigning(false);
                                 DE.getController('Main').onStartFilling(true, options);
                             } else if(state == 'cancel') {
-                                const rightmenuController = DE.getController('RightMenu');
-                                rightmenuController.closeSendForSigning();
+                                me.btnSendForSigning.toggle(false);
+                                me.onBtnMenuClick(me.btnSendForSigning);
+                                me.btnSendForSigning.setDisabled(true);
+                                me.disableUIForSendForSigning(false);
                             }
                         }
                     });
@@ -448,6 +484,31 @@ define([
             $(this.el).width(SCALE_MIN);
             this.minimizedMode = true;
             Common.NotificationCenter.trigger('layout:changed', 'rightmenu');
+        },
+
+        disableUIForSendForSigning: function(status) {
+            if((this._sendForSigningState && this._sendForSigningState.isUIDisabled) == status) return;
+
+            let newDocMode;
+            if(status) {
+                const header = DE.getController('Viewport').getView('Common.Views.Header');
+                this._disableUIForSendForSigningState
+                this._sendForSigningState = {
+                    docMode: (header &&
+                        header.btnDocMode &&
+                        header.btnDocMode.options.value) ||
+                        'edit',
+                    isUIDisabled: true
+                }
+                newDocMode = 'view';
+            } else {
+                newDocMode = this._sendForSigningState.docMode;
+                this._sendForSigningState.isUIDisabled = false;
+            }
+
+            DE.getController('LeftMenu').SetDisabled(status);
+            DE.getController('Main').onDocModeApply(newDocMode, true, true);
+            DE.getController('Toolbar').DisableToolbar(status);
         },
 
         updateScroller: function() {

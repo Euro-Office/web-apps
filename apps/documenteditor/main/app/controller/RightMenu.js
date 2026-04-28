@@ -360,8 +360,6 @@ define([
 
             this._settings[Common.Utils.documentSettingsType.Image].needShow = false;
             // this._settings[Common.Utils.documentSettingsType.Chart].needShow = false;
-            
-            this.rightmenu.btnSendForSigning && this.rightmenu.btnSendForSigning.setDisabled(false);
         },
 
         onCoAuthoringDisconnect: function() {
@@ -526,7 +524,6 @@ define([
                     // this.rightmenu.btnChart.setDisabled(disabled);
                     this.rightmenu.btnForm && this.rightmenu.btnForm.setDisabled(disabled);
                     this.rightmenu.btnFillingStatus && this.rightmenu.btnFillingStatus.setDisabled(disabled);
-                    this.rightmenu.btnSendForSigning && this.rightmenu.btnSendForSigning.setDisabled(disabled);
                     this.rightmenu.setDisabledAllMoreMenuItems(disabled);
                 } else {
                     var selectedElements = this.api.getSelectedElements();
@@ -621,16 +618,10 @@ define([
         },
 
         openSendForSigning: function() {
-            const btnSendForSigning = this.rightmenu.btnSendForSigning;
-            if(!btnSendForSigning.isActive()) {
-                btnSendForSigning.click();
-            }
-        },
-
-        closeSendForSigning: function() {
-            const btnSendForSigning = this.rightmenu.btnSendForSigning;
-            if(btnSendForSigning.isActive()) {
-                btnSendForSigning.click();
+            const activePanelId = this.rightmenu.GetActivePane();
+            if(activePanelId != 'id-send-for-signing-settings') {
+                const panelType = Common.Utils.documentSettingsType.SendForSigning;
+                this._settings[panelType].btn.trigger('click', this._settings[panelType].btn, null, true);
             }
         },
 

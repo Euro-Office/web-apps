@@ -1,4 +1,52 @@
 import {action, observable, computed, makeObservable} from 'mobx';
+import ShapeArrow from '@common/resources/img/shapes/shape-arrow.svg';
+import ShapeBentArrow from '@common/resources/img/shapes/shape-bent-arrow.svg';
+import ShapeBentLeftArrow from '@common/resources/img/shapes/shape-bent-left-arrow.svg';
+import ShapeBentRightArrow from '@common/resources/img/shapes/shape-bent-right-arrow.svg';
+import ShapeBentUpArrow from '@common/resources/img/shapes/shape-bent-up-arrow.svg';
+import ShapeChevron from '@common/resources/img/shapes/shape-chevron.svg';
+import ShapeCircle from '@common/resources/img/shapes/shape-circle.svg';
+import ShapeCircularArrow from '@common/resources/img/shapes/shape-circular-arrow.svg';
+import ShapeCloud from '@common/resources/img/shapes/shape-cloud.svg';
+import ShapeCurvedDown from '@common/resources/img/shapes/shape-curved-down-arrow.svg';
+import ShapeCurvedLeft from '@common/resources/img/shapes/shape-curved-left-arrow.svg';
+import ShapeCurvedRight from '@common/resources/img/shapes/shape-curved-right-arrow.svg';
+import ShapeCurvedUp from '@common/resources/img/shapes/shape-curved-up-arrow.svg';
+import ShapeDouble from '@common/resources/img/shapes/shape-double-arrow.svg';
+import ShapeDownArrow from '@common/resources/img/shapes/shape-down-arrow-callout.svg';
+import ShapeFlowchart from '@common/resources/img/shapes/shape-flowchart-off-page-connector.svg';
+import ShapeHeart from '@common/resources/img/shapes/shape-heart.svg';
+import ShapeHexagon from '@common/resources/img/shapes/shape-hexagon.svg';
+import ShapeHomePlate from '@common/resources/img/shapes/shape-home-plate.svg';
+import ShapeLeftArrow from '@common/resources/img/shapes/shape-left-arrow.svg';
+import ShapeLeftArrowCallout from '@common/resources/img/shapes/shape-left-arrow-callout.svg';
+import ShapeLeftRight from '@common/resources/img/shapes/shape-left-right-arrow.svg';
+import ShapeLeftRightCallout from '@common/resources/img/shapes/shape-left-right-arrow-callout.svg';
+import ShapeLeftRightUpArrow from '@common/resources/img/shapes/shape-left-right-up-arrow.svg';
+import ShapeLeftUpArrow from '@common/resources/img/shapes/shape-left-up-arrow.svg';
+import ShapeLine from '@common/resources/img/shapes/shape-line.svg';
+import ShapeMinus from '@common/resources/img/shapes/shape-minus.svg';
+import ShapeNotched from '@common/resources/img/shapes/shape-notched-right-arrow.svg';
+import ShapeOctagon from '@common/resources/img/shapes/shape-octagon.svg';
+import ShapeOvalCallout from '@common/resources/img/shapes/shape-oval-callout.svg';
+import ShapeParallelogram from '@common/resources/img/shapes/shape-parallelogram.svg';
+import ShapePlus from '@common/resources/img/shapes/shape-plus.svg';
+import ShapeQuadArrow from '@common/resources/img/shapes/shape-quad-arrow.svg';
+import ShapeQuadCallout from '@common/resources/img/shapes/shape-quad-arrow-callout.svg';
+import ShapeRectangular from '@common/resources/img/shapes/shape-rectangular-callout.svg';
+import ShapeRhombus from '@common/resources/img/shapes/shape-rhombus.svg';
+import ShapeRightArrow from '@common/resources/img/shapes/shape-right-arrow.svg';
+import ShapeRightCallout from '@common/resources/img/shapes/shape-right-arrow-callout.svg';
+import ShapeRightTriangle from '@common/resources/img/shapes/shape-right-triangle.svg';
+import ShapeRoundedSquare from '@common/resources/img/shapes/shape-rounded-square.svg';
+import ShapeSquare from '@common/resources/img/shapes/shape-square.svg';
+import ShapeStriped from '@common/resources/img/shapes/shape-striped-right-arrow.svg';
+import ShapeText from '@common/resources/img/shapes/shape-text.svg';
+import ShapeTrapezoid from '@common/resources/img/shapes/shape-trapezoid.svg';
+import ShapeTriangle from '@common/resources/img/shapes/shape-triangle.svg';
+import ShapeUpArrow from '@common/resources/img/shapes/shape-up-arrow-callout.svg';
+import ShapeUpDown from '@common/resources/img/shapes/shape-up-down-arrow.svg';
+import ShapeUturn from '@common/resources/img/shapes/shape-uturn-arrow.svg';
 
 export class storeShapeSettings {
     constructor() {
@@ -16,242 +64,242 @@ export class storeShapeSettings {
         const styles = [
             {
                 title: 'Text',
-                thumb: 'shape-text.svg',
+                thumb: ShapeText.id,
                 type: 'textRect'
             },
             {
                 title: 'Line',
-                thumb: 'shape-line.svg',
+                thumb: ShapeLine.id,
                 type: 'line'
             },
             {
                 title: 'Line with arrow',
-                thumb: 'shape-arrow.svg',
+                thumb: ShapeArrow.id,
                 type: 'lineWithArrow'
             },
             {
                 title: 'Line with two arrows',
-                thumb: 'shape-double-arrow.svg',
+                thumb: ShapeDouble.id,
                 type: 'lineWithTwoArrows'
             },
             {
                 title: 'Rect',
-                thumb: 'shape-square.svg',
+                thumb: ShapeSquare.id,
                 type: 'rect'
             },
             {
                 title: 'Hexagon',
-                thumb: 'shape-hexagon.svg',
+                thumb: ShapeHexagon.id,
                 type: 'hexagon'
             },
             {
                 title: 'Round rect',
-                thumb: 'shape-rounded-square.svg',
+                thumb: ShapeRoundedSquare.id,
                 type: 'roundRect'
             },
             {
                 title: 'Ellipse',
-                thumb: 'shape-circle.svg',
+                thumb: ShapeCircle.id,
                 type: 'ellipse'
             },
             {
                 title: 'Triangle',
-                thumb: 'shape-triangle.svg',
+                thumb: ShapeTriangle.id,
                 type: 'triangle'
             },
             {
                 title: 'Triangle',
-                thumb: 'shape-right-triangle.svg',
+                thumb: ShapeRightTriangle.id,
                 type: 'rtTriangle'
             },
             {
                 title: 'Trapezoid',
-                thumb: 'shape-trapezoid.svg',
+                thumb: ShapeTrapezoid.id,
                 type: 'trapezoid'
             },
             {
                 title: 'Diamond',
-                thumb: 'shape-rhombus.svg',
+                thumb: ShapeRhombus.id,
                 type: 'diamond'
             },
             {
                 title: 'Right arrow',
-                thumb: 'shape-right-arrow.svg',
+                thumb: ShapeRightArrow.id,
                 type: 'rightArrow'
             },
             {
                 title: 'Left-right arrow',
-                thumb: 'shape-left-right-arrow.svg',
+                thumb: ShapeLeftRight.id,
                 type: 'leftRightArrow'
             },
             {
                 title: 'Left arrow callout',
-                thumb: 'shape-left-arrow.svg',
+                thumb: ShapeLeftArrow.id,
                 type: 'leftArrow'
             },
             {
                 title: 'Right arrow callout',
-                thumb: 'shape-bent-up-arrow.svg',
+                thumb: ShapeBentUpArrow.id,
                 type: 'bentUpArrow'
             },
             {
                 title: 'Flow chart off page connector',
-                thumb: 'shape-flowchart-off-page-connector.svg',
+                thumb: ShapeFlowchart.id,
                 type: 'flowChartOffpageConnector'
             },
             {
                 title: 'Heart',
-                thumb: 'shape-heart.svg',
+                thumb: ShapeHeart.id,
                 type: 'heart'
             },
             {
                 title: 'Math minus',
-                thumb: 'shape-minus.svg',
+                thumb: ShapeMinus.id,
                 type: 'mathMinus'
             },
             {
                 title: 'Math plus',
-                thumb: 'shape-plus.svg',
+                thumb: ShapePlus.id,
                 type: 'mathPlus'
             },
             {
                 title: 'Parallelogram',
-                thumb: 'shape-parallelogram.svg',
+                thumb: ShapeParallelogram.id,
                 type: 'parallelogram'
             },
             {
                 title: 'Wedge rect callout',
-                thumb: 'shape-rectangular-callout.svg',
+                thumb: ShapeRectangular.id,
                 type: 'wedgeRectCallout'
             },
             {
                 title: 'Wedge ellipse callout',
-                thumb: 'shape-oval-callout.svg',
+                thumb: ShapeOvalCallout.id,
                 type: 'wedgeEllipseCallout'
             },
             {
                 title: 'Cloud callout',
-                thumb: 'shape-cloud.svg',
+                thumb: ShapeCloud.id,
                 type: 'cloudCallout'
             },
             {
                 title: 'Octagon',
-                thumb: 'shape-octagon.svg',
+                thumb: ShapeOctagon.id,
                 type: 'octagon'
             },
             {
                 title: 'Bent right arrow',
-                thumb: 'shape-bent-right-arrow.svg',
+                thumb: ShapeBentRightArrow.id,
                 type: 'bentRightArrow'
             },
             {
                 title: 'Quad arrow',
-                thumb: 'shape-quad-arrow.svg',
+                thumb: ShapeQuadArrow.id,
                 type: 'quadArrow'
             },
             {
                 title: 'Left-right-up arrow',
-                thumb: 'shape-left-right-up-arrow.svg',
+                thumb: ShapeLeftRightUpArrow.id,
                 type: 'leftRightUpArrow'
             },
             {
                 title: 'Bent arrow',
-                thumb: 'shape-bent-arrow.svg',
+                thumb: ShapeBentArrow.id,
                 type: 'bentArrow'
             },
             {
                 title: 'U-turn arrow',
-                thumb: 'shape-uturn-arrow.svg',
+                thumb: ShapeUturn.id,
                 type: 'uturnArrow'
             },
             {
                 title: 'Left-up arrow',
-                thumb: 'shape-left-up-arrow.svg',
+                thumb: ShapeLeftUpArrow.id,
                 type: 'leftUpArrow'
             },
             {
                 title: 'Curved right arrow',
-                thumb: 'shape-curved-right-arrow.svg',
+                thumb: ShapeCurvedRight.id,
                 type: 'curvedRightArrow'
             },
             {
                 title: 'Curved left arrow',
-                thumb: 'shape-curved-left-arrow.svg',
+                thumb: ShapeCurvedLeft.id,
                 type: 'curvedLeftArrow'
             },
             {
                 title: 'Curved down arrow',
-                thumb: 'shape-curved-down-arrow.svg',
+                thumb: ShapeCurvedDown.id,
                 type: 'curvedDownArrow'
             },
             {
                 title: 'Curved up arrow',
-                thumb: 'shape-curved-up-arrow.svg',
+                thumb: ShapeCurvedUp.id,
                 type: 'curvedUpArrow'
             },
             {
                 title: 'Up-down arrow',
-                thumb: 'shape-up-down-arrow.svg',
+                thumb: ShapeUpDown.id,
                 type: 'upDownArrow'
             },
             {
                 title: 'Chevron',
-                thumb: 'shape-chevron.svg',
+                thumb: ShapeChevron.id,
                 type: 'chevron'
             },
             {
                 title: 'Home plate',
-                thumb: 'shape-home-plate.svg',
+                thumb: ShapeHomePlate.id,
                 type: 'homePlate'
             },
             {
                 title: 'Notched right arrow',
-                thumb: 'shape-notched-right-arrow.svg',
+                thumb: ShapeNotched.id,
                 type: 'notchedRightArrow'
             },
             {
                 title: 'Striped right arrow',
-                thumb: 'shape-striped-right-arrow.svg',
+                thumb: ShapeStriped.id,
                 type: 'stripedRightArrow'
             },
             {
                 title: 'Left-right arrow callout',
-                thumb: 'shape-left-right-arrow-callout.svg',
+                thumb: ShapeLeftRightCallout.id,
                 type: 'leftRightArrowCallout'
             },
             {
                 title: 'Left arrow callout',
-                thumb: 'shape-left-arrow-callout.svg',
+                thumb: ShapeLeftArrowCallout.id,
                 type: 'leftArrowCallout'
             },
             {
                 title: 'Up arrow callout',
-                thumb: 'shape-up-arrow-callout.svg',
+                thumb: ShapeUpArrow.id,
                 type: 'upArrowCallout'
             },
             {
                 title: 'Down arrow callout',
-                thumb: 'shape-down-arrow-callout.svg',
+                thumb: ShapeDownArrow.id,
                 type: 'downArrowCallout'
             },
             {
                 title: 'Right arrow callout',
-                thumb: 'shape-right-arrow-callout.svg',
+                thumb: ShapeRightCallout.id,
                 type: 'rightArrowCallout'
             },
             {
                 title: 'Circular arrow',
-                thumb: 'shape-circular-arrow.svg',
+                thumb: ShapeCircularArrow.id,
                 type: 'circularArrow'
             },
             {
                 title: 'Quad arrow callout',
-                thumb: 'shape-quad-arrow-callout.svg',
+                thumb: ShapeQuadCallout.id,
                 type: 'quadArrowCallout'
             },
             {
                 title: 'Bent left arrow',
-                thumb: 'shape-bent-left-arrow.svg',
+                thumb: ShapeBentLeftArrow.id,
                 type: 'bentLeftArrow'
             }
         ];

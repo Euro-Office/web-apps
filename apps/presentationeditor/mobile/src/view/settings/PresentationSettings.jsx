@@ -22,7 +22,7 @@ const PagePresentationSettings = props => {
                 <ListItem radio name="slide-size" checked={slideSizeIndex === 1}
                     onChange={() => props.onSlideSize(slideSizeArr[1])} title={_t.mniSlideWide}></ListItem>
             </List>
-            <BlockTitle>{_t.textSlideSize}</BlockTitle>
+            <BlockTitle>{_t.textSlideOrientation}</BlockTitle>
             <List>
                 <ListItem radio name="slide-orientation" checked={!slideOrientation}
                     onChange={() => props.onSlideOrientation()} title={_t.mniSlidePortrait}></ListItem>
