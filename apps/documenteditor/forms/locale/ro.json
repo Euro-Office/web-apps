@@ -210,5 +210,10 @@
   "DE.Views.ApplicationView.txtPrint": "Imprimare",
   "DE.Views.ApplicationView.txtSearch": "Căutare",
   "DE.Views.ApplicationView.txtShare": "Partajează",
-  "DE.Views.ApplicationView.txtTheme": "Tema interfeței"
+  "DE.Views.ApplicationView.txtTheme": "Tema interfeței",
+  "DE.Views.FillingStatusSettings.txtComplete": "Finalizat",
+  "DE.Views.FillingStatusSettings.txtDocumentIsSigned": "Documentul a fost semnat",
+  "DE.Views.FillingStatusSettings.txtFillingStatus": "Starea completării",
+  "DE.Views.RightMenu.ariaRightMenu": "Meniul din dreapta",
+  "DE.Views.RightMenu.txtFillingStatus": "Starea completării"
 }

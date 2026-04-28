@@ -2133,7 +2133,9 @@ define([
 
         onSlideSize: function(menu, item) {
             if (item.value !== 'advanced') {
-                var newwidth = (this.currentPageSize.height / this.slideSizeArr[item.value].ratio);
+                var newwidth = this.currentPageSize.width >= this.currentPageSize.height ?
+                    (this.currentPageSize.height / this.slideSizeArr[item.value].ratio) :
+                    (this.currentPageSize.height * this.slideSizeArr[item.value].ratio);
                 this.currentPageSize = {
                     type    : this.slideSizeArr[item.value].type,
                     width   : newwidth,
@@ -2154,7 +2156,9 @@ define([
                     if (result == 'ok') {
                         props = dlg.getSettings();
                         me.currentPageSize = { type: props[0], width: props[1], height: props[2], firstNum: props[3] };
-                        var ratio = me.currentPageSize.height/me.currentPageSize.width,
+                        var ratio = me.currentPageSize.width >= me.currentPageSize.height ?
+                                        me.currentPageSize.height/me.currentPageSize.width :
+                                        me.currentPageSize.width/me.currentPageSize.height,
                             idx = -1;
                         for (var i = 0; i < me.slideSizeArr.length; i++) {
                             if (Math.abs(me.slideSizeArr[i].ratio - ratio) < 0.001 ) {

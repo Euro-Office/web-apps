@@ -223,15 +223,17 @@ define([
                 else if (lastactive>=0) active = lastactive;
                 // else if (forceSignature && !this._settings[Common.Utils.documentSettingsType.Signature].hidden) active = Common.Utils.documentSettingsType.Signature;
 
-                if (active !== undefined) {
-                    this.rightmenu.SetActivePane(active, open);
-                    if (active!=Common.Utils.documentSettingsType.Signature)
-                        this._settings[active].panel.ChangeSettings.call(this._settings[active].panel, this._settings[active].props);
-                    // else
-                    //     this._settings[active].panel.ChangeSettings.call(this._settings[active].panel);
-                    (active !== currentactive) && this.rightmenu.updateScroller();
-                } else
-                    this.rightmenu.clearSelection();
+                if(!this.rightmenu.isPluginButtonPressed()) {
+                    if (active !== undefined) {
+                        this.rightmenu.SetActivePane(active, open);
+                        if (active!=Common.Utils.documentSettingsType.Signature)
+                            this._settings[active].panel.ChangeSettings.call(this._settings[active].panel, this._settings[active].props);
+                        // else
+                        //     this._settings[active].panel.ChangeSettings.call(this._settings[active].panel);
+                        (active !== currentactive) && this.rightmenu.updateScroller();
+                    } else
+                        this.rightmenu.clearSelection();
+                }
             }
 
             this._settings[Common.Utils.documentSettingsType.Image].needShow = false;
@@ -412,6 +414,7 @@ define([
                         }
                         this._lastVisibleSettings = type;
                     }
+                    this.rightmenu.toggleActivePluginButton(false);
                     this.rightmenu.clearSelection();
                     this.rightmenu.hide();
                     // this.rightmenu.signatureSettings && this.rightmenu.signatureSettings.hideSignatureTooltip();
@@ -433,6 +436,7 @@ define([
         },
 
         addNewPlugin: function (button, $button, $panel) {
+            this.getApplication().getController('Viewport').applyEditorMode(true);
             this.rightmenu.insertButton(button, $button);
             this.rightmenu.insertPanel($panel);
         },

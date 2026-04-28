@@ -3751,6 +3751,8 @@ define([], function () {
                 title = chartProps.getTitle && chartProps.getTitle(),
                 legendPos = chartProps.getLegendPos && chartProps.getLegendPos(),
                 trendlineType = chartProps.getTrendlineType && chartProps.getTrendlineType(),
+                forecastForward = chartProps.getForecastForward && chartProps.getForecastForward(),
+                forecastBackward = chartProps.getForecastBackward && chartProps.getForecastBackward(),
                 GridMajor = Asc.c_oAscGridLinesSettings.major,
                 GridMinor = Asc.c_oAscGridLinesSettings.minor,
                 GridMajorMinor = Asc.c_oAscGridLinesSettings.majorMinor,
@@ -3766,48 +3768,15 @@ define([], function () {
                 LabelGroup2 = LabelGroup2Types.includes(comboType),
                 LabelGroup3 = LabelGroup3Types.includes(comboType),
                 LabelGroup4 = LabelGroup4Types.includes(comboType),
-                LabelGroup5 = LabelGroup5Types.includes(comboType);
-
-            const getTrendlineState = function() {
-                const chartSpace = chartProps.chartSpace,
-                    ascFormat = window.AscFormat,
-                    selectedSeries = chartSpace && chartSpace.getSelectedSeries(),
-                    seriesArray = selectedSeries ? [selectedSeries] : chartSpace && chartSpace.getAllSeries();
-
-                if (!chartSpace || !ascFormat || !seriesArray || !seriesArray.length) {
-                    return {
-                        type: trendlineType,
-                        isForecast: false
-                    };
-                }
-
-                let firstState = null;
-                for (let index = 0; index < seriesArray.length; index++) {
-                    const series = seriesArray[index],
-                        trendline = series && series.getLastTrendline ? series.getLastTrendline() : null,
-                        currentType = _.isNumber(trendline && trendline.trendlineType) ? trendline.trendlineType : null,
-                        currentState = {
-                            type: currentType,
-                            isForecast: !!(trendline && currentType === ascFormat.TRENDLINE_TYPE_LINEAR && (
-                                (trendline.forward && trendline.forward > 0) ||
-                                (trendline.backward && trendline.backward > 0)
-                            ))
-                        };
-
-                    if (index === 0) {
-                        firstState = currentState;
-                    } else if (firstState.type !== currentState.type || firstState.isForecast !== currentState.isForecast) {
-                        return {
-                            type: undefined,
-                            isForecast: false
-                        };
-                    }
-                }
-
-                return firstState;
-            };
-
-            const trendlineState = getTrendlineState();
+                LabelGroup5 = LabelGroup5Types.includes(comboType),
+                isMixedState = trendlineType === 1 && (forecastForward === undefined || forecastBackward === undefined),
+                trendlineState = {
+                    type: isMixedState ? undefined : trendlineType,
+                    isForecast: !!(trendlineType === 1 && (
+                        (forecastForward && forecastForward > 0) ||
+                        (forecastBackward && forecastBackward > 0)
+                    ))
+                };
 
             const axesMenu = menu.items[0].menu;
             axesMenu.items[0].setVisible(!RadarChart);

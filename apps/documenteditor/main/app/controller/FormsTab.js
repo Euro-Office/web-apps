@@ -546,6 +546,11 @@ define([
                         }, this);
                     }
                     this.submitedTooltip.show();
+
+                    const rightMenuController = DE.getController('RightMenu');
+                    const rightMenuView = rightMenuController && rightMenuController.getView('RightMenu');
+                    const fillingStatusSettings = rightMenuView && rightMenuView.fillingStatusSettings;
+                    fillingStatusSettings && fillingStatusSettings.updateRoles();
                 } else
                     Common.NotificationCenter.trigger('doc:mode-apply', 'view-form', true, true);
             }
@@ -710,24 +715,45 @@ define([
         },
 
         requestStartFilling: function() {
-            var oform = this.api.asc_GetOForm(),
-                roles = oform ? oform.asc_getAllRoles() : [],
-                arr = [];
-            for (var i=0; i<roles.length; i++) {
-                var role = roles[i].asc_getSettings(),
-                    color = role.asc_getColor();
-                color && (color = Common.Utils.ThemeColor.getHexColor(color.get_r(), color.get_g(), color.get_b()));
-                arr.push({
-                    name: role.asc_getName() || this.view.textAnyone,
-                    color: '#' + color
-                });
-            }
-            Common.Gateway.requestStartFilling(arr);
+            this.tryStartFilling(function() {
+                var oform = this.api.asc_GetOForm(),
+                    roles = oform ? oform.asc_getAllRoles() : [],
+                    arr = [];
+                for (var i=0; i<roles.length; i++) {
+                    var role = roles[i].asc_getSettings(),
+                        color = role.asc_getColor(),
+                        fieldsCount = role.asc_getFieldCount() || 0;
+                    if(fieldsCount > 0) {
+                        color && (color = Common.Utils.ThemeColor.getHexColor(color.get_r(), color.get_g(), color.get_b()));
+                        arr.push({
+                            name: role.asc_getName() || this.view.textAnyone,
+                            color: '#' + color
+                        });
+                    }
+                }
+                Common.Gateway.requestStartFilling(arr);
+            }.bind(this));
         },
 
         showSendForSigning: function() {
-            const rightmenuController = this.getApplication().getController('RightMenu');
-            rightmenuController.openSendForSigning();
+            this.tryStartFilling(function() {
+                const rightmenuController = this.getApplication().getController('RightMenu');
+                rightmenuController.openSendForSigning();
+            }.bind(this));
+        },
+
+        tryStartFilling: function(callback) {
+            const oForm = this.api.asc_GetOForm();
+            const roles = oForm ? oForm.asc_getAllRoles() : [];
+            const hasRoleWithFields = _.some(roles, function(role) {
+                role = role.asc_getSettings();
+                return role && role.asc_getFieldCount() > 0;
+            });
+            if(hasRoleWithFields) {
+                callback && callback();
+            } else {
+                this.view.showStartFillingAlert();
+            }
         },
 
         onActiveTab: function(tab) {

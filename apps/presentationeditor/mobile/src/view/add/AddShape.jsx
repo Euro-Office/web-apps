@@ -3,6 +3,7 @@ import {observer, inject} from "mobx-react";
 import {Page, Navbar, List, ListItem, ListButton, Row, BlockTitle, Range, Toggle, Icon} from 'framework7-react';
 import { useTranslation } from 'react-i18next';
 import {Device} from '../../../../../common/mobile/utils/device';
+import SvgIcon from '@common/lib/component/SvgIcon';
 
 const AddShape = props => {
     const shapes = props.storeShapeSettings.getStyleGroups();
@@ -14,8 +15,8 @@ const AddShape = props => {
                         {row.map((shape, index) => {
                             return (
                                 <li key={'shape-' + indexRow + '-' + index} onClick={() => {props.onShapeClick(shape.type)}}>
-                                    <div className="thumb"
-                                         style={{WebkitMaskImage: `url('resources/img/shapes/${shape.thumb}')`}}>
+                                    <div className="thumb">
+                                        <SvgIcon symbolId={shape.thumb} className="thumb-icon" />
                                     </div>
                                 </li>
                             )

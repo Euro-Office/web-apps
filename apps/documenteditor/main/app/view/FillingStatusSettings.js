@@ -109,6 +109,8 @@ define([
         },
 
         setRoles: function(roles) {
+            if(!this.rolesCollection) return;
+            
             const me = this;
             let needFindActive = true;
             const resultArray = (roles).map(function(role, index) {

@@ -1844,6 +1844,26 @@ define([
                 this.applyModeCommonElements();
                 this.applyModeEditorElements();
 
+                if(!this.appOptions.isEdit && this.appOptions.isPDFForm) {
+                    const application = this.getApplication();
+                    const  viewport = application.getController('Viewport').getView('Viewport');
+                    viewport.applyEditorMode();
+                    const rightmenuController = application.getController('RightMenu');
+                    const rightmenuView = rightmenuController.getView('RightMenu');
+                    if(rightmenuView.getVisibleButtons().length == 0) {
+                        rightmenuController.onRightMenuHide(null, false, true);
+                    }
+                    if(rightmenuController) {
+                        rightmenuController.setApi(this.api);
+                        rightmenuController.setMode(this.appOptions);
+                    }
+                    if (rightmenuView) {
+                        rightmenuView.setApi(this.api);
+                        rightmenuView.on('editcomplete', _.bind(this.onEditComplete, this));
+                        rightmenuView.setMode(this.appOptions);
+                    }
+                }
+
                 this._isPermissionsInited = true;
                 if ( !this.appOptions.isEdit ) {
                     Common.NotificationCenter.trigger('app:face', this.appOptions);
@@ -3434,6 +3454,7 @@ define([
                             if (apiCallback)  {
                                 apiCallback(btn === 'ok');
                             }
+                            Common.Gateway.reportWarning(id, btn === 'ok' ? 'undo' : 'continue');
                             me.onEditComplete();
                         }, this)
                     });

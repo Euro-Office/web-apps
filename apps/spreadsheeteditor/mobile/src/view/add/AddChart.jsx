@@ -2,6 +2,7 @@ import React from 'react';
 import {observer, inject} from "mobx-react";
 import {Device} from "../../../../../common/mobile/utils/device";
 import { Swiper, SwiperSlide } from 'swiper/react';
+import SvgIcon from '@common/lib/component/SvgIcon';
 
 const AddChart = props => {
     const types = props.storeChartSettings.types;
@@ -25,7 +26,9 @@ const AddChart = props => {
                                                             onClick={() => {
                                                                 props.onInsertChart(type.type)
                                                             }}>
-                                                            <div className={`thumb ${type.thumb}`}></div>
+                                                            <div className={'thumb'}>
+                                                                <SvgIcon symbolId={type.thumb} className={'thumb-icon'} />
+                                                            </div>
                                                         </li>
                                                     )
                                                 })}
@@ -50,7 +53,9 @@ const AddChart = props => {
                                                             onClick={() => {
                                                                 props.onInsertChart(type.type)
                                                             }}>
-                                                            <div className={`thumb ${type.thumb}`}></div>
+                                                            <div className={'thumb'}>
+                                                                <SvgIcon symbolId={type.thumb} className={'thumb-icon'} />
+                                                            </div>
                                                         </li>
                                                     )
                                                 })}

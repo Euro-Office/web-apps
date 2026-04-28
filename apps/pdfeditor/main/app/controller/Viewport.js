@@ -351,10 +351,10 @@ define([
             Common.localStorage.getBool("pdfe-hidden-leftmenu", value) && this.getApplication().getController('LeftMenu').getView('LeftMenu').hide();
         },
 
-        applyEditorMode: function() {
+        applyEditorMode: function(forceShowRightMenu) {
             if (!this.viewport) return;
 
-            if (this._initEditing) {
+            if ((this.mode.isPDFEdit || forceShowRightMenu) && this._initEditing) {
                 var rightmenuController = this.getApplication().getController('RightMenu'),
                     rightMenuView   = rightmenuController.getView('RightMenu');
 
@@ -368,6 +368,11 @@ define([
                 Common.Utils.InternalSettings.set("pdfe-hidden-rightmenu", Common.localStorage.getBool("pdfe-hidden-rightmenu", value));
 
                 this._initEditing = false;
+            }
+            if (!this._initEditing && !this._forceShowRightMenu) {
+                const needShow = (this.mode.isPDFEdit || forceShowRightMenu) && !Common.Utils.InternalSettings.get("pdfe-hidden-rightmenu");
+                this.getApplication().getController('RightMenu').onRightMenuHide(undefined, needShow, true);
+                this._forceShowRightMenu = (forceShowRightMenu && needShow);
             }
         },
 

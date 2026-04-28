@@ -304,9 +304,12 @@ define([
             window.key.setScope('special-paste-toolbar');
 
             var closeMenuOnWindowBlur = function() {
-                if (me.btn.menu.$el && me.btn.menu.$el.is(':visible')) {
-                    me.btn.menu.hide();
-                }
+                setTimeout(function() {
+                    const hasFocus = document.hasFocus ? document.hasFocus() : false; 
+                    if (!hasFocus && me.btn.menu.$el && me.btn.menu.$el.is(':visible')) {
+                        me.btn.menu.hide();
+                    }
+                }, 10);
             };
             $(window).on('blur.pastemenuhide', closeMenuOnWindowBlur);
 

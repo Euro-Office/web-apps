@@ -504,8 +504,8 @@ const PageReplace = props => {
                         {row.map((shape, index) => {
                             return (
                                 <li key={'shape-' + indexRow + '-' + index} onClick={() => {props.onReplace(shape.type)}}>
-                                    <div className="thumb"
-                                         style={{WebkitMaskImage: `url('resources/img/shapes/${shape.thumb}')`}}>
+                                    <div className="thumb">
+                                        <SvgIcon symbolId={shape.thumb} className="thumb-icon" />
                                     </div>
                                 </li>
                             )
