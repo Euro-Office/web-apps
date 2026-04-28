@@ -944,10 +944,8 @@ define([
             },
 
             showStartFillingAlert: function() {
-                Common.UI.alert({
-                    title: this.txtStartFillingAlertTitle,
-                    msg: this.txtStartFillingAlertDescription,
-                    iconCls: 'warn',
+                Common.UI.warning({
+                    msg: this.txtStartFillingAlert,
                     buttons: ['ok'],
                 });
             },
@@ -1034,8 +1032,7 @@ define([
             tipSignField: 'Insert signature field',
             textFillFor: 'Insert fields for',
             textAddRole: 'Add recipient',
-            txtStartFillingAlertTitle: 'No fields for filling added',
-            txtStartFillingAlertDescription:'No fields for filling added. Please, add field and try again.'
+            txtStartFillingAlert:'No fields for filling added. Please, add field and try again.'
         }
     }()), DE.Views.FormsTab || {}));
 });
