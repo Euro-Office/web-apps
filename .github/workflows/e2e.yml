@@ -1,0 +1,96 @@
+name: "E2E Tests"
+
+on:
+    workflow_dispatch:
+    push:
+
+jobs:
+    e2e:
+        name: "E2E Tests"
+        runs-on: self-hosted
+        env:
+            NODE_VERSION: 16
+        steps:
+
+          - name: Checkout web-apps
+            uses: actions/checkout@v3
+            with:
+                repository: euro-office/web-apps
+                token: ${{ secrets.EURO_OFFICE_MIRROR_TOKEN }}
+                ref: ${{ github.ref }}
+                path: web-apps
+
+          - name: Checkout SDKJS
+            uses: actions/checkout@v3
+            with:
+                repository: euro-office/sdkjs
+                token: ${{ secrets.EURO_OFFICE_MIRROR_TOKEN }}
+                ref: fork
+                path: sdkjs
+                fetch-depth: '1'
+
+          - name: Checkout fork (for e2e tests)
+            uses: actions/checkout@v3
+            with:
+                repository: euro-office/fork
+                token: ${{ secrets.EURO_OFFICE_MIRROR_TOKEN }}
+                ref: ci/playwright-e2e
+                path: fork
+                sparse-checkout: e2e
+
+          - name: Use Node.js ${{ env.NODE_VERSION }}
+            uses: actions/setup-node@v3
+            with:
+                node-version: ${{ env.NODE_VERSION }}
+
+          - name: Build sprites
+            run: |
+              cd web-apps/build
+              ./sprites.sh
+
+          - name: Install web-apps build dependencies
+            run: |
+              cd web-apps/build
+              npm install
+
+          - name: Build web-apps
+            run: |
+              cd web-apps/build
+              grunt
+            env:
+                BUILD_ROOT: ${{ github.workspace }}/deploy
+
+          - name: Build e2e test image
+            run: |
+              docker build \
+                -t euro-office-e2e-test:${{ github.sha }} \
+                -f - \
+                ${{ github.workspace }} <<'DOCKERFILE'
+              FROM euro-office/documentserver:latest
+              COPY deploy/web-apps/ /var/www/onlyoffice/documentserver/web-apps/
+              DOCKERFILE
+
+          - name: Install e2e dependencies
+            run: |
+              cd fork/e2e
+              npm install
+              npx playwright install chromium
+
+          - name: Run e2e tests
+            run: |
+              cd fork/e2e
+              npm test
+            env:
+                E2E_IMAGE: euro-office-e2e-test:${{ github.sha }}
+
+          - name: Upload Playwright report
+            if: always()
+            uses: actions/upload-artifact@v3
+            with:
+                name: playwright-report-${{ github.sha }}
+                path: fork/e2e/playwright-report/
+                retention-days: 14
+
+          - name: Clean up test image
+            if: always()
+            run: docker rmi euro-office-e2e-test:${{ github.sha }} || true
