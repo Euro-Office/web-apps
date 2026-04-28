@@ -35,7 +35,7 @@ class PresentationSettingsController extends Component {
         let ratio = slideSizeArr[1] / slideSizeArr[0];
         let currentHeight = this.props.storePresentationSettings.currentPageSize.height;
         let currentPageSize = {
-            width: ((currentHeight || slideSizeArr[1]) / ratio),
+            width: this.props.storePresentationSettings.slideOrientation ? ((currentHeight || slideSizeArr[1]) / ratio) : ((currentHeight || slideSizeArr[1]) * ratio),
             height: currentHeight
         };
         // api.changeSlideSize(slideSizeArr[0], slideSizeArr[1], slideSizeArr[2]);
