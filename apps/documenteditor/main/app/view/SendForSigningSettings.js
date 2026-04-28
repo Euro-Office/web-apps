@@ -105,12 +105,10 @@ define([
             this.cancelBtn = $markup.find('#id-send-for-signing-settings-cancel-btn');
             this.cancelBtn.on('click', _.bind(this.onCancel, this));
 
-            const oForm = this.api.asc_GetOForm();
             this.rolesCollection = new Backbone.Collection();
             this.rolesCollection.on('reset', function(newCollection, details) {
                 me._renderRolesList();
             }, this);
-            this.setRoles(oForm ? oForm.asc_getAllRoles() : []);
 
             $(window).on('resize', _.bind(this.onWindowResize, this));
         },
@@ -118,7 +116,7 @@ define([
         setApi: function(api) {
             this.api = api;
             if (this.api) {
-                this.api.asc_registerCallback('asc_onUpdateOFormRoles', _.bind(this.onRefreshRolesList, this));
+                // this.api.asc_registerCallback('asc_onUpdateOFormRoles', _.bind(this.onRefreshRolesList, this));
             }
             return this;
         },
@@ -127,6 +125,8 @@ define([
             if (this._initSettings) {
                 this.createDelayedElements();
             }
+            const oForm = this.api.asc_GetOForm();
+            this.setRoles(oForm ? oForm.asc_getAllRoles() : []);
         },
 
         setLocked: function (locked) {
@@ -142,39 +142,30 @@ define([
         },
 
         updateDisableSendButton: function() {
-            const hasEmptyUser = this.rolesCollection.some(function(role) {
-                return !role.get('user');
-            });
+            const hasEmptyUser =
+                this.rolesCollection.length === 0 ||
+                this.rolesCollection.some(function (role) {
+                    return !role.get('user');
+                });
             this.sendBtn.setDisabled(hasEmptyUser);
         },
 
         setRoles: function(roles) {
-            const oldArray = this.rolesCollection.toJSON();
-            const oldMap = {};
-            const newArray = (roles).map(function(role) {
+            const newArray = [];
+            roles.forEach(function(role) {
                 role = role.asc_getSettings();
-                let color = role.asc_getColor();
-                color && (color = Common.Utils.ThemeColor.getHexColor(color.get_r(), color.get_g(), color.get_b()));
-                return {
-                    name: role.asc_getName(),
-                    color: color,
-                    user: null
+                const fieldsCount = role.asc_getFieldCount() || 0;
+                if(fieldsCount > 0) {
+                    let color = role.asc_getColor();
+                    color && (color = Common.Utils.ThemeColor.getHexColor(color.get_r(), color.get_g(), color.get_b()));
+                    newArray.push({
+                        name: role.asc_getName(),
+                        color: color,
+                        user: null
+                    });
                 }
             });
-
-            oldArray.forEach(function(item) {
-                oldMap[item.name] = item;
-            });
-
-            // Arrays are merged by 'name', only the `user` field is carried over from the old array
-            const resultArray = newArray.map(function(item) {
-                if (oldMap.hasOwnProperty(item.name)) {
-                    item.user = oldMap[item.name].user;
-                }
-                return item;
-            });
-
-            this.rolesCollection.reset(resultArray);
+            this.rolesCollection.reset(newArray);
         },
 
         onUsersListLoad: function(type, users, isPaginated) {
