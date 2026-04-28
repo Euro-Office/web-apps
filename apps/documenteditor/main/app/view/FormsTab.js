@@ -943,6 +943,15 @@ define([
                 this.btnSubmit && this.btnSubmit.setVisible(visible);
             },
 
+            showStartFillingAlert: function() {
+                Common.UI.alert({
+                    title: this.txtStartFillingAlertTitle,
+                    msg: this.txtStartFillingAlertDescription,
+                    iconCls: 'warn',
+                    buttons: ['ok'],
+                });
+            },
+
             SetDisabled: function (state) {
                 this._state.disabled = state;
                 this.paragraphControls.forEach(function(button) {
@@ -1024,7 +1033,9 @@ define([
             capBtnSignature: 'Signature Field',
             tipSignField: 'Insert signature field',
             textFillFor: 'Insert fields for',
-            textAddRole: 'Add recipient'
+            textAddRole: 'Add recipient',
+            txtStartFillingAlertTitle: 'No fields for filling added',
+            txtStartFillingAlertDescription:'No fields for filling added. Please, add field and try again.'
         }
     }()), DE.Views.FormsTab || {}));
 });
