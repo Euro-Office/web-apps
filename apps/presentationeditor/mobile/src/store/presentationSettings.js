@@ -29,7 +29,11 @@ export class storePresentationSettings {
         this.slideSizeIndex = -1;
 
         this.slideSizes.forEach((array, index) => {
-            if(Math.abs(array[1] / array[0] - ratio) < 0.001) {
+            var presetRatio = this.slideOrientation ?
+                array[1] / array[0] :
+                array[0] / array[1];
+
+            if (Math.abs(presetRatio - ratio) < 0.001) {
                 this.slideSizeIndex = index;
             }
         });
