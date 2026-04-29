@@ -1186,7 +1186,7 @@ define([], function () {
     };
 
     Common.Utils.startFullscreenForElement = function (element) {
-        if (element) {
+        if (element && (!navigator.userActivation || navigator.userActivation.isActive)) {
             if (element.requestFullscreen) {
                 element.requestFullscreen();
             } else if (element.webkitRequestFullscreen) {
