@@ -202,6 +202,7 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
                         {
                             text: _t.textDontSave,
                             onClick: () => {
+                                api.asc_undoAllChanges();
                                 goBackLocation(current);
                             }
                         },
