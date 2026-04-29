@@ -709,7 +709,7 @@ define([
 
             let cant_align = no_paragraph && !in_text_form && !in_text_annot;
             toolbar.lockToolbar(Common.enumLock.cantAlign, cant_align, {array: [toolbar.btnHorizontalAlign]});
-            !cant_align && toolbar.btnHorizontalAlign.menu.items[3].setDisabled(in_text_form || in_text_annot);
+            !cant_align && toolbar.btnHorizontalAlign.menu.items[3].setDisabled(in_text_form);
 
             if (this._state.no_object !== no_object ) {
                 if (this._state.activated) this._state.no_object = no_object;

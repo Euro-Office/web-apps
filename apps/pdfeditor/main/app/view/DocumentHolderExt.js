@@ -2051,6 +2051,15 @@ define([], function () {
                             checkmark: false,
                             toggleGroup: 'halignGroup',
                             value: 0
+                        },
+                        {
+                            caption: toolbar.textAlignJust,
+                            iconCls: 'menu__icon btn-align-just',
+                            icls: 'btn-align-just',
+                            checkable: true,
+                            checkmark: false,
+                            toggleGroup: 'halignGroup',
+                            value: 3
                         }
                     ]
                 }),
