@@ -2450,7 +2450,7 @@
   "DE.Views.FormsTab.textNoHighlight": "بدون تمييز للنصوص",
   "DE.Views.FormsTab.textRequired": "قم بملء كل الحقول المطلوبة لارسال  الاستمارة.",
   "DE.Views.FormsTab.textSubmited": "تم تقديم الإستمارة بنجاح",
-  "DE.Views.FormsTab.textSubmitOk": "تم حفظ استمارة PDF في قسم المكتمل",
+  "DE.Views.FormsTab.textSubmitOk": "تم ملء نموذج PDF الخاص بك بنجاح.",
   "DE.Views.FormsTab.tipCheckBox": "إدراج صندوق تحقق",
   "DE.Views.FormsTab.tipComboBox": "إدراج صندوق دمج",
   "DE.Views.FormsTab.tipComplexField": "إدراج حقل معقد",

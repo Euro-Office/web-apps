@@ -2382,7 +2382,7 @@
   "DE.Views.FormsTab.textNoHighlight": "Ei korostusta",
   "DE.Views.FormsTab.textRequired": "Täytä kaikki vaaditut kentät lähettääksesi lomakkeen.",
   "DE.Views.FormsTab.textSubmited": "Lomakkeen lähettäminen onnistui",
-  "DE.Views.FormsTab.textSubmitOk": "Sinun PDF-lomakkeesi on tallennettu Valmiit-osioon.",
+  "DE.Views.FormsTab.textSubmitOk": "PDF-lomakkeesi on täytetty onnistuneesti.",
   "DE.Views.FormsTab.tipCheckBox": "Lisää valintaruutu",
   "DE.Views.FormsTab.tipComboBox": "Lisää yhdistelmävalikko",
   "DE.Views.FormsTab.tipComplexField": "Lisää monimuotoinen kenttä",
