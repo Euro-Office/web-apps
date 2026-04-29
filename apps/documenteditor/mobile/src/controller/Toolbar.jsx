@@ -185,7 +185,7 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
         if (appOptions.customization.goback.requestClose && appOptions.canRequestClose) {
             onRequestClose();
         } else {
-            if (Device.ios) {
+            if (Device.ios && api.isDocumentModified()) {
                 f7.dialog.create({
                     title: _t.textUnsavedData,
                     text: _t.textSaveData,
