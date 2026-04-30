@@ -1037,7 +1037,7 @@ define([
                     me.btnSmartPicker = new Common.UI.Button({
                         id: 'tlbtn-smartpicker',
                         cls: 'btn-toolbar x-huge icon-top',
-                        iconCls: 'toolbar__icon btn-big-inserthyperlink',
+                        iconCls: 'toolbar__icon btn-general-ai',
                         caption: me.capBtnSmartPicker,
                         lock: [_set.hyperlinkLock, _set.slideDeleted, _set.paragraphLock, _set.lostConnect, _set.noSlides, _set.noParagraphSelected, _set.slideMasterMode],
                         dataHint: '1',
