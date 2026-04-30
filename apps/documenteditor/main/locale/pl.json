@@ -2392,7 +2392,7 @@
   "DE.Views.FormsTab.textNoHighlight": "Brak wyróżnienia",
   "DE.Views.FormsTab.textRequired": "Wypełnij wszystkie wymagane pola, aby wysłać formularz.",
   "DE.Views.FormsTab.textSubmited": "Formularz przesłany pomyślnie",
-  "DE.Views.FormsTab.textSubmitOk": "Twój formularz PDF został zapisany w sekcji Zakończone.",
+  "DE.Views.FormsTab.textSubmitOk": "Twój formularz PDF został pomyślnie wypełniony.",
   "DE.Views.FormsTab.tipCheckBox": "Wstaw pole wyboru",
   "DE.Views.FormsTab.tipComboBox": "Wstaw pole kombi",
   "DE.Views.FormsTab.tipComplexField": "Wstaw złożone pole",

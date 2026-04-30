@@ -3032,7 +3032,7 @@
   "DE.Views.FormsTab.textNoHighlight": "Nincs kiemelés",
   "DE.Views.FormsTab.textRequired": "Töltse ki az összes szükséges mezőt az űrlap beküldéséhez.",
   "DE.Views.FormsTab.textSubmited": "Az űrlap sikeresen belküldve",
-  "DE.Views.FormsTab.textSubmitOk": "A PDF űrlapot a Befejezett részben mentettük.",
+  "DE.Views.FormsTab.textSubmitOk": "A PDF űrlap kitöltése sikeresen megtörtént.",
   "DE.Views.FormsTab.tipCheckBox": "Jelölőnégyzet beszúrása",
   "DE.Views.FormsTab.tipComboBox": "Legördülő beszúrása",
   "DE.Views.FormsTab.tipComplexField": "Komplex mező beillesztése",

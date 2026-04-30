@@ -2930,7 +2930,7 @@
   "DE.Views.FormsTab.textNoHighlight": "Žádné zvýraznění",
   "DE.Views.FormsTab.textRequired": "Pro odeslání formuláře vyplňte všechna požadovaná pole.",
   "DE.Views.FormsTab.textSubmited": "Formulář úspěšně odeslán",
-  "DE.Views.FormsTab.textSubmitOk": "Váš formulář PDF byl uložen do sekce Dokončené.",
+  "DE.Views.FormsTab.textSubmitOk": "Váš PDF formulář byl úspěšně vyplněn.",
   "DE.Views.FormsTab.tipCheckBox": "Vložit zaškrtávací pole",
   "DE.Views.FormsTab.tipComboBox": "Vložit výběrové pole",
   "DE.Views.FormsTab.tipComplexField": "Vložit komplexní pole",

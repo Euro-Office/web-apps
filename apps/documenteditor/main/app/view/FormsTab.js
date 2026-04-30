@@ -1022,7 +1022,7 @@ define([
             tipRolesLink: 'Learn more about roles',
             tipFieldsLink: 'Learn more about field parameters',
             capBtnSaveFormDesktop: 'Save as...',
-            textSubmitOk: 'Your PDF form has been saved in the Complete section. You can fill out this form again and send another result.',
+            textSubmitOk: 'Your PDF form has been successfully filled.',
             textFilled: 'Filled',
             tipFirstPage: 'Go to the first page',
             tipLastPage: 'Go to the last page',

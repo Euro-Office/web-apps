@@ -2469,7 +2469,7 @@ define([
         warnLicenseBefore: 'License not active.<br>Please contact your administrator.',
         titleLicenseNotActive: 'License not active',
         warnLicenseAnonymous: 'Access denied for anonymous users. This document will be opened for viewing only.',
-        textSubmitOk: 'Your PDF form has been saved in the Complete section. You can fill out this form again and send another result.',
+        textSubmitOk: 'Your PDF form has been successfully filled.',
         textFilled: 'Filled',
         savingText: 'Saving',
         tipLicenseExceeded: 'The document is open in read-only mode as the maximum number of simultaneous connections allowed by license has been reached.<br><br>Please try again later or contact the document owner if you need editing access.',

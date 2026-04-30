@@ -2880,7 +2880,7 @@
   "DE.Views.FormsTab.textNoHighlight": "Без истицања",
   "DE.Views.FormsTab.textRequired": "Попуни сва потребна поља за слање обрасца.",
   "DE.Views.FormsTab.textSubmited": "Форма предата успешно",
-  "DE.Views.FormsTab.textSubmitOk": "Ваш PDF образац је сачуван у Завршено секцији.",
+  "DE.Views.FormsTab.textSubmitOk": "Ваш PDF образац је успешно попуњен.",
   "DE.Views.FormsTab.tipCheckBox": "Уметни цхецкбоx",
   "DE.Views.FormsTab.tipComboBox": "Уметни комбиновано поље",
   "DE.Views.FormsTab.tipComplexField": "Уметни комплексно поље",

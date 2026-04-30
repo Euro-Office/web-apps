@@ -2332,7 +2332,7 @@
   "DE.Views.FormsTab.textNoHighlight": "Vurgulama yok",
   "DE.Views.FormsTab.textRequired": "Formu gönderebilmek için gerekli tüm alanları doldurun.",
   "DE.Views.FormsTab.textSubmited": "Form başarıyla gönderildi ",
-  "DE.Views.FormsTab.textSubmitOk": "PDF formunuz Tamamlandı bölümüne kaydedildi.",
+  "DE.Views.FormsTab.textSubmitOk": "PDF formunuz başarıyla dolduruldu.",
   "DE.Views.FormsTab.tipCheckBox": "Onay kutusu ekle",
   "DE.Views.FormsTab.tipComboBox": "Açılan kutu ekle",
   "DE.Views.FormsTab.tipComplexField": "Kompleks alan ekle",
