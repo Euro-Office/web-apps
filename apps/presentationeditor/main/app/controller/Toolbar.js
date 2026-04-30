@@ -1975,8 +1975,10 @@ define([
         },
 
         insertPlainText: function(data) {
-            // presentationeditor api has no PastePlainText; route through asc_PasteData with Text format
-            this.api.asc_PasteData(Asc.c_oAscClipboardDataFormat.Text, data);
+            // presentationeditor api has no PastePlainText; route through asc_PasteData
+            // with Text format (1 per c_oAscClipboardDataFormat in clipboard_base.js).
+            var fmt = (window.AscCommon && AscCommon.c_oAscClipboardDataFormat && AscCommon.c_oAscClipboardDataFormat.Text) || 1;
+            this.api.asc_PasteData(fmt, data);
             Common.NotificationCenter.trigger('storage:plain-text-insert', data);
         },
 
