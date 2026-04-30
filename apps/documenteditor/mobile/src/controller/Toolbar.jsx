@@ -196,14 +196,14 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
                             onClick: () => {
                                 LocalStorage.save();
                                 Common.EditorApi.get().asc_Save();
-                                goBackLocation(current);
+                                setTimeout(() => goBackLocation(current), 200);
                             }
                         },
                         {
                             text: _t.textDontSave,
                             onClick: () => {
                                 api.asc_undoAllChanges();
-                                goBackLocation(current);
+                                setTimeout(() => goBackLocation(current), 200);
                             }
                         },
                         {
