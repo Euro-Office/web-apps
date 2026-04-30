@@ -1581,7 +1581,7 @@ define([
                     for (i = 0; i < comments.length; ++i) {
                         comment = this.findComment(comments[i].asc_getId());
                         if (comment) {
-                            comment.set('editTextInPopover', t.mode.canEditComments && AscCommon.UserInfoParser.canEditComment(comment.username));// dont't edit comment when customization->commentAuthorOnly is true or when permissions.editCommentAuthorOnly is true
+                            comment.set('editTextInPopover', t.mode.canEditComments && AscCommon.UserInfoParser.canEditComment(comment.username));// dont't edit comment when permissions.editCommentAuthorOnly is true
                             comment.set('hint', false);
                             this.popoverComments.push(comment);
                         }

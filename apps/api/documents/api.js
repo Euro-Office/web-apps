@@ -238,7 +238,6 @@
                     statusBar: true, // must be deprecated. use layout.statusBar instead
                     autosave: true,
                     forcesave: false,
-                    commentAuthorOnly: false, // must be deprecated. use permissions.editCommentAuthorOnly and permissions.deleteCommentAuthorOnly instead
                     showReviewChanges: false, // must be deprecated. use customization.review.showReviewChanges instead
                     help: true,
                     compactHeader: false,
