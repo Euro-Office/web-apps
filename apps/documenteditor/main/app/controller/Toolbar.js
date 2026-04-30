@@ -2003,8 +2003,8 @@ define([
         },
 
         insertPlainText: function(data) {
-
-            this.api.PastePlainText(data)
+            // documenteditor api has no PastePlainText; route through asc_PasteData with Text format
+            this.api.asc_PasteData(Asc.c_oAscClipboardDataFormat.Text, data);
             Common.NotificationCenter.trigger('storage:plain-text-insert', data);
         },
 
