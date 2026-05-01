@@ -637,7 +637,7 @@ define([
             this.api.asc_registerCallback('asc_onRunAutostartMacroses', _.bind(this.onRunAutostartMacroses, this));
             this.api.asc_registerCallback('asc_onLicenseChanged',       _.bind(this.onLicenseChanged, this));
             this.api.asc_setDocInfo(docInfo);
-            this.api.asc_getEditorPermissions(this.editorConfig.licenseUrl, this.editorConfig.customerId);
+            this.api.asc_getEditorPermissions();
             this.api.asc_enableKeyEvents(true);
 
             Common.Analytics.trackEvent('Load', 'Start');

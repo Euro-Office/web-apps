@@ -290,7 +290,7 @@ class MainController extends Component {
                 this.api.asc_registerCallback('asc_onMacrosPermissionRequest', this.onMacrosPermissionRequest.bind(this));
                 this.api.asc_registerCallback('asc_onRunAutostartMacroses', this.onRunAutostartMacroses.bind(this));
                 this.api.asc_setDocInfo(docInfo);
-                this.api.asc_getEditorPermissions(this.editorConfig.licenseUrl, this.editorConfig.customerId);
+                this.api.asc_getEditorPermissions();
                 this.api.asc_enableKeyEvents(true);
 
                 // Common.SharedSettings.set('document', data.doc);

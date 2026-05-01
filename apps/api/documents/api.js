@@ -80,8 +80,6 @@
                 callbackUrl: <url for connection between sdk and portal>,
                 mergeFolderUrl: 'folder for saving merged file', // must be deprecated, use saveAsUrl instead
                 saveAsUrl: 'folder for saving files'
-                licenseUrl: <url for license>,
-                customerId: <customer id>,
                 region: <regional settings> // can be 'en-us' or lang code
 
                 user: {
@@ -376,7 +374,7 @@
 
     DocsAPI.DocEditor = function(placeholderId, config) {
         var _self = this,
-            _config = config || {};
+            _config = config ? Object.assign({}, config) : {};
 
         extend(_config, DocsAPI.DocEditor.defaultConfig);
         _config.editorConfig.canUseHistory = _config.events && !!_config.events.onRequestHistory;

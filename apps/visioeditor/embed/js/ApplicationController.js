@@ -151,7 +151,7 @@ VE.ApplicationController = new(function(){
                 api.asc_registerCallback('asc_onGetEditorPermissions', onEditorPermissions);
                 // api.asc_registerCallback('asc_onRunAutostartMacroses', onRunAutostartMacroses);
                 api.asc_setDocInfo(docInfo);
-                api.asc_getEditorPermissions(config.licenseUrl, config.customerId);
+                api.asc_getEditorPermissions();
                 api.asc_enableKeyEvents(true);
 
                 Common.Analytics.trackEvent('Load', 'Start');
