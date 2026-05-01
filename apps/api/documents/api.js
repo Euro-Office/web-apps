@@ -480,8 +480,11 @@
 
         var _checkConfigParams = function() {
             if (_config.document) {
-                if (!_config.document.url || ((typeof _config.document.fileType !== 'string' || _config.document.fileType=='') &&
-                                              (typeof _config.documentType !== 'string' || _config.documentType==''))) {
+                if (!_config.document.url ||
+                    ((typeof _config.document.fileType !== 'string' || _config.document.fileType=='') &&
+                                              (typeof _config.documentType !== 'string' || _config.documentType=='')) ||
+                    (!_config.document.key || typeof _config.document.key !== 'string'))
+                {
                     window.alert("One or more required parameter for the config object is not set");
                     return false;
                 }
@@ -534,13 +537,6 @@
 
                 if (!_config.document.title || _config.document.title=='')
                     _config.document.title = 'Unnamed.' + _config.document.fileType;
-
-                if (!_config.document.key) {
-                    _config.document.key = 'xxxxxxxxxxxxxxxxxxxx'.replace(/[x]/g, function (c) {var r = Math.random() * 16 | 0; return r.toString(16);});
-                } else if (typeof _config.document.key !== 'string') {
-                    window.alert("The \"document.key\" parameter for the config object must be string. Please correct it.");
-                    return false;
-                }
 
                 if (_config.editorConfig.user && _config.editorConfig.user.id && (typeof _config.editorConfig.user.id == 'number')) {
                     _config.editorConfig.user.id = _config.editorConfig.user.id.toString();

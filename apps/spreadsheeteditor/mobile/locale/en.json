@@ -466,6 +466,11 @@
     "textCloseHistory": "Close History",
     "textEnterNewFileName": "Enter a new file name",
     "textOk": "OK",
+    "textSave": "Save",
+    "textDontSave": "Don't save",
+    "textCancel": "Cancel",
+    "textSaveData": "Save your changes before leave",
+    "textUnsavedData": "Unsaved data",
     "textRenameFile": "Rename File",
     "textSwitchToDesktop": "Switch to Desktop"
   },

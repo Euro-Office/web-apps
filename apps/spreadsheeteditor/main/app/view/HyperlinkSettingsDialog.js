@@ -140,7 +140,7 @@ define([], function () { 'use strict';
                 placeHolder: me.appOptions.isDesktopApp ? me.txtUrlPlaceholder : '',
                 btnHint: me.textSelectFile,
                 validation  : function(value) {
-                    var trimmed = $.trim(value);
+                    var trimmed = value.trim();
                     if (me.api.asc_getFullHyperlinkLength(trimmed)>2083) return me.txtSizeLimit;
 
                     me.urlType = me.api.asc_getUrlType(trimmed);
@@ -153,7 +153,7 @@ define([], function () { 'use strict';
                 me.isInputFirstChange_url = false;
                 var val = $(e.target).val();
                 me.isAutoUpdate && me.inputDisplay.setValue(val);
-                me.btnOk.setDisabled($.trim(val)=='');
+                me.btnOk.setDisabled(val.trim()=='');
             });
             me.appOptions.isDesktopApp && me.inputUrl.on('button:click', _.bind(me.onSelectFile, me));
 
@@ -182,7 +182,7 @@ define([], function () { 'use strict';
                 me.isInputFirstChange_range = false;
                 var val = $(e.target).val();
                 me.isAutoUpdate && me.inputDisplay.setValue(me.internalList.getSelectedRec().get('name') + (val!=='' ? '!' + val : ''));
-                me.btnOk.setDisabled($.trim(val)=='');
+                me.btnOk.setDisabled(val.trim()=='');
             });
             me.inputRange.on('button:click', _.bind(me.onSelectData, me));
 
@@ -294,7 +294,7 @@ define([], function () { 'use strict';
                         }
                     } else {
                         this.inputUrl.setValue(settings.props.asc_getHyperlinkUrl().replace(new RegExp(" ",'g'), "%20"));
-                        this.btnOk.setDisabled($.trim(this.inputUrl.getValue())=='');
+                        this.btnOk.setDisabled(this.inputUrl.getValue().trim()=='');
                     }
                     this.inputDisplay.setValue(settings.isLock ? this.textDefault : settings.props.asc_getText());
                     this.inputTip.setValue(settings.props.asc_getTooltip());
@@ -456,7 +456,7 @@ define([], function () { 'use strict';
                     }
                 }
                 var rec = this.internalList.getSelectedRec();
-                this.btnOk.setDisabled(!rec || rec.get('level')==0 || rec.get('type')==0 && $.trim(this.inputRange.getValue())=='');
+                this.btnOk.setDisabled(!rec || rec.get('level')==0 || rec.get('type')==0 && this.inputRange.getValue().trim()=='');
                 var me = this;
                 _.delay(function(){
                     if (me.inputRange.isDisabled())
@@ -465,7 +465,7 @@ define([], function () { 'use strict';
                         me.inputRange.focus();
                 },50);
             } else {
-                this.btnOk.setDisabled($.trim(this.inputUrl.getValue())=='');
+                this.btnOk.setDisabled(this.inputUrl.getValue().trim()=='');
                 var me = this;
                 _.delay(function(){
                     me.inputUrl.focus();
@@ -493,7 +493,7 @@ define([], function () { 'use strict';
         },
 
         onSelectItem: function(picker, item, record, e){
-            this.btnOk.setDisabled(record.get('level')==0 || record.get('type')==0 && $.trim(this.inputRange.getValue())=='');
+            this.btnOk.setDisabled(record.get('level')==0 || record.get('type')==0 && this.inputRange.getValue().trim()=='');
             this.inputRange.setDisabled(record.get('type')==1 || record.get('level')==0);
             if (this.isAutoUpdate) {
                 var list = record.get('level') ? record.get('name') : '';
@@ -544,7 +544,7 @@ define([], function () { 'use strict';
                         me.inputRange.setValue(me.dataRangeValid);
                         me.inputRange.checkValidate();
                         me.isAutoUpdate && me.inputDisplay.setValue(me.internalList.getSelectedRec().get('name') + (me.dataRangeValid!=='' ? '!' + me.dataRangeValid : ''));
-                        me.btnOk.setDisabled($.trim(me.dataRangeValid)=='');
+                        me.btnOk.setDisabled(me.dataRangeValid.trim()=='');
                     }
                 };
 
@@ -582,7 +582,7 @@ define([], function () { 'use strict';
                         if (me.inputUrl.checkValidate() !== true)
                             me.isInputFirstChange_url = true;
                         me.isAutoUpdate && me.inputDisplay.setValue(result);
-                        me.btnOk.setDisabled($.trim(result)=='');
+                        me.btnOk.setDisabled(result.trim()=='');
                     }
                 };
 

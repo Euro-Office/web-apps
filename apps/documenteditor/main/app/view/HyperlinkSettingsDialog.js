@@ -134,7 +134,7 @@ define([], function () { 'use strict';
                 placeHolder: me.appOptions.isDesktopApp ? me.txtUrlPlaceholder : '',
                 btnHint: me.textSelectFile,
                 validation  : function(value) {
-                    var trimmed = $.trim(value);
+                    var trimmed = value.trim();
                     if (trimmed.length>2083) return me.txtSizeLimit;
 
                     me.urlType = me.api.asc_getUrlType(trimmed);
@@ -151,7 +151,7 @@ define([], function () { 'use strict';
                     me.inputDisplay.setValue(val);
                     me.isTextChanged = true;
                 }
-                me.btnOk.setDisabled($.trim(val)=='');
+                me.btnOk.setDisabled(val.trim()=='');
             });
             me.appOptions.isDesktopApp && me.inputUrl.on('button:click', _.bind(me.onSelectFile, me));
 
@@ -288,7 +288,7 @@ define([], function () { 'use strict';
                     me.inputDisplay.focus();
                 },50);
             } else {
-                this.btnOk.setDisabled($.trim(this.inputUrl.getValue())=='');
+                this.btnOk.setDisabled(this.inputUrl.getValue().trim()=='');
                 var me = this;
                 _.delay(function(){
                     me.inputUrl.focus();
@@ -338,7 +338,7 @@ define([], function () { 'use strict';
                     } else {
                         me.inputUrl.setValue('');
                     }
-                    this.btnOk.setDisabled($.trim(this.inputUrl.getValue())=='');
+                    this.btnOk.setDisabled(this.inputUrl.getValue().trim()=='');
                 } else {
                     if (props.is_TopOfDocument())
                         this.internalList.selectByIndex(0);
@@ -382,7 +382,7 @@ define([], function () { 'use strict';
                 type = this.btnExternal.isActive() ? c_oHyperlinkType.WebLink : c_oHyperlinkType.InternalLink;
 
             if (type==c_oHyperlinkType.WebLink) {//WebLink
-                var url     = $.trim(me.inputUrl.getValue());
+                var url     = me.inputUrl.getValue().trim();
 
                 if (me.urlType!==AscCommon.c_oAscUrlType.Unsafe && ! /(((^https?)|(^ftp)):\/\/)|(^mailto:)/i.test(url) )
                     url = ( (me.urlType==AscCommon.c_oAscUrlType.Email) ? 'mailto:' : 'http://' ) + url;
@@ -469,7 +469,7 @@ define([], function () { 'use strict';
                             me.inputDisplay.setValue(result);
                             me.isTextChanged = true;
                         }
-                        me.btnOk.setDisabled($.trim(result)=='');
+                        me.btnOk.setDisabled(result.trim()=='');
                     }
                 };
 

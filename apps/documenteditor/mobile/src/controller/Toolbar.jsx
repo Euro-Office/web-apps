@@ -180,18 +180,52 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
     };
 
     const goBack = (current) => {
+        const api = Common.EditorApi.get();
+
         if (appOptions.customization.goback.requestClose && appOptions.canRequestClose) {
             onRequestClose();
         } else {
-            const href = appOptions.customization.goback.url;
-
-            if (!current && appOptions.customization.goback.blank !== false) {
-                window.open(href, "_blank");
+            if (Device.ios && api.isDocumentModified()) {
+                f7.dialog.create({
+                    title: _t.textUnsavedData,
+                    text: _t.textSaveData,
+                    verticalButtons: true,
+                    buttons: [
+                        {
+                            text: _t.textSave,
+                            onClick: () => {
+                                LocalStorage.save();
+                                Common.EditorApi.get().asc_Save();
+                                setTimeout(() => goBackLocation(current), 200);
+                            }
+                        },
+                        {
+                            text: _t.textDontSave,
+                            onClick: () => {
+                                api.asc_undoAllChanges();
+                                setTimeout(() => goBackLocation(current), 200);
+                            }
+                        },
+                        {
+                            text: _t.textCancel
+                        }
+                    ]
+                }).open();
             } else {
-                parent.location.href = href;
+                goBackLocation(current);
             }
         }
     }
+
+    const goBackLocation = (current) => {
+        const href = appOptions.customization.goback.url;
+
+        if (!current && appOptions.customization.goback.blank !== false) {
+            window.open(href, "_blank");
+        } else {
+            parent.location.href = href;
+        }
+    };
 
     const onUndo = () => {
         const api = Common.EditorApi.get();
