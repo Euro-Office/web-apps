@@ -1975,10 +1975,16 @@ define([
         },
 
         insertPlainText: function(data) {
-            // presentationeditor api has no PastePlainText; route through asc_PasteData
-            // with Text format (1 per c_oAscClipboardDataFormat in clipboard_base.js).
-            var fmt = (window.AscCommon && AscCommon.c_oAscClipboardDataFormat && AscCommon.c_oAscClipboardDataFormat.Text) || 1;
-            this.api.asc_PasteData(fmt, data);
+            // Closure Compiler advanced-mode strips dotted-notation prototype
+            // methods, so asc_PasteData is unreachable from outside the bundle.
+            // Use Add_Text where exposed; fall back to asc_PasteData if a build
+            // happens to keep it.
+            if (typeof this.api.Add_Text === 'function') {
+                this.api.Add_Text(data);
+            } else if (typeof this.api.asc_PasteData === 'function') {
+                var fmt = (window.AscCommon && AscCommon.c_oAscClipboardDataFormat && AscCommon.c_oAscClipboardDataFormat.Text) || 1;
+                this.api.asc_PasteData(fmt, data);
+            }
             Common.NotificationCenter.trigger('storage:plain-text-insert', data);
         },
 
