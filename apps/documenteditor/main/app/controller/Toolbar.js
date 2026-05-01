@@ -2003,11 +2003,17 @@ define([
         },
 
         insertPlainText: function(data) {
-            // documenteditor api has no PastePlainText; route through asc_PasteData
-            // with Text format (1 per c_oAscClipboardDataFormat in clipboard_base.js).
-            // The constant is exposed on AscCommon, not Asc, in the documenteditor build.
-            var fmt = (window.AscCommon && AscCommon.c_oAscClipboardDataFormat && AscCommon.c_oAscClipboardDataFormat.Text) || 1;
-            this.api.asc_PasteData(fmt, data);
+            // The documenteditor api has no PastePlainText, and asc_PasteData
+            // is renamed by the Closure Compiler advanced-mode minifier (only
+            // bracket-notation exports survive). Use Add_Text — it is
+            // explicitly exposed via window["asc_docs_api"].prototype["Add_Text"]
+            // in sdkjs/word/api.js as the "cool api" plain-text insertion path.
+            if (typeof this.api.Add_Text === 'function') {
+                this.api.Add_Text(data);
+            } else if (typeof this.api.asc_PasteData === 'function') {
+                var fmt = (window.AscCommon && AscCommon.c_oAscClipboardDataFormat && AscCommon.c_oAscClipboardDataFormat.Text) || 1;
+                this.api.asc_PasteData(fmt, data);
+            }
             Common.NotificationCenter.trigger('storage:plain-text-insert', data);
         },
 
