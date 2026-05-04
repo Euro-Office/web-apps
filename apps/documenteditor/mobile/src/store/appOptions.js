@@ -233,7 +233,7 @@ export class storeAppOptions {
         this.isXpsViewer = /^(?:(djvu|xps|oxps))$/.exec(document.fileType);
         this.typeForm = document.fileType === 'pdf'; // can fill forms only in pdf format
         this.isOForm = document.fileType === 'oform';
-        this.canFillForms = this.canLicense && this.typeForm && ((permissions.fillForms === undefined) ? this.isEdit : permissions.fillForms) && (this.config.mode !== 'view');
+        this.canFillForms = this.canLicense && ((permissions.fillForms === undefined) ? this.isEdit : permissions.fillForms) && (this.config.mode !== 'view');
         this.isForm = !this.isXpsViewer && !!window.isPDFForm;
         this.canProtect = permissions.protect !== false;
         this.canSubmitForms = this.canLicense && !this.isOffline && (typeof (this.customization) == 'object') && !!this.customization.submitForm &&

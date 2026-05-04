@@ -154,16 +154,13 @@ define([
             const newArray = [];
             roles.forEach(function(role) {
                 role = role.asc_getSettings();
-                const fieldsCount = role.asc_getFieldCount() || 0;
-                if(fieldsCount > 0) {
-                    let color = role.asc_getColor();
-                    color && (color = Common.Utils.ThemeColor.getHexColor(color.get_r(), color.get_g(), color.get_b()));
-                    newArray.push({
-                        name: role.asc_getName(),
-                        color: color,
-                        user: null
-                    });
-                }
+                let color = role.asc_getColor();
+                color && (color = Common.Utils.ThemeColor.getHexColor(color.get_r(), color.get_g(), color.get_b()));
+                newArray.push({
+                    name: role.asc_getName(),
+                    color: color,
+                    user: null
+                });
             });
             this.rolesCollection.reset(newArray);
         },

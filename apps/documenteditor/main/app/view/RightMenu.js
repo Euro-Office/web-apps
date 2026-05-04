@@ -275,30 +275,14 @@ define([
                         if(!btn) return;
 
                         if(openStatus === true || btn.pressed) {
-                            const oForm = this.api.asc_GetOForm();
-                            const roles = oForm ? oForm.asc_getAllRoles() : [];
-                            const hasRoleWithFields = _.some(roles, function(role) {
-                                role = role.asc_getSettings();
-                                return role && role.asc_getFieldCount() > 0;
-                            });
-
-                            if(hasRoleWithFields) {
-                                if(!this.$el.is(':visible')) {
-                                    DE.getController('RightMenu').onRightMenuHide(null, true);
-                                }
-                                this.disableUIForSendForSigning(true);
-                                const panelType = Common.Utils.documentSettingsType.SendForSigning;
-                                this._settings[panelType].btn.setDisabled(false);
-                                this._settings[panelType].btn.toggle(true);
-                                this.onBtnMenuClick(btn, e);
-                            } else {
-                                Common.UI.alert({
-                                    title: this.txtNoFieldsForFillingTitle,
-                                    msg: this.txtNoFieldsForFillingDescription,
-                                    iconCls: 'warn',
-                                    buttons: ['ok'],
-                                });
+                            if(!this.$el.is(':visible')) {
+                                DE.getController('RightMenu').onRightMenuHide(null, true);
                             }
+                            this.disableUIForSendForSigning(true);
+                            const panelType = Common.Utils.documentSettingsType.SendForSigning;
+                            this._settings[panelType].btn.setDisabled(false);
+                            this._settings[panelType].btn.toggle(true);
+                            this.onBtnMenuClick(btn, e);
                         } else {
                             btn.toggle(true);
                             btn.$el.blur();
