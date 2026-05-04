@@ -274,7 +274,7 @@ define([
                 el: $('#format-settings-radio-validate-none'),
                 name: 'form-settings-validate',
                 labelText: this.textValidateNone,
-                value: true
+                checked: true
             });
             this.radioValidateNone.on('change', _.bind(this.onValidateTypeChange, this, 'none'));
 
