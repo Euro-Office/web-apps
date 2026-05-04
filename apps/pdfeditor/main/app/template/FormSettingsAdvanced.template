@@ -63,13 +63,13 @@
             </tr>
             <tr class="format-custom">
                 <td colspan="2" class="padding-medium">
-                    <label class="header"><%= scope.textScriptFormat %></label>
+                    <label class="header"><%= scope.textCustomFormatScript %></label>
                     <div id="format-settings-textarea-format"></div>
                 </td>
             </tr>
             <tr class="format-custom">
                 <td colspan="2" class="padding-medium">
-                    <label class="header"><%= scope.textScriptKeystroke %></label>
+                    <label class="header"><%= scope.textCustomKeystrokeScript %></label>
                     <div id="format-settings-textarea-keystroke"></div>
                 </td>
             </tr>
@@ -84,7 +84,38 @@
     <div class="inner-content">
         <table cols="1" width="100%">
             <tr>
-                validate
+                <td class="padding-large">
+                    <div id="format-settings-radio-validate-none"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="padding-small">
+                    <div id="format-settings-radio-validate-range"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="padding-large">
+                    <div style="display: flex">
+                        <div>
+                            <label><%= scope.textFrom %></label>
+                            <div id="format-settings-spin-validate-min"></div>
+                        </div>
+                        <div class="margin-left-20">
+                            <label><%= scope.textTo %></label>
+                            <div id="format-settings-spin-validate-max"></div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="padding-small">
+                    <div id="format-settings-radio-validate-script"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="format-settings-textarea-validate-script"></div>
+                </td>
             </tr>
         </table>
     </div>

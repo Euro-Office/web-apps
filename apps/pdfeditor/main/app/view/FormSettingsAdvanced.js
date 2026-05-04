@@ -56,10 +56,7 @@ define([
             this.props      = options.props;
             this.actionsProps = options.actionsProps;
 
-            this._changedProps = {
-                format: null,
-                keystroke: null
-            };
+            this._changedProps = new Asc.asc_CFieldActionsProperty();
 
             _.extend(this.options, {
                 title: this.textTitle,
@@ -102,8 +99,8 @@ define([
                 takeFocusOnClose: true
             });
             this.cmbFormat.setValue(this.FormatType);
-            this.cmbFormat.on('selected', _.bind(function(combo, record, specProps) {
-                this.onFormatSelect(combo, record, specProps);
+            this.cmbFormat.on('selected', _.bind(function(combo, record) {
+                this.onFormatSelect(combo, record);
                 this.updateChangedProps();
             }, this));
 
@@ -118,7 +115,7 @@ define([
                 allowDecimal: false
             });
             this.spnDecimal.on('change', _.bind(function(field, newValue, oldValue, eOpts) {
-                this.putPropValue('asc_putDecimals', field.getNumberValue());
+                this.putFormatPropValue('asc_putDecimals', field.getNumberValue());
                 this.updateFormatExample();
             }, this));
 
@@ -140,7 +137,7 @@ define([
             });
             this.cmbSeparator.setValue(AscPDF.SeparatorStyle.COMMA_DOT);
             this.cmbSeparator.on('selected', _.bind(function(combo, record) {
-                this.putPropValue('asc_putSepStyle', record.value);
+                this.putFormatPropValue('asc_putSepStyle', record.value);
                 this.updateFormatExample();
             }, this));
 
@@ -164,7 +161,7 @@ define([
             });
             this.cmbSymbols.setValue(null);
             this.cmbSymbols.on('selected', _.bind(function(combo, record) {
-                this.putPropValue('asc_putCurrency', this.getSymbolValue());
+                this.putFormatPropValue('asc_putCurrency', this.getSymbolValue());
                 this.cmbLocation.setDisabled(record.value===null);
                 this.updateFormatExample();
             }, this));
@@ -186,8 +183,8 @@ define([
             this.cmbLocation.setValue(0);
             this.cmbLocation.setDisabled(true);
             this.cmbLocation.on('selected', _.bind(function(combo, record) {
-                this.putPropValue('asc_putCurrencyPrepend', record.value < 2);
-                this.putPropValue('asc_putCurrency', this.getSymbolValue());
+                this.putFormatPropValue('asc_putCurrencyPrepend', record.value < 2);
+                this.putFormatPropValue('asc_putCurrency', this.getSymbolValue());
                 this.updateFormatExample();
             }, this));
 
@@ -220,7 +217,7 @@ define([
             }).on ('changing', function (input, value) {
                 me._state.DateFormat = value;
                 me.lblExample.text(me.api.asc_getFieldDateTimeFormatExample(value));
-                me.putPropValue('asc_putFormat', value);
+                me.putFormatPropValue('asc_putFormat', value);
             });
 
             this.cmbSpecial = new Common.UI.ComboBox({
@@ -252,7 +249,7 @@ define([
                 dataHintOffset: 'small'
             }).on ('changing', function (input, value) {
                 me._state.Mask = value;
-                me.putPropValue('asc_putMask', me._state.Mask);
+                me.putFormatPropValue('asc_putMask', me._state.Mask);
             });
 
             this.textareaFormat = new Common.UI.TextareaField({
@@ -260,7 +257,7 @@ define([
                 rows: 5
             });
             this.textareaFormat.on('changed:after', _.bind(function(input, newValue, oldValue, e) {
-                this.putPropValue('asc_putScript', newValue, 'format');
+                this.putFormatPropValue('asc_putScript', newValue, 'format');
             }, this));
 
             this.textareaKeystroke = new Common.UI.TextareaField({
@@ -268,7 +265,63 @@ define([
                 rows: 5
             });
             this.textareaKeystroke.on('changed:after', _.bind(function(input, newValue, oldValue, e) {
-                this.putPropValue('asc_putScript', newValue, 'keystroke');
+                this.putFormatPropValue('asc_putScript', newValue, 'keystroke');
+            }, this));
+
+
+            //Validate
+            this.radioValidateNone = new Common.UI.RadioBox({
+                el: $('#format-settings-radio-validate-none'),
+                name: 'form-settings-validate',
+                labelText: this.textValidateNone,
+                value: true
+            });
+            this.radioValidateNone.on('change', _.bind(this.onValidateTypeChange, this, 'none'));
+
+            this.radioValidateRange = new Common.UI.RadioBox({
+                el: $('#format-settings-radio-validate-range'),
+                name: 'form-settings-validate',
+                labelText: this.textValidateRange
+            });
+            this.radioValidateRange.on('change', _.bind(this.onValidateTypeChange, this, 'range'));
+
+            this.spnValidateMin = new Common.UI.MetricSpinner({
+                el: $('#format-settings-spin-validate-min'),
+                step: 1,
+                width: 80,
+                defaultUnit : "",
+                allowBlank: true,
+                value: '',
+                maxValue: 999999,
+                minValue: -999999
+            });
+            this.spnValidateMin.on('change', _.bind(this.onValidateRangeChange, this));
+
+            this.spnValidateMax = new Common.UI.MetricSpinner({
+                el: $('#format-settings-spin-validate-max'),
+                step: 1,
+                width: 80,
+                defaultUnit : "",
+                allowBlank: true,
+                value: '',
+                maxValue: 999999,
+                minValue: -999999
+            });
+            this.spnValidateMax.on('change', _.bind(this.onValidateRangeChange, this));
+
+            this.radioValidateScript = new Common.UI.RadioBox({
+                el: $('#format-settings-radio-validate-script'),
+                name: 'form-settings-validate',
+                labelText: this.textValidateScript
+            });
+            this.radioValidateScript.on('change', _.bind(this.onValidateTypeChange, this, 'script'));
+
+            this.textareaValidateScript = new Common.UI.TextareaField({
+                el: $('#format-settings-textarea-validate-script'),
+                rows: 6
+            });
+            this.textareaValidateScript.on('changed:after', _.bind(function(input, newValue, oldValue, e) {
+                this._changedProps.asc_getValidate().asc_putScript(newValue);
             }, this));
 
             var arr = [];
@@ -330,6 +383,7 @@ define([
 
         _setDefaults: function (specProps, actionsProps) {
             if (specProps) {
+                // Format
                 let format = actionsProps.asc_getFormat();
                 !format && (format = actionsProps.asc_getKeystroke());
                 let val = format ? format.asc_getType() : AscPDF.FormatType.NONE;
@@ -387,6 +441,29 @@ define([
                 }
                 this.updateChangedProps();
                 this.updateFormatExample();
+
+                // Validate
+                const validate = actionsProps.asc_getValidate();
+                if(validate) {
+                    let radioField; 
+                    val = validate.asc_getGreaterThen();
+                    if(val != null) {
+                        this.spnValidateMin.setValue(val, true);
+                        radioField = this.radioValidateRange;
+                    }
+
+                    val = validate.asc_getLessThen();
+                    if(val != null) {
+                        this.spnValidateMax.setValue(val, true);
+                        radioField = this.radioValidateRange;
+                    }
+
+                    val = validate.asc_getScript();
+                    val && this.textareaValidateScript.setValue(val, true);
+                    if(val != null) radioField = this.radioValidateScript;
+
+                    radioField && radioField.setValue(true);
+                }
             }
         },
 
@@ -446,58 +523,66 @@ define([
             this.lblExample.text(str);
         },
 
-        putPropValue: function(methodName, value, type) {
-            const props = this._changedProps;
-            if((!type || type == 'format') && props.format && props.format[methodName]) {
-                props.format[methodName](value);
+        putFormatPropValue: function(methodName, value, type) {
+            const format = this._changedProps.asc_getFormat();
+            const keystroke = this._changedProps.asc_getKeystroke();
+            if((!type || type == 'format') && format && format[methodName]) {
+                format[methodName](value);
             }
-            if((!type || type == 'keystroke') && props.keystroke && props.keystroke[methodName]) {
-                props.keystroke[methodName](value);
+            if((!type || type == 'keystroke') && keystroke && keystroke[methodName]) {
+                keystroke[methodName](value);
             }
         },
 
         updateChangedProps: function() {
+            let format, keystroke;
             switch(this.FormatType) {
+                case AscPDF.FormatType.NONE:
+                    format = undefined;
+                    keystroke = undefined;
+                    break;
                 case AscPDF.FormatType.NUMBER:
-                    this._changedProps.format = new Asc.asc_CFieldNumberFormatProperty();
-                    this._changedProps.keystroke = new Asc.asc_CFieldNumberFormatProperty();
+                    format = new Asc.asc_CFieldNumberFormatProperty();
+                    keystroke = new Asc.asc_CFieldNumberFormatProperty();
                     break;
                 case AscPDF.FormatType.PERCENTAGE:
-                    this._changedProps.format = new Asc.asc_CFieldPercentageFormatProperty();
-                    this._changedProps.keystroke = new Asc.asc_CFieldPercentageFormatProperty();
+                    format = new Asc.asc_CFieldPercentageFormatProperty();
+                    keystroke = new Asc.asc_CFieldPercentageFormatProperty();
                     break;
                 case AscPDF.FormatType.DATE:
-                    this._changedProps.format = new Asc.asc_CFieldDateFormatProperty();
-                    this._changedProps.keystroke = new Asc.asc_CFieldDateFormatProperty();
+                    format = new Asc.asc_CFieldDateFormatProperty();
+                    keystroke = new Asc.asc_CFieldDateFormatProperty();
                     break;
                 case AscPDF.FormatType.TIME:
-                    this._changedProps.format = new Asc.asc_CFieldTimeFormatProperty();
-                    this._changedProps.keystroke = new Asc.asc_CFieldTimeFormatProperty();
+                    format = new Asc.asc_CFieldTimeFormatProperty();
+                    keystroke = new Asc.asc_CFieldTimeFormatProperty();
                     break;
                 case AscPDF.FormatType.SPECIAL:
-                    this._changedProps.format = new Asc.asc_CFieldSpecialFormatProperty();
-                    this._changedProps.keystroke = new Asc.asc_CFieldSpecialFormatProperty();
+                    format = new Asc.asc_CFieldSpecialFormatProperty();
+                    keystroke = new Asc.asc_CFieldSpecialFormatProperty();
                     break;
                 case AscPDF.FormatType.CUSTOM:
-                    this._changedProps.format = new Asc.asc_CFieldCustomFormatProperty();
-                    this._changedProps.keystroke = new Asc.asc_CFieldCustomFormatProperty();
+                    format = new Asc.asc_CFieldCustomFormatProperty();
+                    keystroke = new Asc.asc_CFieldCustomFormatProperty();
                     break;
             }
+            this._changedProps.asc_putFormat(format);
+            this._changedProps.asc_putKeystroke(keystroke);
 
-            this.putPropValue('asc_putDecimals', this.spnDecimal.getNumberValue());
-            this.putPropValue('asc_putSepStyle', this.cmbSeparator.getValue());
-            this.putPropValue('asc_putCurrency', this.getSymbolValue());
-            this.putPropValue('asc_putCurrencyPrepend', this.cmbLocation.getValue() < 2);
-            this.putPropValue('asc_putMask', this._state.Mask);
-            this.putPropValue('asc_putScript', this.textareaFormat.getValue(), 'format');
-            this.putPropValue('asc_putScript', this.textareaKeystroke.getValue(), 'keystroke');
-            this.putPropValue('asc_putNegStyle', this._state.NegStyle);
+            this.putFormatPropValue('asc_putDecimals', this.spnDecimal.getNumberValue());
+            this.putFormatPropValue('asc_putSepStyle', this.cmbSeparator.getValue());
+            this.putFormatPropValue('asc_putCurrency', this.getSymbolValue());
+            this.putFormatPropValue('asc_putCurrencyPrepend', this.cmbLocation.getValue() < 2);
+            this.putFormatPropValue('asc_putMask', this._state.Mask);
+            this.putFormatPropValue('asc_putScript', this.textareaFormat.getValue(), 'format');
+            this.putFormatPropValue('asc_putScript', this.textareaKeystroke.getValue(), 'keystroke');
+            this.putFormatPropValue('asc_putNegStyle', this._state.NegStyle);
             if(this.FormatType===AscPDF.FormatType.DATE) {
-                this.putPropValue('asc_putFormat', this._state.DateFormat);
+                this.putFormatPropValue('asc_putFormat', this._state.DateFormat);
             } else if(this.FormatType===AscPDF.FormatType.TIME) {
-                this.putPropValue('asc_putFormat', this._state.TimeFormat);
+                this.putFormatPropValue('asc_putFormat', this._state.TimeFormat);
             } else if(this.FormatType===AscPDF.FormatType.SPECIAL) {
-                this.putPropValue('asc_putFormat', this._state.SpecialType);
+                this.putFormatPropValue('asc_putFormat', this._state.SpecialType);
             }
         },
 
@@ -506,7 +591,7 @@ define([
                 isParens = this.chParens.getValue()==='checked';
             this._state.NegStyle = isRed ? (isParens ? AscPDF.NegativeStyle.PARENS_RED : AscPDF.NegativeStyle.RED_MINUS) :
                                             isParens ? AscPDF.NegativeStyle.PARENS_BLACK : AscPDF.NegativeStyle.BLACK_MINUS;
-            this.putPropValue('asc_putNegStyle', this._state.NegStyle);
+            this.putFormatPropValue('asc_putNegStyle', this._state.NegStyle);
             this.updateFormatExample();
         },
 
@@ -519,7 +604,7 @@ define([
             this.inputCustomFormat.setVisible(isCustom);
             isCustom && this.inputCustomFormat.setValue(this._state.DateFormatCustom);
             this._state[this.FormatType===AscPDF.FormatType.DATE ? 'DateFormat' : 'TimeFormat'] = value;
-            this.putPropValue('asc_putFormat', value);
+            this.putFormatPropValue('asc_putFormat', value);
             this.updateFormatExample();
         },
 
@@ -528,19 +613,74 @@ define([
             this._maskPanel.toggleClass('hidden', this._state.SpecialType!==-1);
             if(this._state.SpecialType===-1) {
                 this.txtMask.setValue(this._state.Mask);
-                this.putPropValue('asc_putMask', this._state.Mask);
+                this.putFormatPropValue('asc_putMask', this._state.Mask);
             }
-            this.putPropValue('asc_putFormat', this._state.SpecialType);
+            this.putFormatPropValue('asc_putFormat', this._state.SpecialType);
             this.updateFormatExample();
         },
 
-        onFormatSelect: function(combo, record, specProps) {
+        onValidateTypeChange: function(type, field, newValue) {
+            let min, max, script;
+            let validate = this._changedProps.asc_getValidate();
+            if(!validate) {
+                this._changedProps.asc_putValidate(new Asc.asc_CFieldValidateProperty());
+                validate = this._changedProps.asc_getValidate();
+            }
+            
+            if(type == 'range') {
+                let val = this.spnValidateMin.getNumberValue();
+                min = Number.isNaN(val) ? undefined : val;
+                
+                val = this.spnValidateMax.getNumberValue();
+                max = Number.isNaN(val) ? undefined : val;
+                
+                if(min != null && max != null) {
+                    const tempMin = min;
+                    min = Math.min(min, max);
+                    max = Math.max(tempMin, max);
+                }
+
+                script = undefined;
+            } else if(type == 'script') {
+                script = this.textareaValidateScript.getValue();
+            }
+            validate.asc_putGreaterThen(min);
+            validate.asc_putLessThen(max);
+            validate.asc_putScript(script);
+
+            this.spnValidateMin.setDisabled(type != 'range');
+            this.spnValidateMax.setDisabled(type != 'range');
+            this.textareaValidateScript.setDisabled(type != 'script');
+        },
+
+        onValidateRangeChange: function() {
+            const validate = this._changedProps.asc_getValidate();
+            if(validate) {
+                let val = this.spnValidateMin.getNumberValue();
+                let min = Number.isNaN(val) ? undefined : val;
+                
+                val = this.spnValidateMax.getNumberValue();
+                let max = Number.isNaN(val) ? undefined : val;
+    
+                if(min != null && max != null) {
+                    const tempMin = min;
+                    min = Math.min(min, max);
+                    max = Math.max(tempMin, max);
+                }
+    
+                validate.asc_putGreaterThen(min);
+                validate.asc_putLessThen(max);
+            }
+        },
+        
+        onFormatSelect: function(combo, record) {
             if (!record) return;
 
             this.FormatType = record.value;
 
             var isNumber = this.FormatType === AscPDF.FormatType.NUMBER,
-                isPercent = this.FormatType === AscPDF.FormatType.PERCENTAGE;
+                isPercent = this.FormatType === AscPDF.FormatType.PERCENTAGE,
+                isNumeric = isNumber || isPercent;
 
             this._decimalPanel.toggleClass('hidden', !(isNumber || isPercent));
             this._separatorPanel.toggleClass('hidden', !(isNumber || isPercent));
@@ -561,6 +701,12 @@ define([
             }
             this._examplePanel.toggleClass('hidden', this.FormatType===AscPDF.FormatType.SPECIAL || this.FormatType===AscPDF.FormatType.NONE || this.FormatType===AscPDF.FormatType.CUSTOM);
             this.updateFormatExample();
+
+            
+            if(!isNumeric && this.radioValidateRange.getValue()) {
+                this.radioValidateNone.setValue(true);
+            }
+            this.radioValidateRange.setDisabled(!isNumeric);
         },
 
         textTitle: 'Format Settings',
@@ -595,8 +741,13 @@ define([
         textFormat: 'Format',
         textValidate: 'Validate',
         textCalculate: 'Calculate',
-        textScriptFormat: 'Script format',
-        textScriptKeystroke: 'Script keystroke',
+        textCustomFormatScript: 'Custom format script',
+        textCustomKeystrokeScript: 'Custom keystroke script',
+        textValidateNone: 'Field value is not validated',
+        textValidateRange: 'Field value is in range',
+        textValidateScript: 'Run custom validation script',
+        textFrom: 'From',
+        textTo: 'To',
 
     }, PDFE.Views.FormSettingsAdvanced || {}))
 });
