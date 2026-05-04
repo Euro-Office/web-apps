@@ -1975,15 +1975,14 @@ define([
         },
 
         insertPlainText: function(data) {
-            // Closure Compiler advanced-mode strips dotted-notation prototype
-            // methods, so asc_PasteData is unreachable from outside the bundle.
-            // Use Add_Text where exposed; fall back to asc_PasteData if a build
-            // happens to keep it.
-            if (typeof this.api.Add_Text === 'function') {
-                this.api.Add_Text(data);
-            } else if (typeof this.api.asc_PasteData === 'function') {
-                var fmt = (window.AscCommon && AscCommon.c_oAscClipboardDataFormat && AscCommon.c_oAscClipboardDataFormat.Text) || 1;
-                this.api.asc_PasteData(fmt, data);
+            // pluginMethod_PasteText is the cross-editor (CDE/CSE/CPE) plain-text
+            // paste entry registered via Api.prototype[...] in
+            // sdkjs/common/apiBase_plugins.js. Bracket-registered so it survives
+            // the Closure Compiler advanced-mode minifier; internally wraps
+            // asc_PasteData(Text, text, ...) with proper undo grouping. This is
+            // the same path OnlyOffice's AI plugin uses for text insertion.
+            if (typeof this.api["pluginMethod_PasteText"] === 'function') {
+                this.api["pluginMethod_PasteText"](data);
             }
             Common.NotificationCenter.trigger('storage:plain-text-insert', data);
         },
