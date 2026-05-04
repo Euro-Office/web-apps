@@ -188,6 +188,8 @@
     <path d="M6.828 13.727a5 5 0 1 1 6.885-6.922m3.476 3.48a5 5 0 1 1-6.924 6.875M14.5 9.5a5 5 0 0 1-5 5 5 5 0 0 1 5-5Z" class="icon-stroke-gray-primary"/>
 </symbol><symbol viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor" fill="none" id="btn-general-ai" xmlns="http://www.w3.org/2000/svg">
     <path d="M16.41 4.694a.1.1 0 0 1 .18 0l.85 1.818a.1.1 0 0 0 .048.049l1.818.848a.1.1 0 0 1 0 .181l-1.818.849a.1.1 0 0 0-.049.048l-.848 1.819a.1.1 0 0 1-.182 0l-.848-1.819a.1.1 0 0 0-.049-.048l-1.818-.849a.1.1 0 0 1 0-.18l1.818-.85a.1.1 0 0 0 .049-.048zm-6 3a.1.1 0 0 1 .18 0l1.804 3.864a.1.1 0 0 0 .048.048l3.864 1.803a.1.1 0 0 1 0 .181l-3.864 1.804a.1.1 0 0 0-.048.048l-1.803 3.864a.1.1 0 0 1-.182 0l-1.803-3.864a.1.1 0 0 0-.048-.048L4.694 13.59a.1.1 0 0 1 0-.18l3.864-1.804a.1.1 0 0 0 .048-.048l1.803-3.864Z" class="icon-stroke-gray-primary"/>
+</symbol><symbol viewBox="0 0 24 24" fill="currentColor" id="btn-nc-assistant" xmlns="http://www.w3.org/2000/svg">
+    <path d="M19,1L17.74,3.75L15,5L17.74,6.26L19,9L20.25,6.26L23,5L20.25,3.75M9,4L6.5,9.5L1,12L6.5,14.5L9,20L11.5,14.5L17,12L11.5,9.5M19,15L17.74,17.74L15,19L17.74,20.25L19,23L20.25,20.25L23,19L20.25,17.74"/>
 </symbol><symbol viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-goback" xmlns="http://www.w3.org/2000/svg">
     <path d="M5.5 10.504V16.5a1 1 0 0 0 1 1h3m-4-6.996V6.5a1 1 0 0 1 1-1h3.586a1 1 0 0 1 .707.293l1.414 1.414a1 1 0 0 0 .707.293H17.5a1 1 0 0 1 1 1v2.004m-13 0h13m0 1.996v-1.996" class="icon-stroke-gray-primary"/>
     <path d="M12.5 17.5h7m0 0-3-3m3 3-3 3" class="icon-stroke-blue-primary"/>

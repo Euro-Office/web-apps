@@ -788,6 +788,13 @@
             });
         };
 
+        var _setSmartPickerEnabled = function(data) {
+            _sendCommand({
+                command: 'setSmartPickerEnabled',
+                data: data
+            });
+        };
+
         var _setMailMergeRecipients = function(data) {
             _sendCommand({
                 command: 'setMailMergeRecipients',
@@ -926,6 +933,7 @@
             insertImage         : _insertImage,
             insertLink          : _insertLink,
             insertPlainText          : _insertPlainText,
+            setSmartPickerEnabled    : _setSmartPickerEnabled,
             setMailMergeRecipients: _setMailMergeRecipients,
             setRevisedFile      : _setRevisedFile,
             setFavorite         : _setFavorite,
