@@ -1066,7 +1066,15 @@ define([
         },
 
         onBtnSmartPickerClick: function(btn) {
-            Common.Gateway.requestSmartPicker()
+            // Capture the user's selected cell text so the AI can act on it.
+            // Spreadsheet has no bookmark manager; inline replacement falls back
+            // to whatever asc_PasteData does at insert time.
+            var selectedText = '';
+            if (typeof this.api["asc_GetSelectedText"] === 'function') {
+                selectedText = this.api["asc_GetSelectedText"]() || '';
+            }
+
+            Common.Gateway.requestSmartPicker(selectedText);
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
             Common.component.Analytics.trackEvent('ToolBar', 'Smart Picker');

@@ -1847,7 +1847,17 @@ define([
         },
 
         onBtnSmartPickerClick: function(btn) {
-            Common.Gateway.requestSmartPicker()
+            // Capture the user's current selection so the AI sees what to operate
+            // on. The presentation editor has no bookmark manager, so inline
+            // selection-replacement is best-effort: if the slide's current
+            // selection is preserved across the toolbar click, asc_PasteData
+            // will replace it; otherwise the AI text lands at the cursor.
+            var selectedText = '';
+            if (typeof this.api["asc_GetSelectedText"] === 'function') {
+                selectedText = this.api["asc_GetSelectedText"]() || '';
+            }
+
+            Common.Gateway.requestSmartPicker(selectedText);
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
             Common.component.Analytics.trackEvent('ToolBar', 'Smart Picker');
