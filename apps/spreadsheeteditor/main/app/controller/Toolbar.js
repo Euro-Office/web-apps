@@ -1394,8 +1394,15 @@ define([
         },
 
         insertPlainText: function(data) {
-
-            this.api.PastePlainText(data)
+            // pluginMethod_PasteText is the cross-editor (CDE/CSE/CPE) plain-text
+            // paste entry registered via Api.prototype[...] in
+            // sdkjs/common/apiBase_plugins.js. Bracket-registered so it survives
+            // the Closure Compiler advanced-mode minifier; internally wraps
+            // asc_PasteData(Text, text, ...) with proper undo grouping. This is
+            // the same path OnlyOffice's AI plugin uses for text insertion.
+            if (typeof this.api["pluginMethod_PasteText"] === 'function') {
+                this.api["pluginMethod_PasteText"](data);
+            }
             Common.NotificationCenter.trigger('storage:plain-text-insert', data);
         },
 
