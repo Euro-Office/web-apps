@@ -372,7 +372,7 @@
 
     DocsAPI.DocEditor = function(placeholderId, config) {
         var _self = this,
-            _config = config ? Object.assign({}, config) : {};
+            _config = config ? Object.assign ? Object.assign({}, config) : config : {};
 
         extend(_config, DocsAPI.DocEditor.defaultConfig);
         _config.editorConfig.canUseHistory = _config.events && !!_config.events.onRequestHistory;

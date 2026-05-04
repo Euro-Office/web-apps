@@ -61,6 +61,7 @@ define([
                 documentType: 'cell',
                 document    : {
                     url         : '_ole_',
+                    key         : 'xxxxxxxxxxxxxxxxxxxx'.replace(/[x]/g, c => {const r = Math.random() * 16 | 0; return r.toString(16);}),
                     permissions : {
                         edit    : true,
                         download: false
