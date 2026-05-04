@@ -943,13 +943,6 @@ define([
                 this.btnSubmit && this.btnSubmit.setVisible(visible);
             },
 
-            showStartFillingAlert: function() {
-                Common.UI.warning({
-                    msg: this.txtStartFillingAlert,
-                    buttons: ['ok'],
-                });
-            },
-
             SetDisabled: function (state) {
                 this._state.disabled = state;
                 this.paragraphControls.forEach(function(button) {
@@ -1031,8 +1024,7 @@ define([
             capBtnSignature: 'Signature Field',
             tipSignField: 'Insert signature field',
             textFillFor: 'Insert fields for',
-            textAddRole: 'Add recipient',
-            txtStartFillingAlert:'No fields for filling added. Please, add field and try again.'
+            textAddRole: 'Add recipient'
         }
     }()), DE.Views.FormsTab || {}));
 });

@@ -715,45 +715,24 @@ define([
         },
 
         requestStartFilling: function() {
-            this.tryStartFilling(function() {
-                var oform = this.api.asc_GetOForm(),
-                    roles = oform ? oform.asc_getAllRoles() : [],
-                    arr = [];
-                for (var i=0; i<roles.length; i++) {
-                    var role = roles[i].asc_getSettings(),
-                        color = role.asc_getColor(),
-                        fieldsCount = role.asc_getFieldCount() || 0;
-                    if(fieldsCount > 0) {
-                        color && (color = Common.Utils.ThemeColor.getHexColor(color.get_r(), color.get_g(), color.get_b()));
-                        arr.push({
-                            name: role.asc_getName() || this.view.textAnyone,
-                            color: '#' + color
-                        });
-                    }
-                }
-                Common.Gateway.requestStartFilling(arr);
-            }.bind(this));
+            var oform = this.api.asc_GetOForm(),
+                roles = oform ? oform.asc_getAllRoles() : [],
+                arr = [];
+            for (var i=0; i<roles.length; i++) {
+                var role = roles[i].asc_getSettings(),
+                    color = role.asc_getColor();
+                color && (color = Common.Utils.ThemeColor.getHexColor(color.get_r(), color.get_g(), color.get_b()));
+                arr.push({
+                    name: role.asc_getName() || this.view.textAnyone,
+                    color: '#' + color
+                });
+            }
+            Common.Gateway.requestStartFilling(arr);
         },
 
         showSendForSigning: function() {
-            this.tryStartFilling(function() {
-                const rightmenuController = this.getApplication().getController('RightMenu');
-                rightmenuController.openSendForSigning();
-            }.bind(this));
-        },
-
-        tryStartFilling: function(callback) {
-            const oForm = this.api.asc_GetOForm();
-            const roles = oForm ? oForm.asc_getAllRoles() : [];
-            const hasRoleWithFields = _.some(roles, function(role) {
-                role = role.asc_getSettings();
-                return role && role.asc_getFieldCount() > 0;
-            });
-            if(hasRoleWithFields) {
-                callback && callback();
-            } else {
-                this.view.showStartFillingAlert();
-            }
+            const rightmenuController = this.getApplication().getController('RightMenu');
+            rightmenuController.openSendForSigning();
         },
 
         onActiveTab: function(tab) {
