@@ -116,6 +116,10 @@ if (window.Common === undefined) {
                 $me.trigger('insertplaintext', data);
             },
 
+            'setSmartPickerEnabled': function(data) {
+                $me.trigger('setsmartpickerenabled', data);
+            },
+
             'setMailMergeRecipients': function(data) {
                 $me.trigger('setmailmergerecipients', data);
             },

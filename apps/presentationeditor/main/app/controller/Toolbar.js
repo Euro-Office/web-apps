@@ -401,6 +401,7 @@ define([
             Common.Gateway.on('insertimage',                            _.bind(this.insertImage, this));
             Common.Gateway.on('insertlink',                             _.bind(this.insertLink, this));
             Common.Gateway.on('insertplaintext',                        _.bind(this.insertPlainText, this));
+            Common.Gateway.on('setsmartpickerenabled',                  _.bind(this.setSmartPickerEnabled, this));
             toolbar.btnInsAudio && toolbar.btnInsAudio.on('click',      _.bind(this.onAddAudio, this));
             toolbar.btnInsVideo && toolbar.btnInsVideo.on('click',      _.bind(this.onAddVideo, this));
 
@@ -1995,6 +1996,12 @@ define([
                 this.api["pluginMethod_PasteText"](data);
             }
             Common.NotificationCenter.trigger('storage:plain-text-insert', data);
+        },
+
+        setSmartPickerEnabled: function(enabled) {
+            if (this.toolbar && this.toolbar.btnSmartPicker && typeof this.toolbar.btnSmartPicker.setDisabled === 'function') {
+                this.toolbar.btnSmartPicker.setDisabled(!enabled);
+            }
         },
 
         onBtnInsertTextClick: function(btn, e) {

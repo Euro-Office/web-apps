@@ -309,6 +309,7 @@ define([
             Common.Gateway.on('insertimage',                      _.bind(this.insertImage, this));
             Common.Gateway.on('insertlink',                      _.bind(this.insertLink, this));
             Common.Gateway.on('insertplaintext',                      _.bind(this.insertPlainText, this));
+            Common.Gateway.on('setsmartpickerenabled',                _.bind(this.setSmartPickerEnabled, this));
         },
 
         attachUIEvents: function(toolbar) {
@@ -437,6 +438,7 @@ define([
             Common.Gateway.on('insertimage',                      _.bind(this.insertImage, this));
             Common.Gateway.on('insertlink',                      _.bind(this.insertLink, this));
             Common.Gateway.on('insertplaintext',                      _.bind(this.insertPlainText, this));
+            Common.Gateway.on('setsmartpickerenabled',                _.bind(this.setSmartPickerEnabled, this));
             Common.Gateway.on('setmailmergerecipients',           _.bind(this.setMailMergeRecipients, this));
             Common.Gateway.on('setrequestedspreadsheet',          _.bind(this.setRequestedSpreadsheet, this));
             Common.NotificationCenter.on('storage:spreadsheet-load',    _.bind(this.openSpreadsheetFromStorage, this));
@@ -2029,6 +2031,15 @@ define([
                 this.api["pluginMethod_PasteText"](data);
             }
             Common.NotificationCenter.trigger('storage:plain-text-insert', data);
+        },
+
+        // Host (Nextcloud) tells us whether the Assistant app is available;
+        // when it isn't, gray out the Smart Picker toolbar button so the user
+        // gets an immediate visual signal instead of clicking into nothing.
+        setSmartPickerEnabled: function(enabled) {
+            if (this.toolbar && this.toolbar.btnSmartPicker && typeof this.toolbar.btnSmartPicker.setDisabled === 'function') {
+                this.toolbar.btnSmartPicker.setDisabled(!enabled);
+            }
         },
 
         onBtnInsertTextClick: function(btn, e) {
