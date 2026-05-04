@@ -448,8 +448,8 @@ if (window.Common === undefined) {
                 _postMessage({event: 'onSubmit'});
             },
 
-            requestSmartPicker: function() {
-                _postMessage({event: 'onRequestSmartPicker'});
+            requestSmartPicker: function(selectedText) {
+                _postMessage({event: 'onRequestSmartPicker', data: { selectedText: selectedText || '' }});
             },
 
             on: function(event, handler){

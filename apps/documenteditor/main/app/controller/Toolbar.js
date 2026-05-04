@@ -2003,12 +2003,28 @@ define([
         },
 
         insertPlainText: function(data) {
+            // If the smartpicker anchor bookmark exists, the user had a selection
+            // at click time. Restore that selection so the paste below replaces
+            // the original text in place. Then drop the bookmark — it lives only
+            // for one round-trip.
+            var mgr = typeof this.api["asc_GetBookmarksManager"] === 'function' ? this.api["asc_GetBookmarksManager"]() : null;
+            if (mgr
+                && typeof mgr["asc_HaveBookmark"] === 'function'
+                && mgr["asc_HaveBookmark"]('eurooffice_smartpicker_anchor')) {
+                if (typeof mgr["asc_SelectBookmark"] === 'function') {
+                    mgr["asc_SelectBookmark"]('eurooffice_smartpicker_anchor');
+                }
+                if (typeof mgr["asc_RemoveBookmark"] === 'function') {
+                    mgr["asc_RemoveBookmark"]('eurooffice_smartpicker_anchor');
+                }
+            }
+
             // pluginMethod_PasteText is the cross-editor (CDE/CSE/CPE) plain-text
             // paste entry registered via Api.prototype[...] in
             // sdkjs/common/apiBase_plugins.js. Bracket-registered so it survives
             // the Closure Compiler advanced-mode minifier; internally wraps
-            // asc_PasteData(Text, text, ...) with proper undo grouping. This is
-            // the same path OnlyOffice's AI plugin uses for text insertion.
+            // asc_PasteData(Text, text, ...) with proper undo grouping. With an
+            // active selection, asc_PasteData replaces it.
             if (typeof this.api["pluginMethod_PasteText"] === 'function') {
                 this.api["pluginMethod_PasteText"](data);
             }
@@ -2652,7 +2668,28 @@ define([
         },
 
         onBtnSmartPickerClick: function(btn) {
-            Common.Gateway.requestSmartPicker()
+            // Capture the user's current selection so the AI sees what to operate
+            // on, and drop a bookmark on the range so we can re-establish the
+            // selection at paste time (the toolbar click would otherwise collapse
+            // it and the AI's answer would land at the cursor instead of
+            // replacing the original text).
+            var selectedText = '';
+            if (typeof this.api["asc_GetSelectedText"] === 'function') {
+                selectedText = this.api["asc_GetSelectedText"]() || '';
+            }
+            if (selectedText) {
+                var mgr = typeof this.api["asc_GetBookmarksManager"] === 'function' ? this.api["asc_GetBookmarksManager"]() : null;
+                if (mgr && typeof mgr["asc_AddBookmark"] === 'function') {
+                    // Drop / replace the anchor bookmark at the current selection.
+                    if (typeof mgr["asc_HaveBookmark"] === 'function' && mgr["asc_HaveBookmark"]('eurooffice_smartpicker_anchor')
+                        && typeof mgr["asc_RemoveBookmark"] === 'function') {
+                        mgr["asc_RemoveBookmark"]('eurooffice_smartpicker_anchor');
+                    }
+                    mgr["asc_AddBookmark"]('eurooffice_smartpicker_anchor');
+                }
+            }
+
+            Common.Gateway.requestSmartPicker(selectedText);
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
             Common.component.Analytics.trackEvent('ToolBar', 'Smart Picker');
