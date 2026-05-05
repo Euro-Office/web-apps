@@ -137,7 +137,7 @@ const SettingsPage = inject("storeAppOptions", "storeReview", "storeDocumentInfo
                             <SvgIcon slot="media" symbolId={IconClearFields.id} className={'icon icon-svg'} />
                         </ListItem>
                     ] : null}
-                    {!appOptions.canLiveView && !isEditableForms &&
+                    {!appOptions.canLiveView && !isForm &&
                         <ListItem title={_t.textAutoSaveDocument}>
                             <SvgIcon slot="media" symbolId={IconAutosave.id} className={'icon icon-svg'} />
                             <Toggle checked={isAutosave}
@@ -148,7 +148,7 @@ const SettingsPage = inject("storeAppOptions", "storeReview", "storeDocumentInfo
                             />
                         </ListItem>
                     }
-                    {!appOptions.canLiveView && !isEditableForms &&
+                    {!appOptions.canLiveView && !isForm &&
                         <ListItem title={_t.textSaveDocument}  className={`no-indicator${appOptions.isSaveBadgeShown ? ' notify' : ''}`} onClick={settingsContext.tryToSave}>
                             <SvgIcon slot="media" symbolId={IconSave.id} className={'icon icon-svg'} />
                         </ListItem>
