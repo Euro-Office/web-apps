@@ -611,10 +611,8 @@
                 _config = null;
 
                 iframe.src = 'about:blank';
-                iframe.onload = function() {
-                    iframe.parentNode && iframe.parentNode.replaceChild(target, iframe);
-                    iframe = null;
-                }
+                iframe.parentNode && iframe.parentNode.replaceChild(target, iframe);
+                iframe = null;
             }
         };
 
