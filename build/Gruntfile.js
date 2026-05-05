@@ -34,7 +34,7 @@ module.exports = function(grunt) {
         defaultConfig,
         packageFile;
 
-    const copyrightHeader = 'Copyright (c) Ascensio System SIA <%= grunt.template.today("yyyy") %>. All rights reserved'
+    const copyrightHeader = 'Copyright (c) Ascensio System SIA 2009-<%= grunt.template.today("yyyy") %>. All rights reserved'
     var copyright = '/*!\n' +
                     ' * ' + (process.env['APP_COPYRIGHT'] || copyrightHeader) + '\n' +
                     ' *\n' +
