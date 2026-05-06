@@ -176,7 +176,6 @@ define([
                 } else
                 if ( tab == 'file' ) {
                     me.fireEvent('file:open');
-                    me.setTab(tab);
                 }
             },
 
