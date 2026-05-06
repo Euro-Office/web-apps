@@ -332,6 +332,7 @@
                 'onRequestRefreshFile': <request new file version> // send when file version is updated. use instead of onOutdatedVersion
                 'onUserActionRequired': <user action callback> // send if the user needs to enter a password or select encoding/delimiters when opening a file
                 'onRequestFillingStatus': <request filling status for current role> // used in pdf-form fill forms mode
+                'onRequestSmartPicker': <request to open the Nextcloud Smart Picker>
                 'onStartFilling': <send when can start filling (form is completed and users are disconnected)> // send after startFilling method, used in pdf-form editing
             }
         }
@@ -773,6 +774,27 @@
             });
         };
 
+        var _insertLink = function(data) {
+            _sendCommand({
+                command: 'insertLink',
+                data: data
+            });
+        };
+
+        var _insertPlainText = function(data) {
+            _sendCommand({
+                command: 'insertPlainText',
+                data: data
+            });
+        };
+
+        var _setSmartPickerEnabled = function(data) {
+            _sendCommand({
+                command: 'setSmartPickerEnabled',
+                data: data
+            });
+        };
+
         var _setMailMergeRecipients = function(data) {
             _sendCommand({
                 command: 'setMailMergeRecipients',
@@ -909,6 +931,9 @@
             showSharingSettings : _showSharingSettings,
             setSharingSettings  : _setSharingSettings,
             insertImage         : _insertImage,
+            insertLink          : _insertLink,
+            insertPlainText          : _insertPlainText,
+            setSmartPickerEnabled    : _setSmartPickerEnabled,
             setMailMergeRecipients: _setMailMergeRecipients,
             setRevisedFile      : _setRevisedFile,
             setFavorite         : _setFavorite,
