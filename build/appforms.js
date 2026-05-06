@@ -104,7 +104,7 @@ module.exports = (grunt) => {
 
             replace: {
                 varsEnviroment: {
-                    src: ['<%= pkg.forms.js.requirejs.options.out %>'],
+                    src: [`${packageFile.forms.js.requirejs.options.dir}/**/*.js`],
                     overwrite: true,
                     replacements: [{
                         from: /\{\{PRODUCT_VERSION\}\}/g,
@@ -159,7 +159,5 @@ module.exports = (grunt) => {
         });
     });
 
-    grunt.registerTask('deploy-app-forms', ['forms-app-init', 'clean:prebuild', /*'imagemin',*/ 'less',
-                                                            'requirejs', 'babel', 'terser', 'concat', 'copy', 'inline', /*'json-minify',*/
-                                                            'replace:varsEnviroment', /*'replace:prepareHelp',*/ 'clean:postbuild']);
+    grunt.registerTask('deploy-app-forms', ['forms-app-init', 'clean:prebuild', 'requirejs', 'less', 'copy', 'inline', 'replace:varsEnviroment', 'clean:postbuild']);
 }
