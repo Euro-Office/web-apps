@@ -374,6 +374,22 @@ define([
             toolbar.mnuMultiChangeLevel.menu.on('show:after',           _.bind(this.onChangeLevelShowAfter, this, 2));
             toolbar.mnuMultiChangeLevel.menu.on('item:click',           _.bind(this.onChangeLevelClick, this, 2));
             toolbar.btnHighlightColor.on('click',                       _.bind(this.onBtnHighlightColor, this));
+            (function(me) {
+                var highlightKeymap = {};
+                highlightKeymap['ctrl+alt+h'] = function() {
+                    var currentColor = toolbar.btnHighlightColor.currentColor;
+                    var textProps = me.api.get_TextProps();
+                    var hl = textProps && textProps.get_TextPr && textProps.get_TextPr().get_HighLight();
+                    var selColor = (hl && hl !== -1 && hl.get_hex) ? hl.get_hex().toUpperCase() : null;
+                    if (selColor && typeof currentColor === 'string' && selColor === currentColor.toUpperCase()) {
+                        me._setMarkerColor('transparent');
+                    } else {
+                        me._setMarkerColor(currentColor);
+                    }
+                    return false;
+                };
+                Common.util.Shortcuts.delegateShortcuts({shortcuts: highlightKeymap});
+            })(this);
             toolbar.btnFontColor.on('click',                            _.bind(this.onBtnFontColor, this));
             toolbar.btnFontColor.on('color:select',                     _.bind(this.onSelectFontColor, this));
             toolbar.btnFontColor.on('auto:select',                      _.bind(this.onAutoFontColor, this));
