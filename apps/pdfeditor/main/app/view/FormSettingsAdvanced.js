@@ -347,15 +347,15 @@ define([
                 menuStyle: 'min-width: 100%;',
                 editable: false,
                 data: [
-                    { displayValue: this.textSum + ' (+)',  value: AscPDF.CalculateOperation.sum },
-                    { displayValue: this.textProduct + ' (x)',  value: AscPDF.CalculateOperation.product },
-                    { displayValue: this.textAverage,  value: AscPDF.CalculateOperation.average },
-                    { displayValue: this.textMinimum,  value: AscPDF.CalculateOperation.min },
-                    { displayValue: this.textMaximum,  value: AscPDF.CalculateOperation.max },
+                    { displayValue: this.textSum + ' (+)',  value: AscPDF.CalculateOperation.SUM },
+                    { displayValue: this.textProduct + ' (x)',  value: AscPDF.CalculateOperation.PRD },
+                    { displayValue: this.textAverage,  value: AscPDF.CalculateOperation.AVG },
+                    { displayValue: this.textMinimum,  value: AscPDF.CalculateOperation.MIN },
+                    { displayValue: this.textMaximum,  value: AscPDF.CalculateOperation.MAX },
                 ],
                 takeFocusOnClose: true
             });
-            this.cmbCalculateOperation.setValue(AscPDF.CalculateOperation.sum, true);
+            this.cmbCalculateOperation.setValue(AscPDF.CalculateOperation.SUM, true);
             this.cmbCalculateOperation.on('selected', function(cmb, record) {
                 const calculate = me._changedProps.asc_getCalculate();
                 calculate && calculate.asc_putType(record.value);
