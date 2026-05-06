@@ -72,16 +72,6 @@ body.theme-type-dark {
     transform: scaleY(calc(1 / var(--skl-pixel-ratio)));
 }
 
-.skl-navbar.skl-navbar--md::before {
-    right: 0;
-    width: 100%;
-    top: 100%;
-    bottom: auto;
-    height: 8px;
-    pointer-events: none;
-    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.08) 40%, rgba(0, 0, 0, 0.04) 50%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0) 100%)
-}
-
 .skl-lines {
     display: none;
 }
