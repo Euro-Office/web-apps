@@ -1842,10 +1842,9 @@ define([
                 api: me.api,
                 handler: function(result, settings) {
                     if(settings) {
+                        this.api.SetFieldActions(settings.actionsProps);
                         if(settings.FormatType == AscPDF.FormatType.NONE) {
                             this.api.ClearFieldFormat();
-                        } else {
-                            this.api.SetFieldActions(settings.actionsProps);
                         }
                     }
                     this.fireEvent('editcomplete', this);

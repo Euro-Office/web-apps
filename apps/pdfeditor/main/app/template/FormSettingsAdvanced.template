@@ -124,7 +124,39 @@
     <div class="inner-content">
         <table cols="1" width="100%">
             <tr>
-                calculate
+                <td class="padding-large">
+                    <div id="format-settings-radio-calculate-none"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="padding-small">
+                    <div id="format-settings-radio-calculate-operation"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="padding-small">
+                    <label><%= scope.textOperation %></label>
+                    <div id="format-settings-cmb-operation"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="padding-small">
+                    <label><%= scope.textFields %></label>
+                    <div style="display: flex">
+                        <div id="format-settings-textarea-calculate-operation" readonly style="pointer-events: none; flex: 1;"></div>
+                        <button id="format-settings-btn-calculate-select-fields" type="button" class="btn btn-text-default auto margin-left-6"><%= scope.textPick %></button>
+                    <div>
+                </td>
+            </tr>
+            <tr>
+                <td class="padding-small">
+                    <div id="format-settings-radio-calculate-script"></div>
+                </td>
+            </tr>
+                <tr>
+                <td>
+                    <div id="format-settings-textarea-calculate-script"></div>
+                </td>
             </tr>
         </table>
     </div>

@@ -40,6 +40,7 @@
 define([
     'text!pdfeditor/main/app/template/FormSettingsAdvanced.template',
     'common/main/lib/view/AdvancedSettingsWindow',
+    'pdfeditor/main/app/view/FormSettingsSelectFields',
 ], function (contentTemplate) { 'use strict';
 
     PDFE.Views.FormSettingsAdvanced = Common.Views.AdvancedSettingsWindow.extend(_.extend({
@@ -274,7 +275,6 @@ define([
                 el: $('#format-settings-radio-validate-none'),
                 name: 'form-settings-validate',
                 labelText: this.textValidateNone,
-                checked: true
             });
             this.radioValidateNone.on('change', _.bind(this.onValidateTypeChange, this, 'none'));
 
@@ -324,6 +324,93 @@ define([
                 this._changedProps.asc_getValidate().asc_putScript(newValue);
             }, this));
 
+
+            //Calculate
+            this.radioCalculateNone = new Common.UI.RadioBox({
+                el: $('#format-settings-radio-calculate-none'),
+                name: 'form-settings-calculate',
+                labelText: this.textCalculateNone,
+            });
+            this.radioCalculateNone.on('change', _.bind(this.onCalculateTypeChange, this, 'none'));
+
+            this.radioCalculateOperation = new Common.UI.RadioBox({
+                el: $('#format-settings-radio-calculate-operation'),
+                name: 'form-settings-calculate',
+                labelText: this.textCalculateOperation
+            });
+            this.radioCalculateOperation.on('change', _.bind(this.onCalculateTypeChange, this, 'operation'));
+            
+            this.cmbCalculateOperation = new Common.UI.ComboBox({
+                el: $('#format-settings-cmb-operation'),
+                cls: 'input-group-nr',
+                style: 'width: 50%;',
+                menuStyle: 'min-width: 100%;',
+                editable: false,
+                data: [
+                    { displayValue: this.textSum + ' (+)',  value: AscPDF.CalculateOperation.sum },
+                    { displayValue: this.textProduct + ' (x)',  value: AscPDF.CalculateOperation.product },
+                    { displayValue: this.textAverage,  value: AscPDF.CalculateOperation.average },
+                    { displayValue: this.textMinimum,  value: AscPDF.CalculateOperation.min },
+                    { displayValue: this.textMaximum,  value: AscPDF.CalculateOperation.max },
+                ],
+                takeFocusOnClose: true
+            });
+            this.cmbCalculateOperation.setValue(AscPDF.CalculateOperation.sum, true);
+            this.cmbCalculateOperation.on('selected', function(cmb, record) {
+                const calculate = me._changedProps.asc_getCalculate();
+                calculate && calculate.asc_putType(record.value);
+            });
+                        
+            this.textareaCalculateOperation = new Common.UI.TextareaField({
+                el: $('#format-settings-textarea-calculate-operation'),
+                rows: 2
+            });
+            this.textareaCalculateOperation.getFields = function() {
+                return me.textareaCalculateOperation._fields || [];
+            };
+            this.textareaCalculateOperation.setFields = function(fields) {
+                !fields && (fields = []);
+                me.textareaCalculateOperation._fields = fields;
+                me.textareaCalculateOperation.setValue(fields.join(', '));
+
+                const calculate = me._changedProps.asc_getCalculate();
+                calculate && calculate.asc_putNames(fields);
+            };
+
+            this.btnCalculateSelectFields = new Common.UI.Button({
+                el: $('#format-settings-btn-calculate-select-fields')
+            });
+            this.btnCalculateSelectFields.on('click', function() {
+                const win = new PDFE.Views.FormSettingsSelectFields({
+                    items: me.api.GetAllFieldsNames(),
+                    checkedItems: me.textareaCalculateOperation.getFields(),
+                    handler: function(state, selectedFields) {
+                        if(state == 'ok') {
+                            me.textareaCalculateOperation.setFields(selectedFields);
+                        }
+                    }
+                });
+                win.show();
+                win.on('close', function() {
+                    me.btnCalculateSelectFields.$el.focus();
+                });
+            })
+
+            this.radioCalculateScript = new Common.UI.RadioBox({
+                el: $('#format-settings-radio-calculate-script'),
+                name: 'form-settings-calculate',
+                labelText: this.textCalculateScript
+            });
+            this.radioCalculateScript.on('change', _.bind(this.onCalculateTypeChange, this, 'script'));
+
+            this.textareaCalculateScript = new Common.UI.TextareaField({
+                el: $('#format-settings-textarea-calculate-script'),
+                rows: 6
+            });
+            this.textareaCalculateScript.on('changed:after', _.bind(function(input, newValue, oldValue, e) {
+                this._changedProps.asc_getCalculate().asc_putScript(newValue);
+            }, this));
+
             var arr = [];
             this.api.asc_getFieldDateFormatOptions().forEach(function(item){
                 arr.push({
@@ -363,10 +450,21 @@ define([
         },
 
         getFocusedComponents: function() {
-            return [this.cmbFormat, this.spnDecimal, this.cmbSeparator, this.cmbSymbols, this.cmbLocation, 
+            return this.btnsCategory.concat([
+                //Format tab
+                this.cmbFormat, this.spnDecimal, this.cmbSeparator, this.cmbSymbols, this.cmbLocation, 
                 this.chParens, this.chRed, this.dateTimeList, this.inputCustomFormat, this.cmbSpecial, this.txtMask, 
-                this.textareaFormat, this.textareaKeystroke
-            ].concat(this.getFooterButtons());
+                this.textareaFormat, this.textareaKeystroke,
+
+                //Validate tab
+                this.radioValidateNone, this.radioValidateRange, this.spnValidateMin, this.spnValidateMax, 
+                this.radioValidateScript, this.textareaValidateScript,
+
+                //Calculate tab
+                this.radioCalculateNone, this.radioCalculateOperation, this.cmbCalculateOperation, 
+                this.textareaCalculateOperation, this.btnCalculateSelectFields, 
+                this.radioCalculateScript, this.textareaCalculateScript
+            ]).concat(this.getFooterButtons());
         },
 
         getDefaultFocusableComponent: function () {
@@ -444,8 +542,8 @@ define([
 
                 // Validate
                 const validate = actionsProps.asc_getValidate();
+                let radioField = this.radioValidateNone; 
                 if(validate) {
-                    let radioField; 
                     val = validate.asc_getGreaterThen();
                     if(val != null) {
                         this.spnValidateMin.setValue(val, true);
@@ -459,11 +557,33 @@ define([
                     }
 
                     val = validate.asc_getScript();
-                    val && this.textareaValidateScript.setValue(val, true);
-                    if(val != null) radioField = this.radioValidateScript;
-
-                    radioField && radioField.setValue(true);
+                    if(val != null) {
+                        this.textareaValidateScript.setValue(val, true);
+                        radioField = this.radioValidateScript;
+                    }
                 }
+                radioField.setValue(true);
+
+                //Calculate
+                const calculate = actionsProps.asc_getCalculate();
+                radioField = this.radioCalculateNone; 
+                if(calculate) {
+                    val = calculate.asc_getType();
+                    this.cmbCalculateOperation.setValue(val);
+
+                    val = calculate.asc_getNames();
+                    if(val && val.length > 0) {
+                        this.textareaCalculateOperation.setFields(val);
+                        radioField = this.radioCalculateOperation;
+                    }
+
+                    val = calculate.asc_getScript();
+                    if(val != null) {
+                        this.textareaCalculateScript.setValue(val, true);
+                        radioField = this.radioCalculateScript;
+                    }
+                }
+                radioField.setValue(true);
             }
         },
 
@@ -672,6 +792,31 @@ define([
                 validate.asc_putLessThen(max);
             }
         },
+
+        onCalculateTypeChange: function(type, field, newValue) {
+            let operation, names, script;
+            let calculate = this._changedProps.asc_getCalculate();
+            if(!calculate) {
+                this._changedProps.asc_putCalculate(new Asc.asc_CFieldCalculateProperty());
+                calculate = this._changedProps.asc_getCalculate();
+            }
+            
+            if(type == 'operation') {
+                operation = this.cmbCalculateOperation.getValue();
+                names = this.textareaCalculateOperation.getFields();
+                script = undefined;
+            } else if(type == 'script') {
+                script = this.textareaCalculateScript.getValue();
+            }
+            calculate.asc_putType(operation);
+            calculate.asc_putNames(names);
+            calculate.asc_putScript(script);
+
+            this.cmbCalculateOperation.setDisabled(type != 'operation');
+            this.textareaCalculateOperation.setDisabled(type != 'operation');
+            this.btnCalculateSelectFields.setDisabled(type != 'operation');
+            this.textareaCalculateScript.setDisabled(type != 'script');
+        },
         
         onFormatSelect: function(combo, record) {
             if (!record) return;
@@ -748,6 +893,17 @@ define([
         textValidateScript: 'Run custom validation script',
         textFrom: 'From',
         textTo: 'To',
+        textCalculateNone: 'Value is not calculated',
+        textCalculateOperation: 'Value from fields',
+        textOperation: 'Operation',
+        textFields: 'Fields',
+        textPick: 'Pick',
+        textCalculateScript: 'Custom calculation script',
+        textSum: 'sum',
+        textProduct: 'product',
+        textAverage: 'average',
+        textMinimum: 'minimum',
+        textMaximum: 'maximum'
 
     }, PDFE.Views.FormSettingsAdvanced || {}))
 });
