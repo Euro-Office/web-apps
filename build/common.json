@@ -271,7 +271,7 @@
                         "dest": "../deploy/web-apps/vendor/requirejs-text/text.js"
                     },
                     {
-                        "src": "../vendor/backbone/backbonejs",
+                        "src": "../vendor/backbone/backbone.js",
                         "dest": "../deploy/web-apps/vendor/backbone/backbone.js"
                     },
                     {
