@@ -206,7 +206,31 @@ define([
                 this.permissions && (this.permissions.isEdit===true) && this.api.asc_registerCallback('asc_onLockDefNameManager', _.bind(this.onLockDefNameManager, this));
 
             }
+            // Host (Nextcloud) tells us whether the Assistant app is loaded.
+            // Drives visibility of the "Ask Nextcloud Assistant" entry in the
+            // cell context menu.
+            Common.Gateway.on('setassistantavailable', _.bind(this.onSetAssistantAvailable, this));
             return this;
+        },
+
+        onSetAssistantAvailable: function(available) {
+            var view = this.documentHolder;
+            if (view && view.pmiAssistant) {
+                view.pmiAssistant.setVisible(!!available);
+                view.pmiAssistantSeparator && view.pmiAssistantSeparator.setVisible(!!available);
+            }
+        },
+
+        // Right-click "Ask Nextcloud Assistant" — capture the current cell
+        // selection text and forward it to the host. The host opens the
+        // Assistant text-processing form pre-filled with the text (or empty
+        // if the cell is empty / no selection).
+        onAskNcAssistant: function() {
+            var selectedText = '';
+            if (this.api && typeof this.api['asc_GetSelectedText'] === 'function') {
+                selectedText = this.api['asc_GetSelectedText']() || '';
+            }
+            Common.Gateway.requestSmartPicker(selectedText);
         },
 
         resetApi: function(api) {

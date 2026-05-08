@@ -785,6 +785,18 @@ define([], function () {
                 caption     : me.txtGetLink
             });
 
+            // Nextcloud Assistant context menu entry — host (NC) toggles
+            // visibility via setAssistantAvailable. Hidden by default.
+            me.pmiAssistantSeparator = new Common.UI.MenuItem({
+                caption     : '--',
+                visible     : false
+            });
+            me.pmiAssistant = new Common.UI.MenuItem({
+                iconCls     : 'menu__icon btn-nc-assistant',
+                caption     : me.txtNcAssistant || 'Ask Nextcloud Assistant',
+                visible     : false
+            });
+
             me.ssMenu = new Common.UI.Menu({
                 cls: 'shifted-right',
                 restoreHeightAndTop: true,
@@ -847,7 +859,9 @@ define([], function () {
                     me.pmiEntireHide,
                     me.pmiEntireShow,
                     me.pmiFreezeSeparator,
-                    me.pmiFreezePanes
+                    me.pmiFreezePanes,
+                    me.pmiAssistantSeparator,
+                    me.pmiAssistant
                 ]
             }).on('hide:after', function(menu, e, isFromInputControl) {
                 me.clearCustomItems(menu);

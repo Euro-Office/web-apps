@@ -201,7 +201,30 @@ define([
                 me.documentHolder.setApi(me.api);
             }
 
+            // Host (Nextcloud) tells us whether the Assistant app is loaded.
+            // Drives visibility of the "Ask Nextcloud Assistant" entry in the
+            // text context menu.
+            Common.Gateway.on('setassistantavailable', _.bind(me.onSetAssistantAvailable, me));
+
             return me;
+        },
+
+        onSetAssistantAvailable: function(available) {
+            var view = this.documentHolder;
+            if (view && view.menuParaAssistant) {
+                view.menuParaAssistant.setVisible(!!available);
+                view.menuParaAssistantSeparator && view.menuParaAssistantSeparator.setVisible(!!available);
+            }
+        },
+
+        // Right-click "Ask Nextcloud Assistant" — capture the current selection
+        // and forward it to the host (Nextcloud) over the gateway.
+        onAskNcAssistant: function() {
+            var selectedText = '';
+            if (this.api && typeof this.api['asc_GetSelectedText'] === 'function') {
+                selectedText = this.api['asc_GetSelectedText']() || '';
+            }
+            Common.Gateway.requestSmartPicker(selectedText);
         },
 
         setMode: function(mode) {

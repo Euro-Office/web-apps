@@ -1834,6 +1834,18 @@ define([], function () {
                 caption: me.textEditPoints
             });
 
+            // Nextcloud Assistant context menu entry — host (NC) toggles
+            // visibility via setAssistantAvailable. Hidden by default.
+            me.menuParaAssistantSeparator = new Common.UI.MenuItem({
+                caption     : '--',
+                visible     : false
+            });
+            me.menuParaAssistant = new Common.UI.MenuItem({
+                iconCls     : 'menu__icon btn-nc-assistant',
+                caption     : me.txtNcAssistant || 'Ask Nextcloud Assistant',
+                visible     : false
+            });
+
             me.textMenu = new Common.UI.Menu({
                 cls: 'shifted-right',
                 scrollToCheckedItem: false,
@@ -1985,7 +1997,9 @@ define([], function () {
                     me.menuAddCommentPara,
                     /** coauthoring end **/
                     me.menuAddHyperlinkPara,
-                    menuHyperlinkPara
+                    menuHyperlinkPara,
+                    me.menuParaAssistantSeparator,
+                    me.menuParaAssistant
                 ]
             }).on('hide:after', function(menu, e, isFromInputControl) {
                 me.clearCustomItems(menu);

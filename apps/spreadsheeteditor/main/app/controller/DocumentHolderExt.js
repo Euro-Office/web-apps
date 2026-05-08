@@ -154,6 +154,7 @@ define([], function () {
                 /** coauthoring begin **/
                 view.pmiAddComment.on('click',                      _.bind(me.onAddComment, me));
                 /** coauthoring end **/
+                view.pmiAssistant.on('click',                       _.bind(me.onAskNcAssistant, me));
                 view.pmiAddNamedRange.on('click',                   _.bind(me.onAddNamedRange, me));
                 view.menuImageArrange.menu.on('item:click',         _.bind(me.onImgMenu, me));
                 view.menuImgRotate.menu.on('item:click',            _.bind(me.onImgMenu, me));

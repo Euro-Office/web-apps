@@ -383,7 +383,6 @@ define([
             toolbar.btnShapesMerge.menu.on('item:click',                _.bind(this.onClickMenuShapesMerge, this));
             toolbar.btnShapesMerge.menu.on('show:before',               _.bind(this.onBeforeShapesMerge, this));
             toolbar.btnInsertHyperlink.on('click',                      _.bind(this.onHyperlinkClick, this));
-            toolbar.btnSmartPicker.on('click',                          _.bind(this.onBtnSmartPickerClick, this));
             toolbar.mnuTablePicker.on('select',                         _.bind(this.onTablePickerSelect, this));
             toolbar.btnInsertTable.menu.on('item:click',                _.bind(this.onInsertTableClick, this));
             toolbar.btnClearStyle.on('click',                           _.bind(this.onClearStyleClick, this));
@@ -401,7 +400,6 @@ define([
             Common.Gateway.on('insertimage',                            _.bind(this.insertImage, this));
             Common.Gateway.on('insertlink',                             _.bind(this.insertLink, this));
             Common.Gateway.on('insertplaintext',                        _.bind(this.insertPlainText, this));
-            Common.Gateway.on('setsmartpickerenabled',                  _.bind(this.setSmartPickerEnabled, this));
             toolbar.btnInsAudio && toolbar.btnInsAudio.on('click',      _.bind(this.onAddAudio, this));
             toolbar.btnInsVideo && toolbar.btnInsVideo.on('click',      _.bind(this.onAddVideo, this));
 
@@ -1847,22 +1845,6 @@ define([
             Common.component.Analytics.trackEvent('ToolBar', 'Add Hyperlink');
         },
 
-        onBtnSmartPickerClick: function(btn) {
-            // Capture the user's current selection so the AI sees what to operate
-            // on. The presentation editor has no bookmark manager, so inline
-            // selection-replacement is best-effort: if the slide's current
-            // selection is preserved across the toolbar click, asc_PasteData
-            // will replace it; otherwise the AI text lands at the cursor.
-            var selectedText = '';
-            if (typeof this.api["asc_GetSelectedText"] === 'function') {
-                selectedText = this.api["asc_GetSelectedText"]() || '';
-            }
-
-            Common.Gateway.requestSmartPicker(selectedText);
-
-            Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Smart Picker');
-        },
 
         onTablePickerSelect: function(picker, columns, rows, e) {
             if (this.api) {
@@ -1996,12 +1978,6 @@ define([
                 this.api["pluginMethod_PasteText"](data);
             }
             Common.NotificationCenter.trigger('storage:plain-text-insert', data);
-        },
-
-        setSmartPickerEnabled: function(enabled) {
-            if (this.toolbar && this.toolbar.btnSmartPicker && typeof this.toolbar.btnSmartPicker.setDisabled === 'function') {
-                this.toolbar.btnSmartPicker.setDisabled(!enabled);
-            }
         },
 
         onBtnInsertTextClick: function(btn, e) {

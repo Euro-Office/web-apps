@@ -309,7 +309,6 @@ define([
             Common.Gateway.on('insertimage',                      _.bind(this.insertImage, this));
             Common.Gateway.on('insertlink',                      _.bind(this.insertLink, this));
             Common.Gateway.on('insertplaintext',                      _.bind(this.insertPlainText, this));
-            Common.Gateway.on('setsmartpickerenabled',                _.bind(this.setSmartPickerEnabled, this));
         },
 
         attachUIEvents: function(toolbar) {
@@ -422,7 +421,6 @@ define([
             toolbar.mnuColorSchema.on('item:click',                     _.bind(this.onColorSchemaClick, this));
             toolbar.mnuColorSchema.on('show:after',                     _.bind(this.onColorSchemaShow, this));
             toolbar.btnBlankPage.on('click',                            _.bind(this.onBtnBlankPageClick, this));
-            toolbar.btnSmartPicker.on('click',                          _.bind(this.onBtnSmartPickerClick, this));
             toolbar.listStyles.on('click',                              _.bind(this.onListStyleSelect, this));
             toolbar.listStyles.on('contextmenu',                        _.bind(this.onListStyleContextMenu, this));
             toolbar.styleMenu.on('hide:before',                         _.bind(this.onListStyleBeforeHide, this));
@@ -438,7 +436,6 @@ define([
             Common.Gateway.on('insertimage',                      _.bind(this.insertImage, this));
             Common.Gateway.on('insertlink',                      _.bind(this.insertLink, this));
             Common.Gateway.on('insertplaintext',                      _.bind(this.insertPlainText, this));
-            Common.Gateway.on('setsmartpickerenabled',                _.bind(this.setSmartPickerEnabled, this));
             Common.Gateway.on('setmailmergerecipients',           _.bind(this.setMailMergeRecipients, this));
             Common.Gateway.on('setrequestedspreadsheet',          _.bind(this.setRequestedSpreadsheet, this));
             Common.NotificationCenter.on('storage:spreadsheet-load',    _.bind(this.openSpreadsheetFromStorage, this));
@@ -2017,15 +2014,6 @@ define([
             Common.NotificationCenter.trigger('storage:plain-text-insert', data);
         },
 
-        // Host (Nextcloud) tells us whether the Assistant app is available;
-        // when it isn't, gray out the Smart Picker toolbar button so the user
-        // gets an immediate visual signal instead of clicking into nothing.
-        setSmartPickerEnabled: function(enabled) {
-            if (this.toolbar && this.toolbar.btnSmartPicker && typeof this.toolbar.btnSmartPicker.setDisabled === 'function') {
-                this.toolbar.btnSmartPicker.setDisabled(!enabled);
-            }
-        },
-
         onBtnInsertTextClick: function(btn, e) {
             btn.menu.getItems(true).forEach(function(item) {
                 if(item.value == btn.options.textboxType) 
@@ -2660,23 +2648,6 @@ define([
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
             Common.component.Analytics.trackEvent('ToolBar', 'Blank Page');
-        },
-
-        onBtnSmartPickerClick: function(btn) {
-            // Capture the user's current selection and forward it so the
-            // Assistant input field opens already filled. The Assistant is
-            // intentionally read-only — the user reads / copies the result
-            // from the modal manually, so no bookmark or paste roundtrip
-            // is needed here.
-            var selectedText = '';
-            if (typeof this.api["asc_GetSelectedText"] === 'function') {
-                selectedText = this.api["asc_GetSelectedText"]() || '';
-            }
-
-            Common.Gateway.requestSmartPicker(selectedText);
-
-            Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Smart Picker');
         },
 
         onWatermarkSelect: function(menu, item) {

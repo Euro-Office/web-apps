@@ -788,9 +788,9 @@
             });
         };
 
-        var _setSmartPickerEnabled = function(data) {
+        var _setAssistantAvailable = function(data) {
             _sendCommand({
-                command: 'setSmartPickerEnabled',
+                command: 'setAssistantAvailable',
                 data: data
             });
         };
@@ -933,7 +933,7 @@
             insertImage         : _insertImage,
             insertLink          : _insertLink,
             insertPlainText          : _insertPlainText,
-            setSmartPickerEnabled    : _setSmartPickerEnabled,
+            setAssistantAvailable    : _setAssistantAvailable,
             setMailMergeRecipients: _setMailMergeRecipients,
             setRevisedFile      : _setRevisedFile,
             setFavorite         : _setFavorite,

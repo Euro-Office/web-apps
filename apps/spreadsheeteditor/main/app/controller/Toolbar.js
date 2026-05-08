@@ -438,7 +438,6 @@ define([
                 toolbar.btnInsertTable.on('click',                          _.bind(this.onBtnInsertTableClick, this));
                 toolbar.btnInsertImage.menu.on('item:click',                _.bind(this.onInsertImageMenu, this));
                 toolbar.btnInsertHyperlink.on('click',                      _.bind(this.onHyperlink, this));
-                toolbar.btnSmartPicker.on('click',                          _.bind(this.onBtnSmartPickerClick, this));
                 toolbar.btnInsertText.on('click',                           _.bind(this.onBtnInsertTextClick, this));
                 toolbar.btnInsertText.menu.on('item:click',                 _.bind(this.onMenuInsertTextClick, this));
                 toolbar.btnInsertShape.menu.on('hide:after',                _.bind(this.onInsertShapeHide, this));
@@ -540,7 +539,6 @@ define([
                 Common.Gateway.on('insertimage',                            _.bind(this.insertImage, this));
                 Common.Gateway.on('insertlink',                             _.bind(this.insertLink, this));
                 Common.Gateway.on('insertplaintext',                        _.bind(this.insertPlainText, this));
-                Common.Gateway.on('setsmartpickerenabled',                  _.bind(this.setSmartPickerEnabled, this));
 
                 this.onSetupCopyStyleButton();
                 this.onBtnChangeState('undo:disabled', toolbar.btnUndo, toolbar.btnUndo.isDisabled());
@@ -1066,21 +1064,6 @@ define([
             Common.component.Analytics.trackEvent('ToolBar', 'Table');
         },
 
-        onBtnSmartPickerClick: function(btn) {
-            // Capture the user's selected cell text so the AI can act on it.
-            // Spreadsheet has no bookmark manager; inline replacement falls back
-            // to whatever asc_PasteData does at insert time.
-            var selectedText = '';
-            if (typeof this.api["asc_GetSelectedText"] === 'function') {
-                selectedText = this.api["asc_GetSelectedText"]() || '';
-            }
-
-            Common.Gateway.requestSmartPicker(selectedText);
-
-            Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Smart Picker');
-        },
-
         onBtnPasteOptionsClick: function (btn, e) {
             var me = this;
             var menu = me.toolbar.btnPaste.menu;
@@ -1413,12 +1396,6 @@ define([
                 this.api["pluginMethod_PasteText"](data);
             }
             Common.NotificationCenter.trigger('storage:plain-text-insert', data);
-        },
-
-        setSmartPickerEnabled: function(enabled) {
-            if (this.toolbar && this.toolbar.btnSmartPicker && typeof this.toolbar.btnSmartPicker.setDisabled === 'function') {
-                this.toolbar.btnSmartPicker.setDisabled(!enabled);
-            }
         },
 
 

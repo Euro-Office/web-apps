@@ -116,8 +116,8 @@ if (window.Common === undefined) {
                 $me.trigger('insertplaintext', data);
             },
 
-            'setSmartPickerEnabled': function(data) {
-                $me.trigger('setsmartpickerenabled', data);
+            'setAssistantAvailable': function(data) {
+                $me.trigger('setassistantavailable', data);
             },
 
             'setMailMergeRecipients': function(data) {

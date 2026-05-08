@@ -2285,6 +2285,20 @@ define([], function () {
                 caption     : '--'
             });
 
+            // Nextcloud Assistant context menu entry — host (NC) toggles
+            // visibility via setAssistantAvailable. Hidden by default; only
+            // appears once the host announces the Assistant app is loaded.
+            var menuParaAssistantSeparator = new Common.UI.MenuItem({
+                caption     : '--',
+                visible     : false
+            });
+            me.menuParaAssistant = new Common.UI.MenuItem({
+                iconCls     : 'menu__icon btn-nc-assistant',
+                caption     : me.txtNcAssistant || 'Ask Nextcloud Assistant',
+                visible     : false
+            });
+            me.menuParaAssistant.assistantSeparator = menuParaAssistantSeparator;
+
             this.textMenu = new Common.UI.Menu({
                 cls: 'shifted-right',
                 restoreHeightAndTop: true,
@@ -2484,6 +2498,14 @@ define([], function () {
                     me.menuAddCommentPara.setDisabled(value.paraProps && value.paraProps.locked === true);
                     /** coauthoring end **/
 
+                    // Nextcloud Assistant entry — show only when the host has
+                    // announced the Assistant app is available; otherwise the
+                    // separator + item stay hidden so the menu looks
+                    // unchanged for users without the integration.
+                    var assistantVisible = !!me.ncAssistantAvailable;
+                    menuParaAssistantSeparator.setVisible(assistantVisible);
+                    me.menuParaAssistant.setVisible(assistantVisible);
+
                     var in_field = me.api.asc_HaveFields(true);
                     me.menuParaRefreshField.setVisible(!!in_field);
                     me.menuParaRefreshField.setDisabled(disabled);
@@ -2567,7 +2589,9 @@ define([], function () {
                     me.menuParaContinueNumbering,
                     me.menuParaListIndents,
                     menuStyleSeparator,
-                    menuStyle
+                    menuStyle,
+                    menuParaAssistantSeparator,
+                    me.menuParaAssistant
                 ]
             }).on('hide:after', function(menu, e, isFromInputControl) {
                 me.clearCustomItems(menu);
