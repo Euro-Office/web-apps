@@ -43,8 +43,8 @@ require.config({
     // scripts that do not call define() to register a module
     baseUrl: '../../',
     paths: {
-        jquery          : '../vendor/jquery/jquery.min',
-        underscore      : '../vendor/underscore/underscore-min',
+        jquery          : '../vendor/jquery/jquery',
+        underscore      : '../vendor/underscore/underscore',
         xregexp         : '../vendor/xregexp/xregexp-all-min',
         socketio        : '../vendor/socketio/socket.io.min',
         allfonts        : '../../sdkjs/common/AllFonts',
