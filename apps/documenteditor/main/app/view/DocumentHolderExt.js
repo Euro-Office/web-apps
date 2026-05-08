@@ -2286,16 +2286,19 @@ define([], function () {
             });
 
             // Nextcloud Assistant context menu entry — host (NC) toggles
-            // visibility via setAssistantAvailable. Hidden by default; only
-            // appears once the host announces the Assistant app is loaded.
+            // visibility via setAssistantAvailable. Construct with default
+            // visible:true; the textMenu's initMenu callback below sets the
+            // actual visibility on each open based on me.ncAssistantAvailable.
+            // Constructing with visible:false hits a broken path in
+            // Common.UI.MenuItem.render (setVisible -> this.hide() which
+            // doesn't exist on MenuItem) so the item never reacts to later
+            // setVisible calls.
             var menuParaAssistantSeparator = new Common.UI.MenuItem({
-                caption     : '--',
-                visible     : false
+                caption     : '--'
             });
             me.menuParaAssistant = new Common.UI.MenuItem({
                 iconCls     : 'menu__icon btn-nc-assistant',
-                caption     : me.txtNcAssistant || 'Ask Nextcloud Assistant',
-                visible     : false
+                caption     : me.txtNcAssistant || 'Ask Nextcloud Assistant'
             });
             me.menuParaAssistant.assistantSeparator = menuParaAssistantSeparator;
 

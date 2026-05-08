@@ -214,10 +214,12 @@ define([
         },
 
         onSetAssistantAvailable: function(available) {
-            var view = this.documentHolder;
-            if (view && view.pmiAssistant) {
-                view.pmiAssistant.setVisible(!!available);
-                view.pmiAssistantSeparator && view.pmiAssistantSeparator.setVisible(!!available);
+            // Stash the flag on the view; the ssMenu's show:before listener
+            // reads it on each open. Calling setVisible here doesn't work
+            // because Common.UI.MenuItem.setVisible only behaves correctly
+            // while the menu is being rendered.
+            if (this.documentHolder) {
+                this.documentHolder.ncAssistantAvailable = !!available;
             }
         },
 

@@ -210,10 +210,13 @@ define([
         },
 
         onSetAssistantAvailable: function(available) {
-            var view = this.documentHolder;
-            if (view && view.menuParaAssistant) {
-                view.menuParaAssistant.setVisible(!!available);
-                view.menuParaAssistantSeparator && view.menuParaAssistantSeparator.setVisible(!!available);
+            // Stash the flag on the view; textMenu's initMenu callback reads
+            // it on each open and toggles visibility. We don't call setVisible
+            // here because Common.UI.MenuItem.setVisible only behaves
+            // correctly while the menu is being rendered (i.e. inside
+            // initMenu).
+            if (this.documentHolder) {
+                this.documentHolder.ncAssistantAvailable = !!available;
             }
         },
 

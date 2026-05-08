@@ -1835,15 +1835,19 @@ define([], function () {
             });
 
             // Nextcloud Assistant context menu entry — host (NC) toggles
-            // visibility via setAssistantAvailable. Hidden by default.
+            // visibility via setAssistantAvailable. We construct with default
+            // visible:true; the textMenu's initMenu callback sets the actual
+            // visibility on each open based on me.ncAssistantAvailable.
+            // Constructing with visible:false hits a broken path in
+            // Common.UI.MenuItem.render (setVisible -> this.hide() which
+            // doesn't exist on MenuItem) and leaves the item in a state
+            // where later setVisible calls have no effect.
             me.menuParaAssistantSeparator = new Common.UI.MenuItem({
-                caption     : '--',
-                visible     : false
+                caption     : '--'
             });
             me.menuParaAssistant = new Common.UI.MenuItem({
                 iconCls     : 'menu__icon btn-nc-assistant',
-                caption     : me.txtNcAssistant || 'Ask Nextcloud Assistant',
-                visible     : false
+                caption     : me.txtNcAssistant || 'Ask Nextcloud Assistant'
             });
 
             me.textMenu = new Common.UI.Menu({
@@ -1973,6 +1977,12 @@ define([], function () {
                         me.menuParagraphEquation.menu.items[8].options.isToolbarHide = isEqToolbarHide;
                         me.menuParagraphEquation.menu.items[8].setCaption(isEqToolbarHide ? me.showEqToolbar : me.hideEqToolbar);
                     }
+
+                    // Nextcloud Assistant entry — show only when the host has
+                    // announced the Assistant app is available.
+                    var assistantVisible = !!me.ncAssistantAvailable;
+                    me.menuParaAssistantSeparator.setVisible(assistantVisible);
+                    me.menuParaAssistant.setVisible(assistantVisible);
                 },
                 items: [
                     me.menuSpellPara,
