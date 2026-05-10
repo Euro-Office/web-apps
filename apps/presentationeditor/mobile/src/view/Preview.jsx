@@ -45,7 +45,7 @@ const Preview = ({
 
     return (
         <div id="pe-preview" className={rootClass.join(' ')}>
-            <div className="pe-preview__top-bar" onClick={(e) => e.stopPropagation()}>
+            <div className="pe-preview__top-bar">
                 <button className="pe-preview__btn pe-preview__close" aria-label={t.textClose} onClick={onClose}>
                     {Device.ios ? <span>{t.textClose}</span> : <SvgIcon symbolId={IconClose.id} className={'icon icon-svg'}/>}
                 </button>
@@ -55,7 +55,7 @@ const Preview = ({
                 </div>
             </div>
             <div id="presentation-preview" className="pe-preview__canvas"/>
-            <div className="pe-preview__bottom-bar" onClick={(e) => e.stopPropagation()}>
+            <div className="pe-preview__bottom-bar">
                 <NavControls t={t} isPlaying={isPlaying} onPrev={onPrev} onNext={onNext} onTogglePlay={onTogglePlay}/>
             </div>
         </div>
