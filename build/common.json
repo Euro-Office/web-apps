@@ -172,6 +172,10 @@
                 "files": [
                     {
                         "src": "../vendor/jquery/jquery.min.js",
+                        "dest": "../deploy/web-apps/vendor/jquery/jquery.min.js"
+                    },
+                    {
+                        "src": "../vendor/jquery/jquery.js",
                         "dest": "../deploy/web-apps/vendor/jquery/jquery.js"
                     },
                     {
@@ -221,8 +225,16 @@
         ],
         "copy": {
             "script": {
-                "src": "../vendor/underscore/underscore-min.js",
-                "dest": "../deploy/web-apps/vendor/underscore/underscore.js"
+                "files": [
+                    {
+                        "src": "../vendor/underscore/underscore-min.js",
+                        "dest": "../deploy/web-apps/vendor/underscore/underscore-min.js"
+                    },
+                    {
+                        "src": "../vendor/underscore/underscore.js",
+                        "dest": "../deploy/web-apps/vendor/underscore/underscore.js"
+                    }
+                ]
             }
         }
     },
