@@ -182,9 +182,9 @@ module.exports = function(grunt) {
 
     function doRegisterInitializeAppTask(name, appName, configFile) {
         if (!!process.env['OO_BRANDING'] &&
-                grunt.file.exists('../../' + process.env['OO_BRANDING'] + '/web-apps-pro/build/' + configFile))
+                grunt.file.exists('../../' + process.env['OO_BRANDING'] + '/web-apps/build/' + configFile))
         {
-            var _extConfig = require('../../' + process.env['OO_BRANDING'] + '/web-apps-pro/build/' + configFile);
+            var _extConfig = require('../../' + process.env['OO_BRANDING'] + '/web-apps/build/' + configFile);
         }
 
         function _merge(target, ...sources) {
@@ -349,13 +349,6 @@ module.exports = function(grunt) {
         return {
             terser: {
                 options: {
-                    format: {
-                        preamble: '/** vim: et:ts=4:sw=4:sts=4\n' +
-                            ' * @license RequireJS 2.1.2 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.\n' +
-                            ' * Available via the MIT or new BSD license.\n' +
-                            ' * see: http://github.com/jrburke/requirejs for details\n' +
-                            ' */\n',
-                    },
                 },
                 build: {
                     src:  packageFile['requirejs']['min']['src'],
@@ -806,6 +799,38 @@ module.exports = function(grunt) {
         grunt.file.write(defaultConfig, JSON.stringify(pkg, null, 4));
     });
 
+    const runMainTasks = function() {
+        if (packageFile) {
+            let maintasks = ['prebuild-icons-sprite', 'main-app-init', 'clean:prebuild',
+                                'requirejs', 'imagemin', 'less', 'copy', 'svgmin', 'inline', 'json-minify',
+                                'replace:writeVersion', 'replace:prepareHelp', 'clean:postbuild'];
+            const cfgpath = `../../${process.env['OO_BRANDING']}/web-apps/build/common.json`;
+            if (!!process.env['OO_BRANDING'] && grunt.file.exists(cfgpath)) {
+                const config = require(cfgpath);
+                const tasks = config["apps-common"].main?.tasks;
+                !!tasks && tasks.length && (maintasks = tasks);
+            }
+
+            grunt.task.run(maintasks);
+        } else {
+            grunt.log.error().writeln('Is not load configure file.'.red);
+        }
+    };
+
+    const runCommonRequireJSTasks = function() {
+        if (packageFile) {
+            let maintasks = ['requirejs-init', 'clean', 'copy'];
+            const cfgpath = `../../${process.env['OO_BRANDING']}/web-apps/build/common.json`;
+            if (!!process.env['OO_BRANDING'] && grunt.file.exists(cfgpath)) {
+                maintasks = ['requirejs-init', 'clean', 'terser'];
+            }
+
+            grunt.task.run(maintasks);
+        } else {
+            grunt.log.error().writeln('Is not load configure file.'.red);
+        }
+    };
+
     //quick workaround for build desktop version
     var copyTask = grunt.option('desktop')? "copy": "copy:script";
 
@@ -821,14 +846,12 @@ module.exports = function(grunt) {
     grunt.registerTask('deploy-iscroll',                ['iscroll-init', 'clean', 'copy']);
     grunt.registerTask('deploy-fetch',                  ['fetch-init', 'clean', 'copy']);
     grunt.registerTask('deploy-bootstrap',              ['bootstrap-init', 'clean', 'copy']);
-    grunt.registerTask('deploy-requirejs',              ['requirejs-init', 'clean', 'copy', 'terser']);
+    grunt.registerTask('deploy-requirejs',              runCommonRequireJSTasks);
     grunt.registerTask('deploy-es6-promise',            ['es6-promise-init', 'clean', 'copy']);
     grunt.registerTask('deploy-monaco',                 ['monaco-init', 'clean', 'copy']);
     grunt.registerTask('deploy-common-embed',           ['common-embed-init', 'clean', 'copy']);
 
-    grunt.registerTask('deploy-app-main',               ['prebuild-icons-sprite', 'main-app-init', 'clean:prebuild',
-                                                            'requirejs', 'imagemin', 'less', 'copy', 'svgmin', 'inline', 'json-minify',
-                                                            'replace:writeVersion', 'replace:prepareHelp', 'clean:postbuild']);
+    grunt.registerTask('deploy-app-main',               runMainTasks);
 
     grunt.registerTask('deploy-app-mobile',             ['mobile-app-init', 'clean:deploy', /*'cssmin',*/ /*'copy:template-backup',*/
                                                             'htmlmin', /*'requirejs',*/ 'exec:webpack_install', 'exec:webpack_app_build', /*'copy:template-restore',*/
