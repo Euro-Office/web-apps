@@ -36,7 +36,14 @@ module.exports = (grunt) => {
         if ( !global.packageFile )
             grunt.log.ok('no package file'.red);
         else {
-            const config = require('./appforms.json');
+            let configpath;
+            if (!!process.env['OO_BRANDING']) {
+                configpath = `../../${process.env['OO_BRANDING']}/web-apps/build/appforms.json`;
+                if (!grunt.file.exists(configpath))
+                    configpath = null;
+            }
+
+            const config = !configpath ? require('./appforms.json') : require(configpath);
             if ( config ) {
                 //packageFile.tasks.deploy.push(...config.tasks.deploy);
                 packageFile.forms = config.forms;
@@ -159,5 +166,20 @@ module.exports = (grunt) => {
         });
     });
 
-    grunt.registerTask('deploy-app-forms', ['forms-app-init', 'clean:prebuild', 'requirejs', 'less', 'copy', 'inline', 'replace:varsEnviroment', 'clean:postbuild']);
+    const runTasks = function() {
+        if (packageFile) {
+            let maintasks = ['forms-app-init', 'clean:prebuild', 'requirejs', 'less', 'copy',
+                                'inline', 'replace:varsEnviroment', 'clean:postbuild'];
+            if (!!packageFile.forms?.branding?.tasks) {
+                maintasks = packageFile.forms?.branding?.tasks;
+            }
+
+            grunt.task.run(maintasks);
+        } else {
+            grunt.log.error().writeln('Is not load configure file.'.red);
+        }
+    };
+
+    // grunt.registerTask('deploy-app-forms', ['forms-app-init', 'clean:prebuild', 'requirejs', 'less', 'copy', 'inline', 'replace:varsEnviroment', 'clean:postbuild']);
+    grunt.registerTask('deploy-app-forms', runTasks);
 }
