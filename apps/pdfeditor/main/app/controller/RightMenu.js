@@ -429,6 +429,7 @@ define([
                     Common.localStorage.setBool('pdfe-hidden-rightmenu', !status);
                     Common.Utils.InternalSettings.set("pdfe-hidden-rightmenu", !status);
                 }
+                !view && this.rightmenu.fireEvent('view:hide', [this, !status]);
             }
 
             Common.NotificationCenter.trigger('layout:changed', 'main');
@@ -436,7 +437,10 @@ define([
         },
 
         addNewPlugin: function (button, $button, $panel) {
-            this.getApplication().getController('Viewport').applyEditorMode(true);
+            if(this.rightmenu.$el.is(':hidden')) {
+                this.onRightMenuHide(undefined, true, false);
+            }
+
             this.rightmenu.insertButton(button, $button);
             this.rightmenu.insertPanel($panel);
         },
