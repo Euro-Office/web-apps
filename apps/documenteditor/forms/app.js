@@ -158,7 +158,6 @@ require([
                 'common/main/lib/controller/Desktop',
                 'common/main/lib/component/ComboBoxFonts',
                 'common/main/lib/component/ColorButton',
-                'common/main/lib/component/TextareaField',
                 'common/main/lib/view/SearchBar',
                 'common/main/lib/controller/Shortcuts',
                 'common/forms/lib/view/modals'

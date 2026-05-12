@@ -181,10 +181,12 @@ module.exports = function(grunt) {
     }
 
     function doRegisterInitializeAppTask(name, appName, configFile) {
-        if (!!process.env['OO_BRANDING'] &&
-                grunt.file.exists('../../' + process.env['OO_BRANDING'] + '/web-apps/build/' + configFile))
-        {
-            var _extConfig = require('../../' + process.env['OO_BRANDING'] + '/web-apps/build/' + configFile);
+        if (!!process.env['OO_BRANDING']) {
+            global.brandingPath = `../../${process.env['OO_BRANDING']}/web-apps/build`;
+
+            if (grunt.file.exists(`${brandingPath}/${configFile}`)) {
+                var _extConfig = require(`${brandingPath}/${configFile}`);
+            }
         }
 
         function _merge(target, ...sources) {
@@ -409,9 +411,7 @@ module.exports = function(grunt) {
 
             replace: {
                 writeVersion: {
-                    src: ['<%= pkg.main.js.requirejs.options.dir %>/app/**/*.js',
-                            '<%= pkg.main.js.postload.options.out %>',
-                            '../deploy/web-apps/apps/common/main/lib/**/*.js'],
+                    src: ['../deploy/web-apps/apps/common/main/lib/**/*.js'],
                     overwrite: true,
                     replacements: [{
                         from: /\{\{PRODUCT_VERSION\}\}/g,
@@ -521,6 +521,19 @@ module.exports = function(grunt) {
             },
         });
 
+        let scriptspath;
+        if (!!packageFile.main.js.requirejs.options.out) {
+            scriptspath = path.dirname(packageFile.main.js.requirejs.options.out);
+        } else if (!!packageFile.main.js.requirejs.options.dir) {
+            scriptspath = packageFile.main.js.requirejs.options.dir;
+        }
+
+        if (!!scriptspath) {
+            const replace = grunt.config.get('replace');
+            replace.writeVersion.src.push(`${scriptspath}/**/*.js`);
+            grunt.config.set('replace', replace);
+
+        }
         // var replace = grunt.config.get('replace');
         // replace.writeVersion.replacements.push(...global.jsreplacements);
         // replace.prepareHelp.replacements.push(...helpreplacements);
