@@ -170,8 +170,16 @@ module.exports = (grunt) => {
         if (packageFile) {
             let maintasks = ['forms-app-init', 'clean:prebuild', 'requirejs', 'less', 'copy',
                                 'inline', 'replace:varsEnviroment', 'clean:postbuild'];
-            if (!!packageFile.forms?.branding?.tasks) {
-                maintasks = packageFile.forms?.branding?.tasks;
+
+            if (!!global.brandingPath) {
+                const cfgfile = `${brandingPath}/appforms.json`;
+                if (grunt.file.exists(cfgfile)) {
+                    const cfg = require(cfgfile);
+
+                    if (!!cfg.forms.branding?.tasks) {
+                        maintasks = cfg.forms.branding.tasks;
+                    }
+                }
             }
 
             grunt.task.run(maintasks);
@@ -180,6 +188,5 @@ module.exports = (grunt) => {
         }
     };
 
-    // grunt.registerTask('deploy-app-forms', ['forms-app-init', 'clean:prebuild', 'requirejs', 'less', 'copy', 'inline', 'replace:varsEnviroment', 'clean:postbuild']);
     grunt.registerTask('deploy-app-forms', runTasks);
 }

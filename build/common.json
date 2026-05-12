@@ -104,6 +104,15 @@
                     },
                     {
                         "expand": true,
+                        "cwd": "../apps/common/forms/lib",
+                        "src": [
+                            "**/*.js",
+                            "**/*.template"
+                        ],
+                        "dest": "../deploy/web-apps/apps/common/main/lib"
+                    },
+                    {
+                        "expand": true,
                         "cwd": "../apps/common/main/lib",
                         "src": [
                             "**/*.js",
@@ -278,6 +287,10 @@
         "copy": {
             "script": {
                 "files": [
+                    {
+                        "src": "../vendor/requirejs/require.js",
+                        "dest": "../deploy/web-apps/vendor/requirejs/require.js"
+                    },
                     {
                         "src": "../vendor/requirejs-text/text.js",
                         "dest": "../deploy/web-apps/vendor/requirejs-text/text.js"

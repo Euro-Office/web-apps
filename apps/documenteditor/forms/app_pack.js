@@ -1,4 +1,5 @@
 require([
+    'common/main/lib/component/TextareaField',
     'common/main/lib/view/PluginDlg',
     'common/main/lib/view/CopyWarningDialog',
     'common/main/lib/view/TextInputDialog',
