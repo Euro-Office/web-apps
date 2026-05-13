@@ -62,7 +62,7 @@ define([], function () {
             this.loadMask.show();
 
             var src = '../../../vendor/monaco/MonacoEditor.html';
-            src += '?editorType=' + (window.SSE ? 'cell' : window.PE ? 'slide' : 'word');
+            src += '?editorType=' + (window.SSE ? 'cell' : window.PE ? 'slide' : window.PDFE ? 'pdf' : 'word');
             src += '&language=' + this.language;
             src += '&id=' + this.id;
 
