@@ -39,3 +39,6 @@ apps/spreadsheeteditor/mobile/offlinedocs
 selenium-debug.log
 **/test/bin
 **/test/reports
+
+# generated at build time by theme.config.mjs
+apps/common/mobile/resources/less/_theme-mobile-overrides.less
