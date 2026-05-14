@@ -1588,6 +1588,8 @@ define([
                         rightmenuView.setMode(me.appOptions);
                     }
 
+                    application.getController('Common.Controllers.ChartTab').setMode(me.appOptions);
+
                     var toolbarView = (toolbarController) ? toolbarController.getView('Toolbar') : null;
                     if (toolbarView) {
                         toolbarView.setApi(me.api);
@@ -1595,7 +1597,7 @@ define([
                         toolbarView.on('insertimage', _.bind(me.onInsertImage, me));
                         toolbarView.on('inserttable', _.bind(me.onInsertTable, me));
                         toolbarView.on('insertshape', _.bind(me.onInsertShape, me));
-                        toolbarView.on('insertchart', _.bind(me.onInsertChart, me));
+                        // toolbarView.on('insertchart', _.bind(me.onInsertChart, me));
                         toolbarView.on('inserttextart', _.bind(me.onInsertTextArt, me));
                     }
 
@@ -1845,6 +1847,14 @@ define([
                     case Asc.c_oAscError.ID.CopyDisabled:
                         config.maxwidth = 450;
                         config.msg = this.errorCopyDisabled;
+                        break;
+
+                    case Asc.c_oAscError.ID.FileNotAssembled:
+                        config.msg = this.errorFileNotAssembled;
+                        break;
+
+                    case Asc.c_oAscError.ID.ForcedViewMode:
+                        config.msg = this.errorForcedViewMode;
                         break;
 
                     default:
@@ -2202,9 +2212,9 @@ define([
                 this.getApplication().getController('RightMenu').onInsertImage();
             },
 
-            onInsertChart:  function() {
-                this.getApplication().getController('RightMenu').onInsertChart();
-            },
+            // onInsertChart:  function() {
+            //     this.getApplication().getController('RightMenu').onInsertChart();
+            // },
 
             onInsertShape:  function() {
                 this.getApplication().getController('RightMenu').onInsertShape();
@@ -3038,6 +3048,7 @@ define([
                             if (apiCallback)  {
                                 apiCallback(btn === 'ok');
                             }
+                            Common.Gateway.reportWarning(id, btn === 'ok' ? 'undo' : 'continue');
                             me.onEditComplete();
                         }, this)
                     });

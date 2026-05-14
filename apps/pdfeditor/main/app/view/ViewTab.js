@@ -88,6 +88,10 @@ define([
                     '<span class="btn-slot text" id="slot-chk-rightmenu"></span>' +
                 '</div>' +
             '</div>' +
+            '<div class="separator long macro"></div>' +
+            '<div class="group macro">' +
+                '<span class="btn-slot text x-huge" id="slot-btn-macros"></span>' +
+            '</div>' +
         '</section>';
 
         return {
@@ -128,6 +132,9 @@ define([
                 me.chRightMenu.on('change', _.bind(function (checkbox, state) {
                     me.fireEvent('rightmenu:hide', [me.chRightMenu, state === 'checked']);
                 }, me));
+                me.btnMacros && me.btnMacros.on('click', function () {
+                    me.fireEvent('macros:click');
+                });
             },
 
             initialize: function (options) {
@@ -182,7 +189,7 @@ define([
 
                 this.btnInterfaceTheme = new Common.UI.Button({
                     cls: 'btn-toolbar x-huge icon-top',
-                    iconCls: 'toolbar__icon btn-day',
+                    iconCls: 'toolbar__icon btn-theme',
                     lock: [_set.lostConnect, _set.disableOnStart],
                     caption: this.textInterfaceTheme,
                     menu: true,
@@ -195,10 +202,9 @@ define([
 
                 this.btnDarkDocument = new Common.UI.Button({
                     cls: 'btn-toolbar x-huge icon-top',
-                    iconCls: 'toolbar__icon btn-dark-mode',
+                    iconCls: `toolbar__icon ${Common.UI.Themes.isContentThemeDark() ? 'btn-night' : 'btn-day'}`,
                     lock: [_set.inLightTheme, _set.lostConnect, _set.disableOnStart],
                     caption: this.textDarkDocument,
-                    enableToggle: true,
                     dataHint: '1',
                     dataHintDirection: 'bottom',
                     dataHintOffset: 'small'
@@ -242,6 +248,24 @@ define([
                     dataHintOffset: 'small'
                 });
                 this.lockedControls.push(this.chRightMenu);
+
+                if (
+                    this.appConfig.canPDFEdit &&
+                    !(this.appConfig.customization && this.appConfig.customization.macros===false) &&
+                    !(Common.Controllers.Desktop && Common.Controllers.Desktop.isWinXp())
+                ) {
+                    this.btnMacros = new Common.UI.Button({
+                        cls: 'btn-toolbar x-huge icon-top',
+                        iconCls: 'toolbar__icon btn-macros',
+                        lock: [_set.lostConnect, _set.disableOnStart],
+                        caption: this.textMacros,
+                        dataHint: '1',
+                        dataHintDirection: 'bottom',
+                        dataHintOffset: 'small'
+                    });
+                    this.lockedControls.push(this.btnMacros);
+                }
+
                 Common.UI.LayoutManager.addControls(this.lockedControls);
                 Common.Utils.lockControls(_set.disableOnStart, true, {array: this.lockedControls});
                 Common.NotificationCenter.on('app:ready', this.onAppReady.bind(this));
@@ -294,6 +318,7 @@ define([
                 this.chToolbar.render($host.find('#slot-chk-toolbar'));
                 this.chLeftMenu.render($host.find('#slot-chk-leftmenu'));
                 this.chRightMenu.render($host.find('#slot-chk-rightmenu'));
+                this.btnMacros && this.btnMacros.render($host.find('#slot-btn-macros'));
 
                 if (this.toolbar && this.toolbar.$el) {
                     this.btnsFitToPage = Common.Utils.injectButtons(this.toolbar.$el.find('.slot-btn-ftp'), 'tlbtn-btn-ftp-', 'toolbar__icon btn-ic-zoomtopage', this.textFitToPage,
@@ -331,6 +356,8 @@ define([
                 value = Common.UI.LayoutManager.getInitValue('rightMenu');
                 value = (value!==undefined) ? !value : false;
                 me.chRightMenu.setValue(!Common.localStorage.getBool("pdfe-hidden-rightmenu", value));
+
+                this.btnMacros && this.btnMacros.updateHint(this.tipMacros);
             },
 
             show: function () {
@@ -383,7 +410,9 @@ define([
             textRightMenu: 'Right panel',
             textTabStyle: 'Tab style',
             textFill: 'Fill',
-            textLine: 'Line'
+            textLine: 'Line',
+            textMacros: 'Macros',
+            tipMacros: 'Macros'
         }
     }()), PDFE.Views.ViewTab || {}));
 });

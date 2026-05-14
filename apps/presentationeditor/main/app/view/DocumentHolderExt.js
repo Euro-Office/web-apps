@@ -256,6 +256,7 @@ define([], function () {
                 initMenu: function(value) {
                     var selectedLast = me.api.asc_IsLastSlideSelected(),
                         selectedFirst = me.api.asc_IsFirstSlideSelected();
+                    me.slideMenu.options.fromThumbs = value.fromThumbs;
                     me.menuSlidePaste.setVisible(value.fromThumbs!==true);
                     me.mnuNewSlide.setVisible(value.fromThumbs===true); // New Slide
                     me.mnuDuplicateSlide.setVisible(value.isSlideSelect===true); // Duplicate Slide
@@ -1351,25 +1352,33 @@ define([], function () {
                                         caption: me.textNone, 
                                         value: 'noneError',
                                         stopPropagation: true, 
-                                        disabled: false
+                                        disabled: false,
+                                        toggleGroup: 'errorBars',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.textStandardError,
                                         value: 'standardError',
                                         stopPropagation: true, 
-                                        disabled: false
+                                        disabled: false,
+                                        toggleGroup: 'errorBars',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.txtPercentage,
                                         value: 'percentage',
                                         stopPropagation: true, 
-                                        disabled: false
+                                        disabled: false,
+                                        toggleGroup: 'errorBars',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.textStandardDeviation,
                                         value: 'standardDeviation',
                                         stopPropagation: true, 
-                                        disabled: false
+                                        disabled: false,
+                                        toggleGroup: 'errorBars',
+                                        checkable: true
                                     }
                                 ]
                             })
@@ -1480,27 +1489,37 @@ define([], function () {
                                     {
                                         caption: me.textNone, 
                                         stopPropagation: true, 
-                                        value: 'trendLineNone'
+                                        value: 'trendLineNone',
+                                        toggleGroup: 'trendLines',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.textLinear,
                                         stopPropagation: true, 
-                                        value: 'trendLineLinear'
+                                        value: 'trendLineLinear',
+                                        toggleGroup: 'trendLines',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.textExponential, 
                                         stopPropagation: true, 
-                                        value: 'trendLineExponential'
+                                        value: 'trendLineExponential',
+                                        toggleGroup: 'trendLines',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.textLinearForecast,
                                         stopPropagation: true, 
-                                        value: 'trendLineForecast'
+                                        value: 'trendLineForecast',
+                                        toggleGroup: 'trendLines',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.textMovingAverage, 
                                         stopPropagation: true, 
-                                        value: 'trendLineMovingAverage'
+                                        value: 'trendLineMovingAverage',
+                                        toggleGroup: 'trendLines',
+                                        checkable: true
                                     }
                                 ]
                             })
@@ -1853,8 +1872,8 @@ define([], function () {
                     var isEquation= (value.mathProps && value.mathProps.value);
                     me._currentParaObjDisabled = disabled;
 
-                    me.menuParagraphVAlign.setVisible(isInShape && !isInChart && !isEquation); // после того, как заголовок можно будет растягивать по вертикали, вернуть "|| isInChart" !!
-                    me.menuParagraphDirection.setVisible(isInShape && !isInChart && !isEquation); // после того, как заголовок можно будет растягивать по вертикали, вернуть "|| isInChart" !!
+                    me.menuParagraphVAlign.setVisible(isInShape && !isInChart && !isEquation); // TODO: once the title can be stretched vertically, restore "|| isInChart" !!
+                    me.menuParagraphDirection.setVisible(isInShape && !isInChart && !isEquation); // TODO: once the title can be stretched vertically, restore "|| isInChart" !!
                     if (isInShape || isInChart) {
                         var align = value.shapeProps.value.get_VerticalTextAlign();
                         var halign = value.paraProps.value.get_Jc();
@@ -2193,6 +2212,36 @@ define([], function () {
                 caption: me.textEditObject
             });
 
+            var menuHyperlinkPicSeparator = new Common.UI.MenuItem({
+                caption     : '--'
+            });
+
+            me.menuAddHyperlinkPic = new Common.UI.MenuItem({
+                iconCls: 'menu__icon btn-inserthyperlink',
+                caption     : me.hyperlinkText
+            });
+
+            me.menuEditHyperlinkPic = new Common.UI.MenuItem({
+                caption     : me.editHyperlinkText
+            });
+
+            me.menuRemoveHyperlinkPic = new Common.UI.MenuItem({
+                caption     : me.removeHyperlinkText
+            });
+
+            var menuHyperlinkPic = new Common.UI.MenuItem({
+                iconCls: 'menu__icon btn-inserthyperlink',
+                caption     : me.hyperlinkText,
+                menu        : new Common.UI.Menu({
+                    cls: 'shifted-right',
+                    menuAlign: 'tl-tr',
+                    items   : [
+                        me.menuEditHyperlinkPic,
+                        me.menuRemoveHyperlinkPic
+                    ]
+                })
+            });
+
             me.pictureMenu = new Common.UI.Menu({
                 cls: 'shifted-right',
                 restoreHeightAndTop: true,
@@ -2295,6 +2344,23 @@ define([], function () {
                     me.menuImgCut.setDisabled(disabled || !cancopy);
                     me.menuImgPaste.setDisabled(disabled);
                     menuImgShapeArrange.setDisabled(disabled);
+
+                    var text = null;
+                    if (me.api) {
+                        text = me.api.can_AddHyperlink();
+                    }
+                    me.menuAddHyperlinkPic.setVisible(value.hyperProps===undefined && text!==false);
+                    menuHyperlinkPic.setVisible(value.hyperProps!==undefined);
+                    menuHyperlinkPicSeparator.setVisible(me.menuAddHyperlinkPic.isVisible() || menuHyperlinkPic.isVisible());
+                    me.menuEditHyperlinkPic.hyperProps = value.hyperProps;
+                    me.menuRemoveHyperlinkPic.hyperProps = value.hyperProps;
+                    if (text !== false) {
+                        me.menuAddHyperlinkPic.hyperProps = {};
+                        me.menuAddHyperlinkPic.hyperProps.value = new Asc.CHyperlinkProperty();
+                        me.menuAddHyperlinkPic.hyperProps.value.put_Text(text);
+                    }
+                    me.menuAddHyperlinkPic.setDisabled(disabled);
+                    menuHyperlinkPic.setDisabled(disabled || (value.hyperProps!==undefined && value.hyperProps.isSeveralLinks===true));
                 },
                 items: [
                     me.menuImgCut,
@@ -2310,6 +2376,9 @@ define([], function () {
                     menuImgShapeSeparator,          //Separator
                     me.menuImgSaveAsPicture,
                     menuImgSaveAsPictureSeparator,     //Separator
+                    me.menuAddHyperlinkPic,
+                    menuHyperlinkPic,
+                    menuHyperlinkPicSeparator,
                     me.menuImgCrop,
                     me.menuImgResetCrop,
                     me.menuImgOriginalSize,

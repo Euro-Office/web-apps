@@ -240,6 +240,8 @@ const PluginsController = inject('storeAppOptions')(observer(props => {
 
     const loadPlugins = () => {
         if (refConfigPlugins.current.config) {
+            const api = Common.EditorApi.get();
+
             getPlugins(refConfigPlugins.current.config.pluginsData)
                 .then(function(loaded)
                 {
@@ -247,8 +249,12 @@ const PluginsController = inject('storeAppOptions')(observer(props => {
                     mergePlugins();
                 });
             if (refConfigPlugins.current.config.options) {
-                const api = Common.EditorApi.get();
                 api && api.setPluginsOptions(refConfigPlugins.current.config.options);
+            }
+            if (api.setPluginsDisabled) {
+                const excludeGuids = !!refConfigPlugins.current.config && refConfigPlugins.current.config.disable instanceof Array ? refConfigPlugins.current.config.disable : [];
+                if (excludeGuids.length)
+                    api.setPluginsDisabled(excludeGuids);
             }
         } else {
             refConfigPlugins.current.plugins = false;

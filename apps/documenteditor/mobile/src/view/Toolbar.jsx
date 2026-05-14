@@ -33,6 +33,7 @@ const ToolbarView = props => {
     const isMobileView = props.isMobileView;
     const docTitle = props.docTitle;
     const isOpenModal = props.isOpenModal;
+    const disableForceDesktop = props.disableForceDesktop;
 
     return (
         <Fragment>
@@ -86,7 +87,7 @@ const ToolbarView = props => {
                     })
                 }
                 {!isEditableForms ? [
-                    !Device.phone && <Link key='desktop-link' iconOnly href={false}
+                    !Device.phone && !disableForceDesktop &&<Link key='desktop-link' iconOnly href={false}
                                            className={isOpenModal || props.disabledControls ? 'disabled' : ''}
                                            onClick={() => props.forceDesktopMode()}>
                                         <SvgIcon symbolId={IconSwitchToDesktop.id}
@@ -113,7 +114,8 @@ const ToolbarView = props => {
                     (props.isEdit && isAvailableExt && !isViewer && !props.isDrawMode && EditorUIController.getToolbarOptions &&
                         <Fragment key='editing-buttons'>
                             {EditorUIController.getToolbarOptions({
-                            disabled: disableEditBtn || props.disabledControls || isOpenModal,
+                            disabledEdit: disableEditBtn || props.disabledControls || isOpenModal,
+                            disabledAdd: disableEditBtn || props.disabledControls || isOpenModal,
                                 onEditClick: e => props.openOptions('edit'),
                                 onAddClick: e => props.openOptions('add')
                             })}
@@ -134,13 +136,13 @@ const ToolbarView = props => {
                             <SvgIcon slot="media" symbolId={IconVersionHistory.id} className={'icon icon-svg'} />
                         </Link>  
                     : null),
-                    <Link iconOnly key='btn-settings' className={(props.disabledSettings || props.disabledControls || isDisconnected || isOpenModal) && 'disabled'} id='btn-settings' href={false} onClick={() => props.openOptions('settings')}>        
+                    <Link iconOnly key='btn-settings' className={(props.disabledSettings || props.disabledControls || isDisconnected || isOpenModal) ? 'disabled' : (props.isSaveBadgeShown ? ' notify' : '')} id='btn-settings' href={false} onClick={() => props.openOptions('settings')}>
                         {Device.ios ? 
                            <SvgIcon symbolId={IconSettingsIos.id} className={'icon icon-svg'} /> :
                            <SvgIcon symbolId={IconSettingsAndroid.id} className={'icon icon-svg'} />
                         }</Link>
                 ] : [
-                    !Device.phone && <Link key='desktop-link' iconOnly href={false} className={isOpenModal || props.disabledControls ? 'disabled' : ''} onClick={() => props.forceDesktopMode()}>
+                    !Device.phone && !disableForceDesktop && <Link key='desktop-link' iconOnly href={false} className={isOpenModal || props.disabledControls ? 'disabled' : ''} onClick={() => props.forceDesktopMode()}>
                         <SvgIcon symbolId={IconSwitchToDesktop.id} className={'icon icon-svg'} />
                     </Link>,
                     <Link iconOnly key='prev-field-link' className={(props.disabledSettings || props.disabledControls || isDisconnected || isOpenModal) && 'disabled'} id='btn-prev-field' href={false} onClick={() => props.movePrevField()}><SvgIcon symbolId={IconPrevField.id} className={'icon icon-svg'} /></Link>,

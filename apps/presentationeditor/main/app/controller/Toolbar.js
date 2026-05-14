@@ -103,7 +103,8 @@ define([
                 isLockedSlideHeaderAppyToAll: false,
                 customPluginItems: undefined,
                 activeTab: 'home',
-                viewMode: 'normal'
+                viewMode: 'normal',
+                showChartTab: false,
             };
             this._isAddingShape = false;
             this.slideSizeArr = [
@@ -140,6 +141,7 @@ define([
                     'add:chart'         : this.onSelectChart,
                     'insert:smartart'   : this.onInsertSmartArt,
                     'smartart:mouseenter': this.mouseenterSmartArt,
+                    'tab:click'          : this.onClickTab,
                     'smartart:mouseleave': this.mouseleaveSmartArt,
                     'tab:active'         : this.onActiveTab.bind(this),
                     'tab:active:before'  : this.onBeforeActiveTab.bind(this),
@@ -201,7 +203,10 @@ define([
                 'ViewTab': {
                     'toolbar:setcompact': this.onChangeCompactView.bind(this),
                     'viewmode:change': this.onChangeViewMode.bind(this)
-                }
+                },
+                'Common.Views.ChartTab': {
+                    'add:chart': this.onSelectChart.bind(this)
+                },
             });
             Common.NotificationCenter.on('toolbar:collapse', _.bind(function () {
                 this.toolbar.collapse();
@@ -302,7 +307,9 @@ define([
                 'masterTab' : {name: 'pe-help-tip-master-tab', placement: 'bottom-right', offset: {x: Common.UI.isRTL() ? -10 : 10, y: 0}, text: this.helpMasterTab, header: this.helpMasterTabHeader, target: 'li.ribtab #slideMaster',
                                 automove: true, maxwidth: 300, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
                 'chartElements' : {name: 'help-tip-chart-elements', placement: 'bottom', text: this.helpChartElements, header: this.helpChartElementsHeader, target: '#id-document-holder-btn-chart-element', maxwidth: 300,
-                    automove: true, noHighlight: true, noArrow: true, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}}
+                    automove: true, noHighlight: true, noArrow: true, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
+                'gifPlayback' : {name:'pe-help-tip-gif-payback', placement: 'bottom', text: this.helpGifPlayback, header: this.helpGifPlaybackHeader, target: '#toolbar', maxwidth: 300,
+                    automove: true, noArrow: true, noHighlight: true, closable: false, isNewFeature: true}
             });
             Common.UI.TooltipManager.addTips({
                 'refreshFile' : {text: _main.textUpdateVersion, header: _main.textUpdating, target: '#toolbar', maxwidth: 'none', showButton: false, automove: true, noHighlight: true, noArrow: true, multiple: true},
@@ -333,6 +340,19 @@ define([
             toolbar.btnRedo.on('disabled',                              _.bind(this.onBtnChangeState, this, 'redo:disabled'));
             toolbar.btnCopy.on('click',                                 _.bind(this.onCopyPaste, this, 'copy'));
             toolbar.btnPaste.on('click',                                _.bind(this.onCopyPaste, this, 'paste'));
+            $('#slot-btn-paste').on('click', '.dropdown-toggle', _.bind(function(e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                var menu = this.toolbar.btnPaste.menu;
+
+                if (menu && menu.isVisible && menu.isVisible()) {
+                    menu.hide();
+                    return;
+                }
+
+                this.toolbar.fireEvent('paste:options', [toolbar.btnPaste, this.api]);
+            }, this));
             toolbar.btnCut.on('click',                                  _.bind(this.onCopyPaste, this, 'cut'));
             toolbar.btnSelectAll.on('click',                            _.bind(this.onSelectAll, this));
             toolbar.btnReplace.on('click',                              _.bind(this.onReplace, this));
@@ -900,7 +920,15 @@ define([
             }
 
             if (in_chart !== this._state.in_chart) {
-                this.toolbar.btnInsertChart.updateHint(in_chart ? this.toolbar.tipChangeChart : this.toolbar.tipInsertChart);
+                this.toolbar.btnInsertChart.updateHint(
+                    in_chart ? this.toolbar.tipChangeChart : this.toolbar.tipInsertChart
+                );
+
+                if (!in_chart && this.toolbar.isTabActive('charttab'))
+                    this.toolbar.setTab('home');
+                this.toolbar.setVisible('charttab', !!in_chart);
+                if (in_chart && this._state.showChartTab)
+                    this.toolbar.setTab('charttab');
                 this._state.in_chart = in_chart;
             }
 
@@ -2105,7 +2133,9 @@ define([
 
         onSlideSize: function(menu, item) {
             if (item.value !== 'advanced') {
-                var newwidth = (this.currentPageSize.height / this.slideSizeArr[item.value].ratio);
+                var newwidth = this.currentPageSize.width >= this.currentPageSize.height ?
+                    (this.currentPageSize.height / this.slideSizeArr[item.value].ratio) :
+                    (this.currentPageSize.height * this.slideSizeArr[item.value].ratio);
                 this.currentPageSize = {
                     type    : this.slideSizeArr[item.value].type,
                     width   : newwidth,
@@ -2126,7 +2156,9 @@ define([
                     if (result == 'ok') {
                         props = dlg.getSettings();
                         me.currentPageSize = { type: props[0], width: props[1], height: props[2], firstNum: props[3] };
-                        var ratio = me.currentPageSize.height/me.currentPageSize.width,
+                        var ratio = me.currentPageSize.width >= me.currentPageSize.height ?
+                                        me.currentPageSize.height/me.currentPageSize.width :
+                                        me.currentPageSize.width/me.currentPageSize.height,
                             idx = -1;
                         for (var i = 0; i < me.slideSizeArr.length; i++) {
                             if (Math.abs(me.slideSizeArr[i].ratio - ratio) < 0.001 ) {
@@ -2177,6 +2209,7 @@ define([
                     chart.changeType(type);
                 Common.NotificationCenter.trigger('edit:complete', this.toolbar);
             } else {
+                me._state.showChartTab = true;
                 me.api.asc_addChartDrawingObject(type, undefined, true);
                 me.toolbar.fireEvent('insertchart', me.toolbar);
             }
@@ -2785,6 +2818,18 @@ define([
                     Array.prototype.push.apply(me.toolbar.slideOnlyControls, me.btnsDrawTab);
                 }
 
+                tab = {caption: me.toolbar.textTabChart, action: 'charttab', extcls: config.isEdit ? 'canedit' : '', layoutname: 'toolbar-charttab', dataHintTitle: 'B', aux: true};
+                var charttab = me.getApplication().getController('Common.Controllers.ChartTab');
+                charttab.setApi(me.api).setConfig({toolbar: me});
+                var view = charttab.getView('Common.Views.ChartTab');
+                var chartbuttons = view.getButtons();
+                var $panel = charttab.createToolbarPanel();
+                if ($panel) {
+                    me.toolbar.addTab(tab, $panel);
+                    me._state.inchart && me.toolbar.setVisible('charttab', true);
+                    Array.prototype.push.apply(me.toolbar.lockControls, chartbuttons);
+                }
+
                 var transitController = me.getApplication().getController('Transitions');
                 transitController.setApi(me.api).setConfig({toolbar: me,mode:config}).createToolbarPanel();
                 Array.prototype.push.apply(me.toolbar.lockControls,transitController.getView().getButtons());
@@ -3035,6 +3080,8 @@ define([
                 me.onPluginToolbarCustomMenuItems(plugin.action, plugin.data);
             });
             this._state.customPluginData = null;
+
+            Common.UI.TooltipManager.showTip('gifPlayback');
         },
 
         onChangeViewMode: function (mode) { // master or normal
@@ -3062,6 +3109,10 @@ define([
 
         onActiveTab: function(tab) {
             (tab !== 'slideMaster') && Common.UI.TooltipManager.closeTip('masterTab');
+        },
+
+        onClickTab: function(tab) {
+            this._state.showChartTab = tab ==='charttab';
         },
 
         onBeforeActiveTab: function(tab) {

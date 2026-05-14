@@ -247,11 +247,6 @@ class MainController extends Component {
                     }
                 }
 
-
-                if(/^(pdf|docxf|oform|djvu|xps|oxps)$/.test(data.doc.fileType)) {
-                    this.changeEditorBrandColorForPdf();
-                }
-
                 if(data.doc.fileType === 'pdf') {
                     if(this.permissions.fillForms === undefined) {
                         this.permissions.fillForms = this.permissions.edit !== false;
@@ -386,6 +381,8 @@ class MainController extends Component {
                 this.api.asc_setSpellCheck(value);
 
                 this.updateWindowTitle(true);
+
+                appOptions.changeAutosave(LocalStorage.itemExists('de-mobile-autosave') ? LocalStorage.getBool("de-mobile-autosave") : true);
 
                 value = LocalStorage.getBool("de-mobile-no-characters");
                 appSettings.changeNoCharacters(value);
@@ -627,15 +624,6 @@ class MainController extends Component {
         }
     }
 
-    changeEditorBrandColorForPdf() {
-        const bodyElement = document.body;
-        bodyElement.classList.add('pdf-view');
-
-        if(Device.android) {
-            bodyElement.classList.add('pdf-view__android');
-        }
-    }
-
     applyMode (appOptions) {
         this.api.asc_enableKeyEvents(appOptions.isEdit);
         this.api.asc_setViewMode(!appOptions.isEdit && !appOptions.isRestrictedEdit);
@@ -652,6 +640,7 @@ class MainController extends Component {
 
         this.api.asc_registerCallback('asc_onDocumentModifiedChanged', this.onDocumentModifiedChanged.bind(this));
         this.api.asc_registerCallback('asc_onDocumentCanSaveChanged',  this.onDocumentCanSaveChanged.bind(this));
+        this.api.asc_registerCallback('asc_onCollaborativeChanges',  this.onCollaborativeChanges.bind(this));
 
         Common.Notifications.trigger('preloader:close');
         Common.Notifications.trigger('preloader:endAction', Asc.c_oAscAsyncActionType['BlockInteraction'], this.ApplyEditRights);
@@ -675,7 +664,14 @@ class MainController extends Component {
     }
 
     onDocumentCanSaveChanged (isCanSave) {
-        //
+        const storeAppOptions = this.props.storeAppOptions;
+        storeAppOptions.changeIsSaveBadgeShown(isCanSave ? !storeAppOptions.isAutosave : false);
+    }
+
+    onCollaborativeChanges () {
+        const storeAppOptions = this.props.storeAppOptions;
+        if (!storeAppOptions.isSaveBadgeShown) storeAppOptions.changeIsSaveBadgeShown(true);
+        storeAppOptions.changeSavingDocStatusText('');
     }
 
     onBeforeUnload () {
@@ -1051,6 +1047,7 @@ class MainController extends Component {
         });
 
         Common.Notifications.on('markfavorite', this.markFavorite.bind(this));
+        Common.Notifications.on('update:windowtitle', force => this.updateWindowTitle(force));
     }
 
     insertImageFromStorage(data) {
@@ -1462,6 +1459,9 @@ class MainController extends Component {
             if (window.document.title != title) {
                 window.document.title = title;
             }
+
+            if (isModified)
+                this.props.storeAppOptions.changeSavingDocStatusText('');
 
             this._isDocReady && (this._state.isDocModified !== isModified) && Common.Gateway.setDocumentModified(isModified);
             this._state.isDocModified = isModified;

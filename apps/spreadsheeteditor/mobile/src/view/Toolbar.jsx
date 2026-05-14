@@ -74,7 +74,8 @@ const ToolbarView = props => {
                     </Link>
                 }
                 {(!props.isDrawMode && props.isEdit && EditorUIController.toolbarOptions && !isVersionHistoryMode) && EditorUIController.toolbarOptions.getEditOptions({
-                    disabled: props.disabledEditControls || props.disabledControls || isDisconnected || isOpenModal,
+                    disabledEdit: props.disabledEditControls || props.disabledControls || isDisconnected || isOpenModal,
+                    disabledAdd: props.disabledEditControls || props.disabledControls || isDisconnected || isOpenModal,
                     wsProps,
                     focusOn,
                     isShapeLocked,
@@ -84,7 +85,7 @@ const ToolbarView = props => {
                 {Device.phone ? null : <Link iconOnly className={(props.disabledControls || props.disabledSearch || isOpenModal) && 'disabled'} searchbarEnable='.searchbar' href={false}><SvgIcon symbolId={IconSearch.id} className={'icon icon-svg'} /></Link>}
                 {!props.isDrawMode && props.displayCollaboration && window.matchMedia("(min-width: 360px)").matches && !isVersionHistoryMode ? <Link iconOnly className={(props.disabledControls || props.disabledCollaboration || isOpenModal) && 'disabled'} id='btn-coauth' href={false} onClick={() => props.openOptions('coauth')}><SvgIcon symbolId={IconCollaboration.id} className={'icon icon-svg'} /></Link> : null}
                 {isVersionHistoryMode ? <Link  iconOnly id='btn-open-history' href={false} className={isOpenModal && 'disabled'} onClick={() => props.openOptions('history')}><SvgIcon symbolId={IconHistory.id} className={'icon icon-svg'} /></Link> : null}
-                <Link iconOnly className={(props.disabledSettings || props.disabledControls || isDisconnected || isOpenModal) && 'disabled'} id='btn-settings' href={false} onClick={() => props.openOptions('settings')}> {Device.ios ? 
+                <Link iconOnly className={(props.disabledSettings || props.disabledControls || isDisconnected || isOpenModal) ? 'disabled' : (props.isSaveBadgeShown ? ' notify' : '')} id='btn-settings' href={false} onClick={() => props.openOptions('settings')}> {Device.ios ? 
                     <SvgIcon symbolId={IconSettingsIos.id} className={'icon icon-svg'} /> :
                     <SvgIcon symbolId={IconSettingsAndroid.id} className={'icon icon-svg'} />
                 }</Link>

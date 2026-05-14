@@ -143,6 +143,7 @@ require([
             'Search',
             'Print',
             'Common.Controllers.Fonts',
+            'Common.Controllers.ChartTab',
             'Common.Controllers.History'
             /** coauthoring begin **/
             , 'Common.Controllers.Chat'
@@ -156,6 +157,7 @@ require([
             ,'Common.Controllers.ReviewChanges'
             ,'Common.Controllers.Protection'
             ,'Common.Controllers.Shortcuts'
+            ,'Common.Controllers.PasteOptions'
             ,'Transitions'
             ,'Animation'
         ]
@@ -190,6 +192,7 @@ require([
             // 'presentationeditor/main/app/view/SignatureSettings',
             'common/main/lib/util/utils',
             'common/main/lib/controller/Fonts',
+            'common/main/lib/controller/ChartTab',
             'common/main/lib/controller/History'
             /** coauthoring begin **/
             ,'common/main/lib/controller/Comments',
@@ -197,13 +200,14 @@ require([
             /** coauthoring end **/
             'common/main/lib/controller/ExternalLinks',
             'common/main/lib/controller/Plugins',
-            'presentationeditor/main/app/view/ChartSettings',
+            // 'presentationeditor/main/app/view/ChartSettings',
             'common/main/lib/controller/ExternalDiagramEditor'
             ,'common/main/lib/controller/ExternalOleEditor'
             ,'common/main/lib/controller/ReviewChanges'
             ,'common/main/lib/controller/Protection'
             ,'common/main/lib/controller/Shortcuts'
             ,'common/main/lib/controller/Draw'
+            ,'common/main/lib/controller/PasteOptions'
             ,'presentationeditor/main/app/controller/Transitions'
             ,'presentationeditor/main/app/controller/Animation'
         ], function() {

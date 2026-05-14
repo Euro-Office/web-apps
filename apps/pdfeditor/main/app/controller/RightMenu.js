@@ -88,9 +88,10 @@ define([
             this._settings[Common.Utils.documentSettingsType.Image] =     {panelId: "id-image-settings",      panel: rightMenu.imageSettings,    btn: rightMenu.btnImage,       hidden: 1, locked: false};
             this._settings[Common.Utils.documentSettingsType.Shape] =     {panelId: "id-shape-settings",      panel: rightMenu.shapeSettings,    btn: rightMenu.btnShape,       hidden: 1, locked: false};
             this._settings[Common.Utils.documentSettingsType.TextArt] =   {panelId: "id-textart-settings",    panel: rightMenu.textartSettings,  btn: rightMenu.btnTextArt,     hidden: 1, locked: false};
-            this._settings[Common.Utils.documentSettingsType.Chart] = {panelId: "id-chart-settings",          panel: rightMenu.chartSettings,    btn: rightMenu.btnChart,       hidden: 1, locked: false};
+            // this._settings[Common.Utils.documentSettingsType.Chart] = {panelId: "id-chart-settings",          panel: rightMenu.chartSettings,    btn: rightMenu.btnChart,       hidden: 1, locked: false};
             // this._settings[Common.Utils.documentSettingsType.Signature] = {panelId: "id-signature-settings",  panel: rightMenu.signatureSettings, btn: rightMenu.btnSignature,  hidden: 1, props: {}, locked: false};
             this._settings[Common.Utils.documentSettingsType.Form] = {panelId: "id-form-settings",  panel: rightMenu.formSettings, btn: rightMenu.btnForm,  hidden: 1, props: {}, locked: false};
+            this._settings[Common.Utils.documentSettingsType.Annotation] = {panelId: "id-annotation-settings",  panel: rightMenu.annotationSettings, btn: rightMenu.btnAnnotation,  hidden: 1, props: {}, locked: false};
         },
 
         setApi: function(api) {
@@ -130,7 +131,7 @@ define([
         },
 
         onFocusObject: function(SelectedObjects, forceSignature, forceOpen) {
-            if (!(this.editMode && this.mode.isPDFEdit) && !forceSignature)
+            if (!this.editMode && !forceSignature)
                 return;
 
             var open = this._initSettings ? !Common.localStorage.getBool("pdfe-hide-right-settings", this.rightmenu.defaultHideRightMenu) : !!forceOpen;
@@ -222,15 +223,17 @@ define([
                 else if (lastactive>=0) active = lastactive;
                 // else if (forceSignature && !this._settings[Common.Utils.documentSettingsType.Signature].hidden) active = Common.Utils.documentSettingsType.Signature;
 
-                if (active !== undefined) {
-                    this.rightmenu.SetActivePane(active, open);
-                    if (active!=Common.Utils.documentSettingsType.Signature)
-                        this._settings[active].panel.ChangeSettings.call(this._settings[active].panel, this._settings[active].props);
-                    // else
-                    //     this._settings[active].panel.ChangeSettings.call(this._settings[active].panel);
-                    (active !== currentactive) && this.rightmenu.updateScroller();
-                } else
-                    this.rightmenu.clearSelection();
+                if(!this.rightmenu.isPluginButtonPressed()) {
+                    if (active !== undefined) {
+                        this.rightmenu.SetActivePane(active, open);
+                        if (active!=Common.Utils.documentSettingsType.Signature)
+                            this._settings[active].panel.ChangeSettings.call(this._settings[active].panel, this._settings[active].props);
+                        // else
+                        //     this._settings[active].panel.ChangeSettings.call(this._settings[active].panel);
+                        (active !== currentactive) && this.rightmenu.updateScroller();
+                    } else
+                        this.rightmenu.clearSelection();
+                }
             }
 
             this._settings[Common.Utils.documentSettingsType.Image].needShow = false;
@@ -252,7 +255,8 @@ define([
                 this.rightmenu.tableSettings.disableControls(disabled);
                 this.rightmenu.imageSettings.disableControls(disabled);
                 this.rightmenu.formSettings && this.rightmenu.formSettings.disableControls(disabled);
-                this.rightmenu.chartSettings.disableControls(disabled);
+                // this.rightmenu.chartSettings.disableControls(disabled);
+                this.rightmenu.annotationSettings.disableControls(disabled);
 
                 // if (this.rightmenu.signatureSettings) {
                 //     !allowSignature && this.rightmenu.btnSignature.setDisabled(disabled);
@@ -266,7 +270,8 @@ define([
                     this.rightmenu.btnShape.setDisabled(disabled);
                     this.rightmenu.btnTextArt.setDisabled(disabled);
                     this.rightmenu.btnForm && this.rightmenu.btnForm.setDisabled(disabled);
-                    this.rightmenu.btnChart.setDisabled(disabled);
+                    // this.rightmenu.btnChart.setDisabled(disabled);
+                    this.rightmenu.btnAnnotation.setDisabled(disabled);
                     this.rightmenu.setDisabledAllMoreMenuItems(disabled);
                 } else {
                     var selectedElements = this.api.getSelectedElements();
@@ -293,13 +298,13 @@ define([
             this._priorityArr.unshift(Common.Utils.documentSettingsType.Image);
         },
 
-        onInsertChart:  function() {
-            // this._settings[Common.Utils.documentSettingsType.Chart].needShow = true;
-            var idx = this._priorityArr.indexOf(Common.Utils.documentSettingsType.Chart);
-            if (idx>=0)
-                this._priorityArr.splice(idx, 1);
-            this._priorityArr.unshift(Common.Utils.documentSettingsType.Chart);
-        },
+        // onInsertChart:  function() {
+        //     // this._settings[Common.Utils.documentSettingsType.Chart].needShow = true;
+        //     var idx = this._priorityArr.indexOf(Common.Utils.documentSettingsType.Chart);
+        //     if (idx>=0)
+        //         this._priorityArr.splice(idx, 1);
+        //     this._priorityArr.unshift(Common.Utils.documentSettingsType.Chart);
+        // },
 
         onInsertShape:  function() {
             // this._settings[Common.Utils.documentSettingsType.Shape].needShow = true;
@@ -332,7 +337,7 @@ define([
 
         updateMetricUnit: function() {
             this.rightmenu.paragraphSettings.updateMetricUnit();
-            this.rightmenu.chartSettings.updateMetricUnit();
+            // this.rightmenu.chartSettings.updateMetricUnit();
             this.rightmenu.imageSettings.updateMetricUnit();
             this.rightmenu.tableSettings.updateMetricUnit();
         },
@@ -386,10 +391,12 @@ define([
                     return Common.Utils.documentSettingsType.Image;
                 case Asc.c_oAscTypeSelectElement.Shape:
                     return Common.Utils.documentSettingsType.Shape;
-                case Asc.c_oAscTypeSelectElement.Chart:
-                    return Common.Utils.documentSettingsType.Chart;
+                // case Asc.c_oAscTypeSelectElement.Chart:
+                //     return Common.Utils.documentSettingsType.Chart;
                 case Asc.c_oAscTypeSelectElement.Field:
                     return Common.Utils.documentSettingsType.Form;
+                case Asc.c_oAscTypeSelectElement.Annot:
+                    return Common.Utils.documentSettingsType.Annotation;
             }
         },
 
@@ -407,6 +414,7 @@ define([
                         }
                         this._lastVisibleSettings = type;
                     }
+                    this.rightmenu.toggleActivePluginButton(false);
                     this.rightmenu.clearSelection();
                     this.rightmenu.hide();
                     // this.rightmenu.signatureSettings && this.rightmenu.signatureSettings.hideSignatureTooltip();
@@ -421,6 +429,7 @@ define([
                     Common.localStorage.setBool('pdfe-hidden-rightmenu', !status);
                     Common.Utils.InternalSettings.set("pdfe-hidden-rightmenu", !status);
                 }
+                !view && this.rightmenu.fireEvent('view:hide', [this, !status]);
             }
 
             Common.NotificationCenter.trigger('layout:changed', 'main');
@@ -428,6 +437,10 @@ define([
         },
 
         addNewPlugin: function (button, $button, $panel) {
+            if(this.rightmenu.$el.is(':hidden')) {
+                this.onRightMenuHide(undefined, true, false);
+            }
+
             this.rightmenu.insertButton(button, $button);
             this.rightmenu.insertPanel($panel);
         },

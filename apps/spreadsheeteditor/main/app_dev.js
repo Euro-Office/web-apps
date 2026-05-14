@@ -151,6 +151,7 @@ require([
             ,'Common.Controllers.ReviewChanges'
             ,'Common.Controllers.Protection'
             ,'Common.Controllers.Shortcuts'
+            ,'Common.Controllers.PasteOptions'
         ]
     });
 
@@ -201,6 +202,7 @@ require([
             ,'common/main/lib/controller/Protection'
             ,'common/main/lib/controller/Shortcuts'
             ,'common/main/lib/controller/Draw'
+            ,'common/main/lib/controller/PasteOptions'
         ], function() {
             app.postLaunchScripts = [
                 'common/main/lib/controller/ScreenReaderFocus',
@@ -208,6 +210,7 @@ require([
                 'common/main/lib/component/ComboBoxDataView',
                 'common/main/lib/view/AdvancedSettingsWindow',
                 'common/main/lib/view/OptionsDialog',
+                'common/main/lib/view/Charts3DDlg',
                 'common/main/lib/view/AutoCorrectDialog',
                 'common/main/lib/view/DocumentAccessDialog',
                 'common/main/lib/view/SaveAsDlg',
@@ -282,7 +285,6 @@ require([
                 'spreadsheeteditor/main/app/view/ShapeSettingsAdvanced',
                 'spreadsheeteditor/main/app/view/ProtectDialog',
                 'spreadsheeteditor/main/app/view/ProtectedRangesEditDlg',
-                'spreadsheeteditor/main/app/view/Charts3DDlg',
                 'spreadsheeteditor/main/app/view/CreatePivotDialog',
                 'spreadsheeteditor/main/app/view/SortOptionsDialog',
                 'spreadsheeteditor/main/app/view/SetValueDialog',
@@ -296,7 +298,11 @@ require([
                 'spreadsheeteditor/main/app/view/AutoFilterDialog',
                 'spreadsheeteditor/main/app/view/PivotGroupDialog',
                 'spreadsheeteditor/main/app/view/PivotCalculatedItemsDialog',
-                'spreadsheeteditor/main/app/view/PivotInsertCalculatedItemDialog'
+                'spreadsheeteditor/main/app/view/PivotInsertCalculatedItemDialog',
+                'spreadsheeteditor/main/app/view/SolverDlg',
+                'spreadsheeteditor/main/app/view/ConstraintDialog',
+                'spreadsheeteditor/main/app/view/SolverMethodDialog',
+                'spreadsheeteditor/main/app/view/SolverResultsDlg'
             ];
 
             window.compareVersions = true;

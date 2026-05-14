@@ -334,7 +334,7 @@ const CreateTextStyle = props => {
     return (
         <Page>
             <Navbar title={t('Edit.textCreateTextStyle')} backLink={t('Edit.textBack')}>
-                <Link slot="right" className={`${!titleNewStyle.trim() && 'disabled'}`} onClick={() => {
+                <Link slot="right" className={!titleNewStyle.trim() ? 'done disabled' : 'done'} onClick={() => {
                     let title = titleNewStyle.trim();
                     if(title) {
                         props.onSaveStyle(title, nextParagraphStyle);

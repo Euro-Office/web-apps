@@ -377,25 +377,33 @@ define([], function () {
                                         caption: me.textNone, 
                                         value: 'noneError',
                                         stopPropagation: true, 
-                                        disabled: false
+                                        disabled: false,
+                                        toggleGroup: 'errorBars',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.textStandardError,
                                         value: 'standardError',
                                         stopPropagation: true, 
-                                        disabled: false
+                                        disabled: false,
+                                        toggleGroup: 'errorBars',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.txtPercentage,
                                         value: 'percentage',
                                         stopPropagation: true, 
-                                        disabled: false
+                                        disabled: false,
+                                        toggleGroup: 'errorBars',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.textStandardDeviation,
                                         value: 'standardDeviation',
                                         stopPropagation: true, 
-                                        disabled: false
+                                        disabled: false,
+                                        toggleGroup: 'errorBars',
+                                        checkable: true
                                     }
                                 ]
                             })
@@ -506,27 +514,37 @@ define([], function () {
                                     {
                                         caption: me.textNone, 
                                         stopPropagation: true, 
-                                        value: 'trendLineNone'
+                                        value: 'trendLineNone',
+                                        toggleGroup: 'trendLines',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.textLinear,
                                         stopPropagation: true, 
-                                        value: 'trendLineLinear'
+                                        value: 'trendLineLinear',
+                                        toggleGroup: 'trendLines',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.textExponential, 
                                         stopPropagation: true, 
-                                        value: 'trendLineExponential'
+                                        value: 'trendLineExponential',
+                                        toggleGroup: 'trendLines',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.textLinearForecast,
                                         stopPropagation: true, 
-                                        value: 'trendLineForecast'
+                                        value: 'trendLineForecast',
+                                        toggleGroup: 'trendLines',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.textMovingAverage, 
                                         stopPropagation: true, 
-                                        value: 'trendLineMovingAverage'
+                                        value: 'trendLineMovingAverage',
+                                        toggleGroup: 'trendLines',
+                                        checkable: true
                                     }
                                 ]
                             })
@@ -831,6 +849,48 @@ define([], function () {
                 caption: me.textEditObject
             });
 
+            var menuHyperlinkPicSeparator = new Common.UI.MenuItem({
+                caption     : '--'
+            });
+
+            me.menuAddHyperlinkPic = new Common.UI.MenuItem({
+                iconCls: 'menu__icon btn-inserthyperlink',
+                caption     : me.hyperlinkText
+            });
+
+            me.menuEditHyperlinkPic = new Common.UI.MenuItem({
+                caption     : me.editHyperlinkText
+            });
+
+            me.menuRemoveHyperlinkPic = new Common.UI.MenuItem({
+                caption     : me.removeHyperlinkText
+            });
+
+            var menuHyperlinkPic = new Common.UI.MenuItem({
+                iconCls: 'menu__icon btn-inserthyperlink',
+                caption     : me.hyperlinkText,
+                menu        : new Common.UI.Menu({
+                    cls: 'shifted-right',
+                    menuAlign: 'tl-tr',
+                    items   : [
+                        me.menuEditHyperlinkPic,
+                        me.menuRemoveHyperlinkPic
+                    ]
+                })
+            });
+
+            me.menuImgStretchContentControl = new Common.UI.MenuItem({
+                iconCls: 'menu__icon btn-resize-to-cell',
+                caption: me.textStretchControl,
+                value: 'stretch'
+            });
+
+            me.menuTableStretchContentControl = new Common.UI.MenuItem({
+                iconCls: 'menu__icon btn-resize-to-cell',
+                caption: me.textStretchControl,
+                value: 'stretch'
+            });
+
             this.pictureMenu = new Common.UI.Menu({
                 cls: 'shifted-right',
                 restoreHeightAndTop: true,
@@ -911,6 +971,8 @@ define([], function () {
                         lock_type = (control_props) ? control_props.get_Lock() : Asc.c_oAscSdtLockType.Unlocked,
                         content_locked = lock_type==Asc.c_oAscSdtLockType.SdtContentLocked || lock_type==Asc.c_oAscSdtLockType.ContentLocked,
                         is_form = control_props && control_props.get_FormPr();
+
+                    me.menuImgStretchContentControl.setVisible(is_form && !!value.imgProps.isTable && (!lock_type || lock_type == Asc.c_oAscSdtLockType.Unlocked));
 
                     me.menuImgRemoveControl.setVisible(in_control);
                     me.menuImgControlSettings.setVisible(in_control && me.mode.canEditContentControl && !is_form);
@@ -1011,6 +1073,23 @@ define([], function () {
                     var canEditPoints = me.api && me.api.asc_canEditGeometry();
                     me.menuImgEditPoints.setVisible(canEditPoints);
                     canEditPoints && me.menuImgEditPoints.setDisabled(islocked);
+
+                    var text = null;
+                    if (me.api) {
+                        text = me.api.can_AddHyperlink();
+                    }
+                    me.menuAddHyperlinkPic.setVisible(value.hyperProps===undefined && text!==false);
+                    menuHyperlinkPic.setVisible(value.hyperProps!==undefined);
+                    menuHyperlinkPicSeparator.setVisible(me.menuAddHyperlinkPic.isVisible() || menuHyperlinkPic.isVisible());
+                    me.menuEditHyperlinkPic.hyperProps = value.hyperProps;
+                    me.menuRemoveHyperlinkPic.hyperProps = value.hyperProps;
+                    if (text !== false) {
+                        me.menuAddHyperlinkPic.hyperProps = {};
+                        me.menuAddHyperlinkPic.hyperProps.value = new Asc.CHyperlinkProperty();
+                        me.menuAddHyperlinkPic.hyperProps.value.put_Text(text);
+                    }
+                    me.menuAddHyperlinkPic.setDisabled(islocked);
+                    menuHyperlinkPic.setDisabled(islocked || (value.hyperProps!==undefined && value.hyperProps.isSeveralLinks===true));
                 },
                 items: [
                     me.menuImgCut,
@@ -1039,11 +1118,15 @@ define([], function () {
                     menuInsertCaptionSeparator,
                     me.menuSaveAsPicture,
                     menuSaveAsPictureSeparator,
+                    me.menuAddHyperlinkPic,
+                    menuHyperlinkPic,
+                    menuHyperlinkPicSeparator,
                     me.menuImgCrop,
                     me.menuImgResetCrop,
                     me.menuOriginalSize,
                     me.menuImgReplace,
                     me.menuChartEdit,
+                    me.menuImgStretchContentControl,
                     me.menuImgEditPoints,
                     me.menuImageAdvanced
                 ]
@@ -1755,6 +1838,8 @@ define([], function () {
                             lock_type = (control_props) ? control_props.get_Lock() : Asc.c_oAscSdtLockType.Unlocked,
                             is_form = control_props && control_props.get_FormPr();
                         me.menuTableRemoveForm.setVisible(is_form);
+                        me.menuTableStretchContentControl.setVisible(is_form && !control_lock);
+
                         menuTableControl.setVisible(!is_form);
                         if (is_form) {
                             me.menuTableRemoveForm.setDisabled(lock_type==Asc.c_oAscSdtLockType.SdtContentLocked || lock_type==Asc.c_oAscSdtLockType.SdtLocked);
@@ -1769,6 +1854,7 @@ define([], function () {
                     } else {
                         menuTableControl.setVisible(in_control);
                         me.menuTableRemoveForm.setVisible(in_control);
+                        me.menuTableStretchContentControl.setVisible(false);
                     }
                     me.menuTableTOC.setVisible(in_toc);
 
@@ -1828,6 +1914,7 @@ define([], function () {
                     menuHyperlinkTable,
                     me.menuTableFollow,
                     menuHyperlinkSeparator,
+                    me.menuTableStretchContentControl,
                     me.menuTableRemoveForm,
                     menuTableControl,
                     me.menuTableTOC,
@@ -2239,8 +2326,8 @@ define([], function () {
                         block_control_lock = (value.paraProps) ? !value.paraProps.value.can_EditBlockContentControl() : false,
                         is_form = control_props && control_props.get_FormPr();
 
-                    me.menuParagraphVAlign.setVisible(isInShape && !isInChart && !isEquation && !(is_form && control_props.get_FormPr().get_Fixed())); // после того, как заголовок можно будет растягивать по вертикали, вернуть "|| isInChart" !!
-                    me.menuParagraphDirection.setVisible(isInShape && !isInChart && !isEquation && !(is_form && control_props.get_FormPr().get_Fixed())); // после того, как заголовок можно будет растягивать по вертикали, вернуть "|| isInChart" !!
+                    me.menuParagraphVAlign.setVisible(isInShape && !isInChart && !isEquation && !(is_form && control_props.get_FormPr().get_Fixed())); // TODO: once the title can be stretched vertically, return "|| isInChart" !!
+                    me.menuParagraphDirection.setVisible(isInShape && !isInChart && !isEquation && !(is_form && control_props.get_FormPr().get_Fixed())); // TODO: once the title can be stretched vertically, return "|| isInChart" !!
                     if ( isInShape || isInChart ) {
                         var align = value.imgProps.value.get_VerticalTextAlign();
                         var halign = value.paraProps.value.get_Jc();

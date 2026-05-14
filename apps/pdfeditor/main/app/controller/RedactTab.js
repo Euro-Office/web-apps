@@ -106,6 +106,7 @@ define([
             });
             this.addListeners({
                 'RedactTab': {
+                    'hiddeninfo:remove' :this.onRemoveHiddenInfo.bind(this),
                     'redact:start'   : this.onStartRedact.bind(this),
                     'redact:apply'   : this.onApplyRedact.bind(this),
                     'redact:page'    : this.onRedactCurrentPage.bind(this),
@@ -115,6 +116,32 @@ define([
                     'tab:active': this.onActiveTab
                 }
             });
+        },
+
+        onRemoveHiddenInfo: function(btn) {
+            var me = this;
+
+            var handlerDlg = function (dlg, result) {
+                if (result === 'ok') {
+                    var props = dlg.getSettings();
+                    if (me.api) {
+                        me.api.RedactMeta(props[0], props[1], props[2], props[3], props[4], props[5], props[6], props[7], props[8], props[9], props[10])
+                    }
+                    if (!Common.localStorage.getBool("pdfe-hide-metadata-info")) {
+                        Common.UI.info({
+                            msg: me.textHiddenInfoWarn,
+                            dontshow: true,
+                            callback: _.bind(function (btn, dontshow) {
+                                if (dontshow) Common.localStorage.setItem("pdfe-hide-metadata-info", 1);
+                            })
+                        })
+                    }
+                }
+            }
+            var win = new PDFE.Views.RemoveMetaDlg({
+                handler: handlerDlg
+            });
+            win.show();
         },
 
         onApplyRedact: function() {

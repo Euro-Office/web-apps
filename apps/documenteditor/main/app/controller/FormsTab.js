@@ -90,6 +90,7 @@ define([
             Common.NotificationCenter.on('forms:close-help', _.bind(this.closeHelpTip, this));
             Common.NotificationCenter.on('forms:show-help', _.bind(this.showHelpTip, this));
             Common.NotificationCenter.on('forms:request-fill', _.bind(this.requestStartFilling, this));
+            Common.NotificationCenter.on('forms:show-send-for-signing', _.bind(this.showSendForSigning, this));
             Common.NotificationCenter.on('document:ready', _.bind(this.onDocumentReady, this));
             return this;
         },
@@ -106,7 +107,7 @@ define([
                 dirLeft = Common.UI.isRTL() ? 'right' : 'left',
                 me = this;
             this._helpTips = {
-                'create': {name: 'de-form-tip-create', placement: 'bottom-' + dirRight, text: this.view.tipCreateField, link: false, target: '#slot-btn-form-field', showButton: true},
+                //'create': {name: 'de-form-tip-create', placement: 'bottom-' + dirRight, text: this.view.tipCreateField, link: false, target: '#slot-btn-form-field', showButton: true},
                 'key': {name: 'de-form-tip-settings-key', placement: dirLeft + '-bottom', text: this.view.tipFormKey, link: {text: this.view.tipFieldsLink, src: 'UsageInstructions\/CreateFillableForms.htm'}, target:  '#form-combo-key', showButton: true},
                 'group-key': {name: 'de-form-tip-settings-group', placement: dirLeft + '-bottom', text: this.view.tipFormGroupKey, link: false, target:  '#form-combo-group-key', showButton: true},
                 'settings': {name: 'de-form-tip-settings', placement: dirLeft + '-top', text: this.view.tipFieldSettings, link: {text: this.view.tipFieldsLink, src: 'UsageInstructions\/CreateFillableForms.htm'}, target:  '#id-right-menu-form', showButton: true},
@@ -161,7 +162,7 @@ define([
 
         getView: function(name) {
             return !name && this.view ?
-                this.view : Backbone.Controller.prototype.getView.call(this, name);
+                this.view : name ? Backbone.Controller.prototype.getView.call(this, name) : undefined;
         },
 
         onCoAuthoringDisconnect: function() {
@@ -545,6 +546,11 @@ define([
                         }, this);
                     }
                     this.submitedTooltip.show();
+
+                    const rightMenuController = DE.getController('RightMenu');
+                    const rightMenuView = rightMenuController && rightMenuController.getView('RightMenu');
+                    const fillingStatusSettings = rightMenuView && rightMenuView.fillingStatusSettings;
+                    fillingStatusSettings && fillingStatusSettings.updateRoles();
                 } else
                     Common.NotificationCenter.trigger('doc:mode-apply', 'view-form', true, true);
             }
@@ -709,19 +715,45 @@ define([
         },
 
         requestStartFilling: function() {
-            var oform = this.api.asc_GetOForm(),
-                roles = oform ? oform.asc_getAllRoles() : [],
-                arr = [];
-            for (var i=0; i<roles.length; i++) {
-                var role = roles[i].asc_getSettings(),
-                    color = role.asc_getColor();
-                color && (color = Common.Utils.ThemeColor.getHexColor(color.get_r(), color.get_g(), color.get_b()));
-                arr.push({
-                    name: role.asc_getName() || this.view.textAnyone,
-                    color: '#' + color
-                });
+            this.tryStartFilling(function() {
+                var oform = this.api.asc_GetOForm(),
+                    roles = oform ? oform.asc_getAllRoles() : [],
+                    arr = [];
+                for (var i=0; i<roles.length; i++) {
+                    var role = roles[i].asc_getSettings(),
+                        color = role.asc_getColor(),
+                        fieldsCount = role.asc_getFieldCount() || 0;
+                    if(fieldsCount > 0) {
+                        color && (color = Common.Utils.ThemeColor.getHexColor(color.get_r(), color.get_g(), color.get_b()));
+                        arr.push({
+                            name: role.asc_getName() || this.view.textAnyone,
+                            color: '#' + color
+                        });
+                    }
+                }
+                Common.Gateway.requestStartFilling(arr);
+            }.bind(this));
+        },
+
+        showSendForSigning: function() {
+            this.tryStartFilling(function() {
+                const rightmenuController = this.getApplication().getController('RightMenu');
+                rightmenuController.openSendForSigning();
+            }.bind(this));
+        },
+
+        tryStartFilling: function(callback) {
+            const oForm = this.api.asc_GetOForm();
+            const roles = oForm ? oForm.asc_getAllRoles() : [];
+            const hasRoleWithFields = _.some(roles, function(role) {
+                role = role.asc_getSettings();
+                return role && role.asc_getFieldCount() > 0;
+            });
+            if(hasRoleWithFields) {
+                callback && callback();
+            } else {
+                this.view.showStartFillingAlert();
             }
-            Common.Gateway.requestStartFilling(arr);
         },
 
         onActiveTab: function(tab) {

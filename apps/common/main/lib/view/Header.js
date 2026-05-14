@@ -402,7 +402,11 @@ define([
             }
 
             me.btnStartFill && me.btnStartFill.on('click', function (e) {
-                Common.NotificationCenter.trigger('forms:request-fill');
+                if(appConfig.canRequestStartFilling) {
+                    Common.NotificationCenter.trigger('forms:request-fill');
+                } else {
+                    Common.NotificationCenter.trigger('forms:show-send-for-signing');
+                }
             });
 
             if (me.btnFillStatus) {
@@ -1011,7 +1015,7 @@ define([
                     } else
                         $html.find('#slot-btn-edit-mode').hide();
 
-                    if (config.canStartFilling) {
+                    if (config.showStartFillingButton) {
                         me.btnStartFill = new Common.UI.Button({
                             cls: 'btn-text-default auto yellow',
                             caption: config.customization && config.customization.startFillingForm && config.customization.startFillingForm.text ? config.customization.startFillingForm.text : me.textStartFill,
@@ -1198,7 +1202,7 @@ define([
                 this.fileExtention = idx>0 ? this.documentCaption.substring(idx) : '';
                 this.isModified && (value += '*');
                 this.readOnly && (value += ' (' + this.textReadOnly + ')');
-                if ( $labelDocName ) {
+                if ( $labelDocName && !this.withoutExt ) {
                     this.setDocTitle( value );
                 }
                 return value;

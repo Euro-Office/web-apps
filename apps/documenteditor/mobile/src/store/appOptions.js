@@ -46,6 +46,15 @@ export class storeAppOptions {
             isFavorite: observable,
             setFavorite: action,
 
+            isAutosave: observable,
+            changeAutosave: action,
+
+            isSaveBadgeShown: observable,
+            changeIsSaveBadgeShown: action,
+
+            savingDocStatusText: observable,
+            changeSavingDocStatusText: action,
+
             customization: observable,
         });
     }
@@ -110,6 +119,21 @@ export class storeAppOptions {
         this.isDocReady = value;
     }
 
+    isAutosave = true;
+    changeAutosave (value) {
+        this.isAutosave = value;
+    }
+
+    isSaveBadgeShown = false;
+    changeIsSaveBadgeShown (value) {
+        this.isSaveBadgeShown = value;
+    }
+
+    savingDocStatusText = '';
+    changeSavingDocStatusText (value) {
+        this.savingDocStatusText = value;
+    }
+
     config = {};
     customization;
 
@@ -143,11 +167,12 @@ export class storeAppOptions {
         this.canAnalytics = false;
         this.canRequestClose = config.canRequestClose;
         this.canCloseEditor = false;
+        this.disableForceDesktop = false;
 
         let canBack = false;
 
         if (typeof config.customization === 'object' && config.customization !== null) {
-            const { goback, close } = config.customization;
+            const { goback, close, mobile } = config.customization;
 
             if (typeof goback === 'object' && config.canBackToFolder !== false) {
                 const hasUrl = !!goback.url;
@@ -163,6 +188,9 @@ export class storeAppOptions {
             if (typeof close === 'object' && close !== null) {
                 this.canCloseEditor = (close.visible!==false) && this.canRequestClose && !this.isDesktopApp;
             }
+
+            if (typeof mobile === 'object' && mobile.disableForceDesktop === true)
+                this.disableForceDesktop = true;
         }
 
         this.canBack = this.canBackToFolder = canBack;

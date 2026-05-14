@@ -139,6 +139,7 @@ require([
             'DocProtection',
             'Print',
             'Common.Controllers.Fonts',
+            'Common.Controllers.ChartTab',
             'Common.Controllers.History'
             /** coauthoring begin **/
             ,'Common.Controllers.Chat'
@@ -153,6 +154,7 @@ require([
             ,'Common.Controllers.ReviewChanges'
             ,'Common.Controllers.Protection'
             ,'Common.Controllers.Shortcuts'
+            ,'Common.Controllers.PasteOptions'
         ]
     });
 
@@ -184,6 +186,7 @@ require([
                 'documenteditor/main/app/controller/Print',
                 'common/main/lib/util/utils',
                 'common/main/lib/controller/Fonts',
+                'common/main/lib/controller/ChartTab',
                 'common/main/lib/controller/History'
                 /** coauthoring begin **/
                 ,'common/main/lib/controller/Comments'
@@ -198,6 +201,7 @@ require([
                 ,'common/main/lib/controller/Protection'
                 ,'common/main/lib/controller/Shortcuts'
                 ,'common/main/lib/controller/Draw'
+                ,'common/main/lib/controller/PasteOptions'
             ], function() {
                 app.postLaunchScripts = [
                     'common/main/lib/controller/ScreenReaderFocus',
@@ -236,6 +240,7 @@ require([
                     'common/main/lib/view/MacrosAiDialog',
                     'common/main/lib/view/ShortcutsDialog',
                     'common/main/lib/view/ShortcutsEditDialog',
+                    'common/main/lib/view/Charts3DDlg',
                     'common/main/lib/component/MonacoEditor',
 
                     'documenteditor/main/app/controller/DocumentHolderExt',

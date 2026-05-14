@@ -392,6 +392,7 @@ define([
 
                 var colorMenu = new Common.UI.Menu({
                     cls: 'menu-marker-colors',
+                    style: 'min-width: 190px;',
                     items: [
                         new Common.UI.MenuItem({
                             caption: me.textHighPoint,

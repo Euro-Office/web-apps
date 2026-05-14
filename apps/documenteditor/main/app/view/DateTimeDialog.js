@@ -168,6 +168,9 @@ define([], function () {
 
             if (this.chUpdate.$el.outerWidth() + this.btnDefault.$el.outerWidth() > this.$window.find('.box').width()) {
                 this.btnDefault.$el.removeClass('float-right');
+                const p = this.btnDefault.$el.parent(),
+                    ph = p.height();
+                p.height(ph*2);
                 this.listFormats.$el.height(139);
             }
             this.$window.find('.dlg-btn').on('click', _.bind(this.onBtnClick, this));

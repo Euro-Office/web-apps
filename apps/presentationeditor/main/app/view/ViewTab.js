@@ -308,7 +308,7 @@ define([
 
                 this.btnInterfaceTheme = new Common.UI.Button({
                     cls: 'btn-toolbar x-huge icon-top',
-                    iconCls: 'toolbar__icon btn-day',
+                    iconCls: 'toolbar__icon btn-theme',
                     caption: this.textInterfaceTheme,
                     lock: [_set.disableOnStart],
                     menu: true,

@@ -8,7 +8,9 @@ export class storePresentationSettings {
             slideSizeIndex: observable,
             allSchemes: observable,
             isLoopSlideshow: observable,
+            slideOrientation: observable,
             changeSizeIndex: action,
+            changeSlideOrientation: action,
             addSchemes: action,
             initSlideSizes: action,
             setLoopSlideshow: action
@@ -18,17 +20,27 @@ export class storePresentationSettings {
     slideSizes = [];
     currentPageSize;
     slideSizeIndex;
+    slideOrientation;
     isLoopSlideshow = false;
 
     changeSizeIndex(width, height) {
         this.currentPageSize = {width, height};
         let ratio = height / width;
+        this.slideSizeIndex = -1;
 
         this.slideSizes.forEach((array, index) => {
-            if(Math.abs(array[1] / array[0] - ratio) < 0.001) {
+            var presetRatio = this.slideOrientation ?
+                array[1] / array[0] :
+                array[0] / array[1];
+
+            if (Math.abs(presetRatio - ratio) < 0.001) {
                 this.slideSizeIndex = index;
             }
         });
+    }
+
+    changeSlideOrientation(width, height) {
+        this.slideOrientation = width >= height ? 1 : 0;
     }
 
     initSlideSizes(value) {

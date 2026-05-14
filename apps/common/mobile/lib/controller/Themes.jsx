@@ -35,6 +35,7 @@ export const ThemesProvider = props => {
         const editorConfig = window.native?.editorConfig;
 
         storeThemes.setConfigSelectTheme(editorConfig?.theme?.select != false);
+        storeThemes.setContentThemeDark(LocalStorage.getItem('content-theme') === 'dark');
         setUITheme(theme ? theme.type : editorConfig?.theme?.type);
 
         applyTheme();
@@ -60,6 +61,10 @@ export const ThemesProvider = props => {
         storeThemes.setSystemColorTheme(theme);
     }
 
+    const getCurrentTheme = () => storeThemes.systemColorTheme || storeThemes.colorTheme || themes.light;
+
+    const isDarkTheme = () => getCurrentTheme().type === 'dark';
+
     const getCurrentThemeColors = colors => {
         let outObject = {};
         const style = getComputedStyle(document.body);
@@ -69,6 +74,22 @@ export const ThemesProvider = props => {
         });
 
         return outObject;
+    }
+
+    const applyContentTheme = () => {
+        const isContentThemeDark = isDarkTheme() && storeThemes.isContentThemeDark;
+        const $body = $$('body');
+        const api = Common.EditorApi ? Common.EditorApi.get() : undefined;
+
+        if (isContentThemeDark) {
+            $body.addClass('content-theme-dark');
+        } else {
+            $body.removeClass('content-theme-dark');
+        }
+
+        if (api && api.asc_setContentDarkMode) {
+            api.asc_setContentDarkMode(isContentThemeDark);
+        }
     }
 
     const changeTheme = key => {
@@ -87,14 +108,19 @@ export const ThemesProvider = props => {
         applyTheme();
     }
 
+    const changeContentTheme = isDark => {
+        storeThemes.setContentThemeDark(isDark);
+        LocalStorage.setItem('content-theme', isDark ? 'dark' : 'light');
+        applyContentTheme();
+    }
+
     const applyTheme = () => {
         const $body = $$('body');
+        const theme = getCurrentTheme();
 
-        let theme = storeThemes.systemColorTheme;
-        if(!theme) theme = storeThemes.colorTheme;
-    
         $body.attr('class') && $body.attr('class', $body.attr('class').replace(/\s?theme-type-(?:dark|light)/, ''));
         $body.addClass(`theme-type-${theme.type}`);
+        applyContentTheme();
 
         const onEngineCreated = api => {
             let obj = getCurrentThemeColors(nameColors);
@@ -102,6 +128,7 @@ export const ThemesProvider = props => {
             obj.name = theme.id;
 
             api.asc_setSkin(obj);
+            applyContentTheme();
         };
 
         const api = Common.EditorApi ? Common.EditorApi.get() : undefined;
@@ -110,7 +137,12 @@ export const ThemesProvider = props => {
     }
 
     return (
-        <ThemesContext.Provider value={{ changeTheme }}>
+        <ThemesContext.Provider value={{
+            changeTheme,
+            changeContentTheme,
+            isDarkTheme: isDarkTheme(),
+            isContentThemeDark: storeThemes.isContentThemeDark
+        }}>
             {props.children}
         </ThemesContext.Provider>
     )

@@ -58,10 +58,23 @@ define([], function () {
         };
 
         dh.setEvents = function() {
+            var me = this;
+
             this.addListeners({
                 'DocumentHolder': {
                     'createdelayedelements': this.createDelayedElements,
                     'equation:callback': this.equationCallback
+                },
+                'Common.Views.ChartTab': {
+                    'charttab:updatemenu': function (menu) {
+                        me.chartProps = me.getCurrentChartProps();
+                        if (me.chartProps) {
+                            this.updateChartElementMenu(menu, me.chartProps)
+                        }
+                    },
+                    'charttab:elementselected': function (menu, item) {
+                        me.onChartElement(menu, item)
+                    }
                 }
             });
 
@@ -101,6 +114,7 @@ define([], function () {
                     Common.NotificationCenter.on('storage:image-insert', _.bind(this.insertImageFromStorage, this));
                     Common.NotificationCenter.on('forms:image-select', _.bind(this.selectFormImage, this));// select from right pane
                 }
+                Common.NotificationCenter.on('charttab:advanced', _.bind(this.onImgAdvanced, this));
                 this.api.asc_registerCallback('onPluginContextMenu',                 _.bind(this.onPluginContextMenu, this));
             }
         };
@@ -237,6 +251,8 @@ define([], function () {
             view.menuTableRemoveForm.on('click', _.bind(me.onControlsSelect, me));
             view.menuTableRemoveControl.on('click', _.bind(me.onControlsSelect, me));
             view.menuTableControlSettings.on('click', _.bind(me.onControlsSelect, me));
+            view.menuImgStretchContentControl.on('click', _.bind(me.onControlsSelect, me));
+            view.menuTableStretchContentControl.on('click', _.bind(me.onControlsSelect, me));
             view.menuParaRemoveControl.on('click', _.bind(me.onControlsSelect, me));
             view.menuParaControlSettings.on('click', _.bind(me.onControlsSelect, me));
             view.menuTableCellAlign.menu.on('item:click', _.bind(me.tableCellsVAlign, me));
@@ -245,10 +261,13 @@ define([], function () {
             view.menuStyleSaveInTable.on('click', _.bind(me.onMenuSaveStyle, me));
             view.menuStyleUpdateInTable.on('click', _.bind(me.onMenuUpdateStyle, me));
             view.menuParagraphAdvanced.on('click', _.bind(me.advancedParagraphClick, me));
+            view.menuEditHyperlinkPic.on('click', _.bind(me.editHyperlink, me));
             view.menuEditHyperlinkTable.on('click', _.bind(me.editHyperlink, me));
             view.menuEditHyperlinkPara.on('click', _.bind(me.editHyperlink, me));
+            view.menuRemoveHyperlinkPic.on('click', _.bind(me.onRemoveHyperlink, me));
             view.menuRemoveHyperlinkTable.on('click', _.bind(me.onRemoveHyperlink, me));
             view.menuRemoveHyperlinkPara.on('click', _.bind(me.onRemoveHyperlink, me));
+            view.menuAddHyperlinkPic.on('click', _.bind(me.addHyperlink, me));
             view.menuAddHyperlinkTable.on('click', _.bind(me.addHyperlink, me));
             view.menuAddHyperlinkPara.on('click', _.bind(me.addHyperlink, me));
             view.menuAddCommentTable.on('click', _.bind(me.addComment, me));
@@ -359,10 +378,10 @@ define([], function () {
 
                     menu_props.imgProps.value = elValue;
                     menu_props.imgProps.locked = (elValue) ? elValue.get_Locked() : false;
+                    menu_props.imgProps.isTable = me.api.asc_IsTable();
 
                     noobject = false;
-                    if ( (shapeprops===undefined || shapeprops===null) && (chartprops===undefined || chartprops===null) )  // not shape and chart
-                        break;
+                    
                 } else if (Asc.c_oAscTypeSelectElement.Table == elType)
                 {
                     menu_to_show = documentHolder.tableMenu;
@@ -1083,8 +1102,12 @@ define([], function () {
                 vertAxes = chartProps.getVertAxesProps && chartProps.getVertAxesProps(),
                 depthAxes = chartProps.getDepthAxesProps && chartProps.getDepthAxesProps(),
                 dataLabelsPos = chartProps.getDataLabelsPos && chartProps.getDataLabelsPos(),
+                errorBarType = chartProps.getErrorBarsValueType && chartProps.getErrorBarsValueType(),
                 title = chartProps.getTitle && chartProps.getTitle(),
                 legendPos = chartProps.getLegendPos && chartProps.getLegendPos(),
+                trendlineType = chartProps.getTrendlineType && chartProps.getTrendlineType(),
+                forecastForward = chartProps.getForecastForward && chartProps.getForecastForward(),
+                forecastBackward = chartProps.getForecastBackward && chartProps.getForecastBackward(),
                 GridMajor = Asc.c_oAscGridLinesSettings.major,
                 GridMinor = Asc.c_oAscGridLinesSettings.minor,
                 GridMajorMinor = Asc.c_oAscGridLinesSettings.majorMinor,
@@ -1100,7 +1123,15 @@ define([], function () {
                 LabelGroup2 = LabelGroup2Types.includes(comboType),
                 LabelGroup3 = LabelGroup3Types.includes(comboType),
                 LabelGroup4 = LabelGroup4Types.includes(comboType),
-                LabelGroup5 = LabelGroup5Types.includes(comboType);
+                LabelGroup5 = LabelGroup5Types.includes(comboType),
+                isMixedState = trendlineType === 1 && (forecastForward === undefined || forecastBackward === undefined),
+                trendlineState = {
+                    type: isMixedState ? undefined : trendlineType,
+                    isForecast: !!(trendlineType === 1 && (
+                        (forecastForward && forecastForward > 0) ||
+                        (forecastBackward && forecastBackward > 0)
+                    ))
+                };
 
             const axesMenu = menu.items[0].menu;
             axesMenu.items[0].setVisible(!RadarChart);
@@ -1165,6 +1196,18 @@ define([], function () {
             // highlightSubmenuItem(tableMenu.items[1], false, 'table');
             // highlightSubmenuItem(tableMenu.items[2], false,'table');
 
+            const errorBarsMenu = menu.items[4].menu;
+            errorBarsMenu.clearAll(true);
+            if (errorBarType === null) {
+                errorBarsMenu.items[0].setChecked(true);
+            } else if (errorBarType === AscFormat.st_errvaltypeSTDERR) {
+                errorBarsMenu.items[1].setChecked(true);
+            } else if (errorBarType === AscFormat.st_errvaltypePERCENTAGE) {
+                errorBarsMenu.items[2].setChecked(true);
+            } else if (errorBarType === AscFormat.st_errvaltypeSTDDEV) {
+                errorBarsMenu.items[3].setChecked(true);
+            }
+
             const gridMenu = menu.items[5].menu;
             gridMenu.items[0].setVisible(true);
             gridMenu.items[2].setVisible(true);
@@ -1190,6 +1233,20 @@ define([], function () {
             legendMenu.items[4].setChecked(legendPos === Asc.c_oAscChartLegendShowSettings.bottom);
             legendMenu.items[5].setChecked(legendPos === Asc.c_oAscChartLegendShowSettings.leftOverlay);
             legendMenu.items[6].setChecked(legendPos === Asc.c_oAscChartLegendShowSettings.rightOverlay);
+
+            const trendlinesMenu = menu.items[7].menu;
+            trendlinesMenu.clearAll(true);
+            if (trendlineState.type === null) {
+                trendlinesMenu.items[0].setChecked(true);
+            } else if (trendlineState.isForecast) {
+                trendlinesMenu.items[3].setChecked(true);
+            } else if (trendlineState.type === AscFormat.TRENDLINE_TYPE_LINEAR) {
+                trendlinesMenu.items[1].setChecked(true);
+            } else if (trendlineState.type === AscFormat.TRENDLINE_TYPE_EXP) {
+                trendlinesMenu.items[2].setChecked(true);
+            } else if (trendlineState.type === AscFormat.TRENDLINE_TYPE_MOVING_AVG) {
+                trendlinesMenu.items[4].setChecked(true);
+            }
 
             const supportedElements = chartElementMap[type] || [];
             menu.items.forEach(function(item) {
@@ -1406,7 +1463,25 @@ define([], function () {
                     }).on('click', _.bind(me.onSpecialPasteItemClick, me));
                     menu.addItem(mnu);
                 });
-                (menu.items.length>0) && menu.items[0].setChecked(true, true);
+                var lastSelected = specialPasteShowOptions.asc_getLastSelectedPasteProperty();
+                (menu.items.length>0) && !lastSelected && menu.items[0].setChecked(true, true);
+
+                if (lastSelected) {
+                    var foundItem = null;
+                    if (me.btnSpecialPaste && me.btnSpecialPaste.menu && me.btnSpecialPaste.menu.items.length > 0) {
+                        for (var i = 0; i < me.btnSpecialPaste.menu.items.length; i++) {
+                            var menuItem = me.btnSpecialPaste.menu.items[i];
+                            if (menuItem.value === lastSelected) {
+                                foundItem = menuItem;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (foundItem) {
+                        foundItem.setChecked(true, true);
+                    }
+                }
             }
 
             var showPoint = [coord.asc_getX() + coord.asc_getWidth() + 3, coord.asc_getY() + coord.asc_getHeight() + 3];
@@ -1474,7 +1549,7 @@ define([], function () {
             }
             str = str.substring(0, str.length-1)
             var keymap = {};
-            keymap[str] = _.bind(function(e) {
+            keymap[str + ' ' + 'special-paste-context'] = _.bind(function(e) {
                 var menu = this.btnSpecialPaste.menu;
                 for (var i = 0; i < menu.items.length; i++) {
                     if (this.hkSpecPaste[menu.items[i].value] === String.fromCharCode(e.keyCode)) {
@@ -1483,12 +1558,14 @@ define([], function () {
                 }
             }, me);
             Common.util.Shortcuts.delegateShortcuts({shortcuts:keymap});
-            Common.util.Shortcuts.suspendEvents(str, undefined, true);
+            Common.util.Shortcuts.suspendEvents(str, 'special-paste-context', true);
 
             me.btnSpecialPaste.menu.on('show:after', function(menu) {
-                Common.util.Shortcuts.resumeEvents(str);
+                window.key.setScope('special-paste-context');
+                Common.util.Shortcuts.resumeEvents(str, 'special-paste-context');
             }).on('hide:after', function(menu) {
-                Common.util.Shortcuts.suspendEvents(str, undefined, true);
+                window.key.setScope('all');
+                Common.util.Shortcuts.suspendEvents(str, 'special-paste-context', true);
             });
         };
 
@@ -1831,32 +1908,40 @@ define([], function () {
                         if (lock == Asc.c_oAscSdtLockType.SdtContentLocked || lock==Asc.c_oAscSdtLockType.ContentLocked)
                             return;
                     }
-                    if (false) {
-                        if (_.isUndefined(me.fontStore)) {
+                    if (me.mode.canSaveToFile) {
+                        if (!me.fontStore) {
                             me.fontStore = new Common.Collections.Fonts();
-                            var fonts = me.getApplication().getController('Toolbar').getView('Toolbar').cmbFontName.store.toJSON();
-                            var arr = [];
-                            _.each(fonts, function(font, index){
-                                if (!font.cloneid) {
-                                    arr.push(_.clone(font));
-                                }
-                            });
-                            me.fontStore.add(arr);
+
+                            const app = me.getApplication(),
+                                cmbFonts = me.getApplication().getController('Toolbar').getView('Toolbar').cmbFontName;
+                            if ( cmbFonts && cmbFonts.store ) {
+                                const fonts = cmbFonts.store.toJSON();
+                                me.fontStore.add(fonts.filter(font => !font.cloneid));
+                            } else {
+                                const fontsController = app.getController('Common.Controllers.Fonts');
+                                fontsController && (me.fontStore = fontsController.store());
+                            }
                         }
-                        (new Common.Views.PdfSignDialog({
-                            props: obj,
+                        var signProps = obj.asc_getSignatureProps(me.api);
+                        var win = (new Common.Views.PdfSignDialog({
+                            props: signProps,
                             api: me.api,
                             disableNetworkFunctionality: me.mode.disableNetworkFunctionality,
                             storage: me.mode.canRequestInsertImage || me.mode.fileChoiceUrl && me.mode.fileChoiceUrl.indexOf("{documentType}")>-1,
                             fontStore: me.fontStore,
                             handler: function(result, value) {
                                 if (result == 'ok') {
-                                    me.api.asc_SetSignatureProps(value);
+                                    me.api.asc_SetSignatureProps(signProps.getResult());
                                 }
                                 Common.NotificationCenter.trigger('edit:complete', me.toolbar);
                             }
-                        })).show();
-                    } else {
+                        })).on('close', function(obj){
+                            setTimeout(function(){
+                                me.api.asc_UncheckContentControlButtons();
+                            }, 100);
+                        });
+                        win.show();
+                    } else { // select picture in viewer only from local file
                         this.api.asc_addImage(obj.pr);
                         setTimeout(function(){
                             me.api.asc_UncheckContentControlButtons();
@@ -2214,6 +2299,10 @@ define([], function () {
                             me.editComplete();
                         }
                     })).show();
+                } else if (item.value == 'stretch') {
+                    if ( me.api.asc_StretchFormToCell ) {
+                        me.api.asc_StretchFormToCell(me.api.asc_GetCurrentContentControl());
+                    }
                 } else if (item.value == 'remove') {
                     props.get_FormPr() ? this.api.asc_RemoveContentControl(props.get_InternalId()) : this.api.asc_RemoveContentControlWrapper(props.get_InternalId());
                 }

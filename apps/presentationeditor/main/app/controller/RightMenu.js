@@ -90,7 +90,7 @@ define([
             this._settings[Common.Utils.documentSettingsType.Slide] =    {panelId: "id-slide-settings",       panel: rightMenu.slideSettings,    btn: rightMenu.btnSlide,       hidden: 1, locked: false};
             this._settings[Common.Utils.documentSettingsType.Shape] =     {panelId: "id-shape-settings",      panel: rightMenu.shapeSettings,    btn: rightMenu.btnShape,       hidden: 1, locked: false};
             this._settings[Common.Utils.documentSettingsType.TextArt] =   {panelId: "id-textart-settings",    panel: rightMenu.textartSettings,  btn: rightMenu.btnTextArt,     hidden: 1, locked: false};
-            this._settings[Common.Utils.documentSettingsType.Chart] = {panelId: "id-chart-settings",          panel: rightMenu.chartSettings,    btn: rightMenu.btnChart,       hidden: 1, locked: false};
+            // this._settings[Common.Utils.documentSettingsType.Chart] = {panelId: "id-chart-settings",          panel: rightMenu.chartSettings,    btn: rightMenu.btnChart,       hidden: 1, locked: false};
             this._settings[Common.Utils.documentSettingsType.Signature] = {panelId: "id-signature-settings",  panel: rightMenu.signatureSettings, btn: rightMenu.btnSignature,  hidden: 1, props: {}, locked: false};
         },
 
@@ -254,7 +254,7 @@ define([
             }
 
             this._settings[Common.Utils.documentSettingsType.Image].needShow = false;
-            this._settings[Common.Utils.documentSettingsType.Chart].needShow = false;
+            // this._settings[Common.Utils.documentSettingsType.Chart].needShow = false;
             this._settings[Common.Utils.documentSettingsType.Shape].needShow = false;
         },
 
@@ -272,7 +272,7 @@ define([
                 this.rightmenu.textartSettings.disableControls(disabled);
                 this.rightmenu.tableSettings.disableControls(disabled);
                 this.rightmenu.imageSettings.disableControls(disabled);
-                this.rightmenu.chartSettings.disableControls(disabled);
+                // this.rightmenu.chartSettings.disableControls(disabled);
 
                 if (this.rightmenu.signatureSettings) {
                     !allowSignature && this.rightmenu.btnSignature.setDisabled(disabled);
@@ -286,7 +286,7 @@ define([
                     this.rightmenu.btnImage.setDisabled(disabled);
                     this.rightmenu.btnShape.setDisabled(disabled);
                     this.rightmenu.btnTextArt.setDisabled(disabled);
-                    this.rightmenu.btnChart.setDisabled(disabled);
+                    // this.rightmenu.btnChart.setDisabled(disabled);
                     this.rightmenu.setDisabledAllMoreMenuItems(disabled);
                 } else {
                     var selectedElements = this.api.getSelectedElements();
@@ -313,13 +313,13 @@ define([
             this._priorityArr.unshift(Common.Utils.documentSettingsType.Image);
         },
 
-        onInsertChart:  function() {
-            // this._settings[Common.Utils.documentSettingsType.Chart].needShow = true;
-            var idx = this._priorityArr.indexOf(Common.Utils.documentSettingsType.Chart);
-            if (idx>=0)
-                this._priorityArr.splice(idx, 1);
-            this._priorityArr.unshift(Common.Utils.documentSettingsType.Chart);
-        },
+        // onInsertChart:  function() {
+        //     // this._settings[Common.Utils.documentSettingsType.Chart].needShow = true;
+        //     var idx = this._priorityArr.indexOf(Common.Utils.documentSettingsType.Chart);
+        //     if (idx>=0)
+        //         this._priorityArr.splice(idx, 1);
+        //     this._priorityArr.unshift(Common.Utils.documentSettingsType.Chart);
+        // },
 
         onInsertShape:  function() {
             // this._settings[Common.Utils.documentSettingsType.Shape].needShow = true;
@@ -346,7 +346,7 @@ define([
 
         updateMetricUnit: function() {
             this.rightmenu.paragraphSettings.updateMetricUnit();
-            this.rightmenu.chartSettings.updateMetricUnit();
+            // this.rightmenu.chartSettings.updateMetricUnit();
             this.rightmenu.imageSettings.updateMetricUnit();
             this.rightmenu.tableSettings.updateMetricUnit();
         },
@@ -413,8 +413,8 @@ define([
                     return Common.Utils.documentSettingsType.Shape;
                 case Asc.c_oAscTypeSelectElement.Slide:
                     return Common.Utils.documentSettingsType.Slide;
-                case Asc.c_oAscTypeSelectElement.Chart:
-                    return Common.Utils.documentSettingsType.Chart;
+                // case Asc.c_oAscTypeSelectElement.Chart:
+                //     return Common.Utils.documentSettingsType.Chart;
             }
         },
 

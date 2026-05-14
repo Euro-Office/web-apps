@@ -98,7 +98,7 @@ define([
             };
 
             this.OriginalFillType = undefined;
-            this.SlideColor = {Value: 1, Color: 'ffffff'};  // value=1 - цвет определен - прозрачный или другой, value=0 - цвет не определен, рисуем прозрачным
+            this.SlideColor = {Value: 1, Color: 'ffffff'};  // value=1 - color is defined (transparent or other), value=0 - color is undefined, draw as transparent
             this.BlipFillType = Asc.c_oAscFillBlipType.STRETCH;
             this.Effect = Asc.c_oAscSlideTransitionTypes.None;
             this.EffectType = undefined;
@@ -107,8 +107,8 @@ define([
             this.GradRadialDirectionIdx = 0;
             this.GradLinearDirectionType = 0;
             this.PatternFillType = 0;
-            this.FGColor = {Value: 1, Color: '000000'};  // value=1 - цвет определен - прозрачный или другой, value=0 - цвет не определен, рисуем прозрачным
-            this.BGColor = {Value: 1, Color: 'ffffff'};  // value=1 - цвет определен - прозрачный или другой, value=0 - цвет не определен, рисуем прозрачным
+            this.FGColor = {Value: 1, Color: '000000'};  // value=1 - color is defined (transparent or other), value=0 - color is undefined, draw as transparent
+            this.BGColor = {Value: 1, Color: 'ffffff'};  // value=1 - color is defined (transparent or other), value=0 - color is undefined, draw as transparent
 
             this.textureNames = [this.txtCanvas, this.txtCarton, this.txtDarkFabric, this.txtGrain, this.txtGranite, this.txtGreyPaper,
                 this.txtKnit, this.txtLeather, this.txtBrownPaper, this.txtPapyrus, this.txtWood];
@@ -1232,7 +1232,7 @@ define([
                     this._state.Transparency=transparency;
                 }
 
-                if (fill===null || fill_type===null || fill_type==Asc.c_oAscFill.FILL_TYPE_NOFILL) { // заливки нет или не совпадает у неск. фигур
+                if (fill===null || fill_type===null || fill_type==Asc.c_oAscFill.FILL_TYPE_NOFILL) { // no fill or fill doesn't match across multiple shapes
                     this.OriginalFillType = null;
                 } else if (fill_type==Asc.c_oAscFill.FILL_TYPE_SOLID) {
                     fill = fill.get_fill();
@@ -1253,7 +1253,7 @@ define([
                     this.GradColor.colors[this.GradColor.colors.length-1] = 'ffffff';
                 }  else if (fill_type==Asc.c_oAscFill.FILL_TYPE_BLIP) {
                     fill = fill.get_fill();
-                    this.BlipFillType = fill.get_type(); // null - не совпадают у нескольких фигур
+                    this.BlipFillType = fill.get_type(); // null - values don't match across multiple shapes
                     if (this._state.BlipFillType !== this.BlipFillType) {
                         if (this.BlipFillType == Asc.c_oAscFillBlipType.STRETCH || this.BlipFillType == Asc.c_oAscFillBlipType.TILE) {
                             this.cmbFillType.setValue(this.BlipFillType);
@@ -1264,7 +1264,7 @@ define([
                     this.OriginalFillType = Asc.c_oAscFill.FILL_TYPE_BLIP;
                 } else if (fill_type==Asc.c_oAscFill.FILL_TYPE_PATT) {
                     fill = fill.get_fill();
-                    this.PatternFillType = fill.get_pattern_type(); // null - не совпадают у нескольких фигур
+                    this.PatternFillType = fill.get_pattern_type(); // null - values don't match across multiple shapes
                     if (this._state.PatternFillType !== this.PatternFillType) {
                         this.cmbPattern.suspendEvents();
                         var rec = this.cmbPattern.menuPicker.store.findWhere({
@@ -1301,7 +1301,7 @@ define([
                     this.GradColor.colors[this.GradColor.colors.length-1] = 'ffffff';
                 } else if (fill_type==Asc.c_oAscFill.FILL_TYPE_GRAD) {
                     fill = fill.get_fill();
-                    var gradfilltype = fill.get_grad_type();  // null - не совпадают у нескольких фигур
+                    var gradfilltype = fill.get_grad_type();  // null - values don't match across multiple shapes
                     if (this._state.GradFillType !== gradfilltype || this.GradFillType !== gradfilltype) {
                         this.GradFillType = gradfilltype;
                         rec = undefined;

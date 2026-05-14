@@ -51,6 +51,9 @@ define([], function () {
                     'createdelayedelements': this.onCreateDelayedElements,
                     'equation:callback': this.equationCallback
                 },
+                'Toolbar': {
+                    'cell:size': this.onSetSize.bind(this)
+                },
                 'ChartTab': {
                     'charttab:updatemenu': function (menu) {
                         me.chartProps = me.getCurrentChartProps();
@@ -193,6 +196,9 @@ define([], function () {
                 view.menuParagraphBullets.menu.on('show:after',     _.bind(me.onBulletMenuShowAfter, me));
                 view.menuAddHyperlinkShape.on('click',              _.bind(me.onInsHyperlink, me));
                 view.menuEditHyperlinkShape.on('click',             _.bind(me.onInsHyperlink, me));
+                view.menuAddHyperlinkPic.on('click',                _.bind(me.onInsHyperlink, me));
+                view.menuEditHyperlinkPic.on('click',               _.bind(me.onInsHyperlink, me));
+                view.menuRemoveHyperlinkPic.on('click',             _.bind(me.onDelHyperlink, me))
                 view.menuRemoveHyperlinkShape.on('click',           _.bind(me.onDelHyperlink, me));
                 view.pmiTextAdvanced.on('click',                    _.bind(me.onTextAdvanced, me));
                 view.mnuShapeAdvanced.on('click',                   _.bind(me.onShapeAdvanced, me));
@@ -923,7 +929,8 @@ define([], function () {
                     Common.NotificationCenter.trigger('edit:complete', me.documentHolder);
                 };
 
-                var cell = me.api.asc_getCellInfo();
+                var cell = me.api.asc_getCellInfo(),
+                    seltype = cell.asc_getSelectionType();
                 props = cell.asc_getHyperlink();
 
                 win = new SSE.Views.HyperlinkSettingsDialog({
@@ -940,7 +947,7 @@ define([], function () {
                     props   : props,
                     text    : cell.asc_getText(),
                     isLock  : cell.asc_getLockText(),
-                    allowInternal: item.options.inCell
+                    allowInternal: (seltype!==Asc.c_oAscSelectionType.RangeChart && seltype!==Asc.c_oAscSelectionType.RangeChartText && seltype!==Asc.c_oAscSelectionType.RangeSlicer)
                 });
             }
 
@@ -1582,17 +1589,18 @@ define([], function () {
                     }
 
                     var data  = dataarray[index_hyperlink-1],
-                        props = data.asc_getHyperlink();
+                        props = data.asc_getHyperlink(),
+                        text = props.asc_getIsFromShape() ? me.textLinkShape : me.textCtrlClick;
 
                     if (props.asc_getType() == Asc.c_oAscHyperlinkType.WebLink) {
                         var linkstr = props.asc_getTooltip();
                         linkstr = (linkstr) ? linkstr : props.asc_getHyperlinkUrl();
                         if (linkstr.length>256)
                             linkstr = linkstr.substr(0, 256) + '...';
-                        linkstr = Common.Utils.String.htmlEncode(linkstr) + '<br><b>' + me.textCtrlClick + '</b>';
+                        linkstr = Common.Utils.String.htmlEncode(linkstr) + '<br><b>' +  text + '</b>';
                     } else {
                         linkstr = Common.Utils.String.htmlEncode(props.asc_getTooltip() || (props.asc_getLocation()));
-                        linkstr += '<br><b>' + me.textCtrlClick + '</b>';
+                        linkstr += '<br><b>' +  text + '</b>';
                     }
 
                     if (hyperlinkTip.ref && hyperlinkTip.ref.isVisible()) {
@@ -2321,6 +2329,14 @@ define([], function () {
                         item.setDisabled(!documentHolder.api.asc_canMergeSelectedShapes(item.value));
                     });
                 }
+
+                var hyperinfo = cellinfo.asc_getHyperlink(),
+                    can_add_hyperlink = this.api.asc_canAddShapeHyperlink();
+                documentHolder.menuHyperlinkPic.setVisible((isimagemenu || isshapemenu) && can_add_hyperlink!==false && hyperinfo);
+                documentHolder.menuAddHyperlinkPic.setVisible((isimagemenu || isshapemenu) && can_add_hyperlink!==false && !hyperinfo);
+                documentHolder.menuHyperlinkPicSeparator.setVisible((isimagemenu || isshapemenu) && can_add_hyperlink!==false);
+                documentHolder.menuHyperlinkPic.setDisabled(isObjLocked || this._state.wsProps['InsertHyperlinks']);
+                documentHolder.menuAddHyperlinkPic.setDisabled(isObjLocked || this._state.wsProps['InsertHyperlinks']);
 
                 var objcount = this.api.asc_getSelectedDrawingObjectsCount();
                 documentHolder.menuImageAlign.menu.items[7].setDisabled(objcount<3);
@@ -3731,8 +3747,12 @@ define([], function () {
                 vertAxes = chartProps.getVertAxesProps && chartProps.getVertAxesProps(),
                 depthAxes = chartProps.getDepthAxesProps && chartProps.getDepthAxesProps(),
                 dataLabelsPos = chartProps.getDataLabelsPos && chartProps.getDataLabelsPos(),
+                errorBarType = chartProps.getErrorBarsValueType && chartProps.getErrorBarsValueType(),
                 title = chartProps.getTitle && chartProps.getTitle(),
                 legendPos = chartProps.getLegendPos && chartProps.getLegendPos(),
+                trendlineType = chartProps.getTrendlineType && chartProps.getTrendlineType(),
+                forecastForward = chartProps.getForecastForward && chartProps.getForecastForward(),
+                forecastBackward = chartProps.getForecastBackward && chartProps.getForecastBackward(),
                 GridMajor = Asc.c_oAscGridLinesSettings.major,
                 GridMinor = Asc.c_oAscGridLinesSettings.minor,
                 GridMajorMinor = Asc.c_oAscGridLinesSettings.majorMinor,
@@ -3748,7 +3768,15 @@ define([], function () {
                 LabelGroup2 = LabelGroup2Types.includes(comboType),
                 LabelGroup3 = LabelGroup3Types.includes(comboType),
                 LabelGroup4 = LabelGroup4Types.includes(comboType),
-                LabelGroup5 = LabelGroup5Types.includes(comboType);
+                LabelGroup5 = LabelGroup5Types.includes(comboType),
+                isMixedState = trendlineType === 1 && (forecastForward === undefined || forecastBackward === undefined),
+                trendlineState = {
+                    type: isMixedState ? undefined : trendlineType,
+                    isForecast: !!(trendlineType === 1 && (
+                        (forecastForward && forecastForward > 0) ||
+                        (forecastBackward && forecastBackward > 0)
+                    ))
+                };
 
             const axesMenu = menu.items[0].menu;
             axesMenu.items[0].setVisible(!RadarChart);
@@ -3813,6 +3841,18 @@ define([], function () {
             // highlightSubmenuItem(tableMenu.items[1], false, 'table');
             // highlightSubmenuItem(tableMenu.items[2], false,'table');
 
+            const errorBarsMenu = menu.items[4].menu;
+            errorBarsMenu.clearAll(true);
+            if (errorBarType === null) {
+                errorBarsMenu.items[0].setChecked(true);
+            } else if (errorBarType === AscFormat.st_errvaltypeSTDERR) {
+                errorBarsMenu.items[1].setChecked(true);
+            } else if (errorBarType === AscFormat.st_errvaltypePERCENTAGE) {
+                errorBarsMenu.items[2].setChecked(true);
+            } else if (errorBarType === AscFormat.st_errvaltypeSTDDEV) {
+                errorBarsMenu.items[3].setChecked(true);
+            }
+
             const gridMenu = menu.items[5].menu;
             gridMenu.items[0].setVisible(true);
             gridMenu.items[2].setVisible(true);
@@ -3838,6 +3878,20 @@ define([], function () {
             legendMenu.items[4].setChecked(legendPos === Asc.c_oAscChartLegendShowSettings.bottom);
             legendMenu.items[5].setChecked(legendPos === Asc.c_oAscChartLegendShowSettings.leftOverlay);
             legendMenu.items[6].setChecked(legendPos === Asc.c_oAscChartLegendShowSettings.rightOverlay);
+
+            const trendlinesMenu = menu.items[7].menu;
+            trendlinesMenu.clearAll(true);
+            if (trendlineState.type === null) {
+                trendlinesMenu.items[0].setChecked(true);
+            } else if (trendlineState.isForecast) {
+                trendlinesMenu.items[3].setChecked(true);
+            } else if (trendlineState.type === AscFormat.TRENDLINE_TYPE_LINEAR) {
+                trendlinesMenu.items[1].setChecked(true);
+            } else if (trendlineState.type === AscFormat.TRENDLINE_TYPE_EXP) {
+                trendlinesMenu.items[2].setChecked(true);
+            } else if (trendlineState.type === AscFormat.TRENDLINE_TYPE_MOVING_AVG) {
+                trendlinesMenu.items[4].setChecked(true);
+            }
 
             const supportedElements = chartElementMap[type] || [];
             menu.items.forEach(function(item) {
@@ -3977,6 +4031,7 @@ define([], function () {
                 pasteContainer = documentHolderView.cmpEl.find('#special-paste-container'),
                 pasteItems = specialPasteShowOptions.asc_getOptions(),
                 isTable = !!specialPasteShowOptions.asc_getContainTables();
+
             if (!pasteItems) return;
 
             // Prepare menu container
@@ -4069,8 +4124,32 @@ define([], function () {
                         });
                     }
                 }
-                (menu.items.length>0) && menu.items[0].setChecked(true, true);
+                var lastSelected = specialPasteShowOptions.asc_getLastSelectedPasteProperty();
+                if (!lastSelected) {
+                    var first = _.find(menu.items, function(item) {
+                        return item.checkable;
+                    });
+
+                    first && first.setChecked(true, true);
+                }
                 me._state.lastSpecPasteChecked = (menu.items.length>0) ? menu.items[0] : null;
+                if (lastSelected) {
+                    var foundItem = null;
+                    if (me.btnSpecialPaste && me.btnSpecialPaste.menu && me.btnSpecialPaste.menu.items.length > 0) {
+                        for (var i = 0; i < me.btnSpecialPaste.menu.items.length; i++) {
+                            var menuItem = me.btnSpecialPaste.menu.items[i];
+                            if (menuItem.value === lastSelected) {
+                                foundItem = menuItem;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (foundItem) {
+                        foundItem.setChecked(true, true);
+                        // me._state.lastSpecPasteChecked = foundItem;
+                    }
+                }
 
                 if (importText) {
                     menu.addItem(new Common.UI.MenuItem({ caption: '--' }));
@@ -4233,7 +4312,7 @@ define([], function () {
             }
             str = str.substring(0, str.length-1)
             var keymap = {};
-            keymap[str] = _.bind(function(e) {
+            keymap[str + ' ' + 'special-paste-context'] = _.bind(function(e) {
                 var menu = this.btnSpecialPaste.menu;
                 for (var i = 0; i < menu.items.length; i++) {
                     if (this.hkSpecPaste[menu.items[i].value] === String.fromCharCode(e.keyCode)) {
@@ -4242,14 +4321,16 @@ define([], function () {
                 }
             }, me);
             Common.util.Shortcuts.delegateShortcuts({shortcuts:keymap});
-            Common.util.Shortcuts.suspendEvents(str, undefined, true);
+            Common.util.Shortcuts.suspendEvents(str, 'special-paste-context', true);
 
             var pasteContainer = me.documentHolder.cmpEl.find('#special-paste-container');
             me.btnSpecialPaste.menu.on('show:after', function(menu) {
-                Common.util.Shortcuts.resumeEvents(str);
+                window.key.setScope('special-paste-context');
+                Common.util.Shortcuts.resumeEvents(str, 'special-paste-context');
                 pasteContainer.addClass('has-open-menu');
             }).on('hide:after', function(menu) {
-                Common.util.Shortcuts.suspendEvents(str, undefined, true);
+                window.key.setScope('all');
+                Common.util.Shortcuts.suspendEvents(str, 'special-paste-context', true);
                 pasteContainer.removeClass('has-open-menu');
             });
         };

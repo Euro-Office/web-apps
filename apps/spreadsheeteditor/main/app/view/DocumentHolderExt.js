@@ -1335,25 +1335,33 @@ define([], function () {
                                         caption: me.textNone, 
                                         value: 'noneError',
                                         stopPropagation: true, 
-                                        disabled: false
+                                        disabled: false,
+                                        toggleGroup: 'errorBars',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.textStandardError,
                                         value: 'standardError',
                                         stopPropagation: true, 
-                                        disabled: false
+                                        disabled: false,
+                                        toggleGroup: 'errorBars',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.txtPercentage,
                                         value: 'percentage',
                                         stopPropagation: true, 
-                                        disabled: false
+                                        disabled: false,
+                                        toggleGroup: 'errorBars',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.textStandardDeviation,
                                         value: 'standardDeviation',
                                         stopPropagation: true, 
-                                        disabled: false
+                                        disabled: false,
+                                        toggleGroup: 'errorBars',
+                                        checkable: true
                                     }
                                 ]
                             })
@@ -1464,27 +1472,37 @@ define([], function () {
                                     {
                                         caption: me.textNone, 
                                         stopPropagation: true, 
-                                        value: 'trendLineNone'
+                                        value: 'trendLineNone',
+                                        toggleGroup: 'trendLines',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.textLinear,
                                         stopPropagation: true, 
-                                        value: 'trendLineLinear'
+                                        value: 'trendLineLinear',
+                                        toggleGroup: 'trendLines',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.textExponential,
                                         stopPropagation: true,  
-                                        value: 'trendLineExponential'
+                                        value: 'trendLineExponential',
+                                        toggleGroup: 'trendLines',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.textLinearForecast,
                                         stopPropagation: true, 
-                                        value: 'trendLineForecast'
+                                        value: 'trendLineForecast',
+                                        toggleGroup: 'trendLines',
+                                        checkable: true
                                     },
                                     {
                                         caption: me.textMovingAverage, 
                                         stopPropagation: true, 
-                                        value: 'trendLineMovingAverage'
+                                        value: 'trendLineMovingAverage',
+                                        toggleGroup: 'trendLines',
+                                        checkable: true
                                     }
                                 ]
                             })
@@ -1572,6 +1590,36 @@ define([], function () {
                 caption: '--'
             });
 
+            me.menuHyperlinkPicSeparator = new Common.UI.MenuItem({
+                caption: '--'
+            });
+
+            me.menuAddHyperlinkPic = new Common.UI.MenuItem({
+                iconCls: 'menu__icon btn-inserthyperlink',
+                caption: me.txtInsHyperlink
+            });
+
+            me.menuEditHyperlinkPic = new Common.UI.MenuItem({
+                caption: me.editHyperlinkText
+            });
+
+            me.menuRemoveHyperlinkPic = new Common.UI.MenuItem({
+                caption: me.removeHyperlinkText
+            });
+
+            me.menuHyperlinkPic = new Common.UI.MenuItem({
+                iconCls: 'menu__icon btn-inserthyperlink',
+                caption: me.txtInsHyperlink,
+                menu: new Common.UI.Menu({
+                    cls: 'shifted-right',
+                    menuAlign: 'tl-tr',
+                    items: [
+                        me.menuEditHyperlinkPic, 
+                        me.menuRemoveHyperlinkPic
+                    ]
+                })
+            });
+
             this.imgMenu = new Common.UI.Menu({
                 cls: 'shifted-right',
                 restoreHeightAndTop: true,
@@ -1594,6 +1642,9 @@ define([], function () {
                     menuSaveAsPictureSeparator,
                     me.menuSaveAsPicture,
                     me.mnuShapeSeparator,
+                    me.menuAddHyperlinkPic,
+                    me.menuHyperlinkPic,
+                    me.menuHyperlinkPicSeparator,
                     me.menuImgCrop,
                     me.menuImgResetCrop,
                     me.mnuChartData,

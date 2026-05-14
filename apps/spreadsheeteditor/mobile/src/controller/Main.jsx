@@ -603,8 +603,7 @@ class MainController extends Component {
 
         this.api.asc_registerCallback('asc_onNeedUpdateExternalReferenceOnOpen', this.onNeedUpdateExternalReference.bind(this));
 
-        const storeAppOptions = this.props.storeAppOptions;
-        this.api.asc_setFilteringMode && this.api.asc_setFilteringMode(storeAppOptions.canModifyFilter);
+        Common.Notifications.on('update:windowtitle', force => this.updateWindowTitle(force));
     }
 
     insertImageFromStorage (data) {
@@ -767,6 +766,8 @@ class MainController extends Component {
         appSettings.changeRefStyle(value);
         this.api.asc_setR1C1Mode(value);
 
+        appOptions.changeAutosave(LocalStorage.itemExists('sse-mobile-autosave') ? LocalStorage.getBool("sse-mobile-autosave") : true);
+
         Common.Gateway.documentReady();
         f7.emit('resize');
 
@@ -816,9 +817,12 @@ class MainController extends Component {
 
         this.api.asc_registerCallback('asc_onDocumentModifiedChanged', this.onDocumentModifiedChanged.bind(this));
         this.api.asc_registerCallback('asc_onDocumentCanSaveChanged',  this.onDocumentCanSaveChanged.bind(this));
+        this.api.asc_registerCallback('asc_onCollaborativeChanges',  this.onCollaborativeChanges.bind(this));
 
         Common.Notifications.trigger('preloader:close');
         Common.Notifications.trigger('preloader:endAction', Asc.c_oAscAsyncActionType['BlockInteraction'], this.ApplyEditRights);
+
+        this.api.asc_setFilteringMode && this.api.asc_setFilteringMode(appOptions.canModifyFilter);
 
         if (!this._isDocReady) {
             Common.Notifications.trigger('preloader:beginAction', Asc.c_oAscAsyncActionType['BlockInteraction'], this.LoadingDocument);
@@ -1190,6 +1194,9 @@ class MainController extends Component {
                 window.document.title = title;
             }
 
+            if (isModified)
+                this.props.storeAppOptions.changeSavingDocStatusText('');
+
             this._isDocReady && (this._state.isDocModified !== isModified) && Common.Gateway.setDocumentModified(isModified);
             this._state.isDocModified = isModified;
         }
@@ -1205,7 +1212,14 @@ class MainController extends Component {
     }
 
     onDocumentCanSaveChanged (isCanSave) {
-        //
+        const storeAppOptions = this.props.storeAppOptions;
+        storeAppOptions.changeIsSaveBadgeShown(isCanSave ? !storeAppOptions.isAutosave : false);
+    }
+
+    onCollaborativeChanges () {
+        const storeAppOptions = this.props.storeAppOptions;
+        if (!storeAppOptions.isSaveBadgeShown) storeAppOptions.changeIsSaveBadgeShown(true);
+        storeAppOptions.changeSavingDocStatusText('');
     }
 
     onPrint () {

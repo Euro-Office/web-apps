@@ -73,6 +73,7 @@ define([
             '<div class="separator long"></div>' +
             '<div class="group">' +
                 '<span class="btn-slot text x-huge" id="slot-btn-interface-theme"></span>' +
+                '<span class="btn-slot text x-huge" id="slot-btn-dark-document"></span>' +
             '</div>' +
             '<div class="separator long separator-theme"></div>' +
             '<div class="group sheet-freeze">' +
@@ -177,6 +178,9 @@ define([
             }, me));
             me.chRightMenu.on('change', _.bind(function (checkbox, state) {
                 me.fireEvent('rightmenu:hide', [me.chRightMenu, state === 'checked']);
+            }, me));
+            me.btnDarkDocument.on('click', _.bind(function (e) {
+                me.fireEvent('darkmode:change', [e.pressed]);
             }, me));
             me.btnMacros && me.btnMacros.on('click', function () {
                 me.fireEvent('macros:click');
@@ -381,7 +385,7 @@ define([
 
                 this.btnInterfaceTheme = new Common.UI.Button({
                     cls: 'btn-toolbar x-huge icon-top',
-                    iconCls: 'toolbar__icon btn-day',
+                    iconCls: 'toolbar__icon btn-theme',
                     caption: this.textInterfaceTheme,
                     menu: true,
                     dataHint: '1',
@@ -390,6 +394,17 @@ define([
                     action: 'interface-theme'
                 });
                 this.lockedControls.push(this.btnInterfaceTheme);
+
+                this.btnDarkDocument = new Common.UI.Button({
+                    cls: 'btn-toolbar x-huge icon-top',
+                    iconCls: `toolbar__icon ${Common.UI.Themes.isContentThemeDark() ? 'btn-night' : 'btn-day'}`,
+                    lock: [_set.inLightTheme, _set.lostConnect],
+                    caption: this.textDarkDocument,
+                    dataHint: '1',
+                    dataHintDirection: 'bottom',
+                    dataHintOffset: 'small'
+                });
+                this.lockedControls.push(this.btnDarkDocument);
 
                 this.chFormula = new Common.UI.CheckBox({
                     labelText: this.textFormula,
@@ -461,6 +476,7 @@ define([
                 this.cmbZoom.setValue(100);
                 $host.find('#slot-lbl-zoom').text(this.textZoom);
                 this.btnInterfaceTheme.render($host.find('#slot-btn-interface-theme'));
+                this.btnDarkDocument.render($host.find('#slot-btn-dark-document'));
                 this.chFormula.render($host.find('#slot-chk-formula'));
                 this.chStatusbar.render($host.find('#slot-chk-statusbar'));
                 this.chToolbar.render($host.find('#slot-chk-toolbar'));
@@ -497,6 +513,7 @@ define([
                     }
                     me.btnMacros && me.btnMacros.updateHint(me.tipMacros);
                     me.btnInterfaceTheme.updateHint(me.tipInterfaceTheme);
+                    me.btnDarkDocument.updateHint(me.tipDarkDocument);
                     me.btnRecMacro && me.btnRecMacro.updateHint(me.tipRecMacro);
                     me.btnPauseMacro && me.btnPauseMacro.updateHint(me.tipPauseMacro);
 

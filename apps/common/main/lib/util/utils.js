@@ -118,7 +118,10 @@ define([], function () {
                 Pivot: 10,
                 Cell: 11,
                 Slicer: 12,
-                Form: 13
+                Form: 13,
+                FillingStatus: 14,
+                SendForSigning: 15,
+                Annotation: 16,
             },
             importTextType = {
                 DRM: 0,
@@ -631,6 +634,39 @@ define([], function () {
                         return parseFloat((value * 72.0 / 25.4).toFixed(3));
                     case me.c_MetricUnits.inch:
                         return parseFloat((value / 25.4).toFixed(3));
+                }
+                return value;
+            },
+
+            fnRecalcToPt: function (value) {
+                // value in mm/cm/inch. need to convert to pt
+                if (value !== null && value !== undefined) {
+                    switch (me.currentMetric) {
+                        case me.c_MetricUnits.mm:
+                            return value * 72.0 / 25.4;
+
+                        case me.c_MetricUnits.cm:
+                            return value * 10 * 72.0 / 25.4;
+
+                        case me.c_MetricUnits.inch:
+                            return value * 72.0;
+
+                        case me.c_MetricUnits.pt:
+                            return value;
+                    }
+                }
+                return value;
+            },
+
+            fnRecalcFromPt: function (value) {
+                // value in pt. need to convert to mm/cm/inch
+                switch (me.currentMetric) {
+                    case me.c_MetricUnits.mm:
+                        return parseFloat((value * 25.4 / 72).toFixed(3));
+                    case me.c_MetricUnits.cm:
+                        return parseFloat((value * 25.4 / 72 / 10).toFixed(4));
+                    case me.c_MetricUnits.inch:
+                        return parseFloat((value / 72).toFixed(4));
                 }
                 return value;
             }

@@ -224,6 +224,7 @@ define([
                     Common.Utils.InternalSettings.set("app-settings-screen-reader", value);
                     this.api.setSpeechEnabled(value);
 
+
                     if ( !Common.Utils.isIE ) {
                         if ( /^https?:\/\//.test('{{HELP_CENTER_WEB_DE}}') ) {
                             const _url_obj = new URL('{{HELP_CENTER_WEB_DE}}');
@@ -1333,6 +1334,11 @@ define([
                 } else if (zf == -3) {
                     if (lastZoom > 0) {
                         this.api.zoom(lastZoom);
+
+                        if (Common.localStorage.getBool("de-zoom-multipage", false)) {
+                            this.api.zoomCustomMode();
+                            this.api.SetMultipageViewMode(true);
+                        }
                     } else if (lastZoom == -1) {
                         this.api.zoomFitToPage();
                     } else if (lastZoom == -2) {
@@ -1708,7 +1714,7 @@ define([
                 this.appOptions.canUseHistory  = this.appOptions.canLicense && this.editorConfig.canUseHistory && this.appOptions.canCoAuthoring && !this.appOptions.isOffline;
                 this.appOptions.canHistoryClose  = this.editorConfig.canHistoryClose;
                 this.appOptions.canHistoryRestore= this.editorConfig.canHistoryRestore;
-                this.appOptions.canUseMailMerge= this.appOptions.canLicense && this.appOptions.canEdit;
+                this.appOptions.canUseMailMerge= this.appOptions.canLicense && this.appOptions.canEdit && !this.appOptions.isOffline;
                 this.appOptions.canSendEmailAddresses  = this.appOptions.canLicense && this.editorConfig.canSendEmailAddresses && this.appOptions.canEdit && this.appOptions.canCoAuthoring;
                 this.appOptions.canComments    = this.appOptions.canLicense && (this.permissions.comment===undefined ? this.appOptions.isEdit : this.permissions.comment) && (this.editorConfig.mode !== 'view');
                 this.appOptions.canComments    = !isPDFViewer && this.appOptions.canComments && !((typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.comments===false);
@@ -1770,7 +1776,9 @@ define([
                 this.appOptions.canSwitchMode  = this.appOptions.isEdit;
                 this.appOptions.canSubmitForms = this.appOptions.isRestrictedEdit && this.appOptions.canFillForms && this.appOptions.canLicense && !this.appOptions.isOffline && (typeof (this.editorConfig.customization) == 'object') &&
                                                 !!this.editorConfig.customization.submitForm && (typeof this.editorConfig.customization.submitForm !== 'object' || this.editorConfig.customization.submitForm.visible!==false);
-                this.appOptions.canStartFilling = this.editorConfig.canStartFilling && this.appOptions.isEdit &&  this.appOptions.isPDFForm; // show Start Filling button in the header
+                this.appOptions.canStartFilling = this.editorConfig.canStartFilling && this.appOptions.isEdit &&  this.appOptions.isPDFForm;
+                this.appOptions.canRequestStartFilling = this.editorConfig.canRequestStartFilling && this.appOptions.isEdit &&  this.appOptions.isPDFForm;
+                this.appOptions.showStartFillingButton = this.appOptions.canStartFilling || this.appOptions.canRequestStartFilling; // show Start Filling button in the header
 
                 this.appOptions.compactHeader = this.appOptions.customization && (typeof (this.appOptions.customization) == 'object') && !!this.appOptions.customization.compactHeader;
                 this.appOptions.twoLevelHeader = this.appOptions.isEdit || this.appOptions.isPDFForm && this.appOptions.canFillForms && this.appOptions.isRestrictedEdit; // when compactHeader=true some buttons move to toolbar
@@ -1835,6 +1843,26 @@ define([
                 this.loadCoAuthSettings();
                 this.applyModeCommonElements();
                 this.applyModeEditorElements();
+
+                if(!this.appOptions.isEdit && this.appOptions.isPDFForm) {
+                    const application = this.getApplication();
+                    const  viewport = application.getController('Viewport').getView('Viewport');
+                    viewport.applyEditorMode();
+                    const rightmenuController = application.getController('RightMenu');
+                    const rightmenuView = rightmenuController.getView('RightMenu');
+                    if(rightmenuView.getVisibleButtons().length == 0) {
+                        rightmenuController.onRightMenuHide(null, false, true);
+                    }
+                    if(rightmenuController) {
+                        rightmenuController.setApi(this.api);
+                        rightmenuController.setMode(this.appOptions);
+                    }
+                    if (rightmenuView) {
+                        rightmenuView.setApi(this.api);
+                        rightmenuView.on('editcomplete', _.bind(this.onEditComplete, this));
+                        rightmenuView.setMode(this.appOptions);
+                    }
+                }
 
                 this._isPermissionsInited = true;
                 if ( !this.appOptions.isEdit ) {
@@ -1977,8 +2005,9 @@ define([
                 (!inViewMode || force) && Common.NotificationCenter.trigger('doc:mode-changed', mode);
             },
 
-            onStartFilling: function(disconnect) {
+            onStartFilling: function(disconnect, roles) {
                 this._isFillInitiator = true;
+                this._rolesForFilling = roles;
                 this.api.asc_CompletePreparingOForm(!!disconnect);
                 !disconnect && this.onDisconnectEveryone(); // disable editing only for current user
             },
@@ -1993,7 +2022,7 @@ define([
             },
 
             onCompletePreparingOForm: function() {
-                Common.Gateway.startFilling();
+                Common.Gateway.startFilling(this._rolesForFilling);
             },
 
             applyModeCommonElements: function() {
@@ -2047,8 +2076,11 @@ define([
                 var toolbarController   = application.getController('Toolbar');
                 toolbarController   && toolbarController.setApi(me.api);
 
-                if (this.appOptions.isRestrictedEdit)
+                if (this.appOptions.isRestrictedEdit) {
                     application.getController('DocProtection').setMode(me.appOptions).setConfig({config: me.editorConfig}, me.api);
+                    const fontsControllers = application.getController('Common.Controllers.Fonts');
+                    fontsControllers && fontsControllers.setApi(me.api);
+                }
                 else if (this.appOptions.isEdit) {
                     var rightmenuController = application.getController('RightMenu'),
                         fontsControllers    = application.getController('Common.Controllers.Fonts');
@@ -2069,6 +2101,8 @@ define([
                         rightmenuView.setMode(me.appOptions);
                     }
 
+                    application.getController('Common.Controllers.ChartTab').setMode(me.appOptions);
+
                     var toolbarView = (toolbarController) ? toolbarController.getView() : null;
                     if (toolbarView) {
                         toolbarView.setApi(me.api);
@@ -2077,7 +2111,7 @@ define([
                         toolbarView.on('insertimage', _.bind(me.onInsertImage, me));
                         toolbarView.on('insertshape', _.bind(me.onInsertShape, me));
                         toolbarView.on('inserttextart', _.bind(me.onInsertTextArt, me));
-                        toolbarView.on('insertchart', _.bind(me.onInsertChart, me));
+                        // toolbarView.on('insertchart', _.bind(me.onInsertChart, me));
                         toolbarView.on('insertcontrol', _.bind(me.onInsertControl, me));
                     }
 
@@ -2371,6 +2405,14 @@ define([
                     case Asc.c_oAscError.ID.CopyDisabled:
                         config.maxwidth = 450;
                         config.msg = this.errorCopyDisabled;
+                        break;
+
+                    case Asc.c_oAscError.ID.FileNotAssembled:
+                        config.msg = this.errorFileNotAssembled;
+                        break;
+
+                    case Asc.c_oAscError.ID.ForcedViewMode:
+                        config.msg = this.errorForcedViewMode;
                         break;
 
                     default:
@@ -2901,9 +2943,9 @@ define([
                 this.getApplication().getController('RightMenu').onInsertImage();
             },
 
-            onInsertChart:  function() {
-                this.getApplication().getController('RightMenu').onInsertChart();
-            },
+            // onInsertChart:  function() {
+            //     this.getApplication().getController('RightMenu').onInsertChart();
+            // },
 
             onInsertShape:  function() {
                 this.getApplication().getController('RightMenu').onInsertShape();
@@ -3412,6 +3454,7 @@ define([
                             if (apiCallback)  {
                                 apiCallback(btn === 'ok');
                             }
+                            Common.Gateway.reportWarning(id, btn === 'ok' ? 'undo' : 'continue');
                             me.onEditComplete();
                         }, this)
                     });

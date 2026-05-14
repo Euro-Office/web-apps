@@ -51,7 +51,7 @@ define([
     'common/main/lib/component/CheckBox',
     'presentationeditor/main/app/view/ParagraphSettings',
     'presentationeditor/main/app/view/ImageSettings',
-    'presentationeditor/main/app/view/ChartSettings',
+    // 'presentationeditor/main/app/view/ChartSettings',
     'presentationeditor/main/app/view/TableSettings',
     'presentationeditor/main/app/view/ShapeSettings',
     'presentationeditor/main/app/view/SlideSettings',
@@ -111,15 +111,15 @@ define([
                 toggleGroup: 'tabpanelbtnsGroup',
                 allowMouseEventsOnDisabled: true
             });
-            this.btnChart = new Common.UI.Button({
-                hint: this.txtChartSettings,
-                asctype: Common.Utils.documentSettingsType.Chart,
-                enableToggle: true,
-                disabled: true,
-                iconCls: 'btn-menu-chart',
-                toggleGroup: 'tabpanelbtnsGroup',
-                allowMouseEventsOnDisabled: true
-            });
+            // this.btnChart = new Common.UI.Button({
+            //     hint: this.txtChartSettings,
+            //     asctype: Common.Utils.documentSettingsType.Chart,
+            //     enableToggle: true,
+            //     disabled: true,
+            //     iconCls: 'btn-menu-chart',
+            //     toggleGroup: 'tabpanelbtnsGroup',
+            //     allowMouseEventsOnDisabled: true
+            // });
             this.btnShape = new Common.UI.Button({
                 hint: this.txtShapeSettings,
                 asctype: Common.Utils.documentSettingsType.Shape,
@@ -146,7 +146,7 @@ define([
             this._settings[Common.Utils.documentSettingsType.Image]       = {panel: "id-image-settings",      btn: this.btnImage};
             this._settings[Common.Utils.documentSettingsType.Slide]       = {panel: "id-slide-settings",      btn: this.btnSlide};
             this._settings[Common.Utils.documentSettingsType.Shape]       = {panel: "id-shape-settings",      btn: this.btnShape};
-            this._settings[Common.Utils.documentSettingsType.Chart]       = {panel: "id-chart-settings",      btn: this.btnChart};
+            // this._settings[Common.Utils.documentSettingsType.Chart]       = {panel: "id-chart-settings",      btn: this.btnChart};
             this._settings[Common.Utils.documentSettingsType.TextArt]     = {panel: "id-textart-settings",    btn: this.btnTextArt};
 
             return this;
@@ -183,7 +183,7 @@ define([
             this.btnTable.setElement($('#id-right-menu-table'), false);         this.btnTable.render();
             this.btnImage.setElement($('#id-right-menu-image'), false);         this.btnImage.render();
             this.btnSlide.setElement($('#id-right-menu-slide'), false);         this.btnSlide.render();
-            this.btnChart.setElement($('#id-right-menu-chart'), false);         this.btnChart.render();
+            // this.btnChart.setElement($('#id-right-menu-chart'), false);         this.btnChart.render();
             this.btnShape.setElement($('#id-right-menu-shape'), false);         this.btnShape.render();
             this.btnTextArt.setElement($('#id-right-menu-textart'), false);     this.btnTextArt.render();
 
@@ -191,14 +191,14 @@ define([
             this.btnTable.on('click',           _.bind(this.onBtnMenuClick, this));
             this.btnImage.on('click',           _.bind(this.onBtnMenuClick, this));
             this.btnSlide.on('click',           _.bind(this.onBtnMenuClick, this));
-            this.btnChart.on('click',           _.bind(this.onBtnMenuClick, this));
+            // this.btnChart.on('click',           _.bind(this.onBtnMenuClick, this));
             this.btnShape.on('click',           _.bind(this.onBtnMenuClick, this));
             this.btnTextArt.on('click',         _.bind(this.onBtnMenuClick, this));
 
             this.paragraphSettings = new PE.Views.ParagraphSettings();
             this.slideSettings = new PE.Views.SlideSettings();
             this.imageSettings = new PE.Views.ImageSettings();
-            this.chartSettings = new PE.Views.ChartSettings();
+            // this.chartSettings = new PE.Views.ChartSettings();
             this.tableSettings = new PE.Views.TableSettings();
             this.shapeSettings = new PE.Views.ShapeSettings();
             this.textartSettings = new PE.Views.TextArtSettings();
@@ -247,7 +247,7 @@ define([
             this.paragraphSettings.setApi(api).on('editcomplete', _.bind( fire, this));
             this.slideSettings.setApi(api).on('editcomplete', _.bind( fire, this)).on('eyedropper', _.bind(_isEyedropperStart, this));
             this.imageSettings.setApi(api).on('editcomplete', _.bind( fire, this));
-            this.chartSettings.setApi(api).on('editcomplete', _.bind( fire, this)).on('updatescroller', _updateScroller);
+            // this.chartSettings.setApi(api).on('editcomplete', _.bind( fire, this)).on('updatescroller', _updateScroller);
             this.tableSettings.setApi(api).on('editcomplete', _.bind( fire, this)).on('eyedropper', _.bind(_isEyedropperStart, this));
             this.shapeSettings.setApi(api).on('editcomplete', _.bind( fire, this)).on('eyedropper', _.bind(_isEyedropperStart, this)).on('updatescroller', _updateScroller);
             this.textartSettings.setApi(api).on('editcomplete', _.bind( fire, this)).on('eyedropper', _.bind(_isEyedropperStart, this)).on('updatescroller', _updateScroller);
@@ -259,7 +259,7 @@ define([
             this.imageSettings && this.imageSettings.setMode(mode);
             this.shapeSettings && this.shapeSettings.setMode(mode);
             this.slideSettings && this.slideSettings.setMode(mode);
-            this.chartSettings && this.chartSettings.setMode(mode);
+            // this.chartSettings && this.chartSettings.setMode(mode);
         },
 
         onBtnMenuClick: function(btn, e) {
@@ -280,6 +280,17 @@ define([
                 }
                 target_pane_parent.find('.content-box > .active').removeClass('active');
                 target_pane && target_pane.addClass("active");
+
+                const viewport = PE.getController('Viewport').getView('Viewport');
+                viewport.hlayout.hideItemResizer('right', !isPlugin);
+
+                const widthFromStorage = Common.localStorage.getItem('pe-rightmenu-width');
+                if(isPlugin && widthFromStorage) {
+                    this.$el.width(parseInt(widthFromStorage));
+                } else {
+                    this.setInnerWidth(MENU_BASE_WIDTH);
+                }
+                Common.NotificationCenter.trigger('layout:changed', 'rightmenu');
 
                 if (this.scroller) {
                     this.scroller.scrollTop(0);
@@ -347,7 +358,7 @@ define([
         },
 
         setButtons: function () {
-            var allButtons = [this.btnSlide, this.btnShape, this.btnImage, this.btnText, this.btnTable, this.btnChart, this.btnTextArt, this.btnSignature];
+            var allButtons = [this.btnSlide, this.btnShape, this.btnImage, this.btnText, this.btnTable, this.btnTextArt, this.btnSignature];
             Common.UI.SideMenu.prototype.setButtons.apply(this, [allButtons]);
         },
 
@@ -355,12 +366,20 @@ define([
             this.$el.find('.side-panel .content-box').append($panel);
         },
 
+        setInnerWidth: function(value) {
+            const pane = $(this.el).find('.right-panel');
+            const paddings = parseInt(pane.css('padding-left')) + parseInt(pane.css('padding-right'));
+            MENU_SCALE_PART = value + paddings;
+            this.$el.css('width', (!Common.Utils.InternalSettings.get("pe-hide-right-settings") ? MENU_SCALE_PART : SCALE_MIN) + 'px');
+        },
+
         updateWidth: function() {
             var pane = $(this.el).find('.right-panel'),
                 paddings = parseInt(pane.css('padding-left')) + parseInt(pane.css('padding-right'));
-            pane.css('width', MENU_BASE_WIDTH + paddings + 'px');
-            MENU_SCALE_PART = SCALE_MIN + MENU_BASE_WIDTH + paddings;
-            this.$el.css('width', (!Common.Utils.InternalSettings.get("pe-hide-right-settings") ? MENU_SCALE_PART : SCALE_MIN) + 'px');
+            MENU_SCALE_PART = MENU_BASE_WIDTH + paddings;
+            if ( !this.isPluginButtonPressed() ) {
+                this.$el.css('width', (!Common.Utils.InternalSettings.get("pe-hide-right-settings") ? MENU_SCALE_PART : SCALE_MIN) + 'px');
+            }
         },
 
         txtParagraphSettings:       'Text Settings',

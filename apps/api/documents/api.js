@@ -403,7 +403,8 @@
         _config.editorConfig.canRequestSelectSpreadsheet = _config.events && !!_config.events.onRequestSelectSpreadsheet;
         _config.editorConfig.canRequestReferenceSource = _config.events && !!_config.events.onRequestReferenceSource;
         _config.editorConfig.canSaveDocumentToBinary = _config.events && !!_config.events.onSaveDocument;
-        _config.editorConfig.canStartFilling = _config.events && !!_config.events.onRequestStartFilling;
+        _config.editorConfig.canRequestStartFilling = _config.events && !!_config.events.onRequestStartFilling;
+        _config.editorConfig.canStartFilling = _config.events && !!_config.events.onStartFilling;
         _config.editorConfig.canRequestRefreshFile = _config.events && !!_config.events.onRequestRefreshFile;
         _config.editorConfig.canUpdateVersion = _config.events && !!_config.events.onOutdatedVersion;
         _config.editorConfig.canRequestFillingStatus = _config.events && !!_config.events.onRequestFillingStatus;
@@ -513,7 +514,7 @@
 
                 if (typeof _config.document.fileType === 'string' && _config.document.fileType != '') {
                     _config.document.fileType = _config.document.fileType.toLowerCase();
-                    var type = /^(?:(xls|xlsx|ods|csv|gsheet|xlsm|xlt|xltm|xltx|fods|ots|xlsb|sxc|et|ett|numbers)|(pps|ppsx|ppt|pptx|odp|gslides|pot|potm|potx|ppsm|pptm|fodp|otp|sxi|dps|dpt|key|odg)|(pdf|djvu|xps|oxps)|(doc|docx|odt|gdoc|txt|rtf|mht|htm|html|mhtml|epub|docm|dot|dotm|dotx|fodt|ott|fb2|xml|oform|docxf|sxw|stw|wps|wpt|pages|hwp|hwpx|md|hml)|(vsdx|vssx|vstx|vsdm|vssm|vstm))$/
+                    var type = /^(?:(xls|xlsx|ods|csv|tsv|gsheet|xlsm|xlt|xltm|xltx|fods|ots|xlsb|sxc|et|ett|numbers)|(pps|ppsx|ppt|pptx|odp|gslides|pot|potm|potx|ppsm|pptm|fodp|otp|sxi|dps|dpt|key|odg)|(pdf|djvu|xps|oxps)|(doc|docx|odt|gdoc|txt|rtf|mht|htm|html|mhtml|epub|docm|dot|dotm|dotx|fodt|ott|fb2|xml|oform|docxf|sxw|stw|wps|wpt|pages|hwp|hwpx|md|hml)|(vsdx|vssx|vstx|vsdm|vssm|vstm))$/
                                     .exec(_config.document.fileType);
                     if (!type) {
                         window.alert("The \"document.fileType\" parameter for the config object is invalid. Please correct it.");
@@ -615,7 +616,14 @@
             if (iframe) {
                 _msgDispatcher && _msgDispatcher.unbindEvents();
                 _detachMouseEvents();
-                iframe.parentNode && iframe.parentNode.replaceChild(target, iframe);
+                _msgDispatcher = null;
+                _config = null;
+
+                iframe.src = 'about:blank';
+                iframe.onload = function() {
+                    iframe.parentNode && iframe.parentNode.replaceChild(target, iframe);
+                    iframe = null;
+                }
             }
         };
 
@@ -1108,7 +1116,7 @@
             isForm = false;
         if (config.document) {
             if (typeof config.document.fileType === 'string')
-                type = /^(?:(pdf)|(djvu|xps|oxps)|(xls|xlsx|ods|csv|xlst|xlsy|gsheet|xlsm|xlt|xltm|xltx|fods|ots|xlsb|numbers)|(pps|ppsx|ppt|pptx|odp|pptt|ppty|gslides|pot|potm|potx|ppsm|pptm|fodp|otp|key|odg)|(oform|docxf)|(vsdx|vssx|vstx|vsdm|vssm|vstm))$/
+                type = /^(?:(pdf)|(djvu|xps|oxps)|(xls|xlsx|ods|csv|tsv|xlst|xlsy|gsheet|xlsm|xlt|xltm|xltx|fods|ots|xlsb|numbers)|(pps|ppsx|ppt|pptx|odp|pptt|ppty|gslides|pot|potm|potx|ppsm|pptm|fodp|otp|key|odg)|(oform|docxf)|(vsdx|vssx|vstx|vsdm|vssm|vstm))$/
                     .exec(config.document.fileType);
 
             if (config.document.permissions)

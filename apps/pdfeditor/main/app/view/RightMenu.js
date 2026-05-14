@@ -51,10 +51,12 @@ define([
     'common/main/lib/component/CheckBox',
     'pdfeditor/main/app/view/ParagraphSettings',
     'pdfeditor/main/app/view/ImageSettings',
-    'pdfeditor/main/app/view/ChartSettings',
+    // 'pdfeditor/main/app/view/ChartSettings',
     'pdfeditor/main/app/view/TableSettings',
     'pdfeditor/main/app/view/ShapeSettings',
     'pdfeditor/main/app/view/TextArtSettings',
+    'pdfeditor/main/app/view/AnnotationSettings',
+    'pdfeditor/main/app/view/FormSettings',
     // 'pdfeditor/main/app/view/SignatureSettings',
     'common/main/lib/component/Scroller',
     'common/main/lib/component/ListView',
@@ -101,15 +103,15 @@ define([
                 toggleGroup: 'tabpanelbtnsGroup',
                 allowMouseEventsOnDisabled: true
             });
-            this.btnChart = new Common.UI.Button({
-                hint: this.txtChartSettings,
-                asctype: Common.Utils.documentSettingsType.Chart,
-                enableToggle: true,
-                disabled: true,
-                iconCls: 'btn-menu-chart',
-                toggleGroup: 'tabpanelbtnsGroup',
-                allowMouseEventsOnDisabled: true
-            });
+            // this.btnChart = new Common.UI.Button({
+            //     hint: this.txtChartSettings,
+            //     asctype: Common.Utils.documentSettingsType.Chart,
+            //     enableToggle: true,
+            //     disabled: true,
+            //     iconCls: 'btn-menu-chart',
+            //     toggleGroup: 'tabpanelbtnsGroup',
+            //     allowMouseEventsOnDisabled: true
+            // });
             this.btnShape = new Common.UI.Button({
                 hint: this.txtShapeSettings,
                 asctype: Common.Utils.documentSettingsType.Shape,
@@ -130,13 +132,24 @@ define([
                 allowMouseEventsOnDisabled: true
             });
 
+            this.btnAnnotation = new Common.UI.Button({
+                hint: this.txtAnnotationSettings,
+                asctype: Common.Utils.documentSettingsType.Annotation,
+                enableToggle: true,
+                disabled: true,
+                iconCls: 'btn-menu-textart',
+                toggleGroup: 'tabpanelbtnsGroup',
+                allowMouseEventsOnDisabled: true
+            });
+
             this._settings = [];
             this._settings[Common.Utils.documentSettingsType.Paragraph]   = {panel: "id-paragraph-settings",  btn: this.btnText};
             this._settings[Common.Utils.documentSettingsType.Table]       = {panel: "id-table-settings",      btn: this.btnTable};
             this._settings[Common.Utils.documentSettingsType.Image]       = {panel: "id-image-settings",      btn: this.btnImage};
             this._settings[Common.Utils.documentSettingsType.Shape]       = {panel: "id-shape-settings",      btn: this.btnShape};
-            this._settings[Common.Utils.documentSettingsType.Chart]       = {panel: "id-chart-settings",      btn: this.btnChart};
+            // this._settings[Common.Utils.documentSettingsType.Chart]       = {panel: "id-chart-settings",      btn: this.btnChart};
             this._settings[Common.Utils.documentSettingsType.TextArt]     = {panel: "id-textart-settings",    btn: this.btnTextArt};
+            this._settings[Common.Utils.documentSettingsType.Annotation]  = {panel: "id-annotation-settings", btn: this.btnAnnotation};
 
             return this;
         },
@@ -168,26 +181,29 @@ define([
             Common.UI.SideMenu.prototype.render.call(this);
             this.btnMore.menu.menuAlign = 'tr-tl';
 
-            this.btnText.setElement($('#id-right-menu-text'), false);           this.btnText.render();
-            this.btnTable.setElement($('#id-right-menu-table'), false);         this.btnTable.render();
-            this.btnImage.setElement($('#id-right-menu-image'), false);         this.btnImage.render();
-            this.btnChart.setElement($('#id-right-menu-chart'), false);         this.btnChart.render();
-            this.btnShape.setElement($('#id-right-menu-shape'), false);         this.btnShape.render();
-            this.btnTextArt.setElement($('#id-right-menu-textart'), false);     this.btnTextArt.render();
+            this.btnText.setElement($('#id-right-menu-text'), false);                   this.btnText.render();
+            this.btnTable.setElement($('#id-right-menu-table'), false);                 this.btnTable.render();
+            this.btnImage.setElement($('#id-right-menu-image'), false);                 this.btnImage.render();
+            // this.btnChart.setElement($('#id-right-menu-chart'), false);         this.btnChart.render();
+            this.btnShape.setElement($('#id-right-menu-shape'), false);                 this.btnShape.render();
+            this.btnTextArt.setElement($('#id-right-menu-textart'), false);             this.btnTextArt.render();
+            this.btnAnnotation.setElement($('#id-right-menu-annotation'), false);       this.btnAnnotation.render();
 
             this.btnText.on('click',            _.bind(this.onBtnMenuClick, this));
             this.btnTable.on('click',           _.bind(this.onBtnMenuClick, this));
             this.btnImage.on('click',           _.bind(this.onBtnMenuClick, this));
-            this.btnChart.on('click',           _.bind(this.onBtnMenuClick, this));
+            // this.btnChart.on('click',           _.bind(this.onBtnMenuClick, this));
             this.btnShape.on('click',           _.bind(this.onBtnMenuClick, this));
             this.btnTextArt.on('click',         _.bind(this.onBtnMenuClick, this));
+            this.btnAnnotation.on('click',         _.bind(this.onBtnMenuClick, this));
 
             this.paragraphSettings = new PDFE.Views.ParagraphSettings();
             this.imageSettings = new PDFE.Views.ImageSettings();
-            this.chartSettings = new PDFE.Views.ChartSettings();
+            // this.chartSettings = new PDFE.Views.ChartSettings();
             this.tableSettings = new PDFE.Views.TableSettings();
             this.shapeSettings = new PDFE.Views.ShapeSettings();
             this.textartSettings = new PDFE.Views.TextArtSettings();
+            this.annotationSettings = new PDFE.Views.AnnotationSettings();
 
             // if (mode && mode.isSignatureSupport) {
             //     this.btnSignature = new Common.UI.Button({
@@ -243,10 +259,11 @@ define([
             var _updateScroller = function () {me.updateScroller();};
             this.paragraphSettings.setApi(api).on('editcomplete', _.bind( fire, this));
             this.imageSettings.setApi(api).on('editcomplete', _.bind( fire, this));
-            this.chartSettings.setApi(api).on('editcomplete', _.bind( fire, this)).on('updatescroller', _updateScroller);
+            // this.chartSettings.setApi(api).on('editcomplete', _.bind( fire, this)).on('updatescroller', _updateScroller);
             this.tableSettings.setApi(api).on('editcomplete', _.bind( fire, this)).on('eyedropper', _.bind(_isEyedropperStart, this));
             this.shapeSettings.setApi(api).on('editcomplete', _.bind( fire, this)).on('eyedropper', _.bind(_isEyedropperStart, this)).on('updatescroller', _updateScroller);
             this.textartSettings.setApi(api).on('editcomplete', _.bind( fire, this)).on('eyedropper', _.bind(_isEyedropperStart, this)).on('updatescroller', _updateScroller);
+            this.annotationSettings.setApi(api).on('editcomplete', _.bind( fire, this)).on('eyedropper', _.bind(_isEyedropperStart, this)).on('updatescroller', _updateScroller);
             // if (this.signatureSettings) this.signatureSettings.setApi(api).on('editcomplete', _.bind( fire, this));
             if (this.formSettings) this.formSettings.setApi(api).on('editcomplete', fire).on('updatescroller', _updateScroller);
         },
@@ -255,7 +272,8 @@ define([
             this.imageSettings && this.imageSettings.setMode(mode);
             this.shapeSettings && this.shapeSettings.setMode(mode);
             this.formSettings && this.formSettings.setMode(mode);
-            this.chartSettings && this.chartSettings.setMode(mode);
+            // this.chartSettings && this.chartSettings.setMode(mode);
+            this.annotationSettings && this.annotationSettings.setMode(mode);
         },
 
         onBtnMenuClick: function(btn, e) {
@@ -276,6 +294,17 @@ define([
                 }
                 target_pane_parent.find('.content-box > .active').removeClass('active');
                 target_pane && target_pane.addClass("active");
+
+                const viewport = PDFE.getController('Viewport').getView('Viewport');
+                viewport.hlayout.hideItemResizer('right', !isPlugin);
+
+                const widthFromStorage = Common.localStorage.getItem('pdfe-rightmenu-width');
+                if(isPlugin && widthFromStorage) {
+                    this.$el.width(parseInt(widthFromStorage));
+                } else {
+                    this.setInnerWidth(MENU_BASE_WIDTH);
+                }
+                Common.NotificationCenter.trigger('layout:changed', 'rightmenu');
 
                 if (this.scroller) {
                     this.scroller.scrollTop(0);
@@ -338,7 +367,7 @@ define([
         },
 
         setButtons: function () {
-            var allButtons = [this.btnShape, this.btnImage, this.btnText, this.btnTable, this.btnTextArt, this.btnChart/*, this.btnSignature*/, this.btnForm];
+            var allButtons = [this.btnShape, this.btnImage, this.btnText, this.btnTable, this.btnTextArt, this.btnChart/*, this.btnSignature*/, this.btnForm, this.btnAnnotation];
             Common.UI.SideMenu.prototype.setButtons.apply(this, [allButtons]);
         },
 
@@ -346,12 +375,20 @@ define([
             this.$el.find('.side-panel .content-box').append($panel);
         },
 
+        setInnerWidth: function(value) {
+            const pane = $(this.el).find('.right-panel');
+            const paddings = parseInt(pane.css('padding-left')) + parseInt(pane.css('padding-right'));
+            MENU_SCALE_PART = value + paddings;
+            this.$el.css('width', (!Common.Utils.InternalSettings.get("pdfe-hide-right-settings") ? MENU_SCALE_PART : SCALE_MIN) + 'px');
+        },
+
         updateWidth: function() {
             var pane = $(this.el).find('.right-panel'),
                 paddings = parseInt(pane.css('padding-left')) + parseInt(pane.css('padding-right'));
-            pane.css('width', MENU_BASE_WIDTH + paddings + 'px');
-            MENU_SCALE_PART = SCALE_MIN + MENU_BASE_WIDTH + paddings;
-            this.$el.css('width', (this.GetActivePane() ? MENU_SCALE_PART : SCALE_MIN) + 'px');
+            MENU_SCALE_PART = MENU_BASE_WIDTH + paddings;
+            if ( !this.isPluginButtonPressed() ) {
+                this.$el.css('width', (!Common.Utils.InternalSettings.get("pdfe-hide-right-settings") ? MENU_SCALE_PART : SCALE_MIN) + 'px');
+            }
         },
 
         txtParagraphSettings:       'Text Settings',
@@ -361,7 +398,8 @@ define([
         txtTextArtSettings:         'Text Art Settings',
         txtChartSettings:           'Chart Settings',
         txtSignatureSettings:       'Signature Settings',
-        ariaRightMenu:               'Right menu',
-        txtFormSettings:            'Form Settings'
+        ariaRightMenu:              'Right menu',
+        txtFormSettings:            'Form Settings',
+        txtAnnotationSettings:      'Annotation Settings'
     }, PDFE.Views.RightMenu || {}));
 });

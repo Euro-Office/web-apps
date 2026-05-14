@@ -1542,8 +1542,8 @@ define([], function () {
                     var isEquation= (value.mathProps && value.mathProps.value);
                     me._currentParaObjDisabled = disabled;
 
-                    me.menuParagraphVAlign.setVisible(isInShape && !isInChart && !isEquation); // после того, как заголовок можно будет растягивать по вертикали, вернуть "|| isInChart" !!
-                    me.menuParagraphDirection.setVisible(isInShape && !isInChart && !isEquation); // после того, как заголовок можно будет растягивать по вертикали, вернуть "|| isInChart" !!
+                    me.menuParagraphVAlign.setVisible(isInShape && !isInChart && !isEquation); // TODO: once the title can be stretched vertically, restore "|| isInChart" !!
+                    me.menuParagraphDirection.setVisible(isInShape && !isInChart && !isEquation); // TODO: once the title can be stretched vertically, restore "|| isInChart" !!
                     if (isInShape || isInChart) {
                         var align = value.shapeProps.value.get_VerticalTextAlign();
                         var halign = value.paraProps.value.get_Jc();

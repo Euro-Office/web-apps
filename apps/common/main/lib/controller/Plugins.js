@@ -149,6 +149,12 @@ define([
 
                 if (this.configPlugins.config.options)
                     this.api.setPluginsOptions(this.configPlugins.config.options);
+
+                if (this.api.setPluginsDisabled) {
+                    const exclude_guids = !!this.configPlugins.config && this.configPlugins.config.disable instanceof Array ? this.configPlugins.config.disable : [];
+                    if (exclude_guids.length)
+                        this.api.setPluginsDisabled(exclude_guids);
+                }
             } else
                 this.configPlugins.plugins = false;
 
@@ -201,6 +207,8 @@ define([
                 this.api.asc_registerCallback("asc_onPluginWindowClose", _.bind(this.onPluginWindowClose, this));
                 this.api.asc_registerCallback("asc_onPluginWindowResize", _.bind(this.onPluginWindowResize, this));
                 this.api.asc_registerCallback("asc_onPluginWindowActivate", _.bind(this.openUIPlugin, this));
+                this.api.asc_registerCallback("asc_onPluginSetButtonDisabled", _.bind(this.onPluginSetButtonDisabled, this, true));
+                this.api.asc_registerCallback("asc_onPluginSetButtonEnabled", _.bind(this.onPluginSetButtonDisabled, this, false));
 
                 this.loadPlugins();
             }
@@ -884,7 +892,11 @@ define([
             if ( pluginsdata instanceof Array ) {
                 var arr = [], arrUI = [],
                     lang = me.appOptions.lang.split(/[\-_]/)[0];
+                const exclude_guids = !!me.configPlugins.config && me.configPlugins.config.disable instanceof Array ? me.configPlugins.config.disable : [];
                 pluginsdata.forEach(function(item){
+                    if ( exclude_guids.length && exclude_guids.includes(item.guid) )
+                        return;
+
                     var updatedItem;
                     if (forceUpdate) {
                         updatedItem = arr.find(function (i){
@@ -1223,7 +1235,8 @@ define([
                     help && window.open(help, '_blank');
                 },
                 'docked': function(frameId){
-                    me.api.asc_pluginButtonDockChanged(isPanel ? variation.type : 'panel', variation.guid, frameId, function(){
+                    const docked_place = isPanel ? variation.type : !!variation.dockedPlace ? variation.dockedPlace : 'panel';
+                    me.api.asc_pluginButtonDockChanged(docked_place, variation.guid, frameId, function(){
                         setTimeout(function () {
                             me.customPluginsDlg[frameId].close();
                             me.onPluginPanelShow(frameId, variation, lang);
@@ -1250,7 +1263,7 @@ define([
                 var variationType = Asc.PluginType.getType(variation.type);
                 var isSystem = (true === variation.isSystem) || (Asc.PluginType.System === variationType),
                     isPanel = variationType === Asc.PluginType.Panel || variationType === Asc.PluginType.PanelRight;
-                var visible = (this.appOptions.isEdit || variation.isViewer && (variation.isDisplayedInViewer!==false)) && _.contains(variation.EditorsSupport, this.editor) && !isSystem;
+                var visible = (this.appOptions.isEdit || this.appOptions.canSubmitForms || variation.isViewer && (variation.isDisplayedInViewer!==false)) && _.contains(variation.EditorsSupport, this.editor) && !isSystem;
                 if (visible && isPanel) {
                     this.onPluginPanelShow(frameId, variation, lang);
                 } else if (visible && !variation.isInsideMode) {
@@ -1295,7 +1308,7 @@ define([
 
         onPluginPanelShow: function (frameId, variation, lang) {
             var guid = variation.guid,
-                menu = this.isPDFEditor ? 'left' : (variation.type == 'panelRight' ? 'right' : 'left');
+                menu = (variation.dockedPlace||variation.type) == 'panelRight' ? 'right' : 'left';
             !menu && (menu = 'left');
 
             var description = variation.description;
@@ -1390,6 +1403,14 @@ define([
                 }, this);
                 this.backgroundPluginsTip.show();
             }
+        },
+
+        onPluginSetButtonDisabled: function (disable, index) {
+            var me = this;
+            if (me.pluginDlg) {
+                var btns = me.pluginDlg.getFooterButtons();
+                btns[index].setDisabled(disable);
+            };
         },
 
         onActiveTab: function (tab) {

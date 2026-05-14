@@ -85,7 +85,8 @@ define([
                 'ViewTab': {
                     'zoom:topage': _.bind(this.onBtnZoomTo, this, 'topage'),
                     'zoom:towidth': _.bind(this.onBtnZoomTo, this, 'towidth'),
-                    'darkmode:change': _.bind(this.onChangeDarkMode, this)
+                    'darkmode:change': _.bind(this.onChangeDarkMode, this),
+                    'macros:click':  _.bind(this.onClickMacros, this)
                 },
                 'Toolbar': {
                     'view:compact': _.bind(function (toolbar, state) {
@@ -100,6 +101,11 @@ define([
                 'LeftMenu': {
                     'view:hide': _.bind(function (leftmenu, state) {
                         this.view.chLeftMenu.setValue(!state, true);
+                    }, this)
+                },
+                'RightMenu': {
+                    'view:hide': _.bind(function (leftmenu, state) {
+                        this.view.chRightMenu.setValue(!state, true);
                     }, this)
                 }
             });
@@ -155,10 +161,17 @@ define([
                         emptyGroup.push(me.view.chRightMenu.$el.closest('.elset'));
                         emptyGroup.shift().append(me.view.chRightMenu.$el[0]);
                     }
-                    config.canPDFEdit && me.applyEditorMode(config);
 
                     if (emptyGroup.length>1) { // remove empty group
                         emptyGroup[emptyGroup.length-1].closest('.group').remove();
+                    }
+
+                    if (
+                        !config.canPDFEdit ||
+                        config.customization && config.customization.macros===false ||
+                        (Common.Controllers.Desktop && Common.Controllers.Desktop.isWinXp())
+                    ) {
+                        me.view.$el.find('.macro').remove();
                     }
 
                     me.view.cmbsZoom.forEach(function (cmb) {
@@ -313,19 +326,21 @@ define([
             Common.NotificationCenter.trigger('edit:complete', this.view);
         },
 
-        onChangeDarkMode: function (isdarkmode) {
+        onChangeDarkMode: function () {
             if (!this._darkModeTimer) {
                 var me = this;
                 me._darkModeTimer = setTimeout(function() {
                     me._darkModeTimer = undefined;
                 }, 500);
-                Common.UI.Themes.setContentTheme(isdarkmode?'dark':'light');
+                var isdarkmode = Common.UI.Themes.isContentThemeDark();
+                Common.UI.Themes.setContentTheme(isdarkmode ? 'light' : 'dark');
+                me.view.btnDarkDocument.setIconCls(isdarkmode ? 'toolbar__icon btn-day' : 'toolbar__icon btn-night');
             } else
                 this.onContentThemeChangedToDark(Common.UI.Themes.isContentThemeDark());
         },
 
         onContentThemeChangedToDark: function (isdark) {
-            this.view && this.view.btnDarkDocument.toggle(isdark, true);
+            this.view && this.view.btnDarkDocument.setIconCls(isdark ? 'toolbar__icon btn-night' : 'toolbar__icon btn-day', true);
         },
 
         onThemeChanged: function () {
@@ -348,11 +363,21 @@ define([
             }
         },
 
+        onClickMacros: function() {
+            var macrosWindow = new Common.Views.MacrosDialog({
+                api: this.api,
+            });
+            macrosWindow.show();
+        },
+
         onComboBlur: function() {
             Common.NotificationCenter.trigger('edit:complete', this.view);
         },
 
         applyEditorMode: function(config) {
+            if (this.view) {
+                this.view.$el && this.view.$el.find('.macro')[(config || this.mode)['isPDFEdit'] ? 'show' : 'hide']();
+            }
             if (this.view && this.view.chRightMenu) {
                 var isVisible = (config || this.mode)['isPDFEdit'];
                 isVisible && this.view.chRightMenu.$el.closest('.elset').addClass('transparent');

@@ -154,10 +154,21 @@ define([
             Common.NotificationCenter.on('layout:changed', _.bind(this.onLayoutChanged, this));
             $(window).on('resize', _.bind(this.onWindowResize, this));
 
-            var leftPanel = $('#left-menu');
+            var leftPanel = $('#left-menu'),
+                histPanel = $('#left-panel-history'),
+                rightPanel = $('#right-menu');
             this.viewport.hlayout.on('layout:resizedrag', function() {
                 this.api.Resize();
-                Common.localStorage.setItem('pdfe-mainmenu-width', leftPanel.width() );
+
+                const leftPanelWidth = histPanel.is(':visible') ? (histPanel.width()+SCALE_MIN) : leftPanel.width();
+                if(leftPanelWidth > SCALE_MIN) {
+                    Common.localStorage.setItem('pdfe-mainmenu-width', leftPanelWidth);
+                }
+
+                const rightPanelWidth = rightPanel.width();
+                if(rightPanelWidth > SCALE_MIN) {
+                    Common.localStorage.setItem('pdfe-rightmenu-width', rightPanelWidth);
+                }
             }, this);
 
             this.boxSdk = $('#editor_sdk');
@@ -220,6 +231,14 @@ define([
             case 'rightmenu':
                     this.viewport.hlayout.doLayout();
                     break;
+            case 'history':
+                var panel = this.viewport.hlayout.getItem('history');
+                if (panel.resize.el) {
+                    this.boxSdk.css('border-left', '');
+                    panel.resize.el.show();
+                }
+                this.viewport.hlayout.doLayout();
+                break;
             case 'leftmenu':
                 var panel = this.viewport.hlayout.getItem('left');
                 if (panel.resize.el) {
@@ -333,29 +352,21 @@ define([
         },
 
         applyEditorMode: function() {
-            if (!this.viewport) return;
+            if (!this.viewport || !this._initEditing) return;
 
-            if (this.mode.isPDFEdit && this._initEditing) {
-                var rightmenuController = this.getApplication().getController('RightMenu'),
-                    rightMenuView   = rightmenuController.getView('RightMenu');
+            var rightmenuController = this.getApplication().getController('RightMenu'),
+                rightMenuView   = rightmenuController.getView('RightMenu');
 
-                rightmenuController.setMode(this.mode);
-                rightmenuController.setApi(this.api);
+            rightmenuController.setMode(this.mode);
+            rightmenuController.setApi(this.api);
 
-                this._rightMenu   = rightMenuView.render(this.mode);
-                var value = Common.UI.LayoutManager.getInitValue('rightMenu');
-                value = (value!==undefined) ? !value : false;
-                Common.localStorage.getBool("pdfe-hidden-rightmenu", value) && this._rightMenu.hide();
-                Common.Utils.InternalSettings.set("pdfe-hidden-rightmenu", Common.localStorage.getBool("pdfe-hidden-rightmenu", value));
+            this._rightMenu   = rightMenuView.render(this.mode);
+            var value = Common.UI.LayoutManager.getInitValue('rightMenu');
+            value = (value!==undefined) ? !value : false;
+            Common.localStorage.getBool("pdfe-hidden-rightmenu", value) && this._rightMenu.hide();
+            Common.Utils.InternalSettings.set("pdfe-hidden-rightmenu", Common.localStorage.getBool("pdfe-hidden-rightmenu", value));
 
-                rightMenuView.setApi(this.api);
-                rightMenuView.setMode(this.mode);
-
-                this._initEditing = false;
-            }
-            if (!this._initEditing) {
-                this.getApplication().getController('RightMenu').onRightMenuHide(undefined, this.mode.isPDFEdit && !Common.Utils.InternalSettings.get("pdfe-hidden-rightmenu"), true);
-            }
+            this._initEditing = false;
         },
 
         onTabStyleChange: function (style) {

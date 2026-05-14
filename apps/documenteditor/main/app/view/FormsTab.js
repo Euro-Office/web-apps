@@ -173,6 +173,7 @@ define([
                 me.fireEvent('forms:insert', ['picture']);
             });
             this.btnSignField && this.btnSignField.on('click', function (b, e) {
+                Common.UI.TooltipManager.closeTip('signature')
                 me.fireEvent('forms:insert', ['signature']);
             });
             this.btnComplexField && this.btnComplexField.on('click', function (b, e) {
@@ -942,6 +943,13 @@ define([
                 this.btnSubmit && this.btnSubmit.setVisible(visible);
             },
 
+            showStartFillingAlert: function() {
+                Common.UI.warning({
+                    msg: this.txtStartFillingAlert,
+                    buttons: ['ok'],
+                });
+            },
+
             SetDisabled: function (state) {
                 this._state.disabled = state;
                 this.paragraphControls.forEach(function(button) {
@@ -1005,7 +1013,7 @@ define([
             tipCreditCard: 'Insert credit card number',
             capDateTime: 'Date & Time',
             tipDateTime: 'Insert date and time',
-            tipCreateField: 'To create a field select the desired field type on the toolbar and click on it. The field will appear in the document.',
+            //tipCreateField: 'To create a field select the desired field type on the toolbar and click on it. The field will appear in the document.',
             tipFormKey: 'You can assign a key to a field or a group of fields. When a user fills in the data, it will be copied to all the fields with the same key.',
             tipFormGroupKey: 'Group radio buttons to make the filling process faster. Choices with the same names will be synchronized. Users can only tick one radio button from the group.',
             tipFieldSettings: 'You can configure selected fields on the right sidebar. Click this icon to open the field settings.',
@@ -1023,7 +1031,8 @@ define([
             capBtnSignature: 'Signature Field',
             tipSignField: 'Insert signature field',
             textFillFor: 'Insert fields for',
-            textAddRole: 'Add recipient'
+            textAddRole: 'Add recipient',
+            txtStartFillingAlert:'No fields for filling added. Please, add field and try again.'
         }
     }()), DE.Views.FormsTab || {}));
 });

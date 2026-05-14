@@ -89,13 +89,15 @@ define([
                 'ViewTab': {
                     'zoom:topage': _.bind(this.onBtnZoomTo, this, 'topage'),
                     'zoom:towidth': _.bind(this.onBtnZoomTo, this, 'towidth'),
+                    'zoom:100': _.bind(this.onZoomTo100, this),
                     'rulers:change': _.bind(this.onChangeRulers, this),
                     'darkmode:change': _.bind(this.onChangeDarkMode, this),
                     'macros:click':  _.bind(this.onClickMacros, this),
                     'macros:record':  _.bind(this.onClickMacrosRec, this),
                     'macros:pause':  _.bind(this.onClickMacrosPause, this),
                     'pointer:select': _.bind(this.onPointerType, this, 'select'),
-                    'pointer:hand': _.bind(this.onPointerType, this, 'hand')
+                    'pointer:hand': _.bind(this.onPointerType, this, 'hand'),
+                    'pages:multiple': _.bind(this.onMultiplePages, this)
                 },
                 'Toolbar': {
                     'view:compact': _.bind(function (toolbar, state) {
@@ -105,6 +107,12 @@ define([
                 'Statusbar': {
                     'view:hide': _.bind(function (statusbar, state) {
                         this.view.chStatusbar.setValue(!state, true);
+                    }, this),
+                    'pages:multiplechanged': _.bind(function (isMultiple) {
+                        this.api.zoomCustomMode();
+                        this.api.SetMultipageViewMode(isMultiple);
+                        Common.localStorage.setBool("de-zoom-multipage", isMultiple);
+                        this.view.btnMultiplePages.toggle(isMultiple);
                     }, this)
                 },
                 'LeftMenu': {
@@ -163,7 +171,13 @@ define([
                         emptyGroup.shift().append(me.view.chLeftMenu.$el[0]);
                     }
 
-                    if (!config.isEdit || config.canBrandingExt && config.customization && config.customization.rightMenu === false || !Common.UI.LayoutManager.isElementVisible('rightMenu')) {
+                    const rightmenuController = me.getApplication().getController('RightMenu');
+                    const rightmenuView = rightmenuController.getView('RightMenu');
+                    const isPdfWithButtons = config.isPDFForm && rightmenuView && rightmenuView.getVisibleButtons().length > 0;
+                    if (!config.isEdit && !isPdfWithButtons || 
+                        config.canBrandingExt && config.customization && config.customization.rightMenu === false || 
+                        !Common.UI.LayoutManager.isElementVisible('rightMenu')
+                    ) {
                         emptyGroup.push(me.view.chRightMenu.$el.closest('.elset'));
                         me.view.chRightMenu.$el.remove();
                     } else if (emptyGroup.length>0) {
@@ -278,7 +292,17 @@ define([
         },
 
         onDocumentReady: function() {
-            Common.Utils.lockControls(Common.enumLock.disableOnStart, false, {array: this.view.lockedControls});
+            if ( this.view )
+                Common.Utils.lockControls(Common.enumLock.disableOnStart, false, {array: this.view.lockedControls});
+        },
+
+        onMultiplePages: function (pressed) {
+            if (this.api) {
+                this.api.zoomCustomMode();
+                this.api.SetMultipageViewMode(pressed);
+                Common.localStorage.setBool("de-zoom-multipage", pressed);
+                this.view.fireEvent('pages:multiplechanged', [pressed]);
+            }
         },
 
         onZoomChange: function (percent, type) {
@@ -288,6 +312,11 @@ define([
             this.view.btnsFitToWidth.forEach(function (btn) {
                 btn.toggle(type === 1, true);
             });
+
+            if (type === 2 || type === 1 && this.view.btnMultiplePages.pressed) {
+                this.api.SetMultipageViewMode(false);
+                this.view.btnMultiplePages.toggle(false);
+            };
 
             this.setZoomValue(percent);
 
@@ -343,6 +372,10 @@ define([
             Common.NotificationCenter.trigger('edit:complete', this.view);
         },
 
+        onZoomTo100: function () {
+            this.api && this.api.zoom(100);
+        },
+
         onChangeRulers: function (btn, checked) {
             Common.localStorage.setBool('de-hidden-rulers', !checked);
             Common.Utils.InternalSettings.set("de-hidden-rulers", !checked);
@@ -392,19 +425,21 @@ define([
             }
         },
 
-        onChangeDarkMode: function (isdarkmode) {
+        onChangeDarkMode: function () {
             if (!this._darkModeTimer) {
                 var me = this;
                 me._darkModeTimer = setTimeout(function() {
                     me._darkModeTimer = undefined;
                 }, 500);
-                Common.UI.Themes.setContentTheme(isdarkmode?'dark':'light');
+                var isdarkmode = Common.UI.Themes.isContentThemeDark();
+                Common.UI.Themes.setContentTheme(isdarkmode ? 'light' : 'dark');
+                me.view.btnDarkDocument.setIconCls(isdarkmode ? 'toolbar__icon btn-day' : 'toolbar__icon btn-night');
             } else
                 this.onContentThemeChangedToDark(Common.UI.Themes.isContentThemeDark());
         },
 
         onContentThemeChangedToDark: function (isdark) {
-            this.view && this.view.btnDarkDocument.toggle(isdark, true);
+            this.view && this.view.btnDarkDocument.setIconCls(isdark ? 'toolbar__icon btn-night' : 'toolbar__icon btn-day', true);
         },
 
         onThemeChanged: function () {
