@@ -302,15 +302,11 @@ define([
                 me = this;
             this.mode = mode;
             this.toolbar.applyLayout(mode);
-            var url = 'https://www.onlyoffice.com/blog/2025/10/docs-9-1-released';
+//            var url = 'https://www.onlyoffice.com/blog/2025/10/docs-9-1-released';
 
             Common.UI.FeaturesManager.isFeatureEnabled('featuresTips', true) && Common.UI.TooltipManager.addTips({
-                'commentFilter' : {name: 'help-tip-comment-filter', placement: 'bottom-right', text: this.helpCommentFilter, header: this.helpCommentFilterHeader, target: '#comments-btn-sort', maxwidth: 300,
-                                   closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
-                'masterTab' : {name: 'pe-help-tip-master-tab', placement: 'bottom-right', offset: {x: Common.UI.isRTL() ? -10 : 10, y: 0}, text: this.helpMasterTab, header: this.helpMasterTabHeader, target: 'li.ribtab #slideMaster',
-                                automove: true, maxwidth: 300, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
-                'chartElements' : {name: 'help-tip-chart-elements', placement: 'bottom', text: this.helpChartElements, header: this.helpChartElementsHeader, target: '#id-document-holder-btn-chart-element', maxwidth: 300,
-                    automove: true, noHighlight: true, noArrow: true, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
+//                'chartElements' : {name: 'help-tip-chart-elements', placement: 'bottom', text: this.helpChartElements, header: this.helpChartElementsHeader, target: '#id-document-holder-btn-chart-element', maxwidth: 300,
+//                    automove: true, noHighlight: true, noArrow: true, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
                 'gifPlayback' : {name:'pe-help-tip-gif-payback', placement: 'bottom', text: this.helpGifPlayback, header: this.helpGifPlaybackHeader, target: '#toolbar', maxwidth: 300,
                     automove: true, noArrow: true, noHighlight: true, closable: false, isNewFeature: true}
             });
@@ -3097,9 +3093,6 @@ define([
             if (isMaster) {
                 Common.NotificationCenter.trigger('tab:visible', 'slideMaster', true);
                 this.toolbar.setTab('slideMaster');
-                setTimeout(function() {
-                    Common.UI.TooltipManager.showTip('masterTab');
-                }, 100);
             } else {
                 Common.NotificationCenter.trigger('tab:visible', 'slideMaster', false);
                 this.toolbar.setTab('home');
@@ -3111,7 +3104,6 @@ define([
         },
 
         onActiveTab: function(tab) {
-            (tab !== 'slideMaster') && Common.UI.TooltipManager.closeTip('masterTab');
         },
 
         onClickTab: function(tab) {

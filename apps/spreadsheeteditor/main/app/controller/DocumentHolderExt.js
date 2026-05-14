@@ -3948,7 +3948,6 @@ define([], function () {
                         if (me.chartProps) {
                             me.updateChartElementMenu(me.documentHolder.menuChartElement.menu, me.chartProps);
                         }
-                        Common.UI.TooltipManager.closeTip('chartElements');
                     });
                 }
 
@@ -3973,7 +3972,6 @@ define([], function () {
                         btnLeft = leftSide - 32; 
                     } else {
                         chartContainer.hide();
-                        Common.UI.TooltipManager.closeTip('chartElements');
                         return;
                     }
                 } else if (me.isRtl) {
@@ -3983,7 +3981,6 @@ define([], function () {
                         btnLeft = rightSide; 
                     } else {
                         chartContainer.hide();
-                        Common.UI.TooltipManager.closeTip('chartElements');
                         return;
                     }
                 } else {
@@ -3993,7 +3990,6 @@ define([], function () {
                         btnLeft = leftSide + 18; 
                     } else {
                         chartContainer.hide();
-                        Common.UI.TooltipManager.closeTip('chartElements');
                         return;
                     }
                 }
@@ -4004,7 +4000,6 @@ define([], function () {
                     var chartBottom = y + height;
                     if (chartBottom < 40) { 
                         chartContainer.hide();
-                        Common.UI.TooltipManager.closeTip('chartElements');
                         return;
                     }
                 }
@@ -4013,15 +4008,10 @@ define([], function () {
                     left: btnLeft + 'px',
                     top: btnTop + 'px'
                 }).show();
-                setTimeout(function (){
-                    Common.UI.TooltipManager.showTip('chartElements');
-                    Common.UI.TooltipManager.applyPlacement('chartElements');
-                }, 100);
         
                 me.disableChartElementButton();
             } else {
                 chartContainer.hide();
-                Common.UI.TooltipManager.closeTip('chartElements');
             }
         };
 

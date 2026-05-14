@@ -1062,11 +1062,6 @@ define([
                 this._state.pagecontrolsdisable = page_deleted;
                 Common.Utils.lockControls(Common.enumLock.pageDeleted, page_deleted, {array: this.view.lockedControls});
             }
-
-            if (!this.view.btnInsertChart.isDisabled() && this._state.onactivetab) {
-                Common.UI.TooltipManager.getNeedShow('pdfCharts') && Common.UI.TooltipManager.closeTip('redactTab');
-                Common.UI.TooltipManager.showTip('pdfCharts');
-            }
         },
 
         onApiCanAddHyperlink: function(value) {
@@ -1079,14 +1074,8 @@ define([
         onActiveTab: function(tab) {
             if (tab === 'ins') {
                 this._state.onactivetab = true;
-                if (this.view && !this.view.btnInsertChart.isDisabled())
-                    setTimeout(function() {
-                        Common.UI.TooltipManager.getNeedShow('pdfCharts') && Common.UI.TooltipManager.closeTip('redactTab');
-                        Common.UI.TooltipManager.showTip('pdfCharts');
-                    }, 10);
             } else {
                 this._state.onactivetab = false;
-                Common.UI.TooltipManager.closeTip('pdfCharts');
             }
         }
 

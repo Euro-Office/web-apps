@@ -1269,7 +1269,6 @@ define([], function () {
                         if (me.chartProps) {
                             me.updateChartElementMenu(me.documentHolder.menuChartElement.menu, me.chartProps);
                         }
-                        Common.UI.TooltipManager.closeTip('chartElements');
                     });
                 }
 
@@ -1294,7 +1293,6 @@ define([], function () {
                         btn = rightSide;
                     } else {
                         chartContainer.hide();
-                        Common.UI.TooltipManager.closeTip('chartElements');
                         return;
                     }
                 } else {
@@ -1304,7 +1302,6 @@ define([], function () {
                         btn = leftSide;
                     } else {
                         chartContainer.hide();
-                        Common.UI.TooltipManager.closeTip('chartElements');
                         return;
                     }
                 }
@@ -1315,7 +1312,6 @@ define([], function () {
                     var chartBottom = y + height;
                     if (chartBottom < 20) { 
                         chartContainer.hide();
-                        Common.UI.TooltipManager.closeTip('chartElements');
                         return;
                     }
                 }
@@ -1324,15 +1320,10 @@ define([], function () {
                     left: btn + 'px',
                     top: btnTop + 'px'
                 }).show();
-                setTimeout(function (){
-                    Common.UI.TooltipManager.showTip('chartElements');
-                    Common.UI.TooltipManager.applyPlacement('chartElements');
-                }, 100);
         
                  me.disableChartElementButton();
             } else {
                 chartContainer.hide();
-                 Common.UI.TooltipManager.closeTip('chartElements');
             }
         };
 
@@ -1341,7 +1332,6 @@ define([], function () {
             var chartContainer = this.documentHolder.cmpEl.find('#chart-element-container');
             if (chartContainer.is(':visible')) {
                 chartContainer.hide();
-                Common.UI.TooltipManager.closeTip('chartElements');
             }
         };
 

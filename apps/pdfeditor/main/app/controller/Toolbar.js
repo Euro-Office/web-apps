@@ -190,15 +190,8 @@ define([
             var _main = this.getApplication().getController('Main');
             this.mode = mode;
             this.toolbar.applyLayout(mode);
-            var url = 'https://www.onlyoffice.com/blog/2025/10/docs-9-1-released';
 
             Common.UI.FeaturesManager.isFeatureEnabled('featuresTips', true) && Common.UI.TooltipManager.addTips({
-                // 'pdfCharts' : {name: 'pdfe-help-tip-pdf-charts', placement: 'bottom', offset: {x: Common.UI.isRTL() ? -30 : 30, y: 0}, text: this.helpPdfCharts, header: this.helpPdfChartsHeader,
-                //               target: '#slot-btn-inssmartart', isNewFeature: true, maxwidth: 300, closable: false, link: {text: _main.textLearnMore, url: url}},
-                'annotRect' : {name: 'pdfe-help-tip-annot-rect', placement: 'bottom', text: this.helpAnnotRect, header: this.helpAnnotRectHeader,
-                              target: '#slot-btn-shape-comment', isNewFeature: true, maxwidth: 300, closable: false, noHighlight: true, link: {text: _main.textLearnMore, url: url}},
-                'redactTab' : {name: 'help-tip-redact-tab', placement: 'bottom-right', offset: {x: Common.UI.isRTL() ? -10 : 10, y: 0}, text: this.helpRedactTab, header: this.helpRedactTabHeader, target: 'li.ribtab #red',
-                               automove: true, maxwidth: 300, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
                 'createLink': {name:'pdfe-help-tip-create-link', placement: 'bottom-left', text: this.helpCreateLink, header: this.helpCreateLinkHeader, target: '#slot-btn-insertlink', maxwidth: 300,
                                 automove: true, closable: false, isNewFeature: true}
             });
@@ -580,8 +573,6 @@ define([
                 if (this._state.activated) this._state.pagecontrolsdisable = page_deleted;
                 this.toolbar.lockToolbar(Common.enumLock.pageDeleted, page_deleted);
             }
-            if (this.toolbar.btnShapeComment && !this.toolbar.btnShapeComment.isDisabled() && this.toolbar.isTabActive('comment'))
-                Common.UI.TooltipManager.showTip('annotRect');
         },
 
         onApiFocusObject: function(selectedObjects) {
@@ -768,11 +759,6 @@ define([
             toolbar.lockToolbar(Common.enumLock.cantRotatePage, !this.api.asc_CanRotatePages([this.api.getCurrentPage()]), {array: [toolbar.btnRotatePage]});
             toolbar.lockToolbar(Common.enumLock.pageEditText, page_edit_text, {array: [toolbar.btnEditText]});
             toolbar.lockToolbar(Common.enumLock.cantDelPage, !this.api.asc_CanRemovePages([this.api.getCurrentPage()]), {array: [toolbar.btnDelPage]});
-
-            if (toolbar.btnShapeComment && !toolbar.btnShapeComment.isDisabled() && toolbar.isTabActive('comment')) {
-                Common.UI.TooltipManager.getNeedShow('annotRect') && Common.UI.TooltipManager.closeTip('redactTab');
-                Common.UI.TooltipManager.showTip('annotRect');
-            }
         },
 
         onApiZoomChange: function(percent, type) {},
@@ -1272,8 +1258,6 @@ define([
         },
 
          onBtnShapeCommentClick: function(btn, e) {
-            Common.UI.TooltipManager.closeTip('annotRect');
-
             btn.menu.getItems(true).filter(function(item) {
                 return item.value == btn.options.shapeType
             })[0].setChecked(true);
@@ -1301,7 +1285,6 @@ define([
         },
 
         onMenuShapeCommentShowAfter: function(menu) {
-            Common.UI.TooltipManager.closeTip('annotRect');
         },
 
         onShapeCommentSizeClick: function (direction) {
@@ -1716,8 +1699,6 @@ define([
             toolbar.processPanelVisible(null, true, true);
             $host.find('.annotate').removeClass('transparent');
             $host.find('.pdfedit').removeClass('transparent');
-
-            this.mode.isPDFEdit ? Common.UI.TooltipManager.showTip('redactTab') : Common.UI.TooltipManager.closeTip('redactTab');
         },
         
         onAppReady: function (config) {
@@ -1804,17 +1785,8 @@ define([
                 this.requiredTooltip.close();
                 this.requiredTooltip = undefined;
             }
-            if (tab === 'comment') {
-                if (this.toolbar && !this.toolbar.btnShapeComment.isDisabled())
-                    setTimeout(function() {
-                        Common.UI.TooltipManager.getNeedShow('annotRect') && Common.UI.TooltipManager.closeTip('redactTab');
-                        Common.UI.TooltipManager.showTip('annotRect')
-                    }, 10);
-            } else
-                Common.UI.TooltipManager.closeTip('annotRect');
 
             (tab === 'ins') ? Common.UI.TooltipManager.showTip('createLink') : Common.UI.TooltipManager.closeTip('createLink');
-            (tab === 'red') && Common.UI.TooltipManager.closeTip('redactTab');
         },
 
         onClickTab: function(tab) {
@@ -1822,8 +1794,6 @@ define([
         },
 
         onTabCollapse: function(tab) {
-            Common.UI.TooltipManager.closeTip('pdfCharts');
-            Common.UI.TooltipManager.closeTip('annotRect');
             Common.UI.TooltipManager.closeTip('createLink');
         },
 

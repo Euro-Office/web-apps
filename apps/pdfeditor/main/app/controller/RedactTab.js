@@ -121,7 +121,6 @@ define([
         },
 
         onApplyRedact: function() {
-            Common.UI.TooltipManager.closeTip('apply-redaction');
             Common.UI.warning({
                 width: 500,
                 msg: this.textApplyRedact,
@@ -136,7 +135,6 @@ define([
         },
 
         onStartRedact: function(isMarkMode) {
-            Common.UI.TooltipManager.closeTip('mark-for-redaction');
             if (isMarkMode && this.toolbar) {
                 this.toolbar.turnOnSelectTool();
                 this.api.SetMarkerFormat(undefined, false);
@@ -219,12 +217,8 @@ define([
         onActiveTab: function(tab) {
             if (tab == 'red') {
                 if (!this.toolbar.toolbar.isCompact()) {
-                    Common.UI.TooltipManager.showTip('mark-for-redaction');
-                    Common.UI.TooltipManager.showTip('apply-redaction');
                 }
             } else {
-                Common.UI.TooltipManager.closeTip('mark-for-redaction');
-                Common.UI.TooltipManager.closeTip('apply-redaction');
                 const isMarked = this.api.HasRedact();
                 if (
                     isMarked &&
@@ -309,12 +303,6 @@ define([
                     }
                 });
             }
-            Common.UI.TooltipManager.addTips({
-                'mark-for-redaction' : {name: 'help-tip-mark-for-redaction', placement: 'bottom-right', text: this.tipMarkForRedaction, header: this.tipMarkForRedactionHeader, target: '#slot-btn-markredact',
-                    automove: true, next: 'apply-redaction', maxwidth: 270, closable: false, isNewFeature: false, noHighlight: true},
-                'apply-redaction' : {name: 'help-tip-apply-redaction', placement: 'bottom-left', text: this.tipApplyRedaction, header: this.tipApplyRedactionHeader, target: '#slot-btn-apply-redactions',
-                    automove: true, prev: 'mark-for-redaction', maxwidth: 270, closable: false, isNewFeature: false, noHighlight: true},
-            });
         },
 
         onDocumentReady: function() {
