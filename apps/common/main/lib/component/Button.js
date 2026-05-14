@@ -1119,7 +1119,7 @@ define([
         },
 
         updateIcon: function() {
-            this.$icon && this.$icon.css({'background-image': 'url('+ (this.cmpButtonFirst && (this.cmpButtonFirst.hasClass('active') || this.cmpButtonFirst.is(':active')) ? this.iconActiveImg : this.iconNormalImg) +')'});
+            this.$icon && this.$icon.css({'background-image': 'url("'+ (this.cmpButtonFirst && (this.cmpButtonFirst.hasClass('active') || this.cmpButtonFirst.is(':active')) ? this.iconActiveImg : this.iconNormalImg) +'")'});
         },
 
         applyScaling: function (ratio) {
