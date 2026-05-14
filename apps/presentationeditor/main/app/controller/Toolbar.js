@@ -312,7 +312,11 @@ define([
                 'chartElements' : {name: 'help-tip-chart-elements', placement: 'bottom', text: this.helpChartElements, header: this.helpChartElementsHeader, target: '#id-document-holder-btn-chart-element', maxwidth: 300,
                     automove: true, noHighlight: true, noArrow: true, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
                 'gifPlayback' : {name:'pe-help-tip-gif-payback', placement: 'bottom', text: this.helpGifPlayback, header: this.helpGifPlaybackHeader, target: '#toolbar', maxwidth: 300,
-                    automove: true, noArrow: true, noHighlight: true, closable: false, isNewFeature: true}
+                    automove: true, noArrow: true, noHighlight: true, closable: false, isNewFeature: true},
+                'slideTransitions' : {name:'pe-help-tip-slideTransitions', placement: 'bottom', text: this.helpSlideTransitions, header: this.helpSlideTransitionsHeader, target: '#transit-field-effects', maxwidth: 300,
+                    automove: true, closable: false, isNewFeature: true},
+                'slideTheme' : {name:'pe-help-tip-slideTheme', placement: 'bottom', text: this.helpSlideTheme, header: this.helpSlideThemeHeader, target: '#slot-field-styles', maxwidth: 300,
+                    automove: true, closable: false, isNewFeature: true}
             });
             Common.UI.TooltipManager.addTips({
                 'refreshFile' : {text: _main.textUpdateVersion, header: _main.textUpdating, target: '#toolbar', maxwidth: 'none', showButton: false, automove: true, noHighlight: true, noArrow: true, multiple: true},
@@ -2219,6 +2223,7 @@ define([
         },
 
         onListThemeSelect: function(combo, record) {
+            Common.UI.TooltipManager.closeTip('slideTheme');
             this._state.themeId = undefined;
             if (this.api && record)
                 this.api.ChangeTheme(record.get('themeId'));
@@ -3112,6 +3117,8 @@ define([
 
         onActiveTab: function(tab) {
             (tab !== 'slideMaster') && Common.UI.TooltipManager.closeTip('masterTab');
+            (tab === 'transit') ? Common.UI.TooltipManager.showTip('slideTransitions') : Common.UI.TooltipManager.closeTip('slideTransitions');
+            (tab === 'design') ? Common.UI.TooltipManager.showTip('slideTheme') : Common.UI.TooltipManager.closeTip('slideTheme');
         },
 
         onClickTab: function(tab) {

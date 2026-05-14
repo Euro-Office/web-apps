@@ -182,6 +182,7 @@ define([
         },
 
         onEffectSelect: function (combo, record) {
+            Common.UI.TooltipManager.closeTip('slideTransitions');
             var type = record.get('value');
             var parameter = this._state.EffectType;
             var prismId = (type === Asc.c_oAscSlideTransitionTypes.Prism) ? record.get('prismId') : undefined;

@@ -2106,6 +2106,8 @@
   "SSE.Controllers.Toolbar.errorMaxPoints": "The maximum number of points in series per chart is 4096.",
   "SSE.Controllers.Toolbar.errorMaxRows": "ERROR! The maximum number of data series per chart is 255",
   "SSE.Controllers.Toolbar.errorStockChart": "Incorrect row order. To build a stock chart place the data on the sheet in the following order:<br> opening price, max price, min price, closing price.",
+  "SSE.Controllers.Toolbar.helpDarkDocument": "In dark theme, you can switch the document to dark mode.",
+  "SSE.Controllers.Toolbar.helpDarkDocumentHeader": "Dark document",
   "SSE.Controllers.Toolbar.helpCellFormat": "Easily access all options for working with sheets, rows, and columns.",
   "SSE.Controllers.Toolbar.helpCellFormatHeader": "New button: Format",
   "SSE.Controllers.Toolbar.helpChartElements": "Easily toggle the visibility of chart elements with several clicks.",
