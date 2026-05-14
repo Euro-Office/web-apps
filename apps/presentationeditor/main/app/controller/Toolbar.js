@@ -316,6 +316,8 @@ define([
                 'slideTransitions' : {name:'pe-help-tip-slideTransitions', placement: 'bottom', text: this.helpSlideTransitions, header: this.helpSlideTransitionsHeader, target: '#transit-field-effects', maxwidth: 300,
                     automove: true, closable: false, isNewFeature: true},
                 'slideTheme' : {name:'pe-help-tip-slideTheme', placement: 'bottom', text: this.helpSlideTheme, header: this.helpSlideThemeHeader, target: '#slot-field-styles', maxwidth: 300,
+                    automove: true, closable: false, isNewFeature: true},
+                'pasteOptions' : {name:'pe-help-tip-pasteOptions', placement: 'bottom-right', text: this.helpPasteOptions, header: this.helpPasteOptionsHeader, target: '#slot-btn-paste', maxwidth: 300,
                     automove: true, closable: false, isNewFeature: true}
             });
             Common.UI.TooltipManager.addTips({
@@ -3090,6 +3092,7 @@ define([
             this._state.customPluginData = null;
 
             Common.UI.TooltipManager.showTip('gifPlayback');
+            this.mode && this.mode.isDesktopApp && Common.UI.TooltipManager.showTip('pasteOptions');
         },
 
         onChangeViewMode: function (mode) { // master or normal
@@ -3119,6 +3122,7 @@ define([
             (tab !== 'slideMaster') && Common.UI.TooltipManager.closeTip('masterTab');
             (tab === 'transit') ? Common.UI.TooltipManager.showTip('slideTransitions') : Common.UI.TooltipManager.closeTip('slideTransitions');
             (tab === 'design') ? Common.UI.TooltipManager.showTip('slideTheme') : Common.UI.TooltipManager.closeTip('slideTheme');
+            (tab !== 'home') && Common.UI.TooltipManager.closeTip('pasteOptions');
         },
 
         onClickTab: function(tab) {

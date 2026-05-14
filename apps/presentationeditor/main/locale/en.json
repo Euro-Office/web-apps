@@ -1877,6 +1877,8 @@
   "PE.Controllers.Toolbar.helpChartElementsHeader": "Chart elements display",
   "PE.Controllers.Toolbar.helpCommentFilter": "Manage your view by toggling between open and resolved comments in the left panel.",
   "PE.Controllers.Toolbar.helpCommentFilterHeader": "Comment filters",
+  "PE.Controllers.Toolbar.helpPasteOptions": "Use the dropdown arrow on the Paste button to choose how to paste content.",
+  "PE.Controllers.Toolbar.helpPasteOptionsHeader": "Paste options",
   "PE.Controllers.Toolbar.helpSlideTheme": "New slide design themes have been added.",
   "PE.Controllers.Toolbar.helpSlideThemeHeader": "New slide themes",
   "PE.Controllers.Toolbar.helpSlideTransitions": "New slide transitions have been added.",
