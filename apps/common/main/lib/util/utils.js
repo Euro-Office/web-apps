@@ -206,7 +206,8 @@ define([], function () {
                     needRepaint = true;
                 else if (needRepaint && me.innerWidth>0) {
                     needRepaint = false;
-                    jQuery.support && jQuery.support.forceStyleTests();
+                    // jQuery.support && jQuery.support.forceStyleTests();  // no computeStyleTests and forceStyleTests in jQuery v4.0.0.
+                                                                            // commit title is "Fix jquery loading in the hidden frame". need to test
                     Common.NotificationCenter.trigger('app:repaint');
                 }
             },
