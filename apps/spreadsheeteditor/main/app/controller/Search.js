@@ -600,6 +600,7 @@ define([
 
         onSelectSearchingResults: function (val) {
             if (!val && (this.getApplication().getController('LeftMenu').isSearchPanelVisible() || this.getApplication().getController('Viewport').isSearchBarVisible())) return;
+            val && this._state.isContentChanged && this._state.searchText && this.onQuerySearch;
 
             if (this._state.isHighlightedResults !== val) {
                 this.api.asc_selectSearchingResults(val);
