@@ -1746,6 +1746,8 @@
   "PDFE.Controllers.Toolbar.helpPdfChartsHeader": "Diagramok és SmartArt-ábrák PDF-ben",
   "PDFE.Controllers.Toolbar.helpRedactTab": "Védje a bizalmas információkat a Kitakarás funkcióval, amely lehetővé teszi a bizalmas tartalmak biztonságos eltávolítását.",
   "PDFE.Controllers.Toolbar.helpRedactTabHeader": "Kitakarás a PDF-ben",
+  "PDFE.Controllers.Toolbar.helpChartTab": "Minden diagrambeállítás mostantól elérhető az eszköztár Diagramtervezés lapján.",
+  "PDFE.Controllers.Toolbar.helpChartTabHeader": "Diagramtervezés lap",
   "PDFE.Controllers.Toolbar.notcriticalErrorTitle": "Figyelmeztetés",
   "PDFE.Controllers.Toolbar.textFontSizeErr": "A megadott érték helytelen.<br>Kérjük, adjon meg egy számértéket 1 és 300 között",
   "PDFE.Controllers.Toolbar.textGotIt": "Megértettem",

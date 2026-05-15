@@ -776,11 +776,7 @@ define([
 
             if (mode === 'show') {
                 this.getApplication().getController('Common.Controllers.Comments').onAfterShow();
-                setTimeout(function() {
-                    Common.UI.TooltipManager.showTip('commentFilter');
-                }, 10);
-            } else
-                Common.UI.TooltipManager.closeTip('commentFilter');
+            }
 
             $(this.leftMenu.btnComments.el).blur();
         },
@@ -798,7 +794,6 @@ define([
                 }
             }
             if (!value) {
-                Common.UI.TooltipManager.closeTip('chartElements');
                 if (this.mode && this.mode.isPDFForm) {
                     Common.UI.TooltipManager.closeTip('formSigned');
                     var rightmenu = this.getApplication().getController('RightMenu');

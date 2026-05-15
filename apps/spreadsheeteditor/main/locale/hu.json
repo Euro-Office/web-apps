@@ -2118,6 +2118,8 @@
   "SSE.Controllers.Toolbar.helpSolverHeader": "Megoldó",
   "SSE.Controllers.Toolbar.helpTableTab": "Az összes formázott táblázatbeállítást kényelmesen elérheti a dedikált Táblázattervezés lapon.",
   "SSE.Controllers.Toolbar.helpTableTabHeader": "Táblázat dizájn fül",
+  "SSE.Controllers.Toolbar.helpChartTab": "Minden diagrambeállítás mostantól elérhető az eszköztár Diagramtervezés lapján.",
+  "SSE.Controllers.Toolbar.helpChartTabHeader": "Diagramtervezés lap",
   "SSE.Controllers.Toolbar.textAccent": "Akcentusok",
   "SSE.Controllers.Toolbar.textBracket": "Zárójelben",
   "SSE.Controllers.Toolbar.textDirectional": "Irányított",

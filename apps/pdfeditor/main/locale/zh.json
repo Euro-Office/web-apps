@@ -1746,6 +1746,8 @@
   "PDFE.Controllers.Toolbar.helpPdfChartsHeader": "PDF图表和智能图形",
   "PDFE.Controllers.Toolbar.helpRedactTab": "使用密文功能保护敏感信息，安全删除机密内容。",
   "PDFE.Controllers.Toolbar.helpRedactTabHeader": "PDF密文",
+  "PDFE.Controllers.Toolbar.helpChartTab": "所有图表设置现已在工具栏上专用的图表设计选项卡中提供。",
+  "PDFE.Controllers.Toolbar.helpChartTabHeader": "图表设计选项卡",
   "PDFE.Controllers.Toolbar.notcriticalErrorTitle": "警告",
   "PDFE.Controllers.Toolbar.textFontSizeErr": "输入的值不正确<br>请输入一个介于1和300之间的数值",
   "PDFE.Controllers.Toolbar.textGotIt": "知道了",

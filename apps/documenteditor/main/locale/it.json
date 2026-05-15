@@ -1867,6 +1867,8 @@
   "DE.Controllers.Toolbar.helpMultipageView": "Lavora con più pagine contemporaneamente per una navigazione più semplice.",
   "DE.Controllers.Toolbar.helpMultipageViewHeader": "Vista multipagina",
   "DE.Controllers.Toolbar.helpSignature": "Inserisci un campo firma per consentire ai destinatari di firmare i moduli: tramite immagine, testo personalizzato o disegno sullo schermo.",
+  "DE.Controllers.Toolbar.helpChartTab": "Tutte le impostazioni del grafico sono ora disponibili nella scheda dedicata Progettazione grafico nella barra degli strumenti.",
+  "DE.Controllers.Toolbar.helpChartTabHeader": "Scheda Progettazione grafico",
   "DE.Controllers.Toolbar.helpSignatureHeader": "Altre opzioni di firma",
   "DE.Controllers.Toolbar.notcriticalErrorTitle": "Avviso",
   "DE.Controllers.Toolbar.textAccent": "Accenti",

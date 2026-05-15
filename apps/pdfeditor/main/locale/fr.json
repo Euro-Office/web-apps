@@ -1746,6 +1746,8 @@
   "PDFE.Controllers.Toolbar.helpPdfChartsHeader": "Graphiques et SmartArt dans les PDF",
   "PDFE.Controllers.Toolbar.helpRedactTab": "Protégez les informations sensibles avec la fonction Biffer, vous permettant de supprimer en toute sécurité le contenu confidentiel.",
   "PDFE.Controllers.Toolbar.helpRedactTabHeader": "Biffer dans les PDF",
+  "PDFE.Controllers.Toolbar.helpChartTab": "Tous les paramètres du graphique sont désormais disponibles dans l'onglet dédié Conception du graphique de la barre d'outils.",
+  "PDFE.Controllers.Toolbar.helpChartTabHeader": "Onglet Conception du graphique",
   "PDFE.Controllers.Toolbar.notcriticalErrorTitle": "Avertissement",
   "PDFE.Controllers.Toolbar.textFontSizeErr": "La valeur saisie est incorrecte.<br>Veuillez saisir une valeur numérique comprise entre 1 et 300",
   "PDFE.Controllers.Toolbar.textGotIt": "OK",

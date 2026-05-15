@@ -469,9 +469,6 @@ define([
                     menu.setInnerMenu([{menu: picker, index: 0}]);
                 };
                 this.btnInsertChart.menu.on('show:before', onShowBefore);
-                this.btnInsertChart.menu.on('show:before', function() {
-                    Common.UI.TooltipManager.closeTip('pdfCharts');
-                });
 
                 this.btnInsertSmartArt.setMenu(new Common.UI.Menu({
                     cls: 'shifted-right',
@@ -545,9 +542,6 @@ define([
                     menu.off('show:before', onShowBeforeSmartArt);
                 };
                 this.btnInsertSmartArt.menu.on('show:before', onShowBeforeSmartArt);
-                this.btnInsertSmartArt.menu.on('show:before', function() {
-                    Common.UI.TooltipManager.closeTip('pdfCharts');
-                });
 
                 var onShowBeforeTextArt = function (menu) {
                     var collection = PDFE.getCollection('Common.Collections.TextArt');

@@ -1746,6 +1746,8 @@
   "PDFE.Controllers.Toolbar.helpPdfChartsHeader": "PDF内のチャートとSmartArt",
   "PDFE.Controllers.Toolbar.helpRedactTab": "機密情報を保護するには、編集機能を使って安全に機密コンテンツを削除できる。",
   "PDFE.Controllers.Toolbar.helpRedactTabHeader": "PDFでの黒消し",
+  "PDFE.Controllers.Toolbar.helpChartTab": "すべてのグラフ設定が、ツールバーの専用「グラフのデザイン」タブで利用可能になりました。",
+  "PDFE.Controllers.Toolbar.helpChartTabHeader": "グラフのデザインタブ",
   "PDFE.Controllers.Toolbar.notcriticalErrorTitle": " 警告",
   "PDFE.Controllers.Toolbar.textFontSizeErr": "入力された値が正しくありません。<br>1〜300の数値を入力してください。",
   "PDFE.Controllers.Toolbar.textGotIt": "OK",

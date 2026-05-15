@@ -1867,6 +1867,8 @@
   "DE.Controllers.Toolbar.helpMultipageView": "Dolgozz egyszerre több oldallal a könnyebb navigáció érdekében.",
   "DE.Controllers.Toolbar.helpMultipageViewHeader": "Többoldalas nézet",
   "DE.Controllers.Toolbar.helpSignature": "Szúrjon be egy aláírásmezőt, hogy a címzettek aláírhassák az űrlapokat: képpel, egyéni szöveggel vagy a képernyőn rajzolva.",
+  "DE.Controllers.Toolbar.helpChartTab": "Minden diagrambeállítás mostantól elérhető az eszköztár Diagramtervezés lapján.",
+  "DE.Controllers.Toolbar.helpChartTabHeader": "Diagramtervezés lap",
   "DE.Controllers.Toolbar.helpSignatureHeader": "További aláírási lehetőségek",
   "DE.Controllers.Toolbar.notcriticalErrorTitle": "Figyelmeztetés",
   "DE.Controllers.Toolbar.textAccent": "Akcentusok",

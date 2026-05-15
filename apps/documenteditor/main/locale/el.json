@@ -1867,6 +1867,8 @@
   "DE.Controllers.Toolbar.helpMultipageView": "Εργαστείτε με πολλές σελίδες ταυτόχρονα για ευκολότερη πλοήγηση.",
   "DE.Controllers.Toolbar.helpMultipageViewHeader": "Προβολή πολλαπλών σελίδων",
   "DE.Controllers.Toolbar.helpSignature": "Εισάγετε ένα πεδίο υπογραφής για να επιτρέψετε στους παραλήπτες να υπογράψουν φόρμες: με εικόνα, προσαρμοσμένο κείμενο ή σχέδιο στην οθόνη.",
+  "DE.Controllers.Toolbar.helpChartTab": "Όλες οι ρυθμίσεις γραφήματος είναι τώρα διαθέσιμες στην ειδική καρτέλα Σχεδίαση γραφήματος στη γραμμή εργαλείων.",
+  "DE.Controllers.Toolbar.helpChartTabHeader": "Καρτέλα Σχεδίαση γραφήματος",
   "DE.Controllers.Toolbar.helpSignatureHeader": "Περισσότερες επιλογές υπογραφής",
   "DE.Controllers.Toolbar.notcriticalErrorTitle": "Προειδοποίηση",
   "DE.Controllers.Toolbar.textAccent": "Τόνοι/Πνεύματα",

@@ -336,6 +336,7 @@ define([
         },
 
         onChangeDarkMode: function (isdarkmode) {
+            Common.UI.TooltipManager.closeTip('darkDocument');
             if (!this._darkModeTimer) {
                 var me = this;
                 me._darkModeTimer = setTimeout(function() {

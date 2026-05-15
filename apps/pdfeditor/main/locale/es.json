@@ -1660,6 +1660,8 @@
   "PDFE.Controllers.Toolbar.helpPdfChartsHeader": "Gráficos y SmartArt en PDF",
   "PDFE.Controllers.Toolbar.helpRedactTab": "Proteja la información confidencial con la función Redactar, que le permite eliminar de forma segura el contenido confidencial.",
   "PDFE.Controllers.Toolbar.helpRedactTabHeader": "Redactar en PDF",
+  "PDFE.Controllers.Toolbar.helpChartTab": "Todas las configuraciones del gráfico ahora están disponibles en la pestaña dedicada Diseño de gráfico en la barra de herramientas.",
+  "PDFE.Controllers.Toolbar.helpChartTabHeader": "Pestaña Diseño de gráfico",
   "PDFE.Controllers.Toolbar.notcriticalErrorTitle": "Advertencia",
   "PDFE.Controllers.Toolbar.textFontSizeErr": "El valor introducido es incorrecto.<br>Por favor, introduzca un valor numérico entre 1 y 300",
   "PDFE.Controllers.Toolbar.textGotIt": "Entiendo",

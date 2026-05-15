@@ -1879,6 +1879,8 @@
   "PE.Controllers.Toolbar.helpCommentFilterHeader": "Filtri dei commenti",
   "PE.Controllers.Toolbar.helpGifPlayback": "Dai vita alle tue diapositive riproducendo animazioni GIF durante la modalità presentazione.",
   "PE.Controllers.Toolbar.helpGifPlaybackHeader": "Riproduzione GIF in modalità presentazione",
+  "PE.Controllers.Toolbar.helpChartTab": "Tutte le impostazioni del grafico sono ora disponibili nella scheda dedicata Progettazione grafico nella barra degli strumenti.",
+  "PE.Controllers.Toolbar.helpChartTabHeader": "Scheda Progettazione grafico",
   "PE.Controllers.Toolbar.helpMasterTab": "Accedi allo Slide Master nella scheda della barra degli strumenti dedicata per un controllo più semplice.",
   "PE.Controllers.Toolbar.helpMasterTabHeader": "Scheda Slide Master",
   "PE.Controllers.Toolbar.textAccent": "Accenti",

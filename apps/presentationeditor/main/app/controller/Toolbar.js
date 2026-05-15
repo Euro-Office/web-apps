@@ -302,17 +302,21 @@ define([
                 me = this;
             this.mode = mode;
             this.toolbar.applyLayout(mode);
-            var url = 'https://www.onlyoffice.com/blog/2025/10/docs-9-1-released';
+//            var url = 'https://www.onlyoffice.com/blog/2025/10/docs-9-1-released';
 
             Common.UI.FeaturesManager.isFeatureEnabled('featuresTips', true) && Common.UI.TooltipManager.addTips({
-                'commentFilter' : {name: 'help-tip-comment-filter', placement: 'bottom-right', text: this.helpCommentFilter, header: this.helpCommentFilterHeader, target: '#comments-btn-sort', maxwidth: 300,
-                                   closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
-                'masterTab' : {name: 'pe-help-tip-master-tab', placement: 'bottom-right', offset: {x: Common.UI.isRTL() ? -10 : 10, y: 0}, text: this.helpMasterTab, header: this.helpMasterTabHeader, target: 'li.ribtab #slideMaster',
-                                automove: true, maxwidth: 300, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
-                'chartElements' : {name: 'help-tip-chart-elements', placement: 'bottom', text: this.helpChartElements, header: this.helpChartElementsHeader, target: '#id-document-holder-btn-chart-element', maxwidth: 300,
-                    automove: true, noHighlight: true, noArrow: true, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
+//                'chartElements' : {name: 'help-tip-chart-elements', placement: 'bottom', text: this.helpChartElements, header: this.helpChartElementsHeader, target: '#id-document-holder-btn-chart-element', maxwidth: 300,
+//                    automove: true, noHighlight: true, noArrow: true, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
+                'tipChartTab' : {name: 'pe-help-tip-chart-tab', placement: 'bottom', text: this.helpChartTab, header: this.helpChartTabHeader, target: 'li.ribtab #charttab', maxwidth: 300,
+                    automove: true, closable: false, isNewFeature: true},
                 'gifPlayback' : {name:'pe-help-tip-gif-payback', placement: 'bottom', text: this.helpGifPlayback, header: this.helpGifPlaybackHeader, target: '#toolbar', maxwidth: 300,
-                    automove: true, noArrow: true, noHighlight: true, closable: false, isNewFeature: true}
+                    automove: true, noArrow: true, noHighlight: true, closable: false, isNewFeature: true},
+                'slideTransitions' : {name:'pe-help-tip-slideTransitions', placement: 'bottom', text: this.helpSlideTransitions, header: this.helpSlideTransitionsHeader, target: '#transit-field-effects', maxwidth: 300,
+                    automove: true, closable: false, isNewFeature: true},
+                'slideTheme' : {name:'pe-help-tip-slideTheme', placement: 'bottom', text: this.helpSlideTheme, header: this.helpSlideThemeHeader, target: '#slot-field-styles', maxwidth: 300,
+                    automove: true, closable: false, isNewFeature: true},
+                'pasteOptions' : {name:'pe-help-tip-pasteOptions', placement: 'bottom-right', text: this.helpPasteOptions, header: this.helpPasteOptionsHeader, target: '#slot-btn-paste', maxwidth: 300,
+                    automove: true, closable: false, isNewFeature: true}
             });
             Common.UI.TooltipManager.addTips({
                 'refreshFile' : {text: _main.textUpdateVersion, header: _main.textUpdating, target: '#toolbar', maxwidth: 'none', showButton: false, automove: true, noHighlight: true, noArrow: true, multiple: true},
@@ -933,6 +937,13 @@ define([
                 if (in_chart && this._state.showChartTab)
                     this.toolbar.setTab('charttab');
                 this._state.in_chart = in_chart;
+
+                if (in_chart) {
+                    Common.UI.TooltipManager.closeTip('gifPlayback');
+                    Common.UI.TooltipManager.showTip('tipChartTab');
+                } else {
+                    Common.UI.TooltipManager.closeTip('tipChartTab');
+                }
             }
 
             this.toolbar.lockToolbar(Common.enumLock.noParagraphObject, !in_para, {array: [me.toolbar.btnLineSpace]});
@@ -2219,6 +2230,7 @@ define([
         },
 
         onListThemeSelect: function(combo, record) {
+            Common.UI.TooltipManager.closeTip('slideTheme');
             this._state.themeId = undefined;
             if (this.api && record)
                 this.api.ChangeTheme(record.get('themeId'));
@@ -3085,6 +3097,7 @@ define([
             this._state.customPluginData = null;
 
             Common.UI.TooltipManager.showTip('gifPlayback');
+            this.mode && this.mode.isDesktopApp && Common.UI.TooltipManager.showTip('pasteOptions');
         },
 
         onChangeViewMode: function (mode) { // master or normal
@@ -3097,9 +3110,6 @@ define([
             if (isMaster) {
                 Common.NotificationCenter.trigger('tab:visible', 'slideMaster', true);
                 this.toolbar.setTab('slideMaster');
-                setTimeout(function() {
-                    Common.UI.TooltipManager.showTip('masterTab');
-                }, 100);
             } else {
                 Common.NotificationCenter.trigger('tab:visible', 'slideMaster', false);
                 this.toolbar.setTab('home');
@@ -3111,7 +3121,12 @@ define([
         },
 
         onActiveTab: function(tab) {
-            (tab !== 'slideMaster') && Common.UI.TooltipManager.closeTip('masterTab');
+            if (tab == 'charttab') {
+                Common.UI.TooltipManager.closeTip('tipChartTab');
+            }
+            (tab === 'transit') ? Common.UI.TooltipManager.showTip('slideTransitions') : Common.UI.TooltipManager.closeTip('slideTransitions');
+            (tab === 'design') ? Common.UI.TooltipManager.showTip('slideTheme') : Common.UI.TooltipManager.closeTip('slideTheme');
+            (tab !== 'home') && Common.UI.TooltipManager.closeTip('pasteOptions');
         },
 
         onClickTab: function(tab) {

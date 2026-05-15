@@ -281,20 +281,15 @@ define([
             var _main = this.getApplication().getController('Main');
             this.mode = mode;
             this.toolbar.applyLayout(mode);
-            var url = 'https://www.onlyoffice.com/blog/2025/10/docs-9-1-released';
 
             Common.UI.FeaturesManager.isFeatureEnabled('featuresTips', true) && Common.UI.TooltipManager.addTips({
-                // 'rtlDirection' : {name: 'sse-help-tip-rtl-dir', placement: 'bottom', text: this.helpRtlDir, header: this.helpRtlDirHeader, target: '#slot-btn-direction', maxwidth: 300, automove: true,
-                                //   closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
-                // 'commentFilter' : {name: 'help-tip-comment-filter', placement: 'bottom-right', text: this.helpCommentFilter, header: this.helpCommentFilterHeader, target: '#comments-btn-sort', maxwidth: 300,
-                //                   closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
-                'tableTab' : {name: 'sse-help-tip-table-tab', placement: 'bottom', offset: {x: Common.UI.isRTL() ? -10 : 10, y: 0}, text: this.helpTableTab, header: this.helpTableTabHeader, target: 'li.ribtab #tabledesign',
-                                automove: true, maxwidth: 300, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
-                'chartElements' : {name: 'help-tip-chart-elements', placement: 'bottom', text: this.helpChartElements, header: this.helpChartElementsHeader, target: '#id-document-holder-btn-chart-element', maxwidth: 300,
-                    automove: true, noHighlight: true, noArrow: true, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
+                'tipChartTab' : {name: 'sse-help-tip-chart-tab', placement: 'bottom', text: this.helpChartTab, header: this.helpChartTabHeader, target: 'li.ribtab #charttab', maxwidth: 300,
+                                    automove: true, closable: false, isNewFeature: true},
                 'solver' : {name:'sse-help-tip-solver', placement: 'bottom-left', text: this.helpSolver, header: this.helpSolverHeader, target: '#slot-btn-solver', maxwidth: 300,
                                     automove: true, closable: false, isNewFeature: true},
                 'cellFormat' : {name:'sse-help-tip-cellFormat', placement: 'bottom-left', text: this.helpCellFormat, header: this.helpCellFormatHeader, target: '#slot-btn-cell-format', maxwidth: 300,
+                                    automove: true, closable: false, isNewFeature: true},
+                'darkDocument' : {name:'sse-help-tip-darkDocument', placement: 'bottom', text: this.helpDarkDocument, header: this.helpDarkDocumentHeader, target: '#slot-btn-dark-document', maxwidth: 300,
                                     automove: true, closable: false, isNewFeature: true}
             });
             Common.UI.TooltipManager.addTips({
@@ -3161,6 +3156,9 @@ define([
                 if (in_chart && this._state.showChartTab)
                     this.toolbar.setTab('charttab');
 
+                if (in_chart) Common.UI.TooltipManager.showTip('tipChartTab');
+                else Common.UI.TooltipManager.closeTip('tipChartTab');
+
                 this._state.in_chart = in_chart;
             }
 
@@ -5515,9 +5513,11 @@ define([
                 setTimeout(function() {
                     Common.UI.TooltipManager.showTip('cellFormat');
                 }, 10);
+            else if (tab == 'charttab')
+                Common.UI.TooltipManager.closeTip('tipChartTab');
 
             (tab === 'data') ? Common.UI.TooltipManager.showTip('solver') : Common.UI.TooltipManager.closeTip('solver');
-            (tab === 'tabledesign') ? Common.UI.TooltipManager.showTip('tableTab') : Common.UI.TooltipManager.closeTip('tableTab');
+            (tab === 'view') ? Common.UI.TooltipManager.showTip('darkDocument') : Common.UI.TooltipManager.closeTip('darkDocument');
         },
 
         onClickTab: function(tab) {

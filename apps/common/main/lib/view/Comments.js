@@ -488,7 +488,6 @@ define([
                 this.buttonCancel.on('click', _.bind(this.onClickCancelDocumentComment, this));
                 this.buttonClose.on('click', _.bind(this.onClickClosePanel, this));
                 this.buttonSort.menu.on('item:toggle', _.bind(this.onSortClick, this));
-                this.buttonSort.menu.on('show:before', _.bind(this.onShowBeforeSortButtonMenu, this));
                 this.menuFilterGroups.menu.on('item:toggle', _.bind(this.onFilterGroupsClick, this));
                 this.menuFilterComments.menu.on('item:toggle', _.bind(this.onFilterCommentsClick, this));
                 this.mnuAddCommentToDoc.on('click', _.bind(this.onClickShowBoxDocumentComment, this));
@@ -952,9 +951,6 @@ define([
             state && this.fireEvent('comment:sort', [item.value]);
         },
 
-        onShowBeforeSortButtonMenu: function(menu, item, state) {
-            Common.UI.TooltipManager.closeTip('commentFilter');
-        },
 
         onFilterGroupsClick: function(menu, item, state) {
             state && this.fireEvent('comment:filtergroups', [item.value]);

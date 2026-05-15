@@ -2118,6 +2118,8 @@
   "SSE.Controllers.Toolbar.helpSolverHeader": "Zgjidhës",
   "SSE.Controllers.Toolbar.helpTableTab": "Aksesoni lehtësisht të gjitha cilësimet e formatuara të tabelës në skedën e dedikuar Dizajni i tabelës.",
   "SSE.Controllers.Toolbar.helpTableTabHeader": "Skeda e Dizajnit të tabelës",
+  "SSE.Controllers.Toolbar.helpChartTab": "Të gjitha cilësimet e grafikut tani janë të disponueshme në skedën e dedikuar Dizajni i grafikut në shiritin e veglave.",
+  "SSE.Controllers.Toolbar.helpChartTabHeader": "Skeda Dizajni i grafikut",
   "SSE.Controllers.Toolbar.textAccent": "Akcente",
   "SSE.Controllers.Toolbar.textBracket": "Kllapa",
   "SSE.Controllers.Toolbar.textDirectional": "Direktorial",

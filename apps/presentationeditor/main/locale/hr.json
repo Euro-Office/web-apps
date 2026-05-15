@@ -1879,6 +1879,8 @@
   "PE.Controllers.Toolbar.helpCommentFilterHeader": "Filteri komentara",
   "PE.Controllers.Toolbar.helpGifPlayback": "Oživite svoje slajdove reprodukcijom GIF animacija tokom dijaprojekcije.",
   "PE.Controllers.Toolbar.helpGifPlaybackHeader": "GIF reprodukcija u dijaprojekciji",
+  "PE.Controllers.Toolbar.helpChartTab": "Sve postavke grafikona sada su dostupne na namjenskoj kartici Dizajn grafikona na alatnoj traci.",
+  "PE.Controllers.Toolbar.helpChartTabHeader": "Kartica Dizajn grafikona",
   "PE.Controllers.Toolbar.helpMasterTab": "Pristupite postavkama Slide Master-a u namjenskoj kartici alatne trake za lakšu kontrolu.",
   "PE.Controllers.Toolbar.helpMasterTabHeader": "Kartica matrice slajdova",
   "PE.Controllers.Toolbar.textAccent": "Naglasci",

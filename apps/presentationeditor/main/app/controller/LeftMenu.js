@@ -532,7 +532,6 @@ define([
 
         onShowTumbnails: function(obj, show) {
             this.api.ShowThumbnails(show);
-            show && Common.UI.TooltipManager.closeTip('commentFilter');
         },
 
         onThumbnailsShow: function(isShow) {
@@ -541,7 +540,6 @@ define([
             } else if (!isShow && this.isThumbsShown)
                 this.leftMenu.btnThumbs.toggle(false, false);
             this.isThumbsShown = isShow;
-            isShow && Common.UI.TooltipManager.closeTip('commentFilter');
         },
 
         setPreviewMode: function(mode) {
@@ -615,12 +613,7 @@ define([
 
             if (mode === 'show') {
                 this.getApplication().getController('Common.Controllers.Comments').onAfterShow();
-                setTimeout(function() {
-                    Common.UI.TooltipManager.showTip('commentFilter');
-                }, 10);
             }
-            else
-                Common.UI.TooltipManager.closeTip('commentFilter');
             $(this.leftMenu.btnComments.el).blur();
         },
         /** coauthoring end **/
@@ -636,9 +629,6 @@ define([
                     this.mode.canViewComments && this.leftMenu.panelComments['hide']();
                     this.mode.canChat && this.leftMenu.panelChat['hide']();
                 }
-            }
-            if (!value) {
-                Common.UI.TooltipManager.closeTip('chartElements');
             }
         },
 

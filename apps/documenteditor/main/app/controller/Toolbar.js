@@ -274,20 +274,19 @@ define([
             var _main = this.getApplication().getController('Main');
             this.mode = mode;
             this.toolbar.applyLayout(mode);
-            var url = 'https://www.onlyoffice.com/blog/2025/10/docs-9-1-released';
+            // var url = 'https://www.onlyoffice.com/blog/2025/10/docs-9-1-released';
             Common.UI.FeaturesManager.isFeatureEnabled('featuresTips', true) && Common.UI.TooltipManager.addTips({
-                'commentFilter' : {name: 'help-tip-comment-filter', placement: 'bottom-right', text: this.helpCommentFilter, header: this.helpCommentFilterHeader, target: '#comments-btn-sort', maxwidth: 300,
-                                  closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
-                'chartElements' : {name: 'help-tip-chart-elements', placement: 'bottom', text: this.helpChartElements, header: this.helpChartElementsHeader, target: '#id-document-holder-btn-chart-element', maxwidth: 300,
-                                    automove: true, noHighlight: true, noArrow: true, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url},
-                                },
-                // 'multipageViewToolbar' : {name: 'de-help-tip-multipage-view-toolbar', placement: 'bottom-right', text: this.helpMultipageView, header: this.helpMultipageViewHeader, target: '#slot-btn-multiple-pages', maxwidth: 300,
-                //                     automove: true, closable: false, isNewFeature: true},
+                // 'commentFilter' : {name: 'help-tip-comment-filter', placement: 'bottom-right', text: this.helpCommentFilter, header: this.helpCommentFilterHeader, target: '#comments-btn-sort', maxwidth: 300,
+                //                   closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
+                'tipChartTab' : {name: 'de-help-tip-chart-tab', placement: 'bottom', text: this.helpChartTab, header: this.helpChartTabHeader, target: 'li.ribtab #charttab', maxwidth: 300,
+                                    automove: true, closable: false, isNewFeature: true},
                 'multipageViewStatusbar' : {name: 'de-help-tip-multipage-view-statusbar', placement: 'top-left', text: this.helpMultipageView, header: this.helpMultipageViewHeader, target: '#status-btn-multiple-pages', maxwidth: 300,
                                     automove: true, closable: false, isNewFeature: true},
                 'headerFooterTab' : {name:'de-help-tip-header-footer-tab', placement: 'bottom-left', text: this.helpHeaderFooterTab, header: this.helpHeaderFooterTabHeader, target: 'li.ribtab #headerfooter', maxwidth: 300,
                                     automove: true, closable: false, isNewFeature: true},
-                'signature' : {name:'de-help-tip-signature', placement: 'bottom-right', text: this.helpSignature, header: this.helpSignatureHeader, target: '#slot-btn-form-signature', maxwidth: 300, 
+                'signature' : {name:'de-help-tip-signature', placement: 'bottom-right', text: this.helpSignature, header: this.helpSignatureHeader, target: '#slot-btn-form-signature', maxwidth: 300,
+                                    automove: true, closable: false, isNewFeature: true},
+                'pasteOptions' : {name:'de-help-tip-pasteOptions', placement: 'bottom-right', text: this.helpPasteOptions, header: this.helpPasteOptionsHeader, target: '#slot-btn-paste', maxwidth: 300,
                                     automove: true, closable: false, isNewFeature: true}
             });
             // TODO: Add name
@@ -972,6 +971,9 @@ define([
                 if (in_chart && this._state.showChartTab)
                     this.toolbar.setTab('charttab');
                 this._state.in_chart = in_chart;
+
+                if (in_chart) Common.UI.TooltipManager.showTip('tipChartTab');
+                else Common.UI.TooltipManager.closeTip('tipChartTab');
             }
 
             var need_disable = paragraph_locked || header_locked || in_equation || control_plain || rich_del_lock || plain_del_lock  || content_locked || in_para && !can_add_image;
@@ -4359,7 +4361,9 @@ define([
                 me.onPluginToolbarCustomMenuItems(plugin.action, plugin.data);
             });
             this._state.customPluginData = null;
-            
+
+            this.mode && this.mode.isDesktopApp && Common.UI.TooltipManager.showTip('pasteOptions');
+
             if(this.mode.isPDFForm) {
                 const formsTabView = this.getApplication().getController('FormsTab').getView();
                 if(formsTabView && formsTabView.btnSignField && !formsTabView.btnSignField.isDisabled() && 
@@ -4387,6 +4391,8 @@ define([
             if(tab === 'view') {
                 Common.UI.TooltipManager.showTip('multipageViewToolbar');
                 Common.UI.TooltipManager.closeTip('multipageViewStatusbar');
+            } else if (tab == 'charttab') {
+                Common.UI.TooltipManager.closeTip('tipChartTab');
             } else {
                 Common.UI.TooltipManager.closeTip('multipageViewToolbar');
             }
@@ -4394,6 +4400,7 @@ define([
             (tab === 'headerfooter') 
                 ? Common.UI.TooltipManager.showTip('headerFooterTab') 
                 : Common.UI.TooltipManager.closeTip('headerFooterTab');
+            (tab !== 'home') && Common.UI.TooltipManager.closeTip('pasteOptions');
         },
 
         onClickTab: function(tab) {
