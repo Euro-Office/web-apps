@@ -78,6 +78,7 @@ define([
         },
 
         onBtnPasteOptionsClick: function (btn, api, isSSE) {
+            Common.UI.TooltipManager.closeTip('pasteOptions');
             this.api = api;
             this.btn = btn;
             this.isSSE = isSSE;

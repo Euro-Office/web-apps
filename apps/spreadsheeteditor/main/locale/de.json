@@ -2112,6 +2112,8 @@
   "SSE.Controllers.Toolbar.helpChartElementsHeader": "Anzeige der Diagrammelemente",
   "SSE.Controllers.Toolbar.helpCommentFilter": "Verwalten Sie Ihre Ansicht, indem Sie im linken Bereich zwischen offenen und gelösten Kommentaren wechseln.",
   "SSE.Controllers.Toolbar.helpCommentFilterHeader": "Kommentarfilter",
+  "SSE.Controllers.Toolbar.helpDarkDocument": "Schalten Sie den Hintergrund des Tabellenblatts in den Dunkelmodus, wenn Sie dunkles Design verwenden.",
+  "SSE.Controllers.Toolbar.helpDarkDocumentHeader": "Dunkles Dokument",
   "SSE.Controllers.Toolbar.helpRtlDir": "Passen Sie die Textrichtung für Zellen an Ihre Inhaltsanforderungen an.",
   "SSE.Controllers.Toolbar.helpRtlDirHeader": "Zelltextrichtung",
   "SSE.Controllers.Toolbar.helpSolver": "Finden Sie optimale Lösungen für komplexe Berechnungen.",

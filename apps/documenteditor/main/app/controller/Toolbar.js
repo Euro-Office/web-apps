@@ -284,7 +284,9 @@ define([
                                     automove: true, closable: false, isNewFeature: true},
                 'headerFooterTab' : {name:'de-help-tip-header-footer-tab', placement: 'bottom-left', text: this.helpHeaderFooterTab, header: this.helpHeaderFooterTabHeader, target: 'li.ribtab #headerfooter', maxwidth: 300,
                                     automove: true, closable: false, isNewFeature: true},
-                'signature' : {name:'de-help-tip-signature', placement: 'bottom-right', text: this.helpSignature, header: this.helpSignatureHeader, target: '#slot-btn-form-signature', maxwidth: 300, 
+                'signature' : {name:'de-help-tip-signature', placement: 'bottom-right', text: this.helpSignature, header: this.helpSignatureHeader, target: '#slot-btn-form-signature', maxwidth: 300,
+                                    automove: true, closable: false, isNewFeature: true},
+                'pasteOptions' : {name:'de-help-tip-pasteOptions', placement: 'bottom-right', text: this.helpPasteOptions, header: this.helpPasteOptionsHeader, target: '#slot-btn-paste', maxwidth: 300,
                                     automove: true, closable: false, isNewFeature: true}
             });
             // TODO: Add name
@@ -4359,7 +4361,9 @@ define([
                 me.onPluginToolbarCustomMenuItems(plugin.action, plugin.data);
             });
             this._state.customPluginData = null;
-            
+
+            this.mode && this.mode.isDesktopApp && Common.UI.TooltipManager.showTip('pasteOptions');
+
             if(this.mode.isPDFForm) {
                 const formsTabView = this.getApplication().getController('FormsTab').getView();
                 if(formsTabView && formsTabView.btnSignField && !formsTabView.btnSignField.isDisabled() && 
@@ -4396,6 +4400,7 @@ define([
             (tab === 'headerfooter') 
                 ? Common.UI.TooltipManager.showTip('headerFooterTab') 
                 : Common.UI.TooltipManager.closeTip('headerFooterTab');
+            (tab !== 'home') && Common.UI.TooltipManager.closeTip('pasteOptions');
         },
 
         onClickTab: function(tab) {
