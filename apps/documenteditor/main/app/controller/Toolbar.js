@@ -278,6 +278,8 @@ define([
             Common.UI.FeaturesManager.isFeatureEnabled('featuresTips', true) && Common.UI.TooltipManager.addTips({
                 // 'commentFilter' : {name: 'help-tip-comment-filter', placement: 'bottom-right', text: this.helpCommentFilter, header: this.helpCommentFilterHeader, target: '#comments-btn-sort', maxwidth: 300,
                 //                   closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
+                'tipChartTab' : {name: 'de-help-tip-chart-tab', placement: 'bottom', text: this.helpChartTab, header: this.helpChartTabHeader, target: 'li.ribtab #charttab', maxwidth: 300,
+                                    automove: true, closable: false, isNewFeature: true},
                 'multipageViewStatusbar' : {name: 'de-help-tip-multipage-view-statusbar', placement: 'top-left', text: this.helpMultipageView, header: this.helpMultipageViewHeader, target: '#status-btn-multiple-pages', maxwidth: 300,
                                     automove: true, closable: false, isNewFeature: true},
                 'headerFooterTab' : {name:'de-help-tip-header-footer-tab', placement: 'bottom-left', text: this.helpHeaderFooterTab, header: this.helpHeaderFooterTabHeader, target: 'li.ribtab #headerfooter', maxwidth: 300,
@@ -967,6 +969,9 @@ define([
                 if (in_chart && this._state.showChartTab)
                     this.toolbar.setTab('charttab');
                 this._state.in_chart = in_chart;
+
+                if (in_chart) Common.UI.TooltipManager.showTip('tipChartTab');
+                else Common.UI.TooltipManager.closeTip('tipChartTab');
             }
 
             var need_disable = paragraph_locked || header_locked || in_equation || control_plain || rich_del_lock || plain_del_lock  || content_locked || in_para && !can_add_image;
@@ -4382,6 +4387,8 @@ define([
             if(tab === 'view') {
                 Common.UI.TooltipManager.showTip('multipageViewToolbar');
                 Common.UI.TooltipManager.closeTip('multipageViewStatusbar');
+            } else if (tab == 'charttab') {
+                Common.UI.TooltipManager.closeTip('tipChartTab');
             } else {
                 Common.UI.TooltipManager.closeTip('multipageViewToolbar');
             }

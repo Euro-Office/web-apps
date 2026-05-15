@@ -307,6 +307,8 @@ define([
             Common.UI.FeaturesManager.isFeatureEnabled('featuresTips', true) && Common.UI.TooltipManager.addTips({
 //                'chartElements' : {name: 'help-tip-chart-elements', placement: 'bottom', text: this.helpChartElements, header: this.helpChartElementsHeader, target: '#id-document-holder-btn-chart-element', maxwidth: 300,
 //                    automove: true, noHighlight: true, noArrow: true, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
+                'tipChartTab' : {name: 'pe-help-tip-chart-tab', placement: 'bottom', text: this.helpChartTab, header: this.helpChartTabHeader, target: 'li.ribtab #charttab', maxwidth: 300,
+                    automove: true, closable: false, isNewFeature: true},
                 'gifPlayback' : {name:'pe-help-tip-gif-payback', placement: 'bottom', text: this.helpGifPlayback, header: this.helpGifPlaybackHeader, target: '#toolbar', maxwidth: 300,
                     automove: true, noArrow: true, noHighlight: true, closable: false, isNewFeature: true}
             });
@@ -929,6 +931,13 @@ define([
                 if (in_chart && this._state.showChartTab)
                     this.toolbar.setTab('charttab');
                 this._state.in_chart = in_chart;
+
+                if (in_chart) {
+                    Common.UI.TooltipManager.closeTip('gifPlayback');
+                    Common.UI.TooltipManager.showTip('tipChartTab');
+                } else {
+                    Common.UI.TooltipManager.closeTip('tipChartTab');
+                }
             }
 
             this.toolbar.lockToolbar(Common.enumLock.noParagraphObject, !in_para, {array: [me.toolbar.btnLineSpace]});
@@ -3104,6 +3113,9 @@ define([
         },
 
         onActiveTab: function(tab) {
+            if (tab == 'charttab') {
+                Common.UI.TooltipManager.closeTip('tipChartTab');
+            }
         },
 
         onClickTab: function(tab) {

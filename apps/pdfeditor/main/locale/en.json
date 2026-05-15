@@ -1746,6 +1746,8 @@
   "PDFE.Controllers.Toolbar.helpPdfChartsHeader": "Charts and SmartArt in PDF",
   "PDFE.Controllers.Toolbar.helpRedactTab": "Safeguard sensitive information with the Redact feature, allowing you to securely remove confidential content.",
   "PDFE.Controllers.Toolbar.helpRedactTabHeader": "Redact in PDF",
+  "PDFE.Controllers.Toolbar.helpChartTab": "All chart settings are now available in the dedicated Chart design tab on the toolbar.",
+  "PDFE.Controllers.Toolbar.helpChartTabHeader": "Chart design tab",
   "PDFE.Controllers.Toolbar.notcriticalErrorTitle": "Warning",
   "PDFE.Controllers.Toolbar.textFontSizeErr": "The entered value is incorrect.<br>Please enter a numeric value between 1 and 300",
   "PDFE.Controllers.Toolbar.textGotIt": "Got it",

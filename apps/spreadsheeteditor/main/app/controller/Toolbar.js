@@ -283,6 +283,8 @@ define([
             this.toolbar.applyLayout(mode);
 
             Common.UI.FeaturesManager.isFeatureEnabled('featuresTips', true) && Common.UI.TooltipManager.addTips({
+                'tipChartTab' : {name: 'sse-help-tip-chart-tab', placement: 'bottom', text: this.helpChartTab, header: this.helpChartTabHeader, target: 'li.ribtab #charttab', maxwidth: 300,
+                                    automove: true, closable: false, isNewFeature: true},
                 'solver' : {name:'sse-help-tip-solver', placement: 'bottom-left', text: this.helpSolver, header: this.helpSolverHeader, target: '#slot-btn-solver', maxwidth: 300,
                                     automove: true, closable: false, isNewFeature: true},
                 'cellFormat' : {name:'sse-help-tip-cellFormat', placement: 'bottom-left', text: this.helpCellFormat, header: this.helpCellFormatHeader, target: '#slot-btn-cell-format', maxwidth: 300,
@@ -3152,6 +3154,9 @@ define([
                 if (in_chart && this._state.showChartTab)
                     this.toolbar.setTab('charttab');
 
+                if (in_chart) Common.UI.TooltipManager.showTip('tipChartTab');
+                else Common.UI.TooltipManager.closeTip('tipChartTab');
+
                 this._state.in_chart = in_chart;
             }
 
@@ -5506,6 +5511,8 @@ define([
                 setTimeout(function() {
                     Common.UI.TooltipManager.showTip('cellFormat');
                 }, 10);
+            else if (tab == 'charttab')
+                Common.UI.TooltipManager.closeTip('tipChartTab');
 
             (tab === 'data') ? Common.UI.TooltipManager.showTip('solver') : Common.UI.TooltipManager.closeTip('solver');
         },

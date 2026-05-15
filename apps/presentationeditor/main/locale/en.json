@@ -1879,6 +1879,8 @@
   "PE.Controllers.Toolbar.helpCommentFilterHeader": "Comment filters",
   "PE.Controllers.Toolbar.helpGifPlayback": "Bring your slides to life by playing GIF animations during slideshow mode.",
   "PE.Controllers.Toolbar.helpGifPlaybackHeader": "GIF playback in slideshow mode",
+  "PE.Controllers.Toolbar.helpChartTab": "All chart settings are now available in the dedicated Chart design tab on the toolbar.",
+  "PE.Controllers.Toolbar.helpChartTabHeader": "Chart design tab",
   "PE.Controllers.Toolbar.helpMasterTab": "Access the Slide Master settings in the dedicated toolbar tab for easier control.",
   "PE.Controllers.Toolbar.helpMasterTabHeader": "Slide Master tab",
   "PE.Controllers.Toolbar.textAccent": "Accents",

@@ -192,6 +192,8 @@ define([
             this.toolbar.applyLayout(mode);
 
             Common.UI.FeaturesManager.isFeatureEnabled('featuresTips', true) && Common.UI.TooltipManager.addTips({
+                'tipChartTab' : {name: 'pdfe-help-tip-chart-tab', placement: 'bottom', text: this.helpChartTab, header: this.helpChartTabHeader, target: 'li.ribtab #charttab', maxwidth: 300,
+                    automove: true, closable: false, isNewFeature: true},
                 'createLink': {name:'pdfe-help-tip-create-link', placement: 'bottom-left', text: this.helpCreateLink, header: this.helpCreateLinkHeader, target: '#slot-btn-insertlink', maxwidth: 300,
                                 automove: true, closable: false, isNewFeature: true}
             });
@@ -666,6 +668,10 @@ define([
                 this.toolbar.setVisible('charttab', !!in_chart);
                 if (in_chart && this._state.showChartTab)
                     this.toolbar.setTab('charttab');
+
+                if (in_chart) Common.UI.TooltipManager.showTip('tipChartTab');
+                else Common.UI.TooltipManager.closeTip('tipChartTab');
+
                 this._state.in_chart = in_chart;
             }
 
@@ -1785,6 +1791,9 @@ define([
                 this.requiredTooltip.close();
                 this.requiredTooltip = undefined;
             }
+
+            if (tab == 'charttab')
+                Common.UI.TooltipManager.closeTip('tipChartTab');
 
             (tab === 'ins') ? Common.UI.TooltipManager.showTip('createLink') : Common.UI.TooltipManager.closeTip('createLink');
         },
