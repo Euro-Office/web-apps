@@ -3106,7 +3106,7 @@ define([], function () {
                         value: value
                     }).on('click', function(item) {
                         setTimeout(function() {
-                            me.api.asc_insertInCell(item.options.value, Asc.c_oAscPopUpSelectorType.None, false);
+                            me.api.asc_insertInCell(item.options.value, Asc.c_oAscPopUpSelectorType.FuncConstant, false);
                         }, 10);
                     });
                     menu.addItem(mnu);

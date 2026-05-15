@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import CellEditorView from '../view/CellEditor';
 import { f7 } from 'framework7-react';
 import { Device } from '../../../../common/mobile/utils/device';
@@ -21,6 +21,8 @@ const CellEditor = inject("storeFunctions")(observer(props => {
     const [stateFuncArr, setFuncArr] = useState('');
     const [stateHintArr, setHintArr] = useState('');
     const [funcHint, setFuncHint] = useState('');
+    const [stateArgConstList, setArgConstList] = useState(null);
+    const argConstListRef = useRef(null);
 
     const onApiCellSelection = info => {
         setCellName(typeof(info)=='string' ? info : info.asc_getName());
@@ -49,6 +51,8 @@ const CellEditor = inject("storeFunctions")(observer(props => {
     const onFormulaInfo = (name, shiftpos, funcInfo) => {
         if (!name) {
             setFuncHint(null);
+            argConstListRef.current = null;
+            setArgConstList(null);
             return;
         }
         
@@ -59,7 +63,11 @@ const CellEditor = inject("storeFunctions")(observer(props => {
             separator = api.asc_getFunctionArgumentSeparator(),
             argstype = funcInfo ? funcInfo.asc_getArgumentsType() : null,
             activeArg = funcInfo ? funcInfo.asc_getActiveArgPos() : null,
-            activeArgsCount = funcInfo ? funcInfo.asc_getActiveArgsCount() : null;
+            activeArgsCount = funcInfo ? funcInfo.asc_getActiveArgsCount() : null,
+            argConstList = funcInfo ? funcInfo.asc_getActiveArgHelpList() : null;
+
+argConstListRef.current = argConstList && argConstList.length ? argConstList : null;
+        setArgConstList(argConstListRef.current);
         let funcName = api.asc_getFormulaLocaleName(name);
 
         const parseArgsDesc = (args) => {
@@ -220,8 +228,10 @@ const CellEditor = inject("storeFunctions")(observer(props => {
         const api = Common.EditorApi.get();
         const storeFunctions = props.storeFunctions;
         const functions = storeFunctions.functions;
+        const argConstList = argConstListRef.current;
 
         if(funcArr) {
+            setArgConstList(null);
             funcArr.sort(function (a, b) {
                 let atype = a.asc_getType(),
                     btype = b.asc_getType();
@@ -289,6 +299,9 @@ const CellEditor = inject("storeFunctions")(observer(props => {
             setHintArr(hintArr);
 
             await f7.popover.open('#idx-functions-list', '#idx-list-target');
+        } else if (argConstList && argConstList.length) {
+            setFuncArr('');
+            setHintArr('');
         } else {
             await f7.popover.close('#idx-functions-list');
 
@@ -302,6 +315,13 @@ const CellEditor = inject("storeFunctions")(observer(props => {
         api.asc_insertInCell(name, type, false);
         f7.popover.close('#idx-functions-list');
     }
+
+    const insertConstant = (value) => {
+        const api = Common.EditorApi.get();
+        api.asc_insertInCell(value, Asc.c_oAscPopUpSelectorType.FuncConstant, false);
+        argConstListRef.current = null;
+        setArgConstList(null);
+    }
     
     return (
         <CellEditorView 
@@ -312,6 +332,8 @@ const CellEditor = inject("storeFunctions")(observer(props => {
             hintArr={stateHintArr}
             insertFormula={insertFormula}
             funcHint={funcHint} 
+            argConstList={stateArgConstList}
+            insertConstant={insertConstant}
         />
     )
 }));
