@@ -2112,6 +2112,8 @@
   "SSE.Controllers.Toolbar.helpChartElementsHeader": "Afișare elemente de diagramă",
   "SSE.Controllers.Toolbar.helpCommentFilter": "Gestionați afișarea comutând între comentariile deschise și comentariile rezolvate în panoul din stânga.",
   "SSE.Controllers.Toolbar.helpCommentFilterHeader": "Filtre pentru comentarii",
+  "SSE.Controllers.Toolbar.helpDarkDocument": "Activați modul întunecat pentru fundalul foii de calcul când utilizați o temă de interfață întunecată.",
+  "SSE.Controllers.Toolbar.helpDarkDocumentHeader": "Document întunecat",
   "SSE.Controllers.Toolbar.helpRtlDir": "Ajustarea orientării de text în celule pentru a adapta conținutului.",
   "SSE.Controllers.Toolbar.helpRtlDirHeader": "Orientare text în celula",
   "SSE.Controllers.Toolbar.helpSolver": "Găsiți soluții optime pentru calcule complexe.",

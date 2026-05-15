@@ -2112,6 +2112,8 @@
   "SSE.Controllers.Toolbar.helpChartElementsHeader": "Prikaz elemenata grafikona",
   "SSE.Controllers.Toolbar.helpCommentFilter": "Upravljajte prikazom tako što ćete se prebacivati između otvorenih i rešenih komentara u levom panelu.",
   "SSE.Controllers.Toolbar.helpCommentFilterHeader": "Filteri komentara",
+  "SSE.Controllers.Toolbar.helpDarkDocument": "Prebacite pozadinu lista na tamni režim kada koristite tamnu temu interfejsa.",
+  "SSE.Controllers.Toolbar.helpDarkDocumentHeader": "Tamni dokument",
   "SSE.Controllers.Toolbar.helpRtlDir": "Podesite pravac teksta tako da ćelije budu u skladu sa vašim potrebama za sadržajem.",
   "SSE.Controllers.Toolbar.helpRtlDirHeader": "Cell text direction",
   "SSE.Controllers.Toolbar.helpSolver": "Pronadjite optimalno rešenje za komplekse kalkulacije.",

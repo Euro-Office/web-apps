@@ -2112,6 +2112,8 @@
   "SSE.Controllers.Toolbar.helpChartElementsHeader": "显示图表元素",
   "SSE.Controllers.Toolbar.helpCommentFilter": "左侧面板切换批注状态。",
   "SSE.Controllers.Toolbar.helpCommentFilterHeader": "批注筛选",
+  "SSE.Controllers.Toolbar.helpDarkDocument": "使用深色界面主题时，将表格背景也切换为深色模式。",
+  "SSE.Controllers.Toolbar.helpDarkDocumentHeader": "深色模式文档",
   "SSE.Controllers.Toolbar.helpRtlDir": "调整单元格文本方向。",
   "SSE.Controllers.Toolbar.helpRtlDirHeader": "单元格文本方向",
   "SSE.Controllers.Toolbar.helpSolver": "为复杂计算寻找最优解。",
