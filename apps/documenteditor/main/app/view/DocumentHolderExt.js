@@ -2285,6 +2285,23 @@ define([], function () {
                 caption     : '--'
             });
 
+            // Nextcloud Assistant context menu entry — host (NC) toggles
+            // visibility via setAssistantAvailable. Construct with default
+            // visible:true; the textMenu's initMenu callback below sets the
+            // actual visibility on each open based on me.ncAssistantAvailable.
+            // Constructing with visible:false hits a broken path in
+            // Common.UI.MenuItem.render (setVisible -> this.hide() which
+            // doesn't exist on MenuItem) so the item never reacts to later
+            // setVisible calls.
+            var menuParaAssistantSeparator = new Common.UI.MenuItem({
+                caption     : '--'
+            });
+            me.menuParaAssistant = new Common.UI.MenuItem({
+                iconCls     : 'menu__icon btn-nc-assistant',
+                caption     : me.txtNcAssistant || 'Ask Nextcloud Assistant'
+            });
+            me.menuParaAssistant.assistantSeparator = menuParaAssistantSeparator;
+
             this.textMenu = new Common.UI.Menu({
                 cls: 'shifted-right',
                 restoreHeightAndTop: true,
@@ -2484,6 +2501,15 @@ define([], function () {
                     me.menuAddCommentPara.setDisabled(value.paraProps && value.paraProps.locked === true);
                     /** coauthoring end **/
 
+                    // Nextcloud Assistant entry — show only when the host has
+                    // announced the Assistant app is available AND the
+                    // document allows copying out (restricted/secure view
+                    // disables copy, and the Assistant reads the selected
+                    // text via asc_GetSelectedText to forward it to the host).
+                    var assistantVisible = !!me.ncAssistantAvailable && cancopy;
+                    menuParaAssistantSeparator.setVisible(assistantVisible);
+                    me.menuParaAssistant.setVisible(assistantVisible);
+
                     var in_field = me.api.asc_HaveFields(true);
                     me.menuParaRefreshField.setVisible(!!in_field);
                     me.menuParaRefreshField.setDisabled(disabled);
@@ -2567,7 +2593,9 @@ define([], function () {
                     me.menuParaContinueNumbering,
                     me.menuParaListIndents,
                     menuStyleSeparator,
-                    menuStyle
+                    menuStyle,
+                    menuParaAssistantSeparator,
+                    me.menuParaAssistant
                 ]
             }).on('hide:after', function(menu, e, isFromInputControl) {
                 me.clearCustomItems(menu);

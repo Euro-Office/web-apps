@@ -251,6 +251,7 @@ define([], function () {
             view.menuAddHyperlinkPara.on('click', _.bind(me.addHyperlink, me));
             view.menuAddCommentTable.on('click', _.bind(me.addComment, me));
             view.menuAddCommentPara.on('click', _.bind(me.addComment, me));
+            view.menuParaAssistant.on('click', _.bind(me.onAskNcAssistant, me));
             view.menuTableFollow.on('click', _.bind(me.onFollowMove, me));
             view.menuParaFollow.on('click', _.bind(me.onFollowMove, me));
             view.menuTableStartNewList.on('click', _.bind(me.onStartNumbering, me, 1));

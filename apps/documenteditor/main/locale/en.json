@@ -2311,6 +2311,7 @@
   "DE.Views.DocProtection.txtUnlockTitle": "Unprotect document",
   "DE.Views.DocumentHolder.aboveText": "Above",
   "DE.Views.DocumentHolder.addCommentText": "Add comment",
+  "DE.Views.DocumentHolder.txtNcAssistant": "Ask Nextcloud Assistant",
   "DE.Views.DocumentHolder.advancedDropCapText": "Drop cap settings",
   "DE.Views.DocumentHolder.advancedEquationText": "Equation settings",
   "DE.Views.DocumentHolder.advancedFrameText": "Frame advanced settings",

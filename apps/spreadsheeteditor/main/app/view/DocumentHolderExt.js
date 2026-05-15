@@ -785,6 +785,21 @@ define([], function () {
                 caption     : me.txtGetLink
             });
 
+            // Nextcloud Assistant context menu entry — host (NC) toggles
+            // visibility via setAssistantAvailable. Construct with default
+            // visible:true; the show:before listener on ssMenu (registered
+            // below) sets the actual visibility based on
+            // me.ncAssistantAvailable. Constructing with visible:false hits
+            // a broken path in Common.UI.MenuItem.render and the item
+            // becomes unresponsive to later setVisible calls.
+            me.pmiAssistantSeparator = new Common.UI.MenuItem({
+                caption     : '--'
+            });
+            me.pmiAssistant = new Common.UI.MenuItem({
+                iconCls     : 'menu__icon btn-nc-assistant',
+                caption     : me.txtNcAssistant || 'Ask Nextcloud Assistant'
+            });
+
             me.ssMenu = new Common.UI.Menu({
                 cls: 'shifted-right',
                 restoreHeightAndTop: true,
@@ -847,10 +862,24 @@ define([], function () {
                     me.pmiEntireHide,
                     me.pmiEntireShow,
                     me.pmiFreezeSeparator,
-                    me.pmiFreezePanes
+                    me.pmiFreezePanes,
+                    me.pmiAssistantSeparator,
+                    me.pmiAssistant
                 ]
             }).on('hide:after', function(menu, e, isFromInputControl) {
                 me.clearCustomItems(menu);
+            }).on('show:before', function() {
+                // Nextcloud Assistant entry — show only when the host has
+                // announced the Assistant app is available AND the document
+                // allows copying out (restricted/secure view disables copy,
+                // and the Assistant reads the selected text via
+                // asc_GetSelectedText to forward it to the host). Toggling
+                // visibility right before the menu opens is the only point
+                // where Common.UI.MenuItem.setVisible behaves reliably.
+                var cancopy = me.api && me.api.can_CopyCut();
+                var assistantVisible = !!me.ncAssistantAvailable && !!cancopy;
+                me.pmiAssistantSeparator.setVisible(assistantVisible);
+                me.pmiAssistant.setVisible(assistantVisible);
             });
 
             me.mnuGroupImg = new Common.UI.MenuItem({

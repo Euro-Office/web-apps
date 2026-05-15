@@ -152,6 +152,17 @@ define([
             this.documentHolder.el.tabIndex = -1;
             this.onAfterRender();
 
+            // Host (Nextcloud) tells us whether the Assistant app is loaded.
+            // Register early — Common.Gateway.appReady() fires before
+            // setApi() runs, so the host's response postMessage can arrive
+            // before this listener exists and be dropped.
+            Common.Gateway.on('setassistantavailable', function(available) {
+                var view = DE.getController('DocumentHolder').documentHolder;
+                if (view) {
+                    view.ncAssistantAvailable = !!available;
+                }
+            });
+
             var me = this;
             Common.NotificationCenter.on({
                 'window:show': function(e){
@@ -677,6 +688,18 @@ define([
                     controller.addDummyComment();
                 }
             }
+        },
+
+        // Right-click "Ask Nextcloud Assistant" — capture the current selection
+        // (if any) and forward it to the host (Nextcloud) over the gateway.
+        // The host opens the Assistant text-processing form with the text
+        // pre-filled, or empty when nothing is selected.
+        onAskNcAssistant: function() {
+            var selectedText = '';
+            if (this.api && typeof this.api['asc_GetSelectedText'] === 'function') {
+                selectedText = this.api['asc_GetSelectedText']() || '';
+            }
+            Common.Gateway.requestSmartPicker(selectedText);
         },
 
         onHideMathTrack: function() {},

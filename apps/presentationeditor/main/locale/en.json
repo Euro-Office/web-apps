@@ -2284,6 +2284,7 @@
   "PE.Views.DateTimeDialog.txtTitle": "Date & Time",
   "PE.Views.DocumentHolder.aboveText": "Above",
   "PE.Views.DocumentHolder.addCommentText": "Add comment",
+  "PE.Views.DocumentHolder.txtNcAssistant": "Ask Nextcloud Assistant",
   "PE.Views.DocumentHolder.advancedChartText": "Chart advanced settings",
   "PE.Views.DocumentHolder.advancedEquationText": "Equation settings",
   "PE.Views.DocumentHolder.advancedImageText": "Image advanced settings",

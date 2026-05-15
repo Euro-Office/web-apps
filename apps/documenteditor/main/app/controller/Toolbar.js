@@ -307,6 +307,8 @@ define([
             this.onBtnChangeState('redo:disabled', toolbar.btnRedo, toolbar.btnRedo.isDisabled());
             this.onBtnChangeState('save:disabled', toolbar.btnSave, toolbar.btnSave.isDisabled());
             Common.Gateway.on('insertimage',                      _.bind(this.insertImage, this));
+            Common.Gateway.on('insertlink',                      _.bind(this.insertLink, this));
+            Common.Gateway.on('insertplaintext',                      _.bind(this.insertPlainText, this));
         },
 
         attachUIEvents: function(toolbar) {
@@ -432,6 +434,8 @@ define([
             toolbar.btnHyphenation.menu.on('item:click',                _.bind(this.onHyphenationSelect, this));
             toolbar.btnHyphenation.menu.on('show:after',                _.bind(this.onHyphenationShow, this));
             Common.Gateway.on('insertimage',                      _.bind(this.insertImage, this));
+            Common.Gateway.on('insertlink',                      _.bind(this.insertLink, this));
+            Common.Gateway.on('insertplaintext',                      _.bind(this.insertPlainText, this));
             Common.Gateway.on('setmailmergerecipients',           _.bind(this.setMailMergeRecipients, this));
             Common.Gateway.on('setrequestedspreadsheet',          _.bind(this.setRequestedSpreadsheet, this));
             Common.NotificationCenter.on('storage:spreadsheet-load',    _.bind(this.openSpreadsheetFromStorage, this));
@@ -1984,6 +1988,30 @@ define([
                 data._urls = arr;
             }
             Common.NotificationCenter.trigger('storage:image-insert', data);
+        },
+
+        insertLink: function(data) { // gateway
+            
+            var props   = new Asc.CHyperlinkProperty();
+            props.put_Value(data);
+            props.put_Bookmark(null);
+            props.put_Text(data);
+            this.api.add_Hyperlink(props);
+            
+            Common.NotificationCenter.trigger('storage:link-insert', data);
+        },
+
+        insertPlainText: function(data) {
+            // pluginMethod_PasteText is the cross-editor (CDE/CSE/CPE) plain-text
+            // paste entry registered via Api.prototype[...] in
+            // sdkjs/common/apiBase_plugins.js. Bracket-registered so it survives
+            // the Closure Compiler advanced-mode minifier. Used by host-side
+            // integrations (e.g. paste-from-clipboard helpers); the Smart
+            // Picker no longer pastes back.
+            if (typeof this.api["pluginMethod_PasteText"] === 'function') {
+                this.api["pluginMethod_PasteText"](data);
+            }
+            Common.NotificationCenter.trigger('storage:plain-text-insert', data);
         },
 
         onBtnInsertTextClick: function(btn, e) {

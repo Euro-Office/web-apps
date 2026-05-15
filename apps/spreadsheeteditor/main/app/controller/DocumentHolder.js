@@ -166,6 +166,16 @@ define([
                 'protect:wslock': _.bind(me.onChangeProtectSheet, me)
             });
             Common.Gateway.on('processmouse', _.bind(me.onProcessMouse, me));
+            // Host (Nextcloud) tells us whether the Assistant app is loaded.
+            // Register early — Common.Gateway.appReady() fires before
+            // setApi() runs, so the host's response postMessage can arrive
+            // before this listener exists and be dropped.
+            Common.Gateway.on('setassistantavailable', function(available) {
+                var view = SSE.getController('DocumentHolder').documentHolder;
+                if (view) {
+                    view.ncAssistantAvailable = !!available;
+                }
+            });
             Common.NotificationCenter.on('script:loaded', _.bind(me.createPostLoadElements, me));
         },
 
@@ -207,6 +217,18 @@ define([
 
             }
             return this;
+        },
+
+        // Right-click "Ask Nextcloud Assistant" — capture the current cell
+        // selection text and forward it to the host. The host opens the
+        // Assistant text-processing form pre-filled with the text (or empty
+        // if the cell is empty / no selection).
+        onAskNcAssistant: function() {
+            var selectedText = '';
+            if (this.api && typeof this.api['asc_GetSelectedText'] === 'function') {
+                selectedText = this.api['asc_GetSelectedText']() || '';
+            }
+            Common.Gateway.requestSmartPicker(selectedText);
         },
 
         resetApi: function(api) {
