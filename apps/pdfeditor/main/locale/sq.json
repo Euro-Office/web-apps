@@ -1746,6 +1746,8 @@
   "PDFE.Controllers.Toolbar.helpPdfChartsHeader": "Grafikët dhe SmartArt në PDF",
   "PDFE.Controllers.Toolbar.helpRedactTab": "Mbroni informacionin e ndjeshëm me veçorinë Redakto, e cila ju lejon të hiqni në mënyrë të sigurt përmbajtjen konfidenciale.",
   "PDFE.Controllers.Toolbar.helpRedactTabHeader": "Redaktoni në PDF",
+  "PDFE.Controllers.Toolbar.helpChartTab": "Të gjitha cilësimet e grafikut tani janë të disponueshme në skedën e dedikuar Dizajni i grafikut në shiritin e veglave.",
+  "PDFE.Controllers.Toolbar.helpChartTabHeader": "Skeda Dizajni i grafikut",
   "PDFE.Controllers.Toolbar.notcriticalErrorTitle": "Paralajmërim",
   "PDFE.Controllers.Toolbar.textFontSizeErr": "Vlera e futu është e pasaktë.<br>Ju lutem vendosni një vlerë numerike midis 1 dhe 300",
   "PDFE.Controllers.Toolbar.textGotIt": "E kuptova",

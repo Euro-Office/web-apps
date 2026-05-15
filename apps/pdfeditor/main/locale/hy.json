@@ -1746,6 +1746,8 @@
   "PDFE.Controllers.Toolbar.helpPdfChartsHeader": "Դիագրամներ և SmartArt PDF-ում",
   "PDFE.Controllers.Toolbar.helpRedactTab": "Ապահովեք զգայուն տեղեկատվությունը Սևագծել ֆունկցիայի միջոցով, որը թույլ է տալիս անվտանգ կերպով հեռացնել գաղտնի պարունակությունը։",
   "PDFE.Controllers.Toolbar.helpRedactTabHeader": "Սևագծել PDF-ում",
+  "PDFE.Controllers.Toolbar.helpChartTab": "Գծապատկերի բոլոր կարգավորումներն այժմ հասանելի են գործիքագոտու Գծապատկերի ձևավորում հատուկ ներդիրում:",
+  "PDFE.Controllers.Toolbar.helpChartTabHeader": "Գծապատկերի ձևավորման ներդիր",
   "PDFE.Controllers.Toolbar.notcriticalErrorTitle": "Զգուշացում",
   "PDFE.Controllers.Toolbar.textFontSizeErr": "Խնդրում ենք մուտքագրել 1-ից 300 թվային արժեք:",
   "PDFE.Controllers.Toolbar.textGotIt": "Հասկանալի է",

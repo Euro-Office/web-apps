@@ -1879,6 +1879,8 @@
   "PE.Controllers.Toolbar.helpCommentFilterHeader": "Hozzászólásszűrők",
   "PE.Controllers.Toolbar.helpGifPlayback": "Keltsd életre a diáidat GIF-animációk lejátszásával diavetítés módban.",
   "PE.Controllers.Toolbar.helpGifPlaybackHeader": "GIF lejátszás diavetítés módban",
+  "PE.Controllers.Toolbar.helpChartTab": "Minden diagrambeállítás mostantól elérhető az eszköztár Diagramtervezés lapján.",
+  "PE.Controllers.Toolbar.helpChartTabHeader": "Diagramtervezés lap",
   "PE.Controllers.Toolbar.helpMasterTab": "A Diaminta beállításait a könnyebb vezérlés érdekében a dedikált eszköztár fülön érheti el.",
   "PE.Controllers.Toolbar.helpMasterTabHeader": "Diaminta fül",
   "PE.Controllers.Toolbar.textAccent": "Akentus",

@@ -2118,6 +2118,8 @@
   "SSE.Controllers.Toolbar.helpSolverHeader": "求解器",
   "SSE.Controllers.Toolbar.helpTableTab": "在表格设计选项卡中便捷访问所有格式化表设置。",
   "SSE.Controllers.Toolbar.helpTableTabHeader": "表格设计选项卡",
+  "SSE.Controllers.Toolbar.helpChartTab": "所有图表设置现已在工具栏上专用的图表设计选项卡中提供。",
+  "SSE.Controllers.Toolbar.helpChartTabHeader": "图表设计选项卡",
   "SSE.Controllers.Toolbar.textAccent": "重点",
   "SSE.Controllers.Toolbar.textBracket": "括号",
   "SSE.Controllers.Toolbar.textDirectional": "方向性的",

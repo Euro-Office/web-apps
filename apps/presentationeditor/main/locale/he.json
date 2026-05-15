@@ -1879,6 +1879,8 @@
   "PE.Controllers.Toolbar.helpCommentFilterHeader": "מסנני תגובות",
   "PE.Controllers.Toolbar.helpGifPlayback": "החייאת השקופיות על-ידי הפעלת אנימציות GIF במהלך מצב מצגת.",
   "PE.Controllers.Toolbar.helpGifPlaybackHeader": "הפעלת GIF במצב שקופיות",
+  "PE.Controllers.Toolbar.helpChartTab": "כל הגדרות התרשים זמינות כעת בלשונית עיצוב התרשים הייעודית בסרגל הכלים.",
+  "PE.Controllers.Toolbar.helpChartTabHeader": "לשונית עיצוב התרשים",
   "PE.Controllers.Toolbar.helpMasterTab": "גש להגדרות תבנית הבסיס לשקופיות בכרטיסייה ייעודית בסרגל הכלים לקבלת שליטה קלה יותר.",
   "PE.Controllers.Toolbar.helpMasterTabHeader": "לשונית תבנית בסיס לשקופיות",
   "PE.Controllers.Toolbar.textAccent": "הדגשות",

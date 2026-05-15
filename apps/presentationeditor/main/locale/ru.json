@@ -1879,6 +1879,8 @@
   "PE.Controllers.Toolbar.helpCommentFilterHeader": "Фильтры комментариев",
   "PE.Controllers.Toolbar.helpGifPlayback": "Оживите слайды, воспроизводя GIF-анимации в режиме слайд-шоу.",
   "PE.Controllers.Toolbar.helpGifPlaybackHeader": "Просмотр GIF в слайд-шоу",
+  "PE.Controllers.Toolbar.helpChartTab": "Все настройки диаграммы теперь доступны на специальной вкладке «Конструктор диаграмм» на панели инструментов.",
+  "PE.Controllers.Toolbar.helpChartTabHeader": "Вкладка «Конструктор диаграмм»",
   "PE.Controllers.Toolbar.helpMasterTab": "Получайте доступ к настройкам образца слайдов на специальной вкладке панели инструментов для более удобного управления.",
   "PE.Controllers.Toolbar.helpMasterTabHeader": "Вкладка Образец слайдов",
   "PE.Controllers.Toolbar.textAccent": "Диакритические знаки",

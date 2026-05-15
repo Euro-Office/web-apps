@@ -2118,6 +2118,8 @@
   "SSE.Controllers.Toolbar.helpSolverHeader": "Επιλύτης",
   "SSE.Controllers.Toolbar.helpTableTab": "Πρόσβαση σε όλες τις ρυθμίσεις μορφοποιημένου πίνακα εύκολα στην αποκλειστική καρτέλα Σχεδίαση Πίνακα.",
   "SSE.Controllers.Toolbar.helpTableTabHeader": "Καρτέλα σχεδίασης πίνακα",
+  "SSE.Controllers.Toolbar.helpChartTab": "Όλες οι ρυθμίσεις γραφήματος είναι τώρα διαθέσιμες στην ειδική καρτέλα Σχεδίαση γραφήματος στη γραμμή εργαλείων.",
+  "SSE.Controllers.Toolbar.helpChartTabHeader": "Καρτέλα Σχεδίαση γραφήματος",
   "SSE.Controllers.Toolbar.textAccent": "Τόνοι/Πνεύματα",
   "SSE.Controllers.Toolbar.textBracket": "Αγκύλες",
   "SSE.Controllers.Toolbar.textDirectional": "Κατευθυντικό",

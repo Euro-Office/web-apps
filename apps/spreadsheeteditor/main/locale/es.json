@@ -2063,6 +2063,8 @@
   "SSE.Controllers.Toolbar.helpRtlDirHeader": "Dirección del texto de la celda",
   "SSE.Controllers.Toolbar.helpTableTab": "Acceda cómodamente a todos los ajustes de formato de tabla en la pestaña dedicada Diseño de tabla.",
   "SSE.Controllers.Toolbar.helpTableTabHeader": "Pestaña Diseño de tabla",
+  "SSE.Controllers.Toolbar.helpChartTab": "Todas las configuraciones del gráfico ahora están disponibles en la pestaña dedicada Diseño de gráfico en la barra de herramientas.",
+  "SSE.Controllers.Toolbar.helpChartTabHeader": "Pestaña Diseño de gráfico",
   "SSE.Controllers.Toolbar.textAccent": "Acentos",
   "SSE.Controllers.Toolbar.textBracket": "Corchetes",
   "SSE.Controllers.Toolbar.textDirectional": "Direccional",

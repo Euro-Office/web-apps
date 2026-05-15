@@ -2118,6 +2118,8 @@
   "SSE.Controllers.Toolbar.helpSolverHeader": "Solver",
   "SSE.Controllers.Toolbar.helpTableTab": "Pristupite svim formatiranim postavkama tabele pogodno na namenskoj kartici Dizajn tabele.",
   "SSE.Controllers.Toolbar.helpTableTabHeader": "Kartica Dizajn tabele",
+  "SSE.Controllers.Toolbar.helpChartTab": "Sva podešavanja grafikona sada su dostupna na namenskoj kartici Dizajn grafikona na traci sa alatkama.",
+  "SSE.Controllers.Toolbar.helpChartTabHeader": "Kartica Dizajn grafikona",
   "SSE.Controllers.Toolbar.textAccent": "Akcenti",
   "SSE.Controllers.Toolbar.textBracket": "Zagrade",
   "SSE.Controllers.Toolbar.textDirectional": "Usmereno",

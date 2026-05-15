@@ -1784,6 +1784,8 @@
   "PE.Controllers.Toolbar.helpChartElementsHeader": "چارٹ عناصر ڈسپلے",
   "PE.Controllers.Toolbar.helpCommentFilter": "بائیں پینل میں کھلے اور حل شدہ تبصروں کے درمیان ٹوگل کرکے اپنے نظارے کا نظم کریں۔",
   "PE.Controllers.Toolbar.helpCommentFilterHeader": "تبصرہ فلٹرز",
+  "PE.Controllers.Toolbar.helpChartTab": "چارٹ کی تمام ترتیبات اب ٹول بار کے مخصوص چارٹ ڈیزائن ٹیب میں دستیاب ہیں۔",
+  "PE.Controllers.Toolbar.helpChartTabHeader": "چارٹ ڈیزائن ٹیب",
   "PE.Controllers.Toolbar.helpMasterTab": "آسان کنٹرول کے لیے وقف شدہ ٹول بار ٹیب میں سلائیڈ ماسٹر سیٹنگز تک رسائی حاصل کریں۔",
   "PE.Controllers.Toolbar.helpMasterTabHeader": "سلائیڈ ماسٹر ٹیب",
   "PE.Controllers.Toolbar.textAccent": "لہجے",

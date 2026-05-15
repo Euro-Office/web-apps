@@ -1746,6 +1746,8 @@
   "PDFE.Controllers.Toolbar.helpPdfChartsHeader": "Gráficos e SmartArt em PDF",
   "PDFE.Controllers.Toolbar.helpRedactTab": "Proteja informações confidenciais com o recurso Redact, que permite remover conteúdo confidencial com segurança.",
   "PDFE.Controllers.Toolbar.helpRedactTabHeader": "Redigir em PDF",
+  "PDFE.Controllers.Toolbar.helpChartTab": "Todas as configurações do gráfico agora estão disponíveis na aba dedicada Design de gráfico na barra de ferramentas.",
+  "PDFE.Controllers.Toolbar.helpChartTabHeader": "Aba Design de gráfico",
   "PDFE.Controllers.Toolbar.notcriticalErrorTitle": "Aviso",
   "PDFE.Controllers.Toolbar.textFontSizeErr": "O valor inserido está incorreto.<br>Insira um valor numérico entre 1 e 300",
   "PDFE.Controllers.Toolbar.textGotIt": "Entendi",

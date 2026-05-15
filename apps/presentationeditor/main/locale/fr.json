@@ -1879,6 +1879,8 @@
   "PE.Controllers.Toolbar.helpCommentFilterHeader": "Filtres de commentaires",
   "PE.Controllers.Toolbar.helpGifPlayback": "Donnez vie à vos diapositives en lisant les animations GIF en mode diaporama.",
   "PE.Controllers.Toolbar.helpGifPlaybackHeader": "Lecture de GIF en mode diaporama",
+  "PE.Controllers.Toolbar.helpChartTab": "Tous les paramètres du graphique sont désormais disponibles dans l'onglet dédié Conception du graphique de la barre d'outils.",
+  "PE.Controllers.Toolbar.helpChartTabHeader": "Onglet Conception du graphique",
   "PE.Controllers.Toolbar.helpMasterTab": "Accédez aux paramètres du Masque des diapositives dans l'onglet de barre d'outils dédié pour un contrôle plus facile.",
   "PE.Controllers.Toolbar.helpMasterTabHeader": " Onglet Masque des diapositives",
   "PE.Controllers.Toolbar.textAccent": "Types d'accentuation",

@@ -1867,6 +1867,8 @@
   "DE.Controllers.Toolbar.helpMultipageView": "עבודה עם מספר עמודים בו זמנית לניווט קל יותר",
   "DE.Controllers.Toolbar.helpMultipageViewHeader": "תצוגה מרובת עמודים",
   "DE.Controllers.Toolbar.helpSignature": "הוסף שדה חתימה כדי לאפשר לנמענים לחתום על טפסים: באמצעות תמונה, טקסט מותאם אישית או ציור על המסך.",
+  "DE.Controllers.Toolbar.helpChartTab": "כל הגדרות התרשים זמינות כעת בלשונית עיצוב התרשים הייעודית בסרגל הכלים.",
+  "DE.Controllers.Toolbar.helpChartTabHeader": "לשונית עיצוב התרשים",
   "DE.Controllers.Toolbar.helpSignatureHeader": "אפשרויות חתימה נוספות",
   "DE.Controllers.Toolbar.notcriticalErrorTitle": "אזהרה",
   "DE.Controllers.Toolbar.textAccent": "הדגשות",

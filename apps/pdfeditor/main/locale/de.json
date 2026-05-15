@@ -1746,6 +1746,8 @@
   "PDFE.Controllers.Toolbar.helpPdfChartsHeader": "Diagramme und SmartArt in PDF",
   "PDFE.Controllers.Toolbar.helpRedactTab": "Schützen Sie vertrauliche Informationen mit der Schwärzungsfunktion, die Ihnen das sichere Entfernen vertraulicher Inhalte ermöglicht.",
   "PDFE.Controllers.Toolbar.helpRedactTabHeader": "In PDF schwärzen",
+  "PDFE.Controllers.Toolbar.helpChartTab": "Alle Diagrammeinstellungen sind jetzt auf der dedizierten Registerkarte Diagrammentwurf in der Symbolleiste verfügbar.",
+  "PDFE.Controllers.Toolbar.helpChartTabHeader": "Registerkarte Diagrammentwurf",
   "PDFE.Controllers.Toolbar.notcriticalErrorTitle": "Warnung",
   "PDFE.Controllers.Toolbar.textFontSizeErr": "Der eingegebene Wert ist falsch.<br>Geben Sie bitte einen numerischen Wert zwischen 1 und 300 ein.",
   "PDFE.Controllers.Toolbar.textGotIt": "OK",

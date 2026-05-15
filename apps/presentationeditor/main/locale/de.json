@@ -1879,6 +1879,8 @@
   "PE.Controllers.Toolbar.helpCommentFilterHeader": "Kommentarfilter",
   "PE.Controllers.Toolbar.helpGifPlayback": "Erwecken Sie Ihre Präsentation zum Leben, indem Sie im Diashow-Modus GIF-Animationen abspielen.",
   "PE.Controllers.Toolbar.helpGifPlaybackHeader": "GIF playback in slideshow mode",
+  "PE.Controllers.Toolbar.helpChartTab": "Alle Diagrammeinstellungen sind jetzt auf der dedizierten Registerkarte Diagrammentwurf in der Symbolleiste verfügbar.",
+  "PE.Controllers.Toolbar.helpChartTabHeader": "Registerkarte Diagrammentwurf",
   "PE.Controllers.Toolbar.helpMasterTab": "Greifen Sie für eine einfachere Steuerung auf die Folienmaster-Einstellungen in der entsprechenden Registerkarte zu.",
   "PE.Controllers.Toolbar.helpMasterTabHeader": "Registerkarte 'Folienmaster'",
   "PE.Controllers.Toolbar.textAccent": "Akzente",

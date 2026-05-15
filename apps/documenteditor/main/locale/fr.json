@@ -1867,6 +1867,8 @@
   "DE.Controllers.Toolbar.helpMultipageView": "Travaillez avec plusieurs pages à la fois pour une navigation plus facile.",
   "DE.Controllers.Toolbar.helpMultipageViewHeader": "Affichage de plusieurs pages",
   "DE.Controllers.Toolbar.helpSignature": "Insérez un champ de signature pour permettre aux destinataires de signer les formulaires : par image, texte personnalisé ou dessin à l'écran.",
+  "DE.Controllers.Toolbar.helpChartTab": "Tous les paramètres du graphique sont désormais disponibles dans l'onglet dédié Conception du graphique de la barre d'outils.",
+  "DE.Controllers.Toolbar.helpChartTabHeader": "Onglet Conception du graphique",
   "DE.Controllers.Toolbar.helpSignatureHeader": "Plus d'options de signature",
   "DE.Controllers.Toolbar.notcriticalErrorTitle": "Avertissement",
   "DE.Controllers.Toolbar.textAccent": "Types d'accentuation",

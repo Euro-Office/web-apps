@@ -2118,6 +2118,8 @@
   "SSE.Controllers.Toolbar.helpSolverHeader": "Solver",
   "SSE.Controllers.Toolbar.helpTableTab": "Greifen Sie bequem über die spezielle Registerkarte „Tabellendesign“ auf alle formatierten Tabelleneinstellungen zu.",
   "SSE.Controllers.Toolbar.helpTableTabHeader": "Registerkarte 'Tabellendesign'",
+  "SSE.Controllers.Toolbar.helpChartTab": "Alle Diagrammeinstellungen sind jetzt auf der dedizierten Registerkarte Diagrammentwurf in der Symbolleiste verfügbar.",
+  "SSE.Controllers.Toolbar.helpChartTabHeader": "Registerkarte Diagrammentwurf",
   "SSE.Controllers.Toolbar.textAccent": "Akzente",
   "SSE.Controllers.Toolbar.textBracket": "Klammern",
   "SSE.Controllers.Toolbar.textDirectional": "Direktional",

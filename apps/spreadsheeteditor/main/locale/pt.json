@@ -2093,6 +2093,8 @@
   "SSE.Controllers.Toolbar.helpSolverHeader": "Solver",
   "SSE.Controllers.Toolbar.helpTableTab": "Acesse todas as configurações de tabela formatadas convenientemente na guia Design de Tabela dedicada.",
   "SSE.Controllers.Toolbar.helpTableTabHeader": "Guia Design de Tabela",
+  "SSE.Controllers.Toolbar.helpChartTab": "Todas as configurações do gráfico agora estão disponíveis na aba dedicada Design de gráfico na barra de ferramentas.",
+  "SSE.Controllers.Toolbar.helpChartTabHeader": "Aba Design de gráfico",
   "SSE.Controllers.Toolbar.textAccent": "Acentos",
   "SSE.Controllers.Toolbar.textBracket": "Parênteses",
   "SSE.Controllers.Toolbar.textDirectional": "Direcional",

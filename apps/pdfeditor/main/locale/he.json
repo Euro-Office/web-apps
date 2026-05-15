@@ -1746,6 +1746,8 @@
   "PDFE.Controllers.Toolbar.helpPdfChartsHeader": "תרשימים ו-SmartArt בקובץ PDF",
   "PDFE.Controllers.Toolbar.helpRedactTab": "הגן על מידע רגיש בעזרת תכונת Redact, המאפשרת לך להסיר תוכן סודי בצורה מאובטחת.",
   "PDFE.Controllers.Toolbar.helpRedactTabHeader": "עריכה בקובץ PDF",
+  "PDFE.Controllers.Toolbar.helpChartTab": "כל הגדרות התרשים זמינות כעת בלשונית עיצוב התרשים הייעודית בסרגל הכלים.",
+  "PDFE.Controllers.Toolbar.helpChartTabHeader": "לשונית עיצוב התרשים",
   "PDFE.Controllers.Toolbar.notcriticalErrorTitle": "אזהרה",
   "PDFE.Controllers.Toolbar.textFontSizeErr": "הערך שהוזן אינו נכון.<br>נא להזין ערך מספרי בין 1 ל 300",
   "PDFE.Controllers.Toolbar.textGotIt": "הבנתי",

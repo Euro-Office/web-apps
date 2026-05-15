@@ -1017,6 +1017,8 @@
   "DE.Controllers.Toolbar.dataUrl": "Indsæt en data-URL",
   "DE.Controllers.Toolbar.errorAccessDeny": "Du prøver at foretage en handling, som du ikke har rettigheder til.<br>Kontakt venligst din administrator for hjælp.",
   "DE.Controllers.Toolbar.helpHeaderFooterTab": "Få adgang til alle sidehoved- og sidefods-indstillinger i én praktisk placering",
+  "DE.Controllers.Toolbar.helpChartTab": "Alle diagramindstillinger er nu tilgængelige på den dedikerede Diagramdesign-fane i værktøjslinjen.",
+  "DE.Controllers.Toolbar.helpChartTabHeader": "Diagramdesign-fane",
   "DE.Controllers.Toolbar.notcriticalErrorTitle": "Advarsel",
   "DE.Controllers.Toolbar.textAccent": "Accenter",
   "DE.Controllers.Toolbar.textBracket": "Klammer",

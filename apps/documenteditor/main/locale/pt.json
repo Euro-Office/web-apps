@@ -1857,6 +1857,8 @@
   "DE.Controllers.Toolbar.helpMultipageView": "Trabalhe com várias páginas simultaneamente para facilitar a navegação.",
   "DE.Controllers.Toolbar.helpMultipageViewHeader": "Visualização de várias páginas",
   "DE.Controllers.Toolbar.helpSignature": "Insira um campo de assinatura para permitir que os destinatários assinem os formulários: por imagem, texto personalizado ou desenho na tela.",
+  "DE.Controllers.Toolbar.helpChartTab": "Todas as configurações do gráfico agora estão disponíveis na aba dedicada Design de gráfico na barra de ferramentas.",
+  "DE.Controllers.Toolbar.helpChartTabHeader": "Aba Design de gráfico",
   "DE.Controllers.Toolbar.helpSignatureHeader": "Mais opções de assinatura",
   "DE.Controllers.Toolbar.notcriticalErrorTitle": "Aviso",
   "DE.Controllers.Toolbar.textAccent": "Acentos",

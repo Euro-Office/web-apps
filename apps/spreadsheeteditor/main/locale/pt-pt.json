@@ -1229,6 +1229,8 @@
   "SSE.Controllers.Toolbar.errorStockChart": "Ordem de linha inválida. Para criar um gráfico de cotações, coloque os dados na folha pela seguinte ordem:<br>preço de abertura, preço máximo, preço mínimo, preço de fecho.",
   "SSE.Controllers.Toolbar.helpCellFormat": "Aceda facilmente a todas as opções para trabalhar com folhas de cálculo, linhas e colunas.",
   "SSE.Controllers.Toolbar.helpTableTab": "Aceda a todas as configurações formatação de tabela na guia dedicada de Design de Tabela.",
+  "SSE.Controllers.Toolbar.helpChartTab": "Todas as configurações do gráfico estão agora disponíveis no separador dedicado Design do gráfico na barra de ferramentas.",
+  "SSE.Controllers.Toolbar.helpChartTabHeader": "Separador Design do gráfico",
   "SSE.Controllers.Toolbar.textAccent": "Destaques",
   "SSE.Controllers.Toolbar.textBracket": "Parênteses",
   "SSE.Controllers.Toolbar.textDirectional": "Direcional",

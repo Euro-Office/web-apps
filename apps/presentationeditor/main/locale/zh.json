@@ -1879,6 +1879,8 @@
   "PE.Controllers.Toolbar.helpCommentFilterHeader": "批注筛选",
   "PE.Controllers.Toolbar.helpGifPlayback": "在放映模式下播放 GIF 动图，让幻灯片更生动。",
   "PE.Controllers.Toolbar.helpGifPlaybackHeader": "幻灯片放映时播放 GIF",
+  "PE.Controllers.Toolbar.helpChartTab": "所有图表设置现已在工具栏上专用的图表设计选项卡中提供。",
+  "PE.Controllers.Toolbar.helpChartTabHeader": "图表设计选项卡",
   "PE.Controllers.Toolbar.helpMasterTab": "在专用选项卡中打开幻灯片母版设置，更轻松管理幻灯片。",
   "PE.Controllers.Toolbar.helpMasterTabHeader": "幻灯片母版选项卡",
   "PE.Controllers.Toolbar.textAccent": "重音符",

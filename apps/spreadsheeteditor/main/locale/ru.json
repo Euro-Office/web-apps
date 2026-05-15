@@ -2118,6 +2118,8 @@
   "SSE.Controllers.Toolbar.helpSolverHeader": "Поиск решения",
   "SSE.Controllers.Toolbar.helpTableTab": "Получайте доступ ко всем параметрам форматированной таблицы на специальной вкладке Дизайн таблицы.",
   "SSE.Controllers.Toolbar.helpTableTabHeader": "Вкладка Дизайн таблицы",
+  "SSE.Controllers.Toolbar.helpChartTab": "Все настройки диаграммы теперь доступны на специальной вкладке «Конструктор диаграмм» на панели инструментов.",
+  "SSE.Controllers.Toolbar.helpChartTabHeader": "Вкладка «Конструктор диаграмм»",
   "SSE.Controllers.Toolbar.textAccent": "Диакритические знаки",
   "SSE.Controllers.Toolbar.textBracket": "Скобки",
   "SSE.Controllers.Toolbar.textDirectional": "Направления",

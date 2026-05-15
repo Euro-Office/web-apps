@@ -2118,6 +2118,8 @@
   "SSE.Controllers.Toolbar.helpSolverHeader": "Rezolvitor",
   "SSE.Controllers.Toolbar.helpTableTab": "Acces ușor la toate setările tabelului formatat din fila dedicată Proiectare tabel.",
   "SSE.Controllers.Toolbar.helpTableTabHeader": "Fila Proiectare tabel",
+  "SSE.Controllers.Toolbar.helpChartTab": "Toate setările graficului sunt acum disponibile în fila dedicată Proiectare grafic din bara de instrumente.",
+  "SSE.Controllers.Toolbar.helpChartTabHeader": "Fila Proiectare grafic",
   "SSE.Controllers.Toolbar.textAccent": "Accente",
   "SSE.Controllers.Toolbar.textBracket": "Paranteze",
   "SSE.Controllers.Toolbar.textDirectional": "Direcțional",

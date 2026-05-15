@@ -840,6 +840,8 @@
   "PDFE.Controllers.Toolbar.helpAnnotRect": "Descubra novas ferramentas de anotação: Retângulo, Círculo, Seta e Linhas Ligadas.",
   "PDFE.Controllers.Toolbar.helpCreateLinkHeader": "Criar e editar ligações",
   "PDFE.Controllers.Toolbar.helpPdfChartsHeader": "Gráficos e SmartArt em PDF",
+  "PDFE.Controllers.Toolbar.helpChartTab": "Todas as configurações do gráfico estão agora disponíveis no separador dedicado Design do gráfico na barra de ferramentas.",
+  "PDFE.Controllers.Toolbar.helpChartTabHeader": "Separador Design do gráfico",
   "PDFE.Controllers.Toolbar.notcriticalErrorTitle": "Aviso",
   "PDFE.Controllers.Toolbar.textSubmited": "<b>Formulário submetido com sucesso</b><br>Clique para fechar a dica.",
   "PDFE.Controllers.Toolbar.textTabChart": "Design do gráfico",

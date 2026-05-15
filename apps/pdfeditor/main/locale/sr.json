@@ -1746,6 +1746,8 @@
   "PDFE.Controllers.Toolbar.helpPdfChartsHeader": "Grafikoni i SmartArt u PDF-u",
   "PDFE.Controllers.Toolbar.helpRedactTab": "Zaštitite osetljive informacije pomoću funkcije Redact, koja vam omogućava da bezbedno uklonite poverljivi sadržaj.",
   "PDFE.Controllers.Toolbar.helpRedactTabHeader": "Uredi u PDF-u",
+  "PDFE.Controllers.Toolbar.helpChartTab": "Sva podešavanja grafikona sada su dostupna na namenskoj kartici Dizajn grafikona na traci sa alatkama.",
+  "PDFE.Controllers.Toolbar.helpChartTabHeader": "Kartica Dizajn grafikona",
   "PDFE.Controllers.Toolbar.notcriticalErrorTitle": "Upozorenje ",
   "PDFE.Controllers.Toolbar.textFontSizeErr": "Uneta vrednost je netačna.<br>Molimo unesite numeričku vrednost između 1 i 300",
   "PDFE.Controllers.Toolbar.textGotIt": "Razumem",

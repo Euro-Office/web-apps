@@ -1783,6 +1783,8 @@
   "PE.Controllers.Toolbar.helpChartElementsHeader": "Zobrazení prvků grafu",
   "PE.Controllers.Toolbar.helpCommentFilter": "Spravujte náhled komentářů přepínáním mezi otevřenými a vyřešenými v levém panelu.",
   "PE.Controllers.Toolbar.helpCommentFilterHeader": "Komentář filtrů",
+  "PE.Controllers.Toolbar.helpChartTab": "Všechna nastavení grafu jsou nyní dostupná na vyhrazené kartě Návrh grafu na panelu nástrojů.",
+  "PE.Controllers.Toolbar.helpChartTabHeader": "Karta Návrh grafu",
   "PE.Controllers.Toolbar.helpMasterTab": "Přistupovat k nastavení předlohy snímků v samostatném panelu nástrojů pro snazší ovládání.",
   "PE.Controllers.Toolbar.helpMasterTabHeader": "Záložka Předloha snímků",
   "PE.Controllers.Toolbar.textAccent": "Akcenty",

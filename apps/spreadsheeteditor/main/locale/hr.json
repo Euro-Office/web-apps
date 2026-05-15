@@ -2118,6 +2118,8 @@
   "SSE.Controllers.Toolbar.helpSolverHeader": "Rješavač",
   "SSE.Controllers.Toolbar.helpTableTab": "Povoljno pristupi svim oblikovanim tabličnim postavkama u posvečenom prozoru za tablični dizajn.",
   "SSE.Controllers.Toolbar.helpTableTabHeader": "Tabulator Dizajna Tablica",
+  "SSE.Controllers.Toolbar.helpChartTab": "Sve postavke grafikona sada su dostupne na namjenskoj kartici Dizajn grafikona na alatnoj traci.",
+  "SSE.Controllers.Toolbar.helpChartTabHeader": "Kartica Dizajn grafikona",
   "SSE.Controllers.Toolbar.textAccent": "Naglasci",
   "SSE.Controllers.Toolbar.textBracket": "Zagrade",
   "SSE.Controllers.Toolbar.textDirectional": "Usmjerno",

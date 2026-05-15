@@ -1870,6 +1870,8 @@
   "PE.Controllers.Toolbar.helpCommentFilterHeader": "Filtros de comentários",
   "PE.Controllers.Toolbar.helpGifPlayback": "Dê vida aos seus slides reproduzindo animações GIF durante o modo de apresentação de slides.",
   "PE.Controllers.Toolbar.helpGifPlaybackHeader": "Reprodução de GIFs em modo de apresentação de slides",
+  "PE.Controllers.Toolbar.helpChartTab": "Todas as configurações do gráfico agora estão disponíveis na aba dedicada Design de gráfico na barra de ferramentas.",
+  "PE.Controllers.Toolbar.helpChartTabHeader": "Aba Design de gráfico",
   "PE.Controllers.Toolbar.helpMasterTab": "Acesse as configurações do Slide Master na guia da barra de ferramentas dedicada para facilitar o controle.",
   "PE.Controllers.Toolbar.helpMasterTabHeader": "Guia Slide Mestre",
   "PE.Controllers.Toolbar.textAccent": "Acentos",

@@ -1867,6 +1867,8 @@
   "DE.Controllers.Toolbar.helpMultipageView": "同时处理多个页面，导航更便捷。",
   "DE.Controllers.Toolbar.helpMultipageViewHeader": "多页视图",
   "DE.Controllers.Toolbar.helpSignature": "插入签名字段，收件人可通过图片、自定义文本或手写进行签署。",
+  "DE.Controllers.Toolbar.helpChartTab": "所有图表设置现已在工具栏上专用的图表设计选项卡中提供。",
+  "DE.Controllers.Toolbar.helpChartTabHeader": "图表设计选项卡",
   "DE.Controllers.Toolbar.helpSignatureHeader": "更多签名选项",
   "DE.Controllers.Toolbar.notcriticalErrorTitle": "警告",
   "DE.Controllers.Toolbar.textAccent": "重点",

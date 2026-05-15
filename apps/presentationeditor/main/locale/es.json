@@ -1784,6 +1784,8 @@
   "PE.Controllers.Toolbar.helpChartElementsHeader": "Visualización de elementos del gráfico",
   "PE.Controllers.Toolbar.helpCommentFilter": "Gestione su vista alternando entre comentarios abiertos y resueltos en el panel izquierdo.",
   "PE.Controllers.Toolbar.helpCommentFilterHeader": "Filtros de comentarios",
+  "PE.Controllers.Toolbar.helpChartTab": "Todas las configuraciones del gráfico ahora están disponibles en la pestaña dedicada Diseño de gráfico en la barra de herramientas.",
+  "PE.Controllers.Toolbar.helpChartTabHeader": "Pestaña Diseño de gráfico",
   "PE.Controllers.Toolbar.helpMasterTab": "Acceda a la configuración del Patrón de diapositivas en la pestaña dedicada de la barra de herramientas para facilitar el control.",
   "PE.Controllers.Toolbar.helpMasterTabHeader": "Pestaña Patrón de diapositivas",
   "PE.Controllers.Toolbar.textAccent": "Acentos",

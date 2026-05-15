@@ -1867,6 +1867,8 @@
   "DE.Controllers.Toolbar.helpMultipageView": "Punoni me faqe të shumta njëkohësisht për navigim më të lehtë.",
   "DE.Controllers.Toolbar.helpMultipageViewHeader": "Pamje shumëfaqëshe",
   "DE.Controllers.Toolbar.helpSignature": "Vendosni një fushë nënshkrimi për t'i lejuar marrësit të nënshkruajnë formularët: me anë të imazhit, tekstit të personalizuar ose vizatimit në ekran.",
+  "DE.Controllers.Toolbar.helpChartTab": "Të gjitha cilësimet e grafikut tani janë të disponueshme në skedën e dedikuar Dizajni i grafikut në shiritin e veglave.",
+  "DE.Controllers.Toolbar.helpChartTabHeader": "Skeda Dizajni i grafikut",
   "DE.Controllers.Toolbar.helpSignatureHeader": "Më shumë opsione nënshkrimi",
   "DE.Controllers.Toolbar.notcriticalErrorTitle": "Paralajmërim",
   "DE.Controllers.Toolbar.textAccent": "Akcente",

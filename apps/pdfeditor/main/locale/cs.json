@@ -1659,6 +1659,8 @@
   "PDFE.Controllers.Toolbar.helpPdfChartsHeader": "Grafy a SmartArt v PDF",
   "PDFE.Controllers.Toolbar.helpRedactTab": "Zabezpečit citlivé informace s funkcí redigování, která umožňuje bezpečně odstranit důvěrný obsah.",
   "PDFE.Controllers.Toolbar.helpRedactTabHeader": "Redigovat v PDF",
+  "PDFE.Controllers.Toolbar.helpChartTab": "Všechna nastavení grafu jsou nyní dostupná na vyhrazené kartě Návrh grafu na panelu nástrojů.",
+  "PDFE.Controllers.Toolbar.helpChartTabHeader": "Karta Návrh grafu",
   "PDFE.Controllers.Toolbar.notcriticalErrorTitle": "Varování",
   "PDFE.Controllers.Toolbar.textFontSizeErr": "Zadaná hodnota není správná.<br>Zadejte hodnotu v rozmezí 1 až 300",
   "PDFE.Controllers.Toolbar.textGotIt": "Rozumím",

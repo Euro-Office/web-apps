@@ -2062,6 +2062,8 @@
   "SSE.Controllers.Toolbar.helpRtlDirHeader": "Směr textu v buňce",
   "SSE.Controllers.Toolbar.helpTableTab": "Všechna nastavení formátovaných tabulek jsou přístupná na kartě Vzhled tabulek.",
   "SSE.Controllers.Toolbar.helpTableTabHeader": "karta Vzhled tabulek",
+  "SSE.Controllers.Toolbar.helpChartTab": "Všechna nastavení grafu jsou nyní dostupná na vyhrazené kartě Návrh grafu na panelu nástrojů.",
+  "SSE.Controllers.Toolbar.helpChartTabHeader": "Karta Návrh grafu",
   "SSE.Controllers.Toolbar.textAccent": "Zvýraznění",
   "SSE.Controllers.Toolbar.textBracket": "Závorky",
   "SSE.Controllers.Toolbar.textDirectional": "Směrové",

@@ -1867,6 +1867,8 @@
   "DE.Controllers.Toolbar.helpMultipageView": "Radite sa više stranica odjednom za lakšu navigaciju.",
   "DE.Controllers.Toolbar.helpMultipageViewHeader": "Prikaz više stranica",
   "DE.Controllers.Toolbar.helpSignature": "Umetnite polje za potpis da biste omogućili primaocima da potpišu obrasce: slikom, prilagođenim tekstom ili crtežom na ekranu.",
+  "DE.Controllers.Toolbar.helpChartTab": "Sva podešavanja grafikona sada su dostupna na namenskoj kartici Dizajn grafikona na traci sa alatkama.",
+  "DE.Controllers.Toolbar.helpChartTabHeader": "Kartica Dizajn grafikona",
   "DE.Controllers.Toolbar.helpSignatureHeader": "Više opcija potpisa",
   "DE.Controllers.Toolbar.notcriticalErrorTitle": "Upozorenje ",
   "DE.Controllers.Toolbar.textAccent": "Naglasci",
