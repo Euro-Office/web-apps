@@ -200,9 +200,10 @@ define([
 
             window.onbeforeunload = _.bind(this.onBeforeUnload, this);
 
-            this.warnNoLicense  = this.warnNoLicense.replace(/%1/g, '{{COMPANY_NAME}}');
+            this.warnNoResources  = this.warnNoResources.replace(/%1/g, '{{COMPANY_NAME}}');
             this.warnNoLicenseUsers = this.warnNoLicenseUsers.replace(/%1/g, '{{COMPANY_NAME}}');
             this.textNoLicenseTitle = this.textNoLicenseTitle.replace(/%1/g, '{{COMPANY_NAME}}');
+            this.textNoResourcesTitle = this.textNoResourcesTitle.replace(/%1/g, '{{COMPANY_NAME}}');
         },
 
         onLayoutChanged: function(area) {
@@ -895,7 +896,9 @@ define([
                     title = this.titleReadOnly;
                     license = (license===Asc.c_oLicenseResult.Connections) ? this.tipLicenseExceeded : this.tipLicenseUsersExceeded;
                 } else {
-                    license = (license===Asc.c_oLicenseResult.ConnectionsOS) ? this.warnNoLicense : this.warnNoLicenseUsers;
+                    if (license===Asc.c_oLicenseResult.ConnectionsOS)
+                        title = this.textNoResourcesTitle;
+                    license = (license===Asc.c_oLicenseResult.ConnectionsOS) ? this.warnNoResources : this.warnNoLicenseUsers;
                     buttons = [{value: 'buynow', caption: this.textBuyNow}, {value: 'contact', caption: this.textContactUs}];
                     primary = 'buynow';
                     modal = true;
@@ -2430,10 +2433,11 @@ define([
         errorUpdateVersion: 'The file version has been changed. The page will be reloaded.',
         warnLicenseLimitedRenewed: 'License needs to be renewed.<br>You have a limited access to document editing functionality.<br>Please contact your administrator to get full access',
         warnLicenseLimitedNoAccess: 'License expired.<br>You have no access to document editing functionality.<br>Please contact your administrator.',
-        warnNoLicense: "You've reached the limit for simultaneous connections to %1 editors. This document will be opened for viewing only.<br>Contact %1 sales team for personal upgrade terms.",
+        warnNoResources: "The %1 server does not have enough resources to open this document for editing. This document will be opened for viewing only.",
         warnNoLicenseUsers: "You've reached the user limit for %1 editors. Contact %1 sales team for personal upgrade terms.",
         textBuyNow: 'Visit website',
         textNoLicenseTitle: 'License limit reached',
+        textNoResourcesTitle: 'Not enough resources',
         textContactUs: 'Contact sales',
         errorLoadingFont: 'Fonts are not loaded.<br>Please contact your Document Server administrator.',
         errorConnectToServer: 'The document could not be saved. Please check connection settings or contact your administrator.<br>When you click the \'OK\' button, you will be prompted to download the document.',

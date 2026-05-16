@@ -531,6 +531,7 @@
   "DE.Controllers.Main.textDisconnect": "Povezava je prekinjena",
   "DE.Controllers.Main.textLoadingDocument": "Nalaganje dokumenta",
   "DE.Controllers.Main.textNoLicenseTitle": "%1 omejitev povezave",
+  "DE.Controllers.Main.textNoResourcesTitle": "Nezadostni viri",
   "DE.Controllers.Main.textReconnect": "Povezava je obnovljena",
   "DE.Controllers.Main.textRequestMacros": "Makro poda zahtevek na URL naslov. Ali dovolite zahtevek na %1?",
   "DE.Controllers.Main.textShape": "Oblika",
