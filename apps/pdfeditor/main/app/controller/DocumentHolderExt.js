@@ -354,6 +354,8 @@ define([], function () {
             if (menu_to_show === null) {
                 if (!_.isUndefined(menu_props.paraProps))
                     menu_to_show = documentHolder.textMenu;
+                else 
+                    menu_to_show = documentHolder.editPDFModeMenu;
             }
 
             return {menu_to_show: menu_to_show, menu_props: menu_props};
