@@ -3021,7 +3021,7 @@ define([], function () {
                 i--;
             }
 
-            if (funcarr) {
+            if (funcarr && !argConstList) {
                 this.formulaMenuType = null;
                 funcarr.sort(function (a,b) {
                     var atype = a.asc_getType(),

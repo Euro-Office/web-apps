@@ -230,8 +230,7 @@ argConstListRef.current = argConstList && argConstList.length ? argConstList : n
         const functions = storeFunctions.functions;
         const argConstList = argConstListRef.current;
 
-        if(funcArr) {
-            setArgConstList(null);
+        if(funcArr && !argConstList) {
             funcArr.sort(function (a, b) {
                 let atype = a.asc_getType(),
                     btype = b.asc_getType();
