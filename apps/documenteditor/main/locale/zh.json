@@ -1858,8 +1858,6 @@
   "DE.Controllers.Toolbar.dataUrl": "粘贴数据URL",
   "DE.Controllers.Toolbar.errorAccessDeny": "您正在尝试执行您没有权限的操作。<br>请联系您的文档服务器管理员。",
   "DE.Controllers.Toolbar.fileUrl": "粘贴文件URL",
-  "DE.Controllers.Toolbar.helpChartElements": "轻松切换图表元素显示。",
-  "DE.Controllers.Toolbar.helpChartElementsHeader": "显示图表元素",
   "DE.Controllers.Toolbar.helpCommentFilter": "左侧面板切换批注状态。",
   "DE.Controllers.Toolbar.helpCommentFilterHeader": "批注筛选",
   "DE.Controllers.Toolbar.helpHeaderFooterTab": "在一个位置集中访问所有页眉和页脚选项。",

@@ -1858,8 +1858,6 @@
   "DE.Controllers.Toolbar.dataUrl": "הדבקת כתובת URL של נתונים",
   "DE.Controllers.Toolbar.errorAccessDeny": "את/ה מנסה לבצע פעולה שאין לך זכויות עליה. <br>נא ליצור קשר עם מנהל שרת המסמכים שלך",
   "DE.Controllers.Toolbar.fileUrl": "הדבקת כתובת URL של קובץ",
-  "DE.Controllers.Toolbar.helpChartElements": "שנה בקלות את הנראות של רכיבי התרשים בכמה לחיצות.",
-  "DE.Controllers.Toolbar.helpChartElementsHeader": "תצוגת רכיבי תרשים",
   "DE.Controllers.Toolbar.helpCommentFilter": "נהל את התצוגה שלך על ידי מעבר בין תגובות פתוחות לתגובות שנפתרו בחלונית השמאלית.",
   "DE.Controllers.Toolbar.helpCommentFilterHeader": "מסנני תגובות",
   "DE.Controllers.Toolbar.helpHeaderFooterTab": "גישה לכל אפשרויות הכותרת העליונה והתחתונה במיקום נוח אחד.",

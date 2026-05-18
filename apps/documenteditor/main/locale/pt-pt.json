@@ -1858,8 +1858,6 @@
   "DE.Controllers.Toolbar.dataUrl": "Colar um URL de dados",
   "DE.Controllers.Toolbar.errorAccessDeny": "Está a tentar executar uma ação para a qual não tem permissões.<br>Por favor contacte o administrador do servidor de documentos.",
   "DE.Controllers.Toolbar.fileUrl": "Colar um URL de ficheiro",
-  "DE.Controllers.Toolbar.helpChartElements": "Alternar facilmente a visibilidade dos elementos do gráfico com vários cliques.",
-  "DE.Controllers.Toolbar.helpChartElementsHeader": "Mostrar elementos do gráfico",
   "DE.Controllers.Toolbar.helpCommentFilter": "Gerir a vista alternando entre comentários abertos e resolvidos no painel esquerdo.",
   "DE.Controllers.Toolbar.helpCommentFilterHeader": "Filtros de comentários",
   "DE.Controllers.Toolbar.helpHeaderFooterTab": "Aceder a todas as opções de cabeçalho e rodapé num só lugar.",

@@ -1858,8 +1858,6 @@
   "DE.Controllers.Toolbar.dataUrl": "Zalijepi URL podataka",
   "DE.Controllers.Toolbar.errorAccessDeny": "Pokušavate izvršiti radnju za koju nemate prava.<br>Kontaktirajte svog administratora poslužitelja dokumenata.",
   "DE.Controllers.Toolbar.fileUrl": "Zalijepi URL datoteke",
-  "DE.Controllers.Toolbar.helpChartElements": "Jednostavno uključi ili isključi prikaz elemenata grafikona u nekoliko klikova.",
-  "DE.Controllers.Toolbar.helpChartElementsHeader": "Prikaz elemenata grafikona",
   "DE.Controllers.Toolbar.helpCommentFilter": "Upravljaj prikazom tako da u lijevom panelu mijenjaš prikaz otvorenih i riješenih komentara.",
   "DE.Controllers.Toolbar.helpCommentFilterHeader": "Filteri komentara",
   "DE.Controllers.Toolbar.helpHeaderFooterTab": "Pristupite svim zaglavljima i podnožjima na jednoj pogodnoj lokaciji.",

@@ -1858,8 +1858,6 @@
   "DE.Controllers.Toolbar.dataUrl": "Вставьте URL-адрес данных",
   "DE.Controllers.Toolbar.errorAccessDeny": "Вы пытаетесь выполнить действие, на которое у вас нет прав.<br>Пожалуйста, обратитесь к администратору Сервера документов.",
   "DE.Controllers.Toolbar.fileUrl": "Вставить URL файла",
-  "DE.Controllers.Toolbar.helpChartElements": "Легко переключайте видимость элементов диаграммы несколькими щелчками мыши.",
-  "DE.Controllers.Toolbar.helpChartElementsHeader": "Отображение элементов диаграммы",
   "DE.Controllers.Toolbar.helpCommentFilter": "Управляйте режимом отображения, переключаясь между открытыми и решенными комментариями на левой панели.",
   "DE.Controllers.Toolbar.helpCommentFilterHeader": "Фильтры комментариев",
   "DE.Controllers.Toolbar.helpHeaderFooterTab": "Получите доступ ко всем параметрам верхнего и нижнего колонтитулов в одном удобном месте.",

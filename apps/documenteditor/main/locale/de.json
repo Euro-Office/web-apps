@@ -1858,8 +1858,6 @@
   "DE.Controllers.Toolbar.dataUrl": "Eine URL der Daten einfügen",
   "DE.Controllers.Toolbar.errorAccessDeny": "Sie versuchen, eine Aktion durchzuführen, für die Sie keine Rechte haben.<br>Wenden Sie sich bitte an Ihren Document Server-Administrator.",
   "DE.Controllers.Toolbar.fileUrl": "URL der Datei einfügen",
-  "DE.Controllers.Toolbar.helpChartElements": "Schalten Sie die Sichtbarkeit von Diagrammelementen einfach mit mehreren Klicks um.",
-  "DE.Controllers.Toolbar.helpChartElementsHeader": "Anzeige der Diagrammelemente",
   "DE.Controllers.Toolbar.helpCommentFilter": "Verwalten Sie Ihre Ansicht, indem Sie im linken Bereich zwischen offenen und gelösten Kommentaren wechseln.",
   "DE.Controllers.Toolbar.helpCommentFilterHeader": "Kommentarfilter",
   "DE.Controllers.Toolbar.helpHeaderFooterTab": "Alle Kopf- und Fußzeilenoptionen sind an einem zentralen Ort verfügbar.",

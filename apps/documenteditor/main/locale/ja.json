@@ -1858,8 +1858,6 @@
   "DE.Controllers.Toolbar.dataUrl": "データのURLを貼り付け",
   "DE.Controllers.Toolbar.errorAccessDeny": "権限のない操作を実行しようとしています。<br>ドキュメントサーバーの管理者にご連絡ください。",
   "DE.Controllers.Toolbar.fileUrl": "ファイルのURLを貼り付ける",
-  "DE.Controllers.Toolbar.helpChartElements": "数回クリックするだけでグラフ要素の表示/非表示を簡単に切り替えられる。",
-  "DE.Controllers.Toolbar.helpChartElementsHeader": "グラフ要素表示",
   "DE.Controllers.Toolbar.helpCommentFilter": "左パネルで、開いているコメントと解決済みコメントを切り替えて、表示の管理ができます。",
   "DE.Controllers.Toolbar.helpCommentFilterHeader": "コメントのフィルター",
   "DE.Controllers.Toolbar.helpHeaderFooterTab": "ヘッダーとフッターのすべてのオプションに、1か所で簡単にアクセス。",
