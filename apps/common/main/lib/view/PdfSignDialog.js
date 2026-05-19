@@ -594,6 +594,9 @@ define([], function () { 'use strict';
                     this.inputName.setValue('');
                     break;
             }
+            var signatureId = this.getSignatureId();
+            if (this.api && signatureId) this.api.asc_ClearContentControl(signatureId);
+            Common.localStorage.removeItem(this.getKey());
         },
 
         onUndo: function () {
