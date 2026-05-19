@@ -159,14 +159,27 @@ define([], function () {
 
             this.boxEl.css('height', height);
 
+            let offset_x = (width - this.getWidth())/2,
+                offset_y = (height - this.getHeight() + this._headerFooterHeight)/2;
+
             Common.UI.Window.prototype.setHeight.call(this, height + this._headerFooterHeight);
             Common.UI.Window.prototype.setWidth.call(this, width + borders_width);
 
-            if (this.getLeft() + width + borders_width > maxWidth)
-                this.$window.css('left', Math.max(0, maxWidth - width - borders_width - this.bordersOffset));
-            if (this.getTop() + height + this._headerFooterHeight > maxHeight)
-                this.$window.css('top', Math.max(0, maxHeight - height - this._headerFooterHeight - this.bordersOffset));
+            const curr_left = this.getLeft(),
+                curr_top = this.getTop();
+            if (curr_left + width + borders_width > maxWidth)
+                offset_x = Math.max(0, maxWidth - width - borders_width - this.bordersOffset);
+            else if (curr_left - offset_x < 0)
+                offset_x = 0;
+            else offset_x = curr_left - offset_x;
 
+            if (curr_top + height + this._headerFooterHeight > maxHeight)
+                offset_y = Math.max(0, maxHeight - height - this._headerFooterHeight - this.bordersOffset);
+            else if (curr_top - offset_y < Common.Utils.InternalSettings.get('window-inactive-area-top'))
+                offset_y = Common.Utils.InternalSettings.get('window-inactive-area-top');
+            else offset_y = curr_top - offset_y;
+
+            this.$window.css({'left': offset_x, 'top': offset_y});
             this._restoreHeight = this._restoreWidth = undefined;
         },
 
