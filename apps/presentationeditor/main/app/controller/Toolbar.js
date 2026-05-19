@@ -1,33 +1,36 @@
 /*
- * (c) Copyright Ascensio System SIA 2010-2024
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 /**
  *  Toolbar.js
@@ -103,7 +106,8 @@ define([
                 isLockedSlideHeaderAppyToAll: false,
                 customPluginItems: undefined,
                 activeTab: 'home',
-                viewMode: 'normal'
+                viewMode: 'normal',
+                showChartTab: false,
             };
             this._isAddingShape = false;
             this.slideSizeArr = [
@@ -140,6 +144,7 @@ define([
                     'add:chart'         : this.onSelectChart,
                     'insert:smartart'   : this.onInsertSmartArt,
                     'smartart:mouseenter': this.mouseenterSmartArt,
+                    'tab:click'          : this.onClickTab,
                     'smartart:mouseleave': this.mouseleaveSmartArt,
                     'tab:active'         : this.onActiveTab.bind(this),
                     'tab:active:before'  : this.onBeforeActiveTab.bind(this),
@@ -201,7 +206,10 @@ define([
                 'ViewTab': {
                     'toolbar:setcompact': this.onChangeCompactView.bind(this),
                     'viewmode:change': this.onChangeViewMode.bind(this)
-                }
+                },
+                'Common.Views.ChartTab': {
+                    'add:chart': this.onSelectChart.bind(this)
+                },
             });
             Common.NotificationCenter.on('toolbar:collapse', _.bind(function () {
                 this.toolbar.collapse();
@@ -294,17 +302,21 @@ define([
                 me = this;
             this.mode = mode;
             this.toolbar.applyLayout(mode);
-            var url = 'https://www.onlyoffice.com/blog/2025/10/docs-9-1-released';
+//            var url = 'https://www.onlyoffice.com/blog/2025/10/docs-9-1-released';
 
             Common.UI.FeaturesManager.isFeatureEnabled('featuresTips', true) && Common.UI.TooltipManager.addTips({
-                'commentFilter' : {name: 'help-tip-comment-filter', placement: 'bottom-right', text: this.helpCommentFilter, header: this.helpCommentFilterHeader, target: '#comments-btn-sort', maxwidth: 300,
-                                   closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
-                'masterTab' : {name: 'pe-help-tip-master-tab', placement: 'bottom-right', offset: {x: Common.UI.isRTL() ? -10 : 10, y: 0}, text: this.helpMasterTab, header: this.helpMasterTabHeader, target: 'li.ribtab #slideMaster',
-                                automove: true, maxwidth: 300, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
-                'chartElements' : {name: 'help-tip-chart-elements', placement: 'bottom', text: this.helpChartElements, header: this.helpChartElementsHeader, target: '#id-document-holder-btn-chart-element', maxwidth: 300,
-                    automove: true, noHighlight: true, noArrow: true, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
+//                'chartElements' : {name: 'help-tip-chart-elements', placement: 'bottom', text: this.helpChartElements, header: this.helpChartElementsHeader, target: '#id-document-holder-btn-chart-element', maxwidth: 300,
+//                    automove: true, noHighlight: true, noArrow: true, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
+                'tipChartTab' : {name: 'pe-help-tip-chart-tab', placement: 'bottom', text: this.helpChartTab, header: this.helpChartTabHeader, target: 'li.ribtab #charttab', maxwidth: 300,
+                    automove: true, closable: false, isNewFeature: true},
                 'gifPlayback' : {name:'pe-help-tip-gif-payback', placement: 'bottom', text: this.helpGifPlayback, header: this.helpGifPlaybackHeader, target: '#toolbar', maxwidth: 300,
-                    automove: true, noArrow: true, noHighlight: true, closable: false, isNewFeature: true}
+                    automove: true, noArrow: true, noHighlight: true, closable: false, isNewFeature: true},
+                'slideTransitions' : {name:'pe-help-tip-slideTransitions', placement: 'bottom', text: this.helpSlideTransitions, header: this.helpSlideTransitionsHeader, target: '#transit-field-effects', maxwidth: 300,
+                    automove: true, closable: false, isNewFeature: true},
+                'slideTheme' : {name:'pe-help-tip-slideTheme', placement: 'bottom', text: this.helpSlideTheme, header: this.helpSlideThemeHeader, target: '#slot-field-styles', maxwidth: 300,
+                    automove: true, closable: false, isNewFeature: true},
+                'pasteOptions' : {name:'pe-help-tip-pasteOptions', placement: 'bottom-right', text: this.helpPasteOptions, header: this.helpPasteOptionsHeader, target: '#slot-btn-paste', maxwidth: 300,
+                    automove: true, closable: false, isNewFeature: true}
             });
             Common.UI.TooltipManager.addTips({
                 'refreshFile' : {text: _main.textUpdateVersion, header: _main.textUpdating, target: '#toolbar', maxwidth: 'none', showButton: false, automove: true, noHighlight: true, noArrow: true, multiple: true},
@@ -335,6 +347,19 @@ define([
             toolbar.btnRedo.on('disabled',                              _.bind(this.onBtnChangeState, this, 'redo:disabled'));
             toolbar.btnCopy.on('click',                                 _.bind(this.onCopyPaste, this, 'copy'));
             toolbar.btnPaste.on('click',                                _.bind(this.onCopyPaste, this, 'paste'));
+            $('#slot-btn-paste').on('click', '.dropdown-toggle', _.bind(function(e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                var menu = this.toolbar.btnPaste.menu;
+
+                if (menu && menu.isVisible && menu.isVisible()) {
+                    menu.hide();
+                    return;
+                }
+
+                this.toolbar.fireEvent('paste:options', [toolbar.btnPaste, this.api]);
+            }, this));
             toolbar.btnCut.on('click',                                  _.bind(this.onCopyPaste, this, 'cut'));
             toolbar.btnSelectAll.on('click',                            _.bind(this.onSelectAll, this));
             toolbar.btnReplace.on('click',                              _.bind(this.onReplace, this));
@@ -902,8 +927,23 @@ define([
             }
 
             if (in_chart !== this._state.in_chart) {
-                this.toolbar.btnInsertChart.updateHint(in_chart ? this.toolbar.tipChangeChart : this.toolbar.tipInsertChart);
+                this.toolbar.btnInsertChart.updateHint(
+                    in_chart ? this.toolbar.tipChangeChart : this.toolbar.tipInsertChart
+                );
+
+                if (!in_chart && this.toolbar.isTabActive('charttab'))
+                    this.toolbar.setTab('home');
+                this.toolbar.setVisible('charttab', !!in_chart);
+                if (in_chart && this._state.showChartTab)
+                    this.toolbar.setTab('charttab');
                 this._state.in_chart = in_chart;
+
+                if (in_chart) {
+                    Common.UI.TooltipManager.closeTip('gifPlayback');
+                    Common.UI.TooltipManager.showTip('tipChartTab');
+                } else {
+                    Common.UI.TooltipManager.closeTip('tipChartTab');
+                }
             }
 
             this.toolbar.lockToolbar(Common.enumLock.noParagraphObject, !in_para, {array: [me.toolbar.btnLineSpace]});
@@ -1513,7 +1553,7 @@ define([
                 });
 
                 if (!item) {
-                    value = /^\+?(\d*(\.|,).?\d+)$|^\+?(\d+(\.|,)?\d*)$/.exec(record.value);
+                    value = /^\+?(\d*(\.|,).?\d+)$|^\+?(\d+(\.|,)?\d*)$/.exec(record.value.trim());
 
                     if (!value) {
                         value = this._getApiTextSize();
@@ -2107,7 +2147,9 @@ define([
 
         onSlideSize: function(menu, item) {
             if (item.value !== 'advanced') {
-                var newwidth = (this.currentPageSize.height / this.slideSizeArr[item.value].ratio);
+                var newwidth = this.currentPageSize.width >= this.currentPageSize.height ?
+                    (this.currentPageSize.height / this.slideSizeArr[item.value].ratio) :
+                    (this.currentPageSize.height * this.slideSizeArr[item.value].ratio);
                 this.currentPageSize = {
                     type    : this.slideSizeArr[item.value].type,
                     width   : newwidth,
@@ -2128,7 +2170,9 @@ define([
                     if (result == 'ok') {
                         props = dlg.getSettings();
                         me.currentPageSize = { type: props[0], width: props[1], height: props[2], firstNum: props[3] };
-                        var ratio = me.currentPageSize.height/me.currentPageSize.width,
+                        var ratio = me.currentPageSize.width >= me.currentPageSize.height ?
+                                        me.currentPageSize.height/me.currentPageSize.width :
+                                        me.currentPageSize.width/me.currentPageSize.height,
                             idx = -1;
                         for (var i = 0; i < me.slideSizeArr.length; i++) {
                             if (Math.abs(me.slideSizeArr[i].ratio - ratio) < 0.001 ) {
@@ -2179,12 +2223,14 @@ define([
                     chart.changeType(type);
                 Common.NotificationCenter.trigger('edit:complete', this.toolbar);
             } else {
+                me._state.showChartTab = true;
                 me.api.asc_addChartDrawingObject(type, undefined, true);
                 me.toolbar.fireEvent('insertchart', me.toolbar);
             }
         },
 
         onListThemeSelect: function(combo, record) {
+            Common.UI.TooltipManager.closeTip('slideTheme');
             this._state.themeId = undefined;
             if (this.api && record)
                 this.api.ChangeTheme(record.get('themeId'));
@@ -2787,6 +2833,18 @@ define([
                     Array.prototype.push.apply(me.toolbar.slideOnlyControls, me.btnsDrawTab);
                 }
 
+                tab = {caption: me.toolbar.textTabChart, action: 'charttab', extcls: config.isEdit ? 'canedit' : '', layoutname: 'toolbar-charttab', dataHintTitle: 'B', aux: true};
+                var charttab = me.getApplication().getController('Common.Controllers.ChartTab');
+                charttab.setApi(me.api).setConfig({toolbar: me});
+                var view = charttab.getView('Common.Views.ChartTab');
+                var chartbuttons = view.getButtons();
+                var $panel = charttab.createToolbarPanel();
+                if ($panel) {
+                    me.toolbar.addTab(tab, $panel);
+                    me._state.inchart && me.toolbar.setVisible('charttab', true);
+                    Array.prototype.push.apply(me.toolbar.lockControls, chartbuttons);
+                }
+
                 var transitController = me.getApplication().getController('Transitions');
                 transitController.setApi(me.api).setConfig({toolbar: me,mode:config}).createToolbarPanel();
                 Array.prototype.push.apply(me.toolbar.lockControls,transitController.getView().getButtons());
@@ -3039,6 +3097,7 @@ define([
             this._state.customPluginData = null;
 
             Common.UI.TooltipManager.showTip('gifPlayback');
+            this.mode && this.mode.isDesktopApp && Common.UI.TooltipManager.showTip('pasteOptions');
         },
 
         onChangeViewMode: function (mode) { // master or normal
@@ -3051,9 +3110,6 @@ define([
             if (isMaster) {
                 Common.NotificationCenter.trigger('tab:visible', 'slideMaster', true);
                 this.toolbar.setTab('slideMaster');
-                setTimeout(function() {
-                    Common.UI.TooltipManager.showTip('masterTab');
-                }, 100);
             } else {
                 Common.NotificationCenter.trigger('tab:visible', 'slideMaster', false);
                 this.toolbar.setTab('home');
@@ -3065,7 +3121,16 @@ define([
         },
 
         onActiveTab: function(tab) {
-            (tab !== 'slideMaster') && Common.UI.TooltipManager.closeTip('masterTab');
+            if (tab == 'charttab') {
+                Common.UI.TooltipManager.closeTip('tipChartTab');
+            }
+            (tab === 'transit') ? Common.UI.TooltipManager.showTip('slideTransitions') : Common.UI.TooltipManager.closeTip('slideTransitions');
+            (tab === 'design') ? Common.UI.TooltipManager.showTip('slideTheme') : Common.UI.TooltipManager.closeTip('slideTheme');
+            (tab !== 'home') && Common.UI.TooltipManager.closeTip('pasteOptions');
+        },
+
+        onClickTab: function(tab) {
+            this._state.showChartTab = tab ==='charttab';
         },
 
         onBeforeActiveTab: function(tab) {

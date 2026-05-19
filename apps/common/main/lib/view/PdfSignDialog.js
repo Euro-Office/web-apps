@@ -1,33 +1,36 @@
 /*
- * (c) Copyright Ascensio System SIA 2010-2024
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 /**
  *  PdfSignDialog.js
@@ -221,7 +224,7 @@ define([], function () { 'use strict';
             this.btnBold = new Common.UI.Button({
                 parentEl: $window.find('#pdf-sign-bold'),
                 cls: 'btn-toolbar',
-                iconCls: 'toolbar__icon btn-bold',
+                iconCls: is_svg_icon ? 'svg-icon bold scaling-off' : 'toolbar__icon btn-bold',
                 enableToggle: true,
                 hint: this.textBold
             });
@@ -233,7 +236,7 @@ define([], function () { 'use strict';
             this.btnItalic = new Common.UI.Button({
                 parentEl: $window.find('#pdf-sign-italic'),
                 cls: 'btn-toolbar',
-                iconCls: 'toolbar__icon btn-italic',
+                iconCls: is_svg_icon ? 'svg-icon italic scaling-off' : 'toolbar__icon btn-italic',
                 enableToggle: true,
                 hint: this.textItalic
             });
@@ -380,6 +383,7 @@ define([], function () { 'use strict';
             };
             this.api.asc_registerCallback('asc_CanUndoSignature', onCanUndoChanged);
             this.api.asc_registerCallback('asc_CanRedoSignature', onCanRedoChanged);
+            this.restoreSignature();
 
             var insertImageFromStorage = function(data) {
                 if (data && data._urls && data.c==='signature') {
@@ -421,14 +425,76 @@ define([], function () { 'use strict';
 
             const $window = this.getChild();
             $window.find('.dlg-btn').on('click', e => {
+                const result = e.currentTarget.getAttribute('result');
+                if (result === 'ok' && me.props) {
+                    const serialized = me.props.serialize();
+                    serialized.mode = me.mode;
+                    Common.localStorage.setItem(me.getKey(), JSON.stringify(serialized));
+                }
                 if ( me.options.handler )
-                    me.options.handler.call(me, event.currentTarget.attributes['result'].value);
+                    me.options.handler.call(me, result);
                 me.close();
             });
         },
 
         updateThemeColors: function() {
             // this.colorsLine.updateColors(Common.Utils.ThemeColor.getEffectColors(), Common.Utils.ThemeColor.getStandartColors());
+        },
+
+        getSignatureId: function() {
+            return this.props ? this.props.getResult().internalId : '';
+        },
+
+        getKey: function() {
+            return 'dialog-signature-' + this.getSignatureId();
+        },
+
+        getStoredData: function() {
+            var storedJson = Common.localStorage.getItem(this.getKey());
+            if (!storedJson) return null;
+            return JSON.parse(storedJson);
+        },
+
+        restoreSignature: function() {
+            if (!this.props) return;
+
+            var data = this.getStoredData();
+            if (!data) return;
+
+            this.props.deserialize(data);
+
+            var mode = data.mode !== undefined ? data.mode : 0;
+            this.mode = mode;
+            this.btnUpload.toggle(mode === 0, true);
+            this.btnDraw.toggle(mode === 1, true);
+            this.btnType.toggle(mode === 2, true);
+            this.ShowHideElem(mode);
+
+            if (mode === 1) {
+                var lineColor = data.lineColor;
+                if (lineColor) this.btnLineColor.setColor(lineColor.replace('#', ''));
+                if (data.lineSize) this.cmbLineSize.setValue(data.lineSize);
+            } else if (mode === 2) {
+                if (data.text) this.inputName.setValue(data.text);
+                if (data.font) {
+                    this.font.name = data.font;
+                    var rec = this.fontStore && this.fontStore.findWhere({name: data.font});
+                    if (rec) this.cmbFonts.selectRecord(rec);
+                    this.props.put_TypeFont(data.font);
+                }
+                if (data.fontSize) {
+                    this.font.size = data.fontSize;
+                    this.cmbFontSize.setValue(data.fontSize);
+                }
+                if (data.bold !== undefined) {
+                    this.font.bold = data.bold;
+                    this.btnBold.toggle(data.bold);
+                }
+                if (data.italic !== undefined) {
+                    this.font.italic = data.italic;
+                    this.btnItalic.toggle(data.italic);
+                }
+            }
         },
 
         onImgModeClick: function(mode, btn) {
@@ -523,6 +589,7 @@ define([], function () { 'use strict';
                     break;
                 case 2:
                     this.props.clearType();
+                    this.inputName.setValue('');
                     break;
             }
         },
