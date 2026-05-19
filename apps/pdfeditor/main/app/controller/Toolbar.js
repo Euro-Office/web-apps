@@ -1,33 +1,36 @@
 /*
- * (c) Copyright Ascensio System SIA 2010-2024
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 /**
  *  Toolbar.js
@@ -187,15 +190,10 @@ define([
             var _main = this.getApplication().getController('Main');
             this.mode = mode;
             this.toolbar.applyLayout(mode);
-            var url = 'https://www.onlyoffice.com/blog/2025/10/docs-9-1-released';
 
             Common.UI.FeaturesManager.isFeatureEnabled('featuresTips', true) && Common.UI.TooltipManager.addTips({
-                // 'pdfCharts' : {name: 'pdfe-help-tip-pdf-charts', placement: 'bottom', offset: {x: Common.UI.isRTL() ? -30 : 30, y: 0}, text: this.helpPdfCharts, header: this.helpPdfChartsHeader,
-                //               target: '#slot-btn-inssmartart', isNewFeature: true, maxwidth: 300, closable: false, link: {text: _main.textLearnMore, url: url}},
-                'annotRect' : {name: 'pdfe-help-tip-annot-rect', placement: 'bottom', text: this.helpAnnotRect, header: this.helpAnnotRectHeader,
-                              target: '#slot-btn-shape-comment', isNewFeature: true, maxwidth: 300, closable: false, noHighlight: true, link: {text: _main.textLearnMore, url: url}},
-                'redactTab' : {name: 'help-tip-redact-tab', placement: 'bottom-right', offset: {x: Common.UI.isRTL() ? -10 : 10, y: 0}, text: this.helpRedactTab, header: this.helpRedactTabHeader, target: 'li.ribtab #red',
-                               automove: true, maxwidth: 300, closable: false, isNewFeature: true, link: {text: _main.textLearnMore, url: url}},
+                'tipChartTab' : {name: 'pdfe-help-tip-chart-tab', placement: 'bottom', text: this.helpChartTab, header: this.helpChartTabHeader, target: 'li.ribtab #charttab', maxwidth: 300,
+                    automove: true, closable: false, isNewFeature: true},
                 'createLink': {name:'pdfe-help-tip-create-link', placement: 'bottom-left', text: this.helpCreateLink, header: this.helpCreateLinkHeader, target: '#slot-btn-insertlink', maxwidth: 300,
                                 automove: true, closable: false, isNewFeature: true}
             });
@@ -577,8 +575,6 @@ define([
                 if (this._state.activated) this._state.pagecontrolsdisable = page_deleted;
                 this.toolbar.lockToolbar(Common.enumLock.pageDeleted, page_deleted);
             }
-            if (this.toolbar.btnShapeComment && !this.toolbar.btnShapeComment.isDisabled() && this.toolbar.isTabActive('comment'))
-                Common.UI.TooltipManager.showTip('annotRect');
         },
 
         onApiFocusObject: function(selectedObjects) {
@@ -672,6 +668,10 @@ define([
                 this.toolbar.setVisible('charttab', !!in_chart);
                 if (in_chart && this._state.showChartTab)
                     this.toolbar.setTab('charttab');
+
+                if (in_chart) Common.UI.TooltipManager.showTip('tipChartTab');
+                else Common.UI.TooltipManager.closeTip('tipChartTab');
+
                 this._state.in_chart = in_chart;
             }
 
@@ -709,7 +709,7 @@ define([
 
             let cant_align = no_paragraph && !in_text_form && !in_text_annot;
             toolbar.lockToolbar(Common.enumLock.cantAlign, cant_align, {array: [toolbar.btnHorizontalAlign]});
-            !cant_align && toolbar.btnHorizontalAlign.menu.items[3].setDisabled(in_text_form || in_text_annot);
+            !cant_align && toolbar.btnHorizontalAlign.menu.items[3].setDisabled(in_text_form);
 
             if (this._state.no_object !== no_object ) {
                 if (this._state.activated) this._state.no_object = no_object;
@@ -765,11 +765,6 @@ define([
             toolbar.lockToolbar(Common.enumLock.cantRotatePage, !this.api.asc_CanRotatePages([this.api.getCurrentPage()]), {array: [toolbar.btnRotatePage]});
             toolbar.lockToolbar(Common.enumLock.pageEditText, page_edit_text, {array: [toolbar.btnEditText]});
             toolbar.lockToolbar(Common.enumLock.cantDelPage, !this.api.asc_CanRemovePages([this.api.getCurrentPage()]), {array: [toolbar.btnDelPage]});
-
-            if (toolbar.btnShapeComment && !toolbar.btnShapeComment.isDisabled() && toolbar.isTabActive('comment')) {
-                Common.UI.TooltipManager.getNeedShow('annotRect') && Common.UI.TooltipManager.closeTip('redactTab');
-                Common.UI.TooltipManager.showTip('annotRect');
-            }
         },
 
         onApiZoomChange: function(percent, type) {},
@@ -1269,8 +1264,6 @@ define([
         },
 
          onBtnShapeCommentClick: function(btn, e) {
-            Common.UI.TooltipManager.closeTip('annotRect');
-
             btn.menu.getItems(true).filter(function(item) {
                 return item.value == btn.options.shapeType
             })[0].setChecked(true);
@@ -1298,7 +1291,6 @@ define([
         },
 
         onMenuShapeCommentShowAfter: function(menu) {
-            Common.UI.TooltipManager.closeTip('annotRect');
         },
 
         onShapeCommentSizeClick: function (direction) {
@@ -1713,8 +1705,6 @@ define([
             toolbar.processPanelVisible(null, true, true);
             $host.find('.annotate').removeClass('transparent');
             $host.find('.pdfedit').removeClass('transparent');
-
-            this.mode.isPDFEdit ? Common.UI.TooltipManager.showTip('redactTab') : Common.UI.TooltipManager.closeTip('redactTab');
         },
         
         onAppReady: function (config) {
@@ -1801,17 +1791,11 @@ define([
                 this.requiredTooltip.close();
                 this.requiredTooltip = undefined;
             }
-            if (tab === 'comment') {
-                if (this.toolbar && !this.toolbar.btnShapeComment.isDisabled())
-                    setTimeout(function() {
-                        Common.UI.TooltipManager.getNeedShow('annotRect') && Common.UI.TooltipManager.closeTip('redactTab');
-                        Common.UI.TooltipManager.showTip('annotRect')
-                    }, 10);
-            } else
-                Common.UI.TooltipManager.closeTip('annotRect');
+
+            if (tab == 'charttab')
+                Common.UI.TooltipManager.closeTip('tipChartTab');
 
             (tab === 'ins') ? Common.UI.TooltipManager.showTip('createLink') : Common.UI.TooltipManager.closeTip('createLink');
-            (tab === 'red') && Common.UI.TooltipManager.closeTip('redactTab');
         },
 
         onClickTab: function(tab) {
@@ -1819,8 +1803,6 @@ define([
         },
 
         onTabCollapse: function(tab) {
-            Common.UI.TooltipManager.closeTip('pdfCharts');
-            Common.UI.TooltipManager.closeTip('annotRect');
             Common.UI.TooltipManager.closeTip('createLink');
         },
 
