@@ -1859,8 +1859,6 @@
   "DE.Controllers.Toolbar.dataUrl": "데이터 URL 붙여넣기",
   "DE.Controllers.Toolbar.errorAccessDeny": "권한이 없는 작업을 시도하고 있습니다.<br>문서 서버 관리자에게 문의하세요.",
   "DE.Controllers.Toolbar.fileUrl": "파일 URL 붙여넣기",
-  "DE.Controllers.Toolbar.helpChartElements": "몇 번의 클릭만으로 차트 요소의 표시 여부를 쉽게 전환할 수 있습니다.",
-  "DE.Controllers.Toolbar.helpChartElementsHeader": "차트 요소 표시",
   "DE.Controllers.Toolbar.helpCommentFilter": "왼쪽 패널에서 열린 댓글과 해결된 댓글을 전환하여 보기 상태를 관리합니다.",
   "DE.Controllers.Toolbar.helpCommentFilterHeader": "댓글 필터",
   "DE.Controllers.Toolbar.helpHeaderFooterTab": "머리글 및 바닥글의 모든 옵션을 한 곳에서 편리하게 이용할 수 있습니다.",

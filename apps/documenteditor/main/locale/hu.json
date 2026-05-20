@@ -1859,8 +1859,6 @@
   "DE.Controllers.Toolbar.dataUrl": "Illesszen be egy adat URL-t",
   "DE.Controllers.Toolbar.errorAccessDeny": "Olyan műveletet próbál végrehajtani, amelyhez nincs jogosultsága.<br>Kérjük, vegye fel a kapcsolatot a dokumentumkiszolgáló rendszergazdájával.",
   "DE.Controllers.Toolbar.fileUrl": "Fájl URL-címének beillesztése",
-  "DE.Controllers.Toolbar.helpChartElements": "A diagramelemek láthatóságát könnyedén, néhány kattintással átkapcsolhatja.",
-  "DE.Controllers.Toolbar.helpChartElementsHeader": "Diagramelemek megjelenítése",
   "DE.Controllers.Toolbar.helpCommentFilter": "A nézetet a bal oldali panelen a megnyitott és a lezárt megjegyzések közötti váltással kezelheti.",
   "DE.Controllers.Toolbar.helpCommentFilterHeader": "Hozzászólásszűrők",
   "DE.Controllers.Toolbar.helpHeaderFooterTab": "Az összes fejléc- és láblécbeállítás egyetlen kényelmes helyen érhető el.",

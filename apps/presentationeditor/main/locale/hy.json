@@ -1547,7 +1547,6 @@
   "PE.Controllers.Toolbar.confirmAddFontName": "Տառատեսակը, որն ուզում եք պահպանել, այս սարքում տեղակայված չէ։<br>Տեքստի ոճը կցուցադրվի համակարգի տառատեսակներից մեկով, իսկ պահպանված տառատեսակը կգործածվի, երբ տեղակայվի։<br>Շարունակե՞լ։",
   "PE.Controllers.Toolbar.helpChartTab": "Գծապատկերի բոլոր կարգավորումներն այժմ հասանելի են գործիքագոտու Գծապատկերի ձևավորում հատուկ ներդիրում:",
   "PE.Controllers.Toolbar.helpChartTabHeader": "Գծապատկերի ձևավորման ներդիր",
-  "PE.Controllers.Toolbar.helpMasterTab": "Մուտք գործեք Սլայդ Մաստերի կարգավորումները համապատասխան գործիքագոտու ներդիրից՝ ավելի հարմար կառավարման համար։",
   "PE.Controllers.Toolbar.textAccent": "Հնչյունատարբերիչ նշաններ",
   "PE.Controllers.Toolbar.textBracket": "Փակագծեր",
   "PE.Controllers.Toolbar.textFontSizeErr": "Խնդրում ենք մուտքագրել 1-ից 300 թվային արժեք:",

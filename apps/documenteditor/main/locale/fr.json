@@ -1859,8 +1859,6 @@
   "DE.Controllers.Toolbar.dataUrl": "Collez une URL de données",
   "DE.Controllers.Toolbar.errorAccessDeny": "Vous ne disposez pas des droits pour effectuer cet action.<br>Veuillez contacter l'administrateur du Serveur de documents.",
   "DE.Controllers.Toolbar.fileUrl": "Coller une URL de fichier",
-  "DE.Controllers.Toolbar.helpChartElements": "Basculez facilement la visibilité des éléments de graphique en quelques clics.",
-  "DE.Controllers.Toolbar.helpChartElementsHeader": "Affichage des éléments de graphique",
   "DE.Controllers.Toolbar.helpCommentFilter": "Gérez votre affichage en basculant entre les commentaires ouverts et résolus dans le volet de gauche.",
   "DE.Controllers.Toolbar.helpCommentFilterHeader": "Filtres de commentaires",
   "DE.Controllers.Toolbar.helpHeaderFooterTab": "Accédez à toutes les options d'en-tête et de pied de page dans un emplacement pratique.",

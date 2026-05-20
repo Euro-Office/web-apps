@@ -1859,8 +1859,6 @@
   "DE.Controllers.Toolbar.dataUrl": "Lipiti adresa URL a datelor",
   "DE.Controllers.Toolbar.errorAccessDeny": "Nu aveți dreptul să efectuați acțiunea pe care doriți.<br>Contactați administratorul dumneavoastră de Server Documente.",
   "DE.Controllers.Toolbar.fileUrl": "Inserare adresa URL a fișierului",
-  "DE.Controllers.Toolbar.helpChartElements": "Comutare ușoară a vizibilității elementelor de diagramă cu doar câteva clicuri.",
-  "DE.Controllers.Toolbar.helpChartElementsHeader": "Afișare elemente de diagramă",
   "DE.Controllers.Toolbar.helpCommentFilter": "Gestionați afișarea comutând între comentariile deschise și comentariile rezolvate în panoul din stânga.",
   "DE.Controllers.Toolbar.helpCommentFilterHeader": "Filtre pentru comentarii",
   "DE.Controllers.Toolbar.helpHeaderFooterTab": "Descoperiți toate setările de antet și subsol într-un loc convenabil.",

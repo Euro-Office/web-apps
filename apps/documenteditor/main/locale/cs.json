@@ -1764,8 +1764,6 @@
   "DE.Controllers.Toolbar.dataUrl": "Vložte URL -adresa domény",
   "DE.Controllers.Toolbar.errorAccessDeny": "Pokoušíte se provést akci, na kterou nemáte oprávnění.<br>Obraťte se na správce vámi využívaného dokumentového serveru.",
   "DE.Controllers.Toolbar.fileUrl": "Vložit URL adresu souboru",
-  "DE.Controllers.Toolbar.helpChartElements": "Jednoduše přepnout viditelnost prvků grafu několika kliknutími.",
-  "DE.Controllers.Toolbar.helpChartElementsHeader": "Zobrazení prvků grafu",
   "DE.Controllers.Toolbar.helpCommentFilter": "Spravujte náhled komentářů přepínáním mezi otevřenými a vyřešenými v levém panelu.",
   "DE.Controllers.Toolbar.helpCommentFilterHeader": "Komentář filtrů",
   "DE.Controllers.Toolbar.helpChartTab": "Všechna nastavení grafu jsou nyní dostupná na vyhrazené kartě Návrh grafu na panelu nástrojů.",

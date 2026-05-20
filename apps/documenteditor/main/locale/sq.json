@@ -1859,8 +1859,6 @@
   "DE.Controllers.Toolbar.dataUrl": "Ngjit një URL të dhënash",
   "DE.Controllers.Toolbar.errorAccessDeny": "Ju po përpiqeni të kryeni një veprim për të cilin nuk keni të drejta.<br>Ju lutem, kontaktoni administratorin e serverit të dokumenteve. ",
   "DE.Controllers.Toolbar.fileUrl": "Ngjitni një skedar URL",
-  "DE.Controllers.Toolbar.helpChartElements": "Aktiviyoni lehtësisht dukshmërine e elementëve të grafikut me disa klikime.",
-  "DE.Controllers.Toolbar.helpChartElementsHeader": "Shfaqja e elementeve të grafikut",
   "DE.Controllers.Toolbar.helpCommentFilter": "Menaxhoni pamjen tënde duke kaluar midis komenteve të hapura dhe të zgjidhura në panelin e majtë.",
   "DE.Controllers.Toolbar.helpCommentFilterHeader": "Filtrat e komenteve",
   "DE.Controllers.Toolbar.helpHeaderFooterTab": "Aksesoni të gjitha opsionet e kokës dhe të fundit të faqes në një vendndodhje të përshtatshme.",

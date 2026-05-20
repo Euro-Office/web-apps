@@ -1859,8 +1859,6 @@
   "DE.Controllers.Toolbar.dataUrl": "ڈیٹا URL چسپاں کریں۔",
   "DE.Controllers.Toolbar.errorAccessDeny": "آپ ایک ایسی کارروائی کرنے کی کوشش کر رہے ہیں جس کا آپ کو حق نہیں ہے۔ براہ کرم اپنے دستاویز سرور کے منتظم سے رابطہ کریں۔",
   "DE.Controllers.Toolbar.fileUrl": "فائل کا URL چسپاں کریں۔",
-  "DE.Controllers.Toolbar.helpChartElements": "کئی کلکس کے ساتھ چارٹ عناصر کی مرئیت کو آسانی سے ٹوگل کریں۔",
-  "DE.Controllers.Toolbar.helpChartElementsHeader": "چارٹ عناصر ڈسپلے",
   "DE.Controllers.Toolbar.helpCommentFilter": "بائیں پینل میں کھلے اور حل شدہ تبصروں کے درمیان ٹوگل کرکے اپنے نظارے کا نظم کریں۔",
   "DE.Controllers.Toolbar.helpCommentFilterHeader": "تبصرہ فلٹرز",
   "DE.Controllers.Toolbar.helpChartTab": "چارٹ کی تمام ترتیبات اب ٹول بار کے مخصوص چارٹ ڈیزائن ٹیب میں دستیاب ہیں۔",

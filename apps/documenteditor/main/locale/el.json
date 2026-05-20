@@ -1859,8 +1859,6 @@
   "DE.Controllers.Toolbar.dataUrl": "Επικόλληση URL δεδομένων",
   "DE.Controllers.Toolbar.errorAccessDeny": "Προσπαθείτε να εκτελέσετε μια ενέργεια για την οποία δεν έχετε δικαιώματα. <br>Επικοινωνήστε με το διαχειριστή του διακομιστή εγγράφων.",
   "DE.Controllers.Toolbar.fileUrl": "Επικόλληση σε URL αρχείου",
-  "DE.Controllers.Toolbar.helpChartElements": "Αλλάζετε εύκολα την ορατότητα των στοιχείων του διαγράμματος με μερικά κλικ.",
-  "DE.Controllers.Toolbar.helpChartElementsHeader": "Εμφάνιση στοιχείων γραφήματος",
   "DE.Controllers.Toolbar.helpCommentFilter": "Διαχειριστείτε την προβολή σας εναλλάσσοντας μεταξύ ανοιχτών και επιλυμένων σχολίων στον αριστερό πίνακα.",
   "DE.Controllers.Toolbar.helpCommentFilterHeader": "Φίλτρα σχολίων",
   "DE.Controllers.Toolbar.helpHeaderFooterTab": "Πρόσβαση σε όλες τις επιλογές κεφαλίδας και υποσέλιδου σε ένα βολικό σημείο.",
