@@ -281,6 +281,7 @@ Common.UI.LayoutManager = new(function() {
                                 }
                                 btn.updateHint(item.hint || '');
                                 (item.disabled!==undefined) && Common.Utils.lockControls(_set.customLock, !!item.disabled, {array: [btn]});
+                                item.pressed!=undefined && !btn.isDisabled() && btn.toggle(item.pressed);
                                 if (btn.menu && item.items && item.items.length > 0) {// update menu items
                                     if (typeof btn.menu !== 'object') {
                                         btn.setMenu(new Common.UI.Menu({items: []}));
@@ -303,6 +304,7 @@ Common.UI.LayoutManager = new(function() {
                                 menu: item.items,
                                 split: item.items && !!item.split,
                                 enableToggle: item.enableToggle && (!item.items || !!item.split),
+                                pressed: item.pressed,
                                 value: item.id,
                                 guid: plugin.guid,
                                 tabid: tab.id,
