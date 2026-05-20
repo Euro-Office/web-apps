@@ -27,6 +27,7 @@ import i18n from './lib/i18n.js';
 
 import { Provider } from 'mobx-react';
 import { stores } from './store/mainStore.js';
+import ErrorBoundary from '../../../common/mobile/lib/component/ErrorBoundary.jsx';
 // import { LocalStorage } from '../../../common/mobile/utils/LocalStorage';
 
 const container = document.getElementById('app');
@@ -37,11 +38,13 @@ Framework7.use(Framework7React);
 
 // Mount React App
 root.render(
-    <I18nextProvider i18n={i18n}>
-        <Provider {...stores}>
-            {/*<Suspense fallback="loading...">*/}
-                <App />
-            {/*</Suspense>*/}
-        </Provider>
-    </I18nextProvider>
+    <ErrorBoundary>
+        <I18nextProvider i18n={i18n}>
+            <Provider {...stores}>
+                {/*<Suspense fallback="loading...">*/}
+                    <App />
+                {/*</Suspense>*/}
+            </Provider>
+        </I18nextProvider>
+    </ErrorBoundary>
 );
