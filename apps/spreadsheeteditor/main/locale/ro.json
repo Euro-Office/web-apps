@@ -5276,5 +5276,22 @@
   "SSE.Views.WBProtection.txtSheetUnlockDescription": "Introduceți parola pentru dezactivarea protejării a foii de calcul",
   "SSE.Views.WBProtection.txtSheetUnlockTitle": "Anularea protecției foii de calcul",
   "SSE.Views.WBProtection.txtWBUnlockDescription": "Introduceți parola pentru dezactivarea protejării a registrului de calcul",
-  "SSE.Views.WBProtection.txtWBUnlockTitle": "Dezactivarea protejării registrului de calcul"
+  "SSE.Views.WBProtection.txtWBUnlockTitle": "Dezactivarea protejării registrului de calcul",
+  "SSE.Controllers.Main.errorFileNotAssembled": "This file is opened from a server backup copy and is not saved to storage.<br>Use the 'Save as...' option to save it to a drive.",
+  "SSE.Controllers.Main.errorForcedViewMode": "This file is opened in view mode.<br>The file is locked for editing or your access rights do not allow editing.",
+  "SSE.Controllers.Toolbar.helpSolver": "Find optimal solutions for complex calculations.",
+  "SSE.Controllers.Toolbar.helpSolverHeader": "Solver",
+  "SSE.Controllers.Toolbar.helpCellFormat": "Easily access all options for working with sheets, rows, and columns.",
+  "SSE.Controllers.Toolbar.helpCellFormatHeader": "New button: Format",
+  "SSE.Views.CheckBoxSettingsDialog.textCellLink": "Cell link",
+  "SSE.Views.CheckBoxSettingsDialog.textChecked": "Checked",
+  "SSE.Views.CheckBoxSettingsDialog.textInvalidRef": "ERROR! Invalid cell reference",
+  "SSE.Views.CheckBoxSettingsDialog.textMixed": "Mixed",
+  "SSE.Views.CheckBoxSettingsDialog.textSelectData": "Select data",
+  "SSE.Views.CheckBoxSettingsDialog.textTitle": "Format Control",
+  "SSE.Views.CheckBoxSettingsDialog.textUnchecked": "Unchecked",
+  "SSE.Views.CheckBoxSettingsDialog.textValue": "Value",
+  "SSE.Views.DocumentHolder.advancedCheckBoxText": "Format Control",
+  "SSE.Views.Toolbar.capInsertCheckBox": "Check Box",
+  "SSE.Views.Toolbar.tipInsertCheckBox": "Insert check box"
 }

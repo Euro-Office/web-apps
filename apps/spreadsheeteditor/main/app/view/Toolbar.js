@@ -1445,6 +1445,17 @@ define([
                     dataHintOffset: 'small'
                 });
 
+                me.btnInsertCheckBox = new Common.UI.Button({
+                    id          : 'tlbtn-insertcheckbox',
+                    cls         : 'btn-toolbar x-huge icon-top',
+                    iconCls     : 'toolbar__icon btn-insertcheckbox',
+                    caption     : me.capInsertCheckBox,
+                    lock        : [_set.editCell, _set.lostConnect, _set.coAuth, _set['Objects']],
+                    dataHint    : '1',
+                    dataHintDirection: 'bottom',
+                    dataHintOffset: 'small'
+                });
+
                 me.btnInsertText = new Common.UI.Button({
                     id          : 'tlbtn-inserttext',
                     cls         : 'btn-toolbar x-huge icon-top',
@@ -2626,6 +2637,7 @@ define([
             _injectComponent('#slot-btn-instable',       this.btnInsertTable);
             _injectComponent('#slot-btn-inshyperlink',   this.btnInsertHyperlink);
             _injectComponent('#slot-btn-insshape',       this.btnInsertShape);
+            _injectComponent('#slot-btn-inscheckbox',    this.btnInsertCheckBox);
             _injectComponent('#slot-btn-instext',        this.btnInsertText);
             _injectComponent('#slot-btn-instextart',     this.btnInsertTextArt);
             _injectComponent('#slot-btn-insequation',    this.btnInsertEquation);
@@ -2720,6 +2732,7 @@ define([
             _updateHint(this.btnInsertText, [this.tipInsertHorizontalText ,this.tipInsertText]);
             _updateHint(this.btnInsertTextArt, this.tipInsertTextart);
             _updateHint(this.btnInsertShape, this.tipInsertShape);
+            _updateHint(this.btnInsertCheckBox, this.tipInsertCheckBox);
             _updateHint(this.btnInsertEquation, this.tipInsertEquation);
             _updateHint(this.btnInsertSymbol, this.tipInsertSymbol);
             _updateHint(this.btnInsertSlicer, this.tipInsertSlicer);

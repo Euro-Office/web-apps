@@ -152,6 +152,7 @@
                     <span class="btn-slot text x-huge" id="slot-btn-insimage"></span>
                     <span class="btn-slot text x-huge" id="slot-btn-insshape"></span>
                     <span class="btn-slot text x-huge" id="slot-btn-inssmartart"></span>
+                    <span class="btn-slot text x-huge" id="slot-btn-inscheckbox"></span>
                 </div>
                 <div class="separator long"></div>
                 <div class="group">

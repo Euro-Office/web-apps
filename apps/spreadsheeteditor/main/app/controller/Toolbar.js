@@ -440,6 +440,7 @@ define([
                 toolbar.btnInsertHyperlink.on('click',                      _.bind(this.onHyperlink, this));
                 toolbar.btnInsertText.on('click',                           _.bind(this.onBtnInsertTextClick, this));
                 toolbar.btnInsertText.menu.on('item:click',                 _.bind(this.onMenuInsertTextClick, this));
+                toolbar.btnInsertCheckBox.on('click',                       _.bind(this.onInsertCheckBoxClick, this));
                 toolbar.btnInsertShape.menu.on('hide:after',                _.bind(this.onInsertShapeHide, this));
                 toolbar.btnInsertEquation.on('click',                       _.bind(this.onInsertEquationClick, this));
                 toolbar.btnInsertSymbol.menu.items[2].on('click',           _.bind(this.onInsertSymbolClick, this));
@@ -4491,6 +4492,13 @@ define([
             var font = fontRecord ? fontRecord: this.api.asc_getCellInfo().asc_getXfs().asc_getFontName();
             this.api.asc_insertSymbol(font, symbol, special);
             !specCharacter && this.toolbar.saveSymbol(symbol, font);
+        },
+
+        onInsertCheckBoxClick: function() {
+            if (this.api) {
+                this.api.asc_addCheckBoxOnSheet();
+            }
+            Common.NotificationCenter.trigger('edit:complete', this.toolbar);
         },
 
         onInsertSlicerClick: function() {

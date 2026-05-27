@@ -876,6 +876,11 @@ define([], function () {
                 caption : me.advancedShapeText
             });
 
+            me.mnuCheckBoxAdvanced = new Common.UI.MenuItem({
+                iconCls     : 'menu__icon btn-insertcheckbox',
+                caption     : me.advancedCheckBoxText
+            });
+
             me.mnuImgAdvanced = new Common.UI.MenuItem({
                 iconCls     : 'menu__icon btn-menu-image',
                 caption : me.advancedImgText
@@ -1627,6 +1632,7 @@ define([], function () {
                     me.mnuChartEdit,
                     me.menuImgEditPoints,
                     me.mnuShapeAdvanced,
+                    me.mnuCheckBoxAdvanced,
                     me.menuImgOriginalSize,
                     me.menuImgReplace,
                     me.mnuImgAdvanced,

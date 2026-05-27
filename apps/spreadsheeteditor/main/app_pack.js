@@ -52,6 +52,7 @@ require([
     'spreadsheeteditor/main/app/view/ProtectRangesDlg',
     'spreadsheeteditor/main/app/view/ProtectedRangesManagerDlg',
     'spreadsheeteditor/main/app/view/RemoveDuplicatesDialog',
+    'spreadsheeteditor/main/app/view/CheckBoxSettingsDialog',
     'spreadsheeteditor/main/app/view/SlicerAddDialog',
     'spreadsheeteditor/main/app/view/Spellcheck',
     'spreadsheeteditor/main/app/view/WatchDialog',

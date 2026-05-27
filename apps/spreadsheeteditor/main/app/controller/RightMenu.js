@@ -193,8 +193,12 @@ define([
                         settingsType = Common.Utils.documentSettingsType.Chart;
                         this._settings[settingsType].btn.updateHint(this.rightmenu.txtChartSettings);
                     } else if (value.asc_getShapeProperties() !== null) {
+                        var shProps = value.asc_getShapeProperties();
+                        if (shProps.asc_getIsControl && shProps.asc_getIsControl()) {
+                            continue; // no right-panel for form controls
+                        }
                         settingsType = Common.Utils.documentSettingsType.Shape;
-                        if (value.asc_getShapeProperties().asc_getTextArtProperties()) {
+                        if (shProps.asc_getTextArtProperties()) {
                             this._settings[Common.Utils.documentSettingsType.TextArt].props = value;
                             this._settings[Common.Utils.documentSettingsType.TextArt].hidden = 0;
                             this._settings[Common.Utils.documentSettingsType.TextArt].locked = value.asc_getLocked() || this._state.wsProps['Objects'] && value.asc_getProtectionLockText();

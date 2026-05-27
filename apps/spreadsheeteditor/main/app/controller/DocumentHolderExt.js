@@ -184,6 +184,7 @@ define([], function () {
                 view.menuRemoveHyperlinkShape.on('click',           _.bind(me.onDelHyperlink, me));
                 view.pmiTextAdvanced.on('click',                    _.bind(me.onTextAdvanced, me));
                 view.mnuShapeAdvanced.on('click',                   _.bind(me.onShapeAdvanced, me));
+                view.mnuCheckBoxAdvanced.on('click',                _.bind(me.onCheckBoxAdvanced, me));
                 view.mnuChartEdit.on('click',                       _.bind(me.onChartEdit, me));
                 view.mnuChartData.on('click',                       _.bind(me.onChartData, me));
                 view.mnuChartType.on('click',                       _.bind(me.onChartType, me));
@@ -1244,6 +1245,22 @@ define([], function () {
             })).show();
         };
 
+        dh.onCheckBoxAdvanced = function(item) {
+            var me = this;
+            var props = me.api.asc_getCheckBoxProps();
+            if (!props) return;
+            (new SSE.Views.CheckBoxSettingsDialog({
+                props   : props,
+                api     : me.api,
+                handler : function(result, value) {
+                    if (result === 'ok' && me.api) {
+                        me.api.asc_setCheckBoxProps(value);
+                    }
+                    Common.NotificationCenter.trigger('edit:complete', me);
+                }
+            })).show();
+        };
+
         dh.onShapeAdvanced = function(item) {
             var me = this;
 
@@ -2217,7 +2234,7 @@ define([], function () {
 
         dh.fillMenuProps = function(cellinfo, showMenu, event){
             if (!cellinfo) return;
-            var iscellmenu, isrowmenu, iscolmenu, isallmenu, ischartmenu, isimagemenu, istextshapemenu, isshapemenu, istextchartmenu, isimageonly, isslicermenu,
+            var iscellmenu, isrowmenu, iscolmenu, isallmenu, ischartmenu, isimagemenu, istextshapemenu, isshapemenu, istextchartmenu, isimageonly, isslicermenu, ischeckboxmenu,
                 documentHolder      = this.documentHolder,
                 seltype             = cellinfo.asc_getSelectionType(),
                 isCellLocked        = cellinfo.asc_getLocked(),
@@ -2270,7 +2287,9 @@ define([], function () {
                                 ischartmenu = true;
                             else if (shapeprops.asc_getFromImage())
                                 isimageonly = true;
-                            else {
+                            else if (shapeprops.asc_getIsCheckBox && shapeprops.asc_getIsCheckBox()) {
+                                ischeckboxmenu = true;
+                            } else {
                                 documentHolder.mnuShapeAdvanced.shapeInfo = elValue;
                                 isshapemenu = true;
                                 if (shapeprops.asc_getFromSmartArt())
@@ -2323,8 +2342,10 @@ define([], function () {
                 documentHolder.menuImageAlign.menu.items[7].setDisabled(objcount<3);
                 documentHolder.menuImageAlign.menu.items[8].setDisabled(objcount<3);
 
-                documentHolder.mnuShapeAdvanced.setVisible(isshapemenu && !isimagemenu && !ischartmenu);
+                documentHolder.mnuShapeAdvanced.setVisible(isshapemenu && !isimagemenu && !ischartmenu && !ischeckboxmenu);
                 documentHolder.mnuShapeAdvanced.setDisabled(isObjLocked);
+                documentHolder.mnuCheckBoxAdvanced.setVisible(!!ischeckboxmenu);
+                documentHolder.mnuCheckBoxAdvanced.setDisabled(isObjLocked);
                 documentHolder.mnuChartEdit.setVisible(ischartmenu && !isimagemenu && !isshapemenu && has_chartprops);
                 documentHolder.mnuChartEdit.setDisabled(isObjLocked);
                 documentHolder.mnuChartData.setVisible(this.permissions.isEditOle && ischartmenu && !isimagemenu && !isshapemenu && has_chartprops);
@@ -2381,7 +2402,7 @@ define([], function () {
                 canEditPoints && documentHolder.menuImgEditPoints.setDisabled(isObjLocked);
 
                 if (showMenu) this.showPopupMenu(documentHolder.imgMenu, {}, event);
-                documentHolder.mnuShapeSeparator.setVisible(documentHolder.mnuShapeAdvanced.isVisible() || documentHolder.mnuChartEdit.isVisible() || documentHolder.mnuImgAdvanced.isVisible());
+                documentHolder.mnuShapeSeparator.setVisible(documentHolder.mnuShapeAdvanced.isVisible() || documentHolder.mnuCheckBoxAdvanced.isVisible() || documentHolder.mnuChartEdit.isVisible() || documentHolder.mnuImgAdvanced.isVisible());
                 documentHolder.mnuSlicerSeparator.setVisible(documentHolder.mnuSlicerAdvanced.isVisible());
                 if (isInSign) {
                     documentHolder.menuSignatureEditSign.cmpEl.attr('data-value', signGuid); // sign
