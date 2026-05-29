@@ -1,4 +1,5 @@
 import React, {Fragment, useState} from 'react';
+import {observer, inject} from "mobx-react";
 import {Page, Navbar, BlockTitle, List, ListItem, ListInput, ListButton, Icon} from 'framework7-react';
 import { useTranslation } from 'react-i18next';
 import { Device } from '../../../../../common/mobile/utils/device';
@@ -7,10 +8,13 @@ import IconImageLibraryIos from '@common-ios-icons/icon-image-library.svg?ios';
 import IconImageLibraryAndroid from '@common-android-icons/icon-image-library.svg';
 import IconLinkIos from '@common-ios-icons/icon-link.svg?ios';
 import IconLinkAndroid from '@common-android-icons/icon-link.svg';
+import IconImageStorage from '@common-icons/icon-image-storage.svg';
 
-const AddImageList = props => {
+const AddImageList = inject('storeAppOptions')(observer(props => {
     const { t } = useTranslation();
     const _t = t('View.Add', {returnObjects: true});
+    const canRequestInsertImage = props.storeAppOptions.canRequestInsertImage;
+
     return (
         <List>
             <ListItem title={_t.textPictureFromLibrary} onClick={() => {props.onInsertByFile()}}>
@@ -27,9 +31,15 @@ const AddImageList = props => {
                     <SvgIcon slot="media" symbolId={IconLinkAndroid.id} className={'icon icon-svg'} />
                 }
             </ListItem>
+            {
+                canRequestInsertImage &&
+                <ListItem title={_t.textPictureFromStorage} onClick={() => {props.onInsertByStorage()}}>
+                    <SvgIcon slot="media" symbolId={IconImageStorage.id} className={'icon icon-svg'} />
+                </ListItem>
+            }
         </List>
     )
-};
+}));
 
 const PageLinkSettings = props => {
     const { t } = useTranslation();
@@ -62,10 +72,10 @@ const AddImage = props => {
     const _t = t('View.Add', {returnObjects: true});
     return (
         props.inTabs ?
-            <AddImageList onInsertByFile={props.onInsertByFile} onInsertByUrl={ props.onInsertByUrl} /> :
+            <AddImageList onInsertByFile={props.onInsertByFile} onInsertByUrl={ props.onInsertByUrl} onInsertByStorage={props.onInsertByStorage} /> :
             <Page>
                 <Navbar title={_t.textImage} backLink={_t.textBack}/>
-                <AddImageList onInsertByFile={props.onInsertByFile} onInsertByUrl={ props.onInsertByUrl} />
+                <AddImageList onInsertByFile={props.onInsertByFile} onInsertByUrl={ props.onInsertByUrl} onInsertByStorage={props.onInsertByStorage}/>
             </Page>
         )
 };

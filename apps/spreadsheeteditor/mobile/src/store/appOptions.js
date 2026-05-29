@@ -14,12 +14,16 @@ export class storeAppOptions {
 
             lostEditingRights: observable,
             changeEditingRights: action,
-            
+
             canBranding: observable,
             canBrandingExt: observable,
 
             isDocReady: observable,
             changeDocReady: action,
+
+
+            canRequestInsertImage: observable,
+            changeCanRequestInsertImage: action,
 
             customization: observable,
         });
@@ -52,6 +56,11 @@ export class storeAppOptions {
         this.isDocReady = value;
     }
 
+    canRequestInsertImage = false;
+    changeCanRequestInsertImage(value) {
+        this.canRequestInsertImage = value;
+    }
+
     setConfigOptions (config, _t) {
         this.config = config;
         this.customization = config.customization;
@@ -64,7 +73,7 @@ export class storeAppOptions {
         this.canRename = this.config.canRename;
         this.user = Common.Utils.fillUserInfo(config.user, config.lang, value ? (value + ' (' + this.guestName + ')' ) : _t.textAnonymous, LocalStorage.getItem("guest-id") || ('uid-' + Date.now()));
         this.user.anonymous && LocalStorage.setItem("guest-id", this.user.id);
-        
+
         config.user = this.user;
         this.isDesktopApp = config.targetApp == 'desktop';
         this.canCreateNew = !!config.createUrl && !this.isDesktopApp;
@@ -82,6 +91,7 @@ export class storeAppOptions {
         this.mergeFolderUrl = config.mergeFolderUrl;
         this.canAnalytics = false;
         this.canRequestClose = config.canRequestClose;
+        this.canRequestInsertImage = config.canRequestInsertImage === true;
         this.canCloseEditor = false;
         
         let canBack = false;
@@ -149,12 +159,12 @@ export class storeAppOptions {
         const type = /^(?:(pdf|djvu|xps|oxps))$/.exec(document.fileType);
         this.canDownloadOrigin = permissions.download !== false && (type && typeof type[1] === 'string');
         this.canDownload = permissions.download !== false && (!type || typeof type[1] !== 'string');
-        this.canUseReviewPermissions = this.canLicense && (!!permissions.reviewGroups || this.customization 
+        this.canUseReviewPermissions = this.canLicense && (!!permissions.reviewGroups || this.customization
             && this.customization.reviewPermissions && (typeof (this.customization.reviewPermissions) == 'object'));
         this.canUseCommentPermissions = this.canLicense && !!permissions.commentGroups;
         this.canUseUserInfoPermissions = this.canLicense && !!permissions.userInfoGroups;
         this.canUseReviewPermissions && AscCommon.UserInfoParser.setReviewPermissions(permissions.reviewGroups, this.customization.reviewPermissions);
-        this.canUseCommentPermissions && AscCommon.UserInfoParser.setCommentPermissions(permissions.commentGroups);  
+        this.canUseCommentPermissions && AscCommon.UserInfoParser.setCommentPermissions(permissions.commentGroups);
         this.canUseUserInfoPermissions && AscCommon.UserInfoParser.setUserInfoPermissions(permissions.userInfoGroups);
 
         this.canUseHistory = this.canLicense && this.config.canUseHistory && this.canCoAuthoring && !this.isDesktopApp && !this.isOffline;

@@ -14,6 +14,7 @@ import IconImageLibraryIos from '@common-ios-icons/icon-image-library.svg?ios';
 import IconImageLibraryAndroid from '@common-android-icons/icon-image-library.svg';
 import IconLinkIos from '@common-ios-icons/icon-link.svg?ios';
 import IconLinkAndroid from '@common-android-icons/icon-link.svg';
+import IconImageStorage from '@common-icons/icon-image-storage.svg';
 
 const EditImage = props => {
     const { t } = useTranslation();
@@ -27,7 +28,8 @@ const EditImage = props => {
             <List>
                 <ListItem title={t('View.Edit.textReplaceImage')} link="/edit-replace-image/" className={pluginGuid ? 'disabled' : ''} routeProps={{
                     onReplaceByFile: props.onReplaceByFile,
-                    onReplaceByUrl: props.onReplaceByUrl
+                    onReplaceByUrl: props.onReplaceByUrl,
+                    onReplaceByStorage: props.onReplaceByStorage
                 }}></ListItem>
                 <ListItem title={t('View.Edit.textArrange')} link="/edit-reorder-image/" routeProps={{
                     onReorder: props.onReorder
@@ -86,6 +88,7 @@ const PageReorder = props => {
 const PageReplace = props => {
     const { t } = useTranslation();
     const _t = t('View.Edit', {returnObjects: true});
+    const canRequestInsertImage = props.storeAppOptions.canRequestInsertImage;
 
     const storeFocusObjects = props.storeFocusObjects;
     if ((!storeFocusObjects.imageObject || storeFocusObjects.focusOn === 'cell') && Device.phone) {
@@ -120,6 +123,12 @@ const PageReplace = props => {
                         <SvgIcon slot="media" symbolId={IconLinkAndroid.id} className={'icon icon-svg'} />
                     }
                 </ListItem>
+                {
+                    canRequestInsertImage &&
+                    <ListItem title={_t.textPictureFromStorage} onClick={() => {props.onReplaceByStorage()}}>
+                        <SvgIcon slot="media" symbolId={IconImageStorage.id} className={'icon icon-svg'} />
+                    </ListItem>
+                }
             </List>
         </Page>
     )
@@ -172,7 +181,7 @@ const PageLinkSettings = props => {
 };
 
 const EditImageContainer = inject("storeFocusObjects")(observer(EditImage));
-const PageReplaceContainer = inject("storeFocusObjects")(observer(PageReplace));
+const PageReplaceContainer = inject("storeAppOptions","storeFocusObjects")(observer(PageReplace));
 const PageReorderContainer = inject("storeFocusObjects")(observer(PageReorder));
 const PageLinkSettingsContainer = inject("storeFocusObjects")(observer(PageLinkSettings));
 
