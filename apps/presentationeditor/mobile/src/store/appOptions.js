@@ -20,6 +20,9 @@ export class storeAppOptions {
             isDocReady: observable,
             changeDocReady: action,
 
+            canRequestInsertImage: observable,
+            changeCanRequestInsertImage: action,
+
             customization: observable,
         });
     }
@@ -44,6 +47,11 @@ export class storeAppOptions {
     isDocReady = false;
     changeDocReady (value) {
         this.isDocReady = value;
+    }
+
+    canRequestInsertImage = false;
+    changeCanRequestInsertImage(value) {
+        this.canRequestInsertImage = value;
     }
 
     setConfigOptions (config, _t) {
@@ -74,6 +82,7 @@ export class storeAppOptions {
         this.mergeFolderUrl = config.mergeFolderUrl;
         this.canAnalytics = false;
         this.canRequestClose = config.canRequestClose;
+        this.canRequestInsertImage = config.canRequestInsertImage === true;
         this.canCloseEditor = false;
         
         let canBack = false;
@@ -151,7 +160,7 @@ export class storeAppOptions {
         this.canBranding = params.asc_getCustomization();
         this.canBrandingExt = params.asc_getCanBranding() && (typeof this.customization == 'object' || this.config.plugins);
 
-        this.canUseReviewPermissions = this.canLicense && (!!permissions.reviewGroups || this.customization 
+        this.canUseReviewPermissions = this.canLicense && (!!permissions.reviewGroups || this.customization
             && this.customization.reviewPermissions && (typeof (this.customization.reviewPermissions) == 'object'));
         this.canUseCommentPermissions = this.canLicense && !!permissions.commentGroups;
         this.canUseUserInfoPermissions = this.canLicense && !!permissions.userInfoGroups;

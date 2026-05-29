@@ -8,6 +8,7 @@ import IconImageLibraryIos from '@common-ios-icons/icon-image-library.svg?ios';
 import IconImageLibraryAndroid from '@common-android-icons/icon-image-library.svg';
 import IconLinkIos from '@common-ios-icons/icon-link.svg?ios';
 import IconLinkAndroid from '@common-android-icons/icon-link.svg';
+import IconImageStorage from '@common-icons/icon-image-storage.svg';
 
 const PageLinkSettings = props => {
     const { t } = useTranslation();
@@ -35,9 +36,11 @@ const PageLinkSettings = props => {
     )
 };
 
-const AddImage = props => {
+const AddImage = inject('storeAppOptions')(observer(props => {
     const { t } = useTranslation();
     const _t = t('View.Add', {returnObjects: true});
+    const canRequestInsertImage = props.storeAppOptions.canRequestInsertImage;
+
     return (
         <Page>
             <Navbar title={t('View.Add.textInsertImage')} backLink={_t.textBack}></Navbar>
@@ -56,9 +59,15 @@ const AddImage = props => {
                         <SvgIcon slot="media"  symbolId={IconLinkAndroid.id} className={'icon icon-svg'} />
                     }
                 </ListItem>
-            </List>
+                {
+                canRequestInsertImage &&
+                <ListItem title={_t.textPictureFromStorage} onClick={() => {props.onInsertByStorage()}}>
+                    <SvgIcon slot="media" symbolId={IconImageStorage.id} className={'icon icon-svg'} />
+                </ListItem>
+            }
+        </List>
         </Page>
     )
-};
+}));
 
 export {AddImage, PageLinkSettings as PageImageLinkSettings};

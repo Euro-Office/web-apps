@@ -550,6 +550,14 @@ class MainController extends Component {
         }
     }
 
+    replaceImageFromStorage (data) {
+        if (data && data._urls && (!data.c || data.c === 'change') && data._urls.length > 0) {
+            const image = new Asc.asc_CImgProperty();
+            image.put_ImageUrl(data._urls[0], data.token);
+            this.api.ImgApply(image);
+        }
+    }
+
     onApiTextReplaced(found, replaced) {
         const { t } = this.props;
 
@@ -647,7 +655,12 @@ class MainController extends Component {
             data._urls = arr;
         }
 
-        this.insertImageFromStorage(data);
+        if(data.c === 'add') {
+            this.insertImageFromStorage(data);
+        }
+        else if(data.c === 'change') {
+            this.replaceImageFromStorage(data);
+        }
     }
 
     onLicenseChanged (params) {

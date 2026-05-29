@@ -11,6 +11,7 @@ class EditImageController extends Component {
         this.onRemoveImage = this.onRemoveImage.bind(this);
         this.onReplaceByFile = this.onReplaceByFile.bind(this);
         this.onReplaceByUrl = this.onReplaceByUrl.bind(this);
+        this.onReplaceByStorage = this.onReplaceByStorage.bind(this);
     }
 
     onReorder(type) {
@@ -102,6 +103,10 @@ class EditImageController extends Component {
         this.closeModal();
     }
 
+    onReplaceByStorage () {
+        Common.Gateway.requestInsertImage('change');
+        this.closeModal();
+    }
 
     render () {
         return (
@@ -112,6 +117,7 @@ class EditImageController extends Component {
                 onReplaceByFile={this.onReplaceByFile}
                 onDefaultSize={this.onDefaultSize}
                 onReplaceByUrl={this.onReplaceByUrl}
+                onReplaceByStorage={this.onReplaceByStorage}
             />
         )
     }
