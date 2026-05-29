@@ -10,6 +10,7 @@ class AddImageController extends Component {
         super(props);
         this.onInsertByFile = this.onInsertByFile.bind(this);
         this.onInsertByUrl = this.onInsertByUrl.bind(this);
+        this.onInsertByStorage = this.onInsertByStorage.bind(this);
     }
 
     closeModal () {
@@ -45,10 +46,16 @@ class AddImageController extends Component {
         }
     }
 
+    onInsertByStorage () {
+        Common.Gateway.requestInsertImage('add');
+        this.closeModal();
+    }
+
     render () {
         return (
             <AddImage onInsertByFile={this.onInsertByFile}
                       onInsertByUrl={this.onInsertByUrl}
+                      onInsertByStorage={this.onInsertByStorage}
             />
         )
     }

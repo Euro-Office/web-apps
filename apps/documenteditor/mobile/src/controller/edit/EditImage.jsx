@@ -12,6 +12,7 @@ class EditImageController extends Component {
         this.onRemoveImage = this.onRemoveImage.bind(this);
         this.onReplaceByFile = this.onReplaceByFile.bind(this);
         this.onReplaceByUrl = this.onReplaceByUrl.bind(this);
+        this.onReplaceByStorage = this.onReplaceByStorage.bind(this);
     }
 
     closeModal () {
@@ -117,6 +118,11 @@ class EditImageController extends Component {
         }
     }
 
+    onReplaceByStorage () {
+        Common.Gateway.requestInsertImage('change');
+        this.closeModal();
+    }
+
     onReorder (type) {
         const api = Common.EditorApi.get();
         if (api) {
@@ -145,6 +151,7 @@ class EditImageController extends Component {
                        onWrapDistance={this.onWrapDistance}
                        onReplaceByFile={this.onReplaceByFile}
                        onReplaceByUrl={this.onReplaceByUrl}
+                       onReplaceByStorage={this.onReplaceByStorage}
                        onReorder={this.onReorder}
             />
         )

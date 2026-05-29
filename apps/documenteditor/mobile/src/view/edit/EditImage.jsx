@@ -25,6 +25,7 @@ import IconMoveForeground from '@common-icons/icon-move-foreground.svg';
 import IconMoveBackground from '@common-icons/icon-move-background.svg';
 import IconMoveForward from '@common-icons/icon-move-forward.svg';
 import IconMoveBackward from '@common-icons/icon-move-backward.svg';
+import IconImageStorage from '@common-icons/icon-image-storage.svg';
 
 
 const PageWrap = props => {
@@ -287,6 +288,8 @@ const PageReplace = props => {
     const { t } = useTranslation();
     const _t = t('Edit', {returnObjects: true});
     const imageObject = props.storeFocusObjects.imageObject;
+    const canRequestInsertImage = props.storeAppOptions.canRequestInsertImage;
+
     if (!imageObject && Device.phone) {
         $$('.sheet-modal.modal-in').length > 0 && f7.sheet.close();
         return null;
@@ -320,6 +323,12 @@ const PageReplace = props => {
                         <SvgIcon slot="media" symbolId={IconLinkAndroid.id} className={'icon icon-svg'} />
                     }
                 </ListItem>
+                {
+                    canRequestInsertImage &&
+                    <ListItem title={_t.textPictureFromStorage} onClick={() => {props.onReplaceByStorage()}}>
+                        <SvgIcon slot="media" symbolId={IconImageStorage.id} className={'icon icon-svg'} />
+                    </ListItem>
+                }
             </List>
         </Page>
     )
@@ -385,7 +394,8 @@ const EditImage = props => {
                 }}></ListItem>
                 <ListItem title={t('Edit.textReplaceImage')} link='/edit-image-replace/' className={pluginGuid ? 'disabled' : ''} routeProps={{
                     onReplaceByFile: props.onReplaceByFile,
-                    onReplaceByUrl: props.onReplaceByUrl
+                    onReplaceByUrl: props.onReplaceByUrl,
+                    onReplaceByStorage: props.onReplaceByStorage
                 }}></ListItem>
                 { wrapType !== 'inline' && <ListItem title={t('Edit.textArrange')} link='/edit-image-reorder/' routeProps={{
                     onReorder: props.onReorder
@@ -401,7 +411,7 @@ const EditImage = props => {
 
 const EditImageContainer = inject("storeFocusObjects", "storeImageSettings")(observer(EditImage));
 const PageWrapContainer = inject("storeFocusObjects", "storeImageSettings")(observer(PageWrap));
-const PageReplaceContainer = inject("storeFocusObjects")(observer(PageReplace));
+const PageReplaceContainer = inject("storeAppOptions","storeFocusObjects")(observer(PageReplace));
 const PageReorderContainer = inject("storeFocusObjects")(observer(PageReorder));
 const PageLinkSettingsContainer = inject("storeFocusObjects")(observer(PageLinkSettings));
 const PageWrappingStyleContainer = inject("storeFocusObjects")(observer(PageWrappingStyle));
