@@ -447,6 +447,7 @@ define([
                 toolbar.btnInsertSymbol.menu.items[2].on('click',           _.bind(this.onInsertSymbolClick, this));
                 toolbar.mnuInsertSymbolsPicker.on('item:click',             _.bind(this.onInsertSymbolItemClick, this));
                 toolbar.btnInsertSlicer.on('click',                         _.bind(this.onInsertSlicerClick, this));
+                toolbar.btnInsertCheckbox.on('click',                       _.bind(this.onInsertCheckboxClick, this));
                 toolbar.btnTableTemplate.menu.on('show:after',              _.bind(this.onTableTplMenuOpen, this));
                 toolbar.btnPercentStyle.on('click',                         _.bind(this.onNumberFormat, this));
                 toolbar.btnCommaStyle.on('click',                           _.bind(this.onNumberFormat, this));
@@ -4547,6 +4548,13 @@ define([
                     }
                 })).show();
             }
+        },
+
+        onInsertCheckboxClick: function() {
+            if (this.api) {
+                this.api.asc_insertCheckbox();
+            }
+            Common.NotificationCenter.trigger('edit:complete', this.toolbar);
         },
 
         onApiMathTypes: function(equation) {
