@@ -1536,6 +1536,17 @@ define([
                     dataHintOffset: 'small'
                 });
 
+                me.btnInsertCheckbox = new Common.UI.Button({
+                    id: 'tlbtn-insertcheckbox',
+                    cls: 'btn-toolbar x-huge icon-top',
+                    iconCls: 'toolbar__icon btn-checkbox',
+                    caption: me.capBtnInsCheckbox,
+                    lock: [_set.editCell, _set.selChart, _set.selChartText, _set.selShape, _set.selShapeText, _set.selImage, _set.selSlicer, _set.lostConnect, _set.coAuth, _set.wsLock, _set.userProtected],
+                    dataHint: '1',
+                    dataHintDirection: 'bottom',
+                    dataHintOffset: 'small'
+                });
+
                 me.btnTableTemplate = new Common.UI.Button({
                     id          : 'id-toolbar-btn-ttempl',
                     cls         : 'btn-toolbar',
@@ -2474,7 +2485,7 @@ define([
                     me.btnItalic, me.btnUnderline, me.btnStrikeout, me.btnSubscript, me.btnTextColor, me.btnAlignLeft,
                     me.btnAlignCenter,me.btnAlignRight,me.btnAlignJust, me.btnAlignTop,
                     me.btnAlignMiddle, me.btnAlignBottom, me.btnWrap, me.btnTextOrient, me.btnBackColor, me.btnInsertTable,
-                    me.btnMerge, me.btnTextDir, me.btnInsertFormula, me.btnNamedRange, me.btnFillNumbers, me.btnIncDecimal, me.btnInsertShape, me.btnInsertSmartArt, me.btnInsertEquation, me.btnInsertSymbol, me.btnInsertSlicer,
+                    me.btnMerge, me.btnTextDir, me.btnInsertFormula, me.btnNamedRange, me.btnFillNumbers, me.btnIncDecimal, me.btnInsertShape, me.btnInsertSmartArt, me.btnInsertEquation, me.btnInsertSymbol, me.btnInsertSlicer, me.btnInsertCheckbox,
                     me.btnInsertText, me.btnInsertTextArt, me.btnSortUp, me.btnSortDown, me.btnSetAutofilter, me.btnClearAutofilter,
                     me.btnTableTemplate, me.btnCellStyle, me.btnPercentStyle, me.btnCommaStyle, me.btnCurrencyStyle, me.btnDecDecimal, me.btnAddCell, me.btnDeleteCell, me.btnFormatCell, me.btnCondFormat,
                     me.cmbNumberFormat, me.btnBorders, me.btnInsertImage, me.btnInsertHyperlink,
@@ -2656,6 +2667,7 @@ define([
             _injectComponent('#slot-btn-insequation',    this.btnInsertEquation);
             _injectComponent('#slot-btn-inssymbol',      this.btnInsertSymbol);
             _injectComponent('#slot-btn-insslicer',      this.btnInsertSlicer);
+            _injectComponent('#slot-btn-inscheckbox',    this.btnInsertCheckbox);
             _injectComponent('#slot-btn-sortdesc',       this.btnSortDown);
             _injectComponent('#slot-btn-sortasc',        this.btnSortUp);
             _injectComponent('#slot-btn-setfilter',      this.btnSetAutofilter);
@@ -2750,6 +2762,7 @@ define([
             _updateHint(this.btnInsertEquation, this.tipInsertEquation);
             _updateHint(this.btnInsertSymbol, this.tipInsertSymbol);
             _updateHint(this.btnInsertSlicer, this.tipInsertSlicer);
+            _updateHint(this.btnInsertCheckbox, this.tipInsertCheckbox);
             _updateHint(this.btnSortDown, this.txtSortAZ);
             _updateHint(this.btnSortUp, this.txtSortZA);
             _updateHint(this.btnClearAutofilter, this.txtClearFilter);
