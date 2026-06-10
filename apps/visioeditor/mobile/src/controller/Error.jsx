@@ -262,8 +262,6 @@ const ErrorController = inject('storeAppOptions','storeVisioInfo')(({storeAppOpt
                 }
             ]
         }).open();
-
-        Common.component.Analytics.trackEvent('Internal Error', id.toString());
     };
 
     return null

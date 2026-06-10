@@ -1134,7 +1134,6 @@ define([
                 this.api.OpenNewDocument();
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'New Document');
         },
 
         onOpenDocument: function(btn, e) {
@@ -1142,7 +1141,6 @@ define([
                 this.api.LoadDocumentFromDisk();
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Open Document');
         },
 
         onPrint: function(e) {
@@ -1153,9 +1151,6 @@ define([
                 var _main = this.getApplication().getController('Main');
                 _main.onPrintQuick();
             }
-            Common.component.Analytics.trackEvent('Print');
-            Common.component.Analytics.trackEvent('ToolBar', 'Print');
-
         },
 
         onPrintMenu: function (btn, e){
@@ -1231,9 +1226,6 @@ define([
             toolbar.btnSave && toolbar.lockToolbar(Common.enumLock.cantSave, !mode.forcesave && !mode.canSaveDocumentToBinary && mode.canSaveToFile || !mode.showSaveButton, {array: [toolbar.btnSave]});
 
             Common.NotificationCenter.trigger('edit:complete', toolbar);
-
-            Common.component.Analytics.trackEvent('Save');
-            Common.component.Analytics.trackEvent('ToolBar', 'Save');
         },
 
         onBtnChangeState: function(prop) {
@@ -1248,8 +1240,6 @@ define([
                 this.api.Undo();
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-
-            Common.component.Analytics.trackEvent('ToolBar', 'Undo');
         },
 
         onRedo: function(btn, e) {
@@ -1257,8 +1247,6 @@ define([
                 this.api.Redo();
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-
-            Common.component.Analytics.trackEvent('ToolBar', 'Redo');
         },
 
         onCopyPaste: function(type, e) {
@@ -1274,8 +1262,7 @@ define([
                             }
                         })).show();
                     }
-                } else
-                    Common.component.Analytics.trackEvent('ToolBar', 'Copy Warning');
+                }
             }
             Common.NotificationCenter.trigger('edit:complete', me.toolbar);
         },
@@ -1285,7 +1272,6 @@ define([
                 this.api.asc_EditSelectAll();
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Select All');
         },
 
         onReplace: function(e) {
@@ -1297,7 +1283,6 @@ define([
                 this.api.FontSizeIn();
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Font Size');
         },
 
         onDecrease: function(e) {
@@ -1305,7 +1290,6 @@ define([
                 this.api.FontSizeOut();
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Font Size');
         },
 
         onBold: function(btn, e) {
@@ -1314,7 +1298,6 @@ define([
                 this.api.put_TextPrBold(btn.pressed);
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Bold');
         },
 
         onItalic: function(btn, e) {
@@ -1323,7 +1306,6 @@ define([
                 this.api.put_TextPrItalic(btn.pressed);
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Italic');
         },
 
         onUnderline: function(btn, e) {
@@ -1332,7 +1314,6 @@ define([
                 this.api.put_TextPrUnderline(btn.pressed);
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Underline');
         },
 
         onStrikeout: function(btn, e) {
@@ -1341,7 +1322,6 @@ define([
                 this.api.put_TextPrStrikeout(btn.pressed);
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Strikeout');
         },
 
         onSuperscript: function(btn, e) {
@@ -1351,7 +1331,6 @@ define([
                     this.api.put_TextPrBaseline(btn.pressed ? Asc.vertalign_SuperScript : Asc.vertalign_Baseline);
 
                 Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-                Common.component.Analytics.trackEvent('ToolBar', 'Superscript');
             }
         },
 
@@ -1362,7 +1341,6 @@ define([
                     this.api.put_TextPrBaseline(btn.pressed ? Asc.vertalign_SubScript : Asc.vertalign_Baseline);
 
                 Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-                Common.component.Analytics.trackEvent('ToolBar', 'Subscript');
             }
         },
 
@@ -1371,7 +1349,6 @@ define([
                 this.api.DecreaseIndent();
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Indent');
         },
 
         onIncOffset: function(btn, e) {
@@ -1379,7 +1356,6 @@ define([
                 this.api.IncreaseIndent();
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Indent');
         },
 
         onHorizontalAlign: function(type, btn, e) {
@@ -1395,7 +1371,6 @@ define([
             }
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Align');
         },
 
 
@@ -1434,7 +1409,6 @@ define([
                         callback: _.bind(function(btn) {
                             if (btn == 'yes') {
                                 this.api.put_TextPrFontName(record.name);
-                                Common.component.Analytics.trackEvent('ToolBar', 'Font Name');
                             } else {
                                 this.toolbar.cmbFontName.setValue(this.api.get_TextProps().get_TextPr().get_FontFamily().get_Name());
                             }
@@ -1443,7 +1417,6 @@ define([
                     });
                 } else {
                     this.api.put_TextPrFontName(record.name);
-                    Common.component.Analytics.trackEvent('ToolBar', 'Font Name');
                 }
             }
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
@@ -1465,7 +1438,6 @@ define([
                 this.api.put_TextPrFontSize(this._state.type_fontsize === 'string' ? parseFloat(record.value) : record.value);
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Font Size');
         },
 
         onFontSizeChanged: function(before, combo, record, e) {
@@ -1646,7 +1618,6 @@ define([
                 }
             }
 
-            Common.component.Analytics.trackEvent('ToolBar', 'List Type');
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
         },
 
@@ -1781,7 +1752,6 @@ define([
                 if (this.api)
                     this.api.put_PrLineSpacing(c_paragraphLinerule.LINERULE_AUTO, item.value);
 
-                Common.component.Analytics.trackEvent('ToolBar', 'Line Spacing');
                 Common.NotificationCenter.trigger('edit:complete', this.toolbar);
             }
         },
@@ -1853,7 +1823,6 @@ define([
                     me.api.put_ShowParaMarks(state);
 
                 Common.NotificationCenter.trigger('edit:complete', me);
-                Common.component.Analytics.trackEvent('ToolBar', 'Hidden Characters');
             } else if (item.value === 'table') {
                 Common.localStorage.setItem("de-show-tableline", state);
                 me.api && me.api.put_ShowTableEmptyLine(state);
@@ -1865,8 +1834,6 @@ define([
             var me = this;
             if (state) {
                 me.toolbar.mnuNonPrinting.items[0].setChecked(true, true);
-
-                Common.component.Analytics.trackEvent('ToolBar', 'Hidden Characters');
             } else {
                 me.toolbar.mnuNonPrinting.items[0].setChecked(false, true);
             }
@@ -1881,14 +1848,11 @@ define([
         onClickPageBreak: function(value, e) {
             if ( value === 'column' ) {
                 this.api.put_AddColumnBreak();
-                Common.component.Analytics.trackEvent('ToolBar', 'Column Break');
             } else
             if ( value == 'page' ) {
                 this.api.put_AddPageBreak();
-                Common.component.Analytics.trackEvent('ToolBar', 'Page Break');
             } else {
                 this.api.add_SectionBreak( value );
-                Common.component.Analytics.trackEvent('ToolBar', 'Section Break');
             }
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
@@ -1901,7 +1865,6 @@ define([
             }
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Table');
         },
 
         onInsertTableShow: function(menu) {
@@ -1921,7 +1884,6 @@ define([
                                 me.api.put_Table(value.columns, value.rows);
                             }
 
-                            Common.component.Analytics.trackEvent('ToolBar', 'Table');
                         }
                         Common.NotificationCenter.trigger('edit:complete', me.toolbar);
                     }
@@ -1972,7 +1934,6 @@ define([
             if (data && data._urls && (!data.c || data.c=='add')) {
                 this.toolbar.fireEvent('insertimage', this.toolbar);
                 (data._urls.length>0) && this.api.AddImageUrl(data._urls, undefined, data.token);// for loading from storage
-                Common.component.Analytics.trackEvent('ToolBar', 'Image');
             }
         },
 
@@ -2050,7 +2011,6 @@ define([
                 this.toolbar.btnInsertShape.toggle(false, true);
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar, this.toolbar.btnInsertShape);
-            Common.component.Analytics.trackEvent('ToolBar', 'Add Text');
         },
 
         onInsertShapeHide: function(btn, e) {
@@ -2069,7 +2029,6 @@ define([
             }
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Page Orientation');
         },
 
         onClearStyleClick: function(btn, e) {
@@ -2113,7 +2072,6 @@ define([
                     win.setSettings(me.api.asc_GetSectionProps());
                 }
 
-                Common.component.Analytics.trackEvent('ToolBar', 'Page Size');
             }
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
@@ -2156,8 +2114,6 @@ define([
                     win.show();
                     win.setSettings(me.api.asc_GetSectionProps());
                 }
-
-                Common.component.Analytics.trackEvent('ToolBar', 'Page Margins');
             }
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
@@ -2284,8 +2240,6 @@ define([
         onColorSchemaClick: function(menu, item) {
             if (this.api) {
                 this.api.asc_ChangeColorSchemeByIdx(item.value);
-
-                Common.component.Analytics.trackEvent('ToolBar', 'Color Scheme');
             }
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
@@ -2329,7 +2283,6 @@ define([
             }
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Drop Cap');
         },
 
         onDropCap: function(v) {
@@ -2433,7 +2386,6 @@ define([
 
                         } else {
                             this.api.asc_RemoveContentControlWrapper(id);
-                            Common.component.Analytics.trackEvent('ToolBar', 'Remove Content Control');
                         }
                     }
                 }
@@ -2465,8 +2417,6 @@ define([
                     props.put_FormPr(oFormPr);
                     this.api.asc_AddContentControlTextForm(props);
                 }
-
-                Common.component.Analytics.trackEvent('ToolBar', 'Add Content Control');
             }
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
@@ -2488,8 +2438,6 @@ define([
             if (this.api) {
                 this.api.asc_SetGlobalContentControlShowHighlight(true, clr.get_r(), clr.get_g(), clr.get_b());
             }
-
-            Common.component.Analytics.trackEvent('ToolBar', 'Content Controls Color');
         },
 
         onColumnsSelect: function(menu, item) {
@@ -2534,7 +2482,6 @@ define([
             }
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Insert Columns');
         },
 
         onColumnsProps: function(props) {
@@ -2610,7 +2557,6 @@ define([
                     this.toolbar.btnInsertShape.toggle(false, true);
 
                 Common.NotificationCenter.trigger('edit:complete', this.toolbar, this.toolbar.btnInsertTextArt);
-                Common.component.Analytics.trackEvent('ToolBar', 'Add Text Art');
             }
         },
 
@@ -2622,7 +2568,6 @@ define([
                 this.toolbar.btnEditHeader.menu.hide();
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Page Number');
         },
         
         onInsertPageCountClick: function(item, e) {
@@ -2630,7 +2575,6 @@ define([
                 this.api.asc_AddPageCount();
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Pages Count');
         },
 
         onPageNumCurrentPosClick: function(item, e) {
@@ -2640,7 +2584,6 @@ define([
             if (e.type !== 'click')
                 this.toolbar.btnEditHeader.menu.hide();
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Page Number');
         },
 
         onBtnBlankPageClick: function(btn) {
@@ -2648,7 +2591,6 @@ define([
                 this.api.asc_AddBlankPage();
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Blank Page');
         },
 
         onWatermarkSelect: function(menu, item) {
@@ -2685,7 +2627,6 @@ define([
                     })).show();
                 }
                 Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-                Common.component.Analytics.trackEvent('ToolBar', 'Edit ' + item.value);
             }
         },
 
@@ -2695,7 +2636,6 @@ define([
                 this.api.put_Style(record.get('title'));
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Style');
         },
 
         onListStyleBeforeHide: function(item, e) {
@@ -2826,8 +2766,6 @@ define([
                 });
                 win.show();
             }
-
-            Common.component.Analytics.trackEvent('ToolBar', 'Save as Style');
         },
 
         onMenuSaveStyle: function(item, e) {
@@ -2889,8 +2827,6 @@ define([
             this.toolbar.mnuFontColorPicker.currentColor = color;
             if (this.api)
                 this.api.put_TextColor(color.isAuto ? color.color : Common.Utils.ThemeColor.getRgbColor(color));
-
-            Common.component.Analytics.trackEvent('ToolBar', 'Text Color');
         },
 
         onParagraphColorPickerSelect: function(btn, color) {
@@ -2914,15 +2850,11 @@ define([
         onSelectPageColor: function(btn, color) {
             if (this.api)
                 this.api.asc_putPageColor(Common.Utils.ThemeColor.getRgbColor(color));
-
-            Common.component.Analytics.trackEvent('ToolBar', 'Page Color');
         },
 
         onPageNoFillClick: function(item) {
             if (this.api && item.checked)
                 this.api.asc_putPageColor(null);
-
-            Common.component.Analytics.trackEvent('ToolBar', 'Page Color');
         },
 
         onNewBorderColor: function(picker, color) {
@@ -3171,7 +3103,6 @@ define([
                 }
 
                 Common.NotificationCenter.trigger('edit:complete', me.toolbar);
-                Common.component.Analytics.trackEvent('ToolBar', 'Borders');
             } 
         },
 
@@ -3180,7 +3111,6 @@ define([
                 this.toolbar.btnBorders.options.borderswidth = item.value;
 
                 Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-                Common.component.Analytics.trackEvent('ToolBar', 'Border Width');
             }
         },
 
@@ -3193,7 +3123,6 @@ define([
             clr_item.hasClass('selected') && clr_item.removeClass('selected');
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Border Color');
         },
 
         onAutoBorderColor: function(e) {
@@ -3208,7 +3137,6 @@ define([
             !clr_item.hasClass('selected') && clr_item.addClass('selected');
 
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
-            Common.component.Analytics.trackEvent('ToolBar', 'Border Color');
         },
 
         eyedropperStart: function () {
@@ -3233,7 +3161,6 @@ define([
         onBtnHighlightColor: function(btn) {
             if (btn.pressed) {
                 this._setMarkerColor(btn.currentColor);
-                Common.component.Analytics.trackEvent('ToolBar', 'Highlight Color');
             }
             else {
                 this.api.SetMarkerFormat(false);
@@ -3354,7 +3281,6 @@ define([
                     if (e.type !== 'click')
                         me.toolbar.btnInsertShape.menu.hide();
                     Common.NotificationCenter.trigger('edit:complete', me.toolbar, me.toolbar.btnInsertShape);
-                    Common.component.Analytics.trackEvent('ToolBar', 'Add Shape');
                 }
             });
         },
@@ -3390,7 +3316,6 @@ define([
                             if (e.type !== 'click')
                                 me.toolbar.btnInsertEquation.menu.hide();
                             Common.NotificationCenter.trigger('edit:complete', me.toolbar, me.toolbar.btnInsertEquation);
-                            Common.component.Analytics.trackEvent('ToolBar', 'Add Equation');
                         }
                     });
                 }
@@ -3418,7 +3343,6 @@ define([
         onInsertEquationClick: function() {
             if (this.api && !this._state.in_equation) {
                 this.api.asc_AddMath();
-                Common.component.Analytics.trackEvent('ToolBar', 'Add Equation');
             }
             Common.NotificationCenter.trigger('edit:complete', this.toolbar, this.toolbar.btnInsertEquation);
         },
@@ -3730,7 +3654,6 @@ define([
             }
 
             Common.NotificationCenter.trigger('edit:complete', me.toolbar, me.toolbar.btnHighlightColor);
-            Common.component.Analytics.trackEvent('ToolBar', 'Highlight Color');
         },
 
         onHideMenus: function(e){

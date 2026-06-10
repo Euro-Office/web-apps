@@ -371,8 +371,6 @@ define([
                     win.setSettings(props);
                 }
             }
-
-            Common.component.Analytics.trackEvent('ToolBar', 'Add Hyperlink');
         },
 
         onDialogAddAnnotLink: function(arrIds) {
@@ -463,8 +461,6 @@ define([
 
                                 me.api.put_Table(value.columns, value.rows);
                             }
-
-                            Common.component.Analytics.trackEvent('ToolBar', 'Table');
                         }
                         Common.NotificationCenter.trigger('edit:complete', me.view);
                     }
@@ -487,7 +483,6 @@ define([
                 setTimeout(function() {me.api.asc_addImage();}, 1);
 
                 Common.NotificationCenter.trigger('edit:complete', this.view);
-                Common.component.Analytics.trackEvent('ToolBar', 'Image');
             } else if (opts === 'url') {
                 (new Common.Views.ImageFromUrlDialog({
                     handler: function(result, value) {
@@ -497,8 +492,6 @@ define([
                                 if (!_.isEmpty(checkUrl)) {
                                     me.view.fireEvent('insertimage', me.view);
                                     me.api.AddImageUrl([checkUrl]);
-
-                                    Common.component.Analytics.trackEvent('ToolBar', 'Image');
                                 } else {
                                     Common.UI.warning({
                                         msg: this.textEmptyImgUrl
@@ -535,7 +528,6 @@ define([
             if (data && data._urls && (!data.c || data.c=='add')) {
                 this.view.fireEvent('insertimage', this.view);
                 (data._urls.length>0) && this.api.AddImageUrl(data._urls, undefined, data.token);// for loading from storage
-                Common.component.Analytics.trackEvent('ToolBar', 'Image');
             }
         },
 
@@ -593,7 +585,6 @@ define([
                 this.view.btnsInsertShape.toggle(false, true);
 
             Common.NotificationCenter.trigger('edit:complete', this.view);
-            Common.component.Analytics.trackEvent('ToolBar', 'Add Text');
         },
 
         onInsertShape: function (type) {
@@ -613,7 +604,6 @@ define([
                     me.view.btnsInsertText.toggle(false, true);
 
                 Common.NotificationCenter.trigger('edit:complete', me.view);
-                Common.component.Analytics.trackEvent('ToolBar', 'Add Shape');
             }
         },
 
@@ -627,7 +617,6 @@ define([
                 me.view.btnsInsertShape.toggle(false, true);
 
             Common.NotificationCenter.trigger('edit:complete', me.view);
-            Common.component.Analytics.trackEvent('ToolBar', 'Add Text Art');
         },
 
         onEditHeaderClick: function(type, e) {
@@ -810,7 +799,6 @@ define([
                             if (e.type !== 'click')
                                 me.view.btnInsertEquation.menu.hide();
                             Common.NotificationCenter.trigger('edit:complete', me.view, me.view.btnInsertEquation);
-                            Common.component.Analytics.trackEvent('ToolBar', 'Add Equation');
                         }
                     });
                 }
@@ -838,7 +826,6 @@ define([
         onInsertEquationClick: function() {
             if (this.api) {
                 this.api.asc_AddMath();
-                Common.component.Analytics.trackEvent('ToolBar', 'Add Equation');
             }
             Common.NotificationCenter.trigger('edit:complete', this.view, this.view.btnInsertEquation);
         },

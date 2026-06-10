@@ -580,8 +580,6 @@ const ErrorController = inject('storeAppOptions','storeSpreadsheetInfo')(({store
                 }
             ]
         }).open();
-
-        Common.component.Analytics.trackEvent('Internal Error', id.toString());
     };
 
     return null

@@ -1401,7 +1401,6 @@ define([], function () {
                 opts.asc_setAdvancedOptions(printopt);
                 this.api.asc_Print(opts);
                 this.editComplete();
-                Common.component.Analytics.trackEvent('DocumentHolder', 'Print Selection');
             }
         };
 
@@ -1949,8 +1948,6 @@ define([], function () {
 
                 win.show();
                 win.setSettings(item.hyperProps.value);
-
-                Common.component.Analytics.trackEvent('DocumentHolder', 'Add Hyperlink');
             }
         };
 
@@ -1981,8 +1978,6 @@ define([], function () {
                 });
                 win.show();
                 win.setSettings(item.hyperProps.value);
-
-                Common.component.Analytics.trackEvent('DocumentHolder', 'Edit Hyperlink');
             }
         };
 
@@ -1992,7 +1987,6 @@ define([], function () {
             }
 
             this.editComplete();
-            Common.component.Analytics.trackEvent('DocumentHolder', 'Remove Hyperlink');
         };
 
         dh.onInsertImageUrl = function(placeholder, obj, x, y) {
@@ -2041,7 +2035,6 @@ define([], function () {
                             if (me.api) {
                                 me.api.SplitCell(value.columns, value.rows);
                             }
-                            Common.component.Analytics.trackEvent('DocumentHolder', 'Table Split');
                         }
                         me.editComplete();
                     }
@@ -2064,7 +2057,6 @@ define([], function () {
             }
 
             this.editComplete();
-            Common.component.Analytics.trackEvent('DocumentHolder', 'Table Cell Align');
         };
 
         dh.onTableDistRows = function () {
@@ -2100,7 +2092,6 @@ define([], function () {
                                             }
                                         }
                                         me.editComplete();
-                                        Common.component.Analytics.trackEvent('DocumentHolder', 'Table Settings Advanced');
                                     }
                                 })).show();
                             break;
@@ -2142,7 +2133,6 @@ define([], function () {
                                             }
                                         }
                                         me.editComplete();
-                                        Common.component.Analytics.trackEvent('DocumentHolder', 'Image Settings Advanced');
                                     }
                                 })).show();
                             break;
@@ -2167,7 +2157,6 @@ define([], function () {
                 }
 
                 me.editComplete();
-                Common.component.Analytics.trackEvent('DocumentHolder', 'Set Image Original Size');
             }
         };
 
@@ -2233,7 +2222,6 @@ define([], function () {
                                             }
                                         }
                                         me.editComplete();
-                                        Common.component.Analytics.trackEvent('DocumentHolder', 'Image Shape Advanced');
                                     }
                                 })).show();
                             break;
@@ -2268,7 +2256,6 @@ define([], function () {
                                             }
                                         }
                                         me.editComplete();
-                                        Common.component.Analytics.trackEvent('DocumentHolder', 'Chart Settings Advanced');
                                     }
                                 })).show();
                             break;
@@ -2301,7 +2288,6 @@ define([], function () {
                                             }
                                         }
                                         me.editComplete();
-                                        Common.component.Analytics.trackEvent('DocumentHolder', 'Image Paragraph Advanced');
                                     }
                                 })).show();
                             break;
@@ -2314,37 +2300,31 @@ define([], function () {
         dh.onGroupImg = function(item) {
             this.api && this.api.groupShapes();
             this.editComplete();
-            Common.component.Analytics.trackEvent('DocumentHolder', 'Group Image');
         };
 
         dh.onUnGroupImg = function(item) {
             this.api && this.api.unGroupShapes();
             this.editComplete();
-            Common.component.Analytics.trackEvent('DocumentHolder', 'UnGroup Image');
         };
 
         dh.onArrangeFront = function(item) {
             this.api && this.api.shapes_bringToFront();
             this.editComplete();
-            Common.component.Analytics.trackEvent('DocumentHolder', 'Bring To Front');
         };
 
         dh.onArrangeBack = function(item) {
             this.api && this.api.shapes_bringToBack();
             this.editComplete();
-            Common.component.Analytics.trackEvent('DocumentHolder', 'Bring To Back');
         };
 
         dh.onArrangeForward = function(item) {
             this.api && this.api.shapes_bringForward();
             this.editComplete();
-            Common.component.Analytics.trackEvent('DocumentHolder', 'Send Forward');
         };
 
         dh.onArrangeBackward = function(item) {
             this.api && this.api.shapes_bringBackward();
             this.editComplete();
-            Common.component.Analytics.trackEvent('DocumentHolder', 'Send Backward');
         };
 
         dh.onImgShapeAlign = function (menu, item) {
@@ -2354,13 +2334,10 @@ define([], function () {
                 value = value ? Asc.c_oAscObjectsAlignType.Page : Asc.c_oAscObjectsAlignType.Selected;
                 if (item.value < 6) {
                     me.api.put_ShapesAlign(item.value, value);
-                    Common.component.Analytics.trackEvent('DocumentHolder', 'Shape Align');
                 } else if (item.value == 6) {
                     me.api.DistributeHorizontally(value);
-                    Common.component.Analytics.trackEvent('DocumentHolder', 'Distribute Horizontally');
                 } else if (item.value == 7){
                     me.api.DistributeVertically(value);
-                    Common.component.Analytics.trackEvent('DocumentHolder', 'Distribute Vertically');
                 }
                 me.editComplete();
             }
@@ -2370,7 +2347,6 @@ define([], function () {
             var me = this;
             if (item && item.value) {
                 me.api.asc_mergeSelectedShapes(item.value);
-                Common.component.Analytics.trackEvent('DocumentHolder', 'Shapes Merge');
             }
             me.editComplete();
         };
@@ -2392,7 +2368,6 @@ define([], function () {
             }
 
             me.editComplete();
-            Common.component.Analytics.trackEvent('DocumentHolder', 'Text Vertical Align');
         };
 
         dh.onParagraphDirection = function(menu, item) {
@@ -2403,7 +2378,6 @@ define([], function () {
                 me.api.ShapeApply(properties);
             }
             me.editComplete();
-            Common.component.Analytics.trackEvent('DocumentHolder', 'Text Direction');
         };
 
         dh.tableSelectText = function(menu, item) {
@@ -2549,7 +2523,6 @@ define([], function () {
                     }
                 }
             }
-            Common.component.Analytics.trackEvent('DocumentHolder', 'Add Hyperlink');
         };
 
         dh.onShowForeignCursorLabel = function(UserId, X, Y, color) {

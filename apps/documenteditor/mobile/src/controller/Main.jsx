@@ -1459,7 +1459,6 @@ class MainController extends Component {
 
         if (this.api)
             this.api.asc_Print();
-        Common.component.Analytics.trackEvent('Print');
     }
 
     onPrintUrl (url) {
@@ -1498,8 +1497,6 @@ class MainController extends Component {
                 text: [msg.msg.charAt(0).toUpperCase() + msg.msg.substring(1)],
                 closeButton: true
             }).open();
-
-            Common.component.Analytics.trackEvent('External Error');
         }
     }
 

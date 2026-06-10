@@ -248,8 +248,6 @@ define([
                     }
                 }
             }
-
-            Common.component.Analytics.trackEvent('ToolBar', 'Add Hyperlink');
         },
 
         onTableContents: function(type, currentTOC){

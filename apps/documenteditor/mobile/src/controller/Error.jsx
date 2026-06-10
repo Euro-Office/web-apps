@@ -329,8 +329,6 @@ const ErrorController = inject('storeAppOptions','storeDocumentInfo')(({storeApp
                 }
             ]
         }).open();
-
-        Common.component.Analytics.trackEvent('Internal Error', id.toString());
     };
 
     return null
