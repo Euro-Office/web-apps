@@ -655,10 +655,10 @@ class MainController extends Component {
             data._urls = arr;
         }
 
-        if(data.c === 'add') {
+        if (!data.c || data.c === 'add') {
             this.insertImageFromStorage(data);
         }
-        else if(data.c === 'change') {
+        else if (data.c === 'change') {
             this.replaceImageFromStorage(data);
         }
     }
