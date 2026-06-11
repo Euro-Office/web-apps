@@ -60,11 +60,11 @@ const AddImage = inject('storeAppOptions')(observer(props => {
                     }
                 </ListItem>
                 {
-                canRequestInsertImage &&
-                <ListItem title={_t.textPictureFromStorage} onClick={() => {props.onInsertByStorage()}}>
-                    <SvgIcon slot="media" symbolId={IconImageStorage.id} className={'icon icon-svg'} />
-                </ListItem>
-            }
+                    canRequestInsertImage &&
+                    <ListItem title={_t.textPictureFromStorage} onClick={() => {props.onInsertByStorage()}}>
+                        <SvgIcon slot="media" symbolId={IconImageStorage.id} className={'icon icon-svg'} />
+                    </ListItem>
+                }
         </List>
         </Page>
     )
