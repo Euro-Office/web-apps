@@ -43,11 +43,6 @@ SSE.ApplicationController = new(function(){
     var LoadingDocument = -256,
         WarningShown = false;
 
-    // Initialize analytics
-    // -------------------------
-
-
-
     // Check browser
     // -------------------------
 
