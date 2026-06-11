@@ -21,10 +21,6 @@ export class storeAppOptions {
             isDocReady: observable,
             changeDocReady: action,
 
-
-            canRequestInsertImage: observable,
-            changeCanRequestInsertImage: action,
-
             customization: observable,
         });
     }
@@ -57,9 +53,6 @@ export class storeAppOptions {
     }
 
     canRequestInsertImage = false;
-    changeCanRequestInsertImage(value) {
-        this.canRequestInsertImage = value;
-    }
 
     setConfigOptions (config, _t) {
         this.config = config;

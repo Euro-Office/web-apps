@@ -22,10 +22,6 @@ export class storeAppOptions {
             canBrandingExt: observable,
             canBranding: observable,
 
-
-            canRequestInsertImage: observable,
-            changeCanRequestInsertImage: action,
-
             isDocReady: observable,
             changeDocReady: action,
 
@@ -115,9 +111,6 @@ export class storeAppOptions {
     }
 
     canRequestInsertImage = false;
-    changeCanRequestInsertImage(value) {
-        this.canRequestInsertImage = value;
-    }
 
     config = {};
     customization;
