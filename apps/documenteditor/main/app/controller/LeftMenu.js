@@ -359,6 +359,21 @@ define([
                         menu.hide();
                     }
                 } else {
+                    // Intercept EPUB downloads - use platform's Pandoc-based exporter
+                    if (format == Asc.c_oAscFileType.EPUB) {
+                        var docKey = this.getApplication().getController('Main').document.key;
+                        if (docKey) {
+                            // Document key format is "{fileId}_{timestamp}" - extract the fileId
+                            var parts = docKey.split('_');
+                            parts.pop(); // remove timestamp
+                            var fileId = parts.join('_');
+                            if (fileId) {
+                                window.open('/api/files/' + fileId + '/export/epub', '_blank');
+                                menu && menu.hide();
+                                return;
+                            }
+                        }
+                    }
                     this.isFromFileDownloadAs = ext;
                     this.api.asc_DownloadAs(options);
                     menu.hide();
