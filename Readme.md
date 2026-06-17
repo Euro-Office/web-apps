@@ -20,6 +20,7 @@ If you have any problems with or questions about [Euro-Office Document Server][2
 
   [1]: https://github.com/Euro-Office
   [2]: https://github.com/Euro-Office/DocumentServer
+  [3]: https://stackoverflow.com
 
 ## Styling
 
