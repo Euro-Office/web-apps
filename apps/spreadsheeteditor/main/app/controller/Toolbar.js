@@ -1066,9 +1066,12 @@ define([
         },
 
         onSmartPickerClick: function() {
-            if (this.api && typeof this.api['asc_GetSelectedText'] === 'function') {
-                Common.Gateway.requestSmartPicker(this.api['asc_GetSelectedText']() || '', 'toolbar');
+            if (!this.api) return;
+            if (typeof this.api['pluginMethod_InputText'] === 'function') {
+                this.api['pluginMethod_InputText']('/');
+                this._smartPickerSlashInserted = true;
             }
+            Common.Gateway.requestSmartPicker('', 'toolbar');
         },
 
         onBtnPasteOptionsClick: function (btn, e) {
@@ -1382,7 +1385,13 @@ define([
         },
         
         insertLink: function(data) { // gateway
-            
+            if (!this.api) return;
+            if (this._smartPickerSlashInserted) {
+                this._smartPickerSlashInserted = false;
+                if (typeof this.api['pluginMethod_InputText'] === 'function') {
+                    this.api['pluginMethod_InputText']('', '/');
+                }
+            }
             var props = new Asc.asc_CHyperlink();
             props.asc_setHyperlinkUrl(data);
             props.asc_setText(data);
