@@ -280,6 +280,28 @@ define([
             PE.getCollection('SlideLayouts').bind({
                 reset: me.onResetSlides.bind(this)
             });
+            Common.Gateway.on('setsmartpickeravailable', function(available) {
+                me._smartPickerAvailable = !!available;
+                me.toolbar.btnSmartPicker && me.toolbar.btnSmartPicker.setVisible(!!available);
+            });
+            Common.Gateway.on('setsmartpickercancel', function() {
+                // Remove the "/" only if the toolbar button inserted it; a
+                // user-typed "/" is left in place.
+                if (me._smartPickerSlashArtificial && me.api && typeof me.api['pluginMethod_InputText'] === 'function') {
+                    me.api['pluginMethod_InputText']('', '/');
+                }
+                me._smartPickerSlashInserted = false;
+                me._smartPickerSlashArtificial = false;
+                Common.NotificationCenter.trigger('edit:complete');
+            });
+            $(document).on('keydown', function(e) {
+                var key = e.key || (e.originalEvent && e.originalEvent.key);
+                if (key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey && me._smartPickerAvailable
+                    && e.target && /area_id/.test(e.target.id || '')) {
+                    me._smartPickerSlashInserted = true;
+                    Common.Gateway.requestSmartPicker('', 'toolbar');
+                }
+            });
         },
 
         setMode: function(mode) {
@@ -1851,6 +1873,7 @@ define([
             if (typeof this.api['pluginMethod_InputText'] === 'function') {
                 this.api['pluginMethod_InputText']('/');
                 this._smartPickerSlashInserted = true;
+                this._smartPickerSlashArtificial = true;
             }
             Common.Gateway.requestSmartPicker('', 'toolbar');
         },
@@ -1967,8 +1990,10 @@ define([
 
         insertLink: function(data) { // gateway
             if (!this.api) return;
+            var fromSmartPicker = this._smartPickerSlashInserted;
             if (this._smartPickerSlashInserted) {
                 this._smartPickerSlashInserted = false;
+                this._smartPickerSlashArtificial = false;
                 if (typeof this.api['pluginMethod_InputText'] === 'function') {
                     this.api['pluginMethod_InputText']('', '/');
                 }
@@ -1978,8 +2003,11 @@ define([
             props.put_Bookmark(null);
             props.put_Text(data);
             this.api.add_Hyperlink(props);
-            
+
             Common.NotificationCenter.trigger('storage:link-insert', data);
+            if (fromSmartPicker) {
+                Common.NotificationCenter.trigger('edit:complete');
+            }
         },
 
         insertPlainText: function(data) {
@@ -2799,11 +2827,9 @@ define([
             Common.Utils.InternalSettings.set('toolbar-active-tab', !editmode && !compactview);
 
             me.toolbar.render(_.extend({compactview: editmode ? compactview : true}, config));
-
-            // Smart Picker button visibility: show only when assistant is available.
-            Common.Gateway.on('setassistantavailable', function(available) {
-                me.toolbar.btnSmartPicker && me.toolbar.btnSmartPicker.setVisible(!!available);
-            });
+            if (me._smartPickerAvailable !== undefined) {
+                me.toolbar.btnSmartPicker && me.toolbar.btnSmartPicker.setVisible(me._smartPickerAvailable);
+            }
 
             var tab = {action: 'review', caption: me.toolbar.textTabCollaboration, layoutname: 'toolbar-collaboration', dataHintTitle: 'U'};
             var $panel = me.getApplication().getController('Common.Controllers.ReviewChanges').createToolbarPanel();

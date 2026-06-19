@@ -258,11 +258,38 @@ define([
         },
 
         onLaunch: function() {
+            var me = this;
             // Create toolbar view
             this.toolbar = this.createView('Toolbar');
 
             Common.NotificationCenter.on('app:ready', this.onAppReady.bind(this));
             Common.NotificationCenter.on('app:face', this.onAppShowed.bind(this));
+            Common.Gateway.on('setsmartpickeravailable', function(available) {
+                me._smartPickerAvailable = !!available;
+                me.toolbar.btnSmartPicker && me.toolbar.btnSmartPicker.setVisible(!!available);
+            });
+            Common.Gateway.on('setsmartpickercancel', function() {
+                // Nothing to undo: the button doesn't pre-insert "/", and a
+                // user-typed "/" is left in place. Just restore focus.
+                me._smartPickerSlashInserted = false;
+                me._smartPickerSlashArtificial = false;
+                me._smartPickerReplace = '';
+                Common.NotificationCenter.trigger('edit:complete');
+            });
+            // Capture phase: while editing a cell the cell editor consumes the
+            // keydown before it bubbles to document, so a bubble-phase listener
+            // never sees mid-edit "/". Capture runs first, so "/" is caught both
+            // on a selected cell and mid-edit (e.g. "asdf /"); _smartPickerReplace
+            // then drives the "/" removal on insert.
+            document.addEventListener('keydown', function(e) {
+                var key = e.key || (e.originalEvent && e.originalEvent.key);
+                if (key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey && me._smartPickerAvailable
+                    && e.target && /area_id/.test(e.target.id || '')) {
+                    me._smartPickerSlashInserted = true;
+                    me._smartPickerReplace = '/';
+                    Common.Gateway.requestSmartPicker('', 'toolbar');
+                }
+            }, true);
         },
 
         setMode: function(mode) {
@@ -1068,10 +1095,10 @@ define([
 
         onSmartPickerClick: function() {
             if (!this.api) return;
-            if (typeof this.api['pluginMethod_InputText'] === 'function') {
-                this.api['pluginMethod_InputText']('/');
-                this._smartPickerSlashInserted = true;
-            }
+            // Leave any in-progress cell edit OPEN so insertLink can insert at
+            // the cursor (keeping the cell in edit mode for continued typing).
+            this._smartPickerSlashInserted = true;
+            this._smartPickerReplace = '';
             Common.Gateway.requestSmartPicker('', 'toolbar');
         },
 
@@ -1388,16 +1415,45 @@ define([
         insertLink: function(data) { // gateway
             if (!this.api) return;
             if (this._smartPickerSlashInserted) {
+                var replace = this._smartPickerReplace || '';
                 this._smartPickerSlashInserted = false;
-                if (typeof this.api['pluginMethod_InputText'] === 'function') {
-                    this.api['pluginMethod_InputText']('', '/');
+                this._smartPickerSlashArtificial = false;
+                this._smartPickerReplace = '';
+                // Insert the link as plain TEXT (a cell hyperlink is whole-cell
+                // and would re-link/replace the cell). NOTE: use isCellEdited,
+                // not asc_getCellEditMode (the latter isn't exported here).
+                if (this.api.isCellEdited) {
+                    // Editing (typed "/", or mid-edit + ribbon): insert at the
+                    // cursor and backspace the "/" trigger, keeping the cell in
+                    // edit mode so the user can keep typing. The ribbon button
+                    // blurs the cell-editor input, so re-focus it first or
+                    // pluginMethod's addText won't land. (text-input path never
+                    // adds a "+" the way asc_insertInCell while editing would.)
+                    var areaEl = document.getElementById('area_id');
+                    if (areaEl && areaEl.focus) { try { areaEl.focus(); } catch (e) {} }
+                    if (typeof this.api['pluginMethod_InputText'] === 'function') {
+                        this.api['pluginMethod_InputText'](data, replace);
+                    }
+                } else if (typeof this.api.asc_insertInCell === 'function') {
+                    // Not editing (selected cell): append to the committed cell
+                    // text via the value path (no formula operators, so no "+");
+                    // drop a trailing "/" trigger if present.
+                    var cell = this.api.asc_getCellInfo && this.api.asc_getCellInfo();
+                    var cur = (cell && cell.asc_getText && cell.asc_getText()) || '';
+                    if (cur.slice(-1) === '/') {
+                        cur = cur.slice(0, -1);
+                    }
+                    this.api.asc_insertInCell(cur + data, Asc.c_oAscPopUpSelectorType.None);
                 }
+                Common.NotificationCenter.trigger('storage:link-insert', data);
+                Common.NotificationCenter.trigger('edit:complete');
+                return;
             }
             var props = new Asc.asc_CHyperlink();
             props.asc_setHyperlinkUrl(data);
             props.asc_setText(data);
             this.api.asc_insertHyperlink(props);
-            
+
             Common.NotificationCenter.trigger('storage:link-insert', data);
         },
 
@@ -4983,11 +5039,9 @@ define([
             }
 
             me.toolbar.render(_.extend({isCompactView: editmode ? compactview : true}, config));
-
-            // Smart Picker button visibility: show only when assistant is available.
-            Common.Gateway.on('setassistantavailable', function(available) {
-                me.toolbar.btnSmartPicker && me.toolbar.btnSmartPicker.setVisible(!!available);
-            });
+            if (me._smartPickerAvailable !== undefined) {
+                me.toolbar.btnSmartPicker && me.toolbar.btnSmartPicker.setVisible(me._smartPickerAvailable);
+            }
 
             if ( !config.isEditDiagram && !config.isEditMailMerge && !config.isEditOle ) {
                 var tab = {action: 'review', caption: me.toolbar.textTabCollaboration, layoutname: 'toolbar-collaboration', dataHintTitle: 'U'};

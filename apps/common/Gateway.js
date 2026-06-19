@@ -120,6 +120,14 @@ if (window.Common === undefined) {
                 $me.trigger('setassistantavailable', data);
             },
 
+            'setSmartPickerAvailable': function(data) {
+                $me.trigger('setsmartpickeravailable', data);
+            },
+
+            'setSmartPickerCancel': function() {
+                $me.trigger('setsmartpickercancel');
+            },
+
             'setMailMergeRecipients': function(data) {
                 $me.trigger('setmailmergerecipients', data);
             },
