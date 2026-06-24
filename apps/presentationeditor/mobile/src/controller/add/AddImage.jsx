@@ -51,7 +51,6 @@ class AddImageController extends Component {
         this.closeModal();
     }
 
-
     render () {
         return (
             <AddImage onInsertByFile={this.onInsertByFile}

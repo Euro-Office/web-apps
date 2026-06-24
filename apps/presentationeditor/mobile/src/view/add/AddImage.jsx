@@ -65,7 +65,7 @@ const AddImage = inject('storeAppOptions')(observer(props => {
                         <SvgIcon slot="media" symbolId={IconImageStorage.id} className={'icon icon-svg'} />
                     </ListItem>
                 }
-        </List>
+            </List>
         </Page>
     )
 }));
