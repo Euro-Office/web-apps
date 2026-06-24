@@ -41,6 +41,25 @@ const SRC_ROOT = REPO_ROOT;
 const APPS_SRC = path.join(REPO_ROOT, 'apps');
 const APPS_OUT = path.join(BUILD_ROOT, 'web-apps', 'apps');
 
+// Theme branding tokens (issue #89) — mirrors grunt replace:indexhtml. Env vars override
+// theme config.json; logo paths resolve to the header logos deploy-theme-images overwrites.
+const THEME = process.env.THEME || 'default';
+let themeMeta = {};
+{
+    const cfg = path.join(REPO_ROOT, 'theme', THEME, 'meta', 'config.json');
+    if (fs.existsSync(cfg)) {
+        try { themeMeta = JSON.parse(fs.readFileSync(cfg, 'utf8')); }
+        catch (e) { console.warn(`deploy-html: bad theme config ${cfg}: ${e.message}`); }
+    }
+}
+const tv = (envVal, key, def) => (envVal != null && envVal !== '') ? envVal : (key in themeMeta ? themeMeta[key] : def);
+const HEADER_IMG = '../../common/main/resources/img/header/';
+const TOKENS = {
+    APP_TITLE_TEXT:   tv(process.env.APP_TITLE_TEXT, 'app_title', 'ONLYOFFICE'),
+    LOADER_LOGO:      HEADER_IMG + (themeMeta.loader_logo || 'dark-logo_s.svg'),
+    LOADER_LOGO_DARK: HEADER_IMG + (themeMeta.loader_logo_dark || 'header-logo_s.svg'),
+};
+
 const DIRS = [
     { editor: 'documenteditor',     subpath: 'main'  },
     { editor: 'spreadsheeteditor',  subpath: 'main'  },
@@ -73,7 +92,8 @@ for (const { editor, subpath } of DIRS) {
 
     for (const filename of deploys) {
         const content  = fs.readFileSync(path.join(srcDir, filename), 'utf8');
-        const replaced = content.replace(/@@SRC_ROOT@@/g, SRC_ROOT);
+        let replaced   = content.replace(/@@SRC_ROOT@@/g, SRC_ROOT);
+        for (const [k, v] of Object.entries(TOKENS)) replaced = replaced.split(`{{${k}}}`).join(v);
         const destName = filename.replace('.html.deploy', '.html');
         fs.writeFileSync(path.join(destDir, destName), replaced, 'utf8');
     }

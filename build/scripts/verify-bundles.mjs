@@ -66,7 +66,8 @@ let failed = false;
 
 for (const bundle of BUNDLES) {
     if (!fs.existsSync(bundle.path)) {
-        console.warn(`verify-bundles: skip  ${bundle.label}  (not found — build may not have run)`);
+        console.error(`verify-bundles: FAIL  ${bundle.label}  (not found — webpack did not emit this bundle)`);
+        failed = true;
         continue;
     }
     const content = fs.readFileSync(bundle.path, 'utf8');

@@ -131,9 +131,17 @@ The common `index.html` also has inline tags. If `inline-svgs.js` only covers ed
 
 Always test in incognito or disable the SW in DevTools → Application → Service Workers. Stale `app.js` from a previous build will persist invisibly. Two `app.js` entries in DevTools Sources = cache conflict.
 
-### 9. `output.clean: false` is intentional
+**Why incognito is needed locally (not in production):** The production server 302-redirects every asset through a version-prefixed URL (`/<PRODUCT_VERSION>-<cache_tag>/…`), and `cache_tag` is a fresh random hash per deploy (`documentserver-flush-cache.sh`). Real production deploys self-bust the SW with no manual action.
+
+Locally, the `eo` Makefile pins `PRODUCT_VERSION` from a static `VERSION` file. A local `make web-apps` rebuild emits a new `app.js` at the **same URL** — same version prefix, no `cache_tag` change — so the SW recognises the path as a known asset and serves the previous (stale) bundle from its cache.
+
+Fix: run `documentserver-flush-cache.sh` inside the container after a local rebuild, or use incognito for the test session.
+
+### 9. `output.clean: false` is intentional — do not enable code-splitting without also addressing stale chunks
 
 All six webpack configs share a single `BUILD_ROOT`. Setting `clean: true` would wipe sibling editors' output. Leave it false.
+
+This is safe **only because the output set is fixed**: each editor always emits exactly `app.js`, `app.css`, and `locale/*`. Do not enable `splitChunks`, dynamic `import()`, or `asyncChunks` without adding per-editor output cleaning or content-hashed filenames. A build that stops emitting a chunk would leave the old file on disk; the SW would cache it under the live version prefix and serve stale code silently.
 
 ---
 

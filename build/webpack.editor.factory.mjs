@@ -98,7 +98,13 @@ export function editorConfig(editorName, opts = {}) {
             filename: '[name].js',
             chunkFilename: '[name].chunk.js',
             publicPath: '',
+            // clean:false is intentional — all six editors share BUILD_ROOT; wiping it would
+            // destroy sibling editors' output. Safe only because the output set is fixed
+            // ([name].js, [name].css, locale/*). Do not enable splitChunks or dynamic import()
+            // without also adding per-editor output cleaning or content-hashed filenames —
+            // a build that stops emitting a chunk leaves a stale file the SW will cache.
             clean: false,
+            // asyncChunks:false keeps all AMD require() calls bundled synchronously.
             asyncChunks: false,
         },
 
@@ -233,6 +239,8 @@ export function editorConfig(editorName, opts = {}) {
         ],
 
         optimization: {
+            // splitChunks:false — see clean:false note above. Enabling this without
+            // content-hashed filenames or per-editor cleaning leaves stale chunks on disk.
             splitChunks: false,
             minimize: env === 'production',
             minimizer: [

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ONLYOFFICE PDF Editor</title>
+    <title>{{APP_TITLE_TEXT}} PDF Editor</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=IE8"/>
     <meta name="description" content="" />
@@ -11,6 +11,12 @@
     <!-- splash -->
 
     <style type="text/css">
+        .loader-logo-light,
+        .loader-logo-dark { width: 240px; max-width: 80%; height: auto; vertical-align: middle; }
+        .loader-logo-dark { display: none; }
+        .theme-type-dark .loader-logo-light { display: none; }
+        .theme-type-dark .loader-logo-dark { display: inline-block; }
+
         .theme-dark {
             --romb-start-color: #555;
         }
@@ -65,11 +71,11 @@
             margin-bottom: 5px;
         }
 
-        .theme-dark .loadmask {
+        .theme-type-dark .loadmask {
             background-color: #555;
         }
 
-        .theme-dark .loader-page-text {
+        .theme-type-dark .loader-page-text {
             color: rgba(255, 255, 255, 0.8);
         }
 
@@ -274,11 +280,8 @@
                 '<div id="loading-mask" class="loadmask">' +
                     '<div class="loader-page" style="margin-bottom: ' + margin + 'px;' + ((logo!==null) ? 'height: auto;' : '') + '">' +
                         ((logo!==null) ? logo :
-                        '<div class="loader-page-romb">' +
-                            '<div class="romb" id="blue"></div>' +
-                            '<div class="romb" id="green"></div>' +
-                            '<div class="romb" id="red"></div>' +
-                        '</div>') +
+                        '<img class="loader-logo loader-logo-light" src="{{LOADER_LOGO}}" />' +
+                        '<img class="loader-logo loader-logo-dark" src="{{LOADER_LOGO_DARK}}" />') +
                     '</div>' +
                     '<div class="loader-page-text">' +  customer +
                         '<div class="loader-page-text-loading">' + loading + '</div>' +
