@@ -3,8 +3,8 @@ import { Device } from '../utils/device';
 import SvgIcon from './component/SvgIcon';
 import IconEditSettingsIos from '@common-ios-icons/icon-edit-settings.svg?ios';
 import IconEditSettingsAndroid from '@common-android-icons/icon-edit-settings.svg';
-import IconAddOtherIos from '@common-ios-icons/icon-add-other.svg?ios';
-import IconAddOtherAndroid from '@common-android-icons/icon-add-other.svg';
+import IconPlusIos from '@common-ios-icons/icon-plus.svg?ios';
+import IconPlusAndroid from '@common-android-icons/icon-plus.svg';
 import IconUndoIos from '@common-ios-icons/icon-undo.svg?ios';
 import IconUndoAndroid from '@common-android-icons/icon-undo.svg';
 import IconRedoIos from '@common-ios-icons/icon-redo.svg?ios';
@@ -12,7 +12,7 @@ import IconRedoAndroid from '@common-android-icons/icon-redo.svg';
 
 export const icons = {
     edit: { ios: IconEditSettingsIos, android: IconEditSettingsAndroid },
-    add: { ios: IconAddOtherIos, android: IconAddOtherAndroid },
+    add: { ios: IconPlusIos, android: IconPlusAndroid },
     undo: { ios: IconUndoIos, android: IconUndoAndroid },
     redo: { ios: IconRedoIos, android: IconRedoAndroid },
 };
