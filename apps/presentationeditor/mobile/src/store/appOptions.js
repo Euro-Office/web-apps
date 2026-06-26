@@ -21,6 +21,8 @@ export class storeAppOptions {
             changeDocReady: action,
 
             customization: observable,
+
+            canRequestInsertImage: observable,
         });
     }
 

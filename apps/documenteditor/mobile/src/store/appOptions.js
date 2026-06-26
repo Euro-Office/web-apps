@@ -47,6 +47,8 @@ export class storeAppOptions {
             setFavorite: action,
 
             customization: observable,
+
+            canRequestInsertImage: observable,
         });
     }
 
