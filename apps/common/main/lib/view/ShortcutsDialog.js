@@ -96,11 +96,11 @@ define([
                         '</div>',
                         '<% if (action.isLocked) { %>',
                             '<button type="button" class="btn-toolbar">',
-                                '<i class="icon options__icon toolbar__icon btn-lock icon-lock">&nbsp;</i>',
+                                '<svg class="icon uni-scale options__icon icon-lock"><use href="#btn-lock"></use></svg>',
                             '</button>',
                         '<% } else { %>',
                             '<button type="button" class="action-edit btn-toolbar">',
-                                '<i class="icon options__icon toolbar__icon btn-edit">&nbsp;</i>',
+                                '<svg class="icon uni-scale options__icon"><use href="#btn-edit"></use></svg>',
                             '</button>',
                         '<% } %>',
                     '</div>'

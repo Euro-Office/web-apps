@@ -1445,6 +1445,17 @@ define([
                     dataHintOffset: 'small'
                 });
 
+                me.btnInsertCheckBox = new Common.UI.Button({
+                    id          : 'tlbtn-insertcheckbox',
+                    cls         : 'btn-toolbar x-huge icon-top',
+                    iconCls     : 'toolbar__icon btn-insertcheckbox',
+                    caption     : me.capInsertCheckBox,
+                    lock        : [_set.editCell, _set.lostConnect, _set.coAuth, _set['Objects']],
+                    dataHint    : '1',
+                    dataHintDirection: 'bottom',
+                    dataHintOffset: 'small'
+                });
+
                 me.btnInsertText = new Common.UI.Button({
                     id          : 'tlbtn-inserttext',
                     cls         : 'btn-toolbar x-huge icon-top',
@@ -1546,6 +1557,18 @@ define([
                     iconCls     : 'toolbar__icon btn-inserttable',
                     caption     : me.capInsertTable,
                     lock        : [_set.editCell, _set.selChart, _set.selChartText, _set.selShape, _set.selShapeText, _set.selImage, _set.selSlicer, _set.lostConnect, _set.coAuth, _set.ruleFilter, _set.multiselect, _set.cantModifyFilter, _set.ruleMerge, _set.editPivot, _set.wsLock, _set.userProtected],
+                    dataHint: '1',
+                    dataHintDirection: 'bottom',
+                    dataHintOffset: 'small'
+                });
+
+                me.btnSmartPicker = new Common.UI.Button({
+                    id: 'tlbtn-smartpicker',
+                    cls: 'btn-toolbar x-huge icon-top',
+                    iconCls: 'toolbar__icon btn-nc-assistant',
+                    lock: [_set.lostConnect, _set.disableOnStart, _set.viewMode],
+                    caption: me.capSmartPicker,
+                    action: 'smart-picker',
                     dataHint: '1',
                     dataHintDirection: 'bottom',
                     dataHintOffset: 'small'
@@ -2624,8 +2647,10 @@ define([
             _injectComponent('#slot-btn-text-orient',    this.btnTextOrient);
             _injectComponent('#slot-btn-insimage',       this.btnInsertImage);
             _injectComponent('#slot-btn-instable',       this.btnInsertTable);
+            _injectComponent('#slot-btn-smartpicker',    this.btnSmartPicker);
             _injectComponent('#slot-btn-inshyperlink',   this.btnInsertHyperlink);
             _injectComponent('#slot-btn-insshape',       this.btnInsertShape);
+            _injectComponent('#slot-btn-inscheckbox',    this.btnInsertCheckBox);
             _injectComponent('#slot-btn-instext',        this.btnInsertText);
             _injectComponent('#slot-btn-instextart',     this.btnInsertTextArt);
             _injectComponent('#slot-btn-insequation',    this.btnInsertEquation);
@@ -2712,6 +2737,7 @@ define([
             _updateHint(this.btnWrap, this.tipWrap);
             _updateHint(this.btnTextOrient, this.tipTextOrientation);
             _updateHint(this.btnInsertTable, this.tipInsertTable);
+            _updateHint(this.btnSmartPicker, this.tipSmartPicker);
             _updateHint(this.btnInsertImage, this.tipInsertImage);
             _updateHint(this.btnInsertChart, this.tipInsertChartSpark);
             _updateHint(this.btnInsertChartRecommend, this.tipInsertChartRecommend);
@@ -2720,6 +2746,7 @@ define([
             _updateHint(this.btnInsertText, [this.tipInsertHorizontalText ,this.tipInsertText]);
             _updateHint(this.btnInsertTextArt, this.tipInsertTextart);
             _updateHint(this.btnInsertShape, this.tipInsertShape);
+            _updateHint(this.btnInsertCheckBox, this.tipInsertCheckBox);
             _updateHint(this.btnInsertEquation, this.tipInsertEquation);
             _updateHint(this.btnInsertSymbol, this.tipInsertSymbol);
             _updateHint(this.btnInsertSlicer, this.tipInsertSlicer);

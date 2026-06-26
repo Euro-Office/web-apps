@@ -176,7 +176,7 @@ def traverse_icons(mainnode):
 
     # collect items for export
     nodes_to_export = []
-    names_map = {}  # node_id → base_name (из title-name)
+    names_map = {}  # node_id → base_name (from title-name)
 
     for icon in icons:
         # title_node = find_node_by_name(icon, "title")

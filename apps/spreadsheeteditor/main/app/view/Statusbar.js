@@ -474,7 +474,7 @@ define([
                             cls           : locked ? 'coauth-locked':'',
                             disabled      : me.mode.isBackgroundOpen,
                             isLockTheDrag : locked || me.mode.isDisconnected || me.mode.isBackgroundOpen || wbprotected,
-                            iconCls       : 'btn-sheet-view',
+                            iconCls       : name !== '' ? 'btn-sheet-view' : '',
                             iconTitle     : name,
                             iconVisible   : name!==''
                         };

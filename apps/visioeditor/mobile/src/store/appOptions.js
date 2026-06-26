@@ -139,7 +139,7 @@ export class storeAppOptions {
         this.canDownload = permissions.download !== false;
 
         this.canBranding = params.asc_getCustomization();
-        this.canBrandingExt = params.asc_getCanBranding() && (typeof this.customization == 'object' || this.config.plugins);
+        this.canBrandingExt = (typeof this.customization == 'object' || this.config.plugins);
 
         this.canUseReviewPermissions = this.canLicense && (!!permissions.reviewGroups || this.customization 
             && this.customization.reviewPermissions && (typeof (this.customization.reviewPermissions) == 'object'));

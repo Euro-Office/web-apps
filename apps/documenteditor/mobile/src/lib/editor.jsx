@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { Link } from 'framework7-react';
-import { CommentsController, ViewCommentsController } from '../../../../common/mobile/lib/controller/collaboration/Comments';
+import { AddCommentController, EditCommentController } from '../../../../common/mobile/lib/controller/collaboration/Comments';
 import {
     PlatformIcon,
     buildFocusObjectGetters,
@@ -172,12 +172,12 @@ export const updateChartStyles = (storeChartSettings, storeFocusObjects) => {
 
 /**
  * Renders comment controller components for editing mode
- * @returns {JSX.Element} Fragment containing CommentsController and ViewCommentsController
+ * @returns {JSX.Element} Fragment containing AddCommentController and EditCommentController
  */
 export const getEditCommentControllers = () => (
     <Fragment>
-        <CommentsController />
-        <ViewCommentsController />
+        <AddCommentController />
+        <EditCommentController />
     </Fragment>
 );
 

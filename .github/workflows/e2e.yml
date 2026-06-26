@@ -1,0 +1,138 @@
+name: E2E (overlay on nightly)
+
+# Builds web-apps, overlays the fresh build onto the published
+# ghcr.io/euro-office/documentserver:nightly image, and runs the DocumentServer
+# Playwright e2e suite against it. Fast feedback on a web-apps change against
+# the full stack without rebuilding core/server/sdkjs.
+on:
+  push:
+    branches:
+      - fork
+      - develop
+      - 'release/**'
+      - 'hotfix/**'
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NIGHTLY_IMAGE: ghcr.io/euro-office/documentserver:nightly
+  OVERLAY_IMAGE: euro-office/documentserver:e2e-web-apps
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out web-apps
+        uses: actions/checkout@v4
+        with:
+          path: web-apps
+
+      # The e2e suite lives in the DocumentServer repo. Prefer a same-named
+      # branch (so tests can be co-developed with the change), else main.
+      - name: Check out DocumentServer e2e (current branch)
+        id: docserver
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          repository: Euro-Office/DocumentServer
+          path: documentserver
+          ref: ${{ github.head_ref || github.ref_name }}
+      - name: Check out DocumentServer e2e (main)
+        if: steps.docserver.outcome != 'success'
+        uses: actions/checkout@v4
+        with:
+          repository: Euro-Office/DocumentServer
+          path: documentserver
+          ref: main
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Mirrors web-apps.bake.Dockerfile so the overlay matches the shipped build.
+      - name: Install build prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-21-jre-headless brotli zip bzip2
+
+      - name: Pull nightly image
+        run: docker pull ${{ env.NIGHTLY_IMAGE }}
+
+      # The editor reports a build version to docservice, which rejects the
+      # document if it differs from its own (services gate on an exact match).
+      # The fresh build must therefore carry the SAME PRODUCT_VERSION the nightly
+      # image was built with — otherwise the editor loads but the document never
+      # opens. Read it from the image so this tracks version bumps automatically.
+      - name: Read nightly product version
+        id: ver
+        run: |
+          set -euo pipefail
+          VER=$(docker run --rm --entrypoint sh ${{ env.NIGHTLY_IMAGE }} -c \
+            "grep -A2 'DocsAPI.DocEditor.version = function' \
+              \$(find /var/www -maxdepth 8 -path '*api/documents/api.js' | head -n1) \
+              | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1")
+          test -n "$VER"
+          echo "product_version=$VER" >> "$GITHUB_OUTPUT"
+          echo "nightly PRODUCT_VERSION=$VER"
+
+      - name: Build web-apps
+        working-directory: web-apps/build
+        env:
+          BUILD_ROOT: ${{ github.workspace }}/web-apps/deploy
+          THEME: euro-office
+          PRODUCT_VERSION: ${{ steps.ver.outputs.product_version }}
+        run: |
+          npm install -g grunt-cli
+          npm install
+          ( cd ../translation && python3 merge_and_check.py )
+          grunt
+
+      - name: Build overlay image with fresh web-apps
+        run: |
+          set -euo pipefail
+          cat > overlay.Dockerfile <<'EOF'
+          ARG NIGHTLY_IMAGE
+          FROM ${NIGHTLY_IMAGE}
+          COPY . /tmp/new-web-apps/
+          # The install path is brand-derived (/var/www/<brand>/documentserver);
+          # locate it via the sdkjs dir, then overlay the fresh web-apps over it.
+          RUN set -eux; \
+              root="$(dirname "$(find /var/www -maxdepth 5 -type d -name sdkjs -path '*documentserver*' | head -n1)")"; \
+              test -n "$root"; \
+              cp -a /tmp/new-web-apps/. "$root/web-apps/"; \
+              rm -rf /tmp/new-web-apps
+          EOF
+          docker build \
+            --build-arg NIGHTLY_IMAGE=${{ env.NIGHTLY_IMAGE }} \
+            -t ${{ env.OVERLAY_IMAGE }} \
+            -f overlay.Dockerfile \
+            web-apps/deploy/web-apps
+
+      - name: Install e2e dependencies
+        working-directory: documentserver/e2e
+        run: npm ci
+
+      - name: Install Playwright browsers
+        working-directory: documentserver/e2e
+        run: npx playwright install chromium --with-deps
+
+      - name: Run E2E tests
+        working-directory: documentserver/e2e
+        env:
+          E2E_IMAGE: ${{ env.OVERLAY_IMAGE }}
+        run: npm test
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ github.sha }}
+          path: documentserver/e2e/playwright-report/
+          retention-days: 14

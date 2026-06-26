@@ -785,6 +785,21 @@ define([], function () {
                 caption     : me.txtGetLink
             });
 
+            // Nextcloud Assistant context menu entry — host (NC) toggles
+            // visibility via setAssistantAvailable. Construct with default
+            // visible:true; the show:before listener on ssMenu (registered
+            // below) sets the actual visibility based on
+            // me.ncAssistantAvailable. Constructing with visible:false hits
+            // a broken path in Common.UI.MenuItem.render and the item
+            // becomes unresponsive to later setVisible calls.
+            me.pmiAssistantSeparator = new Common.UI.MenuItem({
+                caption     : '--'
+            });
+            me.pmiAssistant = new Common.UI.MenuItem({
+                iconCls     : 'menu__icon btn-nc-assistant',
+                caption     : me.txtNcAssistant || 'Ask Nextcloud Assistant'
+            });
+
             me.ssMenu = new Common.UI.Menu({
                 cls: 'shifted-right',
                 restoreHeightAndTop: true,
@@ -847,10 +862,24 @@ define([], function () {
                     me.pmiEntireHide,
                     me.pmiEntireShow,
                     me.pmiFreezeSeparator,
-                    me.pmiFreezePanes
+                    me.pmiFreezePanes,
+                    me.pmiAssistantSeparator,
+                    me.pmiAssistant
                 ]
             }).on('hide:after', function(menu, e, isFromInputControl) {
                 me.clearCustomItems(menu);
+            }).on('show:before', function() {
+                // Nextcloud Assistant entry — show only when the host has
+                // announced the Assistant app is available AND the document
+                // allows copying out (restricted/secure view disables copy,
+                // and the Assistant reads the selected text via
+                // asc_GetSelectedText to forward it to the host). Toggling
+                // visibility right before the menu opens is the only point
+                // where Common.UI.MenuItem.setVisible behaves reliably.
+                var cancopy = me.api && me.api.can_CopyCut();
+                var assistantVisible = !!me.ncAssistantAvailable && !!cancopy;
+                me.pmiAssistantSeparator.setVisible(assistantVisible);
+                me.pmiAssistant.setVisible(assistantVisible);
             });
 
             me.mnuGroupImg = new Common.UI.MenuItem({
@@ -874,6 +903,11 @@ define([], function () {
             me.mnuShapeAdvanced = new Common.UI.MenuItem({
                 iconCls     : 'menu__icon btn-menu-shape',
                 caption : me.advancedShapeText
+            });
+
+            me.mnuCheckBoxAdvanced = new Common.UI.MenuItem({
+                iconCls     : 'menu__icon btn-insertcheckbox',
+                caption     : me.advancedCheckBoxText
             });
 
             me.mnuImgAdvanced = new Common.UI.MenuItem({
@@ -1095,7 +1129,7 @@ define([], function () {
                 })
             });
 
-            var _СhartSettingsDlg_view = SSE.Views.ChartSettingsDlg.prototype;
+            var _ChartSettingsDlg_view = SSE.Views.ChartSettingsDlg.prototype;
             me.menuChartElement = new Common.UI.MenuItem({
                 menu: new Common.UI.Menu({
                     items: [
@@ -1108,25 +1142,25 @@ define([], function () {
                                 menuAlign: 'tl-tr',
                                 items: [
                                     { 
-                                        caption: _СhartSettingsDlg_view.textHorAxis, 
+                                        caption: _ChartSettingsDlg_view.textHorAxis,
                                         value: 'bShowHorAxis',
                                         stopPropagation: true,
                                         checkable: true
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textVertAxis, 
+                                        caption: _ChartSettingsDlg_view.textVertAxis,
                                         value: 'bShowVertAxis',
                                         stopPropagation: true, 
                                         checkable: true
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textHorAxisSec, 
+                                        caption: _ChartSettingsDlg_view.textHorAxisSec,
                                         value: 'bShowHorAxSec',
                                         stopPropagation: true, 
                                         checkable: true
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textVertAxisSec, 
+                                        caption: _ChartSettingsDlg_view.textVertAxisSec,
                                         value: 'bShowVertAxSec', 
                                         stopPropagation: true,
                                         checkable: true
@@ -1149,25 +1183,25 @@ define([], function () {
                                 menuAlign: 'tl-tr',
                                 items: [
                                     { 
-                                        caption:_СhartSettingsDlg_view.textHorAxis, 
+                                        caption:_ChartSettingsDlg_view.textHorAxis,
                                         value: 'bShowHorAxTitle',
                                         stopPropagation: true, 
                                         checkable: true                                   
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textVertAxis, 
+                                        caption: _ChartSettingsDlg_view.textVertAxis,
                                         value: 'bShowVertAxTitle',
                                         stopPropagation: true,  
                                         checkable: true
                                     },
                                     { 
-                                        caption:  _СhartSettingsDlg_view.textHorAxisSec, 
+                                        caption:  _ChartSettingsDlg_view.textHorAxisSec,
                                         value: 'bShowHorAxTitleSec',
                                         stopPropagation: true,  
                                         checkable: true
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textVertAxisSec, 
+                                        caption: _ChartSettingsDlg_view.textVertAxisSec,
                                         value: 'bShowVertAxisTitleSec',
                                         stopPropagation: true,  
                                         checkable: true
@@ -1197,14 +1231,14 @@ define([], function () {
                                         checkable: true
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textNoOverlay, 
+                                        caption: _ChartSettingsDlg_view.textNoOverlay,
                                         value: 'bShowChartTitle',
                                         stopPropagation: true,
                                         toggleGroup: 'chartTitle',   
                                         checkable: true
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textOverlay, 
+                                        caption: _ChartSettingsDlg_view.textOverlay,
                                         value: 'bOverlayTitle',
                                         stopPropagation: true,
                                         toggleGroup: 'chartTitle',   
@@ -1214,7 +1248,7 @@ define([], function () {
                             })
                         },
                         { 
-                            caption: _СhartSettingsDlg_view.textDataLabels, 
+                            caption: _ChartSettingsDlg_view.textDataLabels,
                             value: 'dataLabels', 
                             disabled: false,
                             menu: new Common.UI.Menu({
@@ -1229,62 +1263,62 @@ define([], function () {
                                         checkable: true
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textCenter, 
+                                        caption: _ChartSettingsDlg_view.textCenter,
                                         value: 'CenterData',
                                         stopPropagation: true,
                                         toggleGroup: 'dataLabels',   
                                         checkable: true
                                     },
                                     {   
-                                        caption: _СhartSettingsDlg_view.textInnerBottom, 
+                                        caption: _ChartSettingsDlg_view.textInnerBottom,
                                         value: 'InnerBottomData',
                                         stopPropagation: true,
                                         toggleGroup: 'dataLabels',   
                                         checkable: true
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textInnerTop, 
+                                        caption: _ChartSettingsDlg_view.textInnerTop,
                                         value: 'InnerTopData',
                                         stopPropagation: true,
                                         toggleGroup: 'dataLabels',   
                                         checkable: true
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textOuterTop, 
+                                        caption: _ChartSettingsDlg_view.textOuterTop,
                                         value: 'OuterTopData',
                                         stopPropagation: true,
                                         toggleGroup: 'dataLabels',   
                                         checkable: true
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textTop, 
+                                        caption: _ChartSettingsDlg_view.textTop,
                                         value: 'TopData',
                                         stopPropagation: true,
                                         toggleGroup: 'dataLabels',   
                                         checkable: true
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textLeft, 
+                                        caption: _ChartSettingsDlg_view.textLeft,
                                         value: 'LeftData',
                                         stopPropagation: true,
                                         toggleGroup: 'dataLabels',   
                                         checkable: true
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textRight, 
+                                        caption: _ChartSettingsDlg_view.textRight,
                                         value: 'RightData',
                                         stopPropagation: true,  
                                         checkable: true
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textBottom, 
+                                        caption: _ChartSettingsDlg_view.textBottom,
                                         value: 'BottomData',
                                         stopPropagation: true,
                                         toggleGroup: 'dataLabels',   
                                         checkable: true
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textFit, 
+                                        caption: _ChartSettingsDlg_view.textFit,
                                         value: 'FitWidthData',
                                         stopPropagation: true,
                                         toggleGroup: 'dataLabels',   
@@ -1352,7 +1386,7 @@ define([], function () {
                             })
                         },
                         { 
-                            caption: _СhartSettingsDlg_view.textGridLines, 
+                            caption: _ChartSettingsDlg_view.textGridLines,
                             value: 'gridLines', 
                             disabled: false,
                             menu: new Common.UI.Menu({
@@ -1387,7 +1421,7 @@ define([], function () {
                             })
                         },
                         { 
-                            caption: _СhartSettingsDlg_view.textLegendPos, 
+                            caption: _ChartSettingsDlg_view.textLegendPos,
                             value: 'legend', 
                             disabled: false,
                             menu: new Common.UI.Menu({
@@ -1402,42 +1436,42 @@ define([], function () {
                                         checkable: true
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textTop, 
+                                        caption: _ChartSettingsDlg_view.textTop,
                                         value: 'TopLegend',
                                         stopPropagation: true,
                                         toggleGroup: 'legend',  
                                         checkable: true
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textLeft, 
+                                        caption: _ChartSettingsDlg_view.textLeft,
                                         value: 'LeftLegend',
                                         stopPropagation: true, 
                                         toggleGroup: 'legend',   
                                         checkable: true
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textRight, 
+                                        caption: _ChartSettingsDlg_view.textRight,
                                         value: 'RightLegend', 
                                         stopPropagation: true, 
                                         toggleGroup: 'legend',  
                                         checkable: true
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textBottom, 
+                                        caption: _ChartSettingsDlg_view.textBottom,
                                         value: 'BottomLegend', 
                                         stopPropagation: true, 
                                         toggleGroup: 'legend',  
                                         checkable: true
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textLeftOverlay, 
+                                        caption: _ChartSettingsDlg_view.textLeftOverlay,
                                         value: 'LeftOverlay', 
                                         stopPropagation: true,
                                         toggleGroup: 'legend',   
                                         checkable: true
                                     },
                                     { 
-                                        caption: _СhartSettingsDlg_view.textRightOverlay, 
+                                        caption: _ChartSettingsDlg_view.textRightOverlay,
                                         value: 'RightOverlay', 
                                         stopPropagation: true, 
                                         toggleGroup: 'legend',  
@@ -1627,6 +1661,7 @@ define([], function () {
                     me.mnuChartEdit,
                     me.menuImgEditPoints,
                     me.mnuShapeAdvanced,
+                    me.mnuCheckBoxAdvanced,
                     me.menuImgOriginalSize,
                     me.menuImgReplace,
                     me.mnuImgAdvanced,

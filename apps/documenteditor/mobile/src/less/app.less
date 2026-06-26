@@ -355,8 +355,8 @@
     }
 }
 
-// FAB
-.fab {
+// FAB — z-index must beat framework7.css (.fab z-index:1500) which loads after app.css
+.page .fab {
     z-index: 10000;
     a {
         background-color: @background-primary;
@@ -393,4 +393,6 @@
     padding-right: 15px;
     margin-right: 5px;
 }
+
+@import '../../../../common/mobile/resources/less/_theme-mobile-overrides.less';
 

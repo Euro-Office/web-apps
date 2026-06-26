@@ -510,6 +510,7 @@ module.exports = function(grunt) {
         return {
             terser: {
                 options: {
+                    mangle: false,
                     format: {
                         preamble: '/** vim: et:ts=4:sw=4:sts=4\n' +
                             ' * @license RequireJS 2.1.2 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.\n' +
@@ -598,6 +599,15 @@ module.exports = function(grunt) {
                     replacements: [{
                         from: /\@\@SRC_ROOT\@\@/g,
                         to: SRC_ROOT
+                    }, {
+                        from: /\{\{APP_TITLE_TEXT\}\}/g,
+                        to: _themVal(process.env.APP_TITLE_TEXT, 'app_title')
+                    }, {
+                        from: /\{\{LOADER_LOGO\}\}/g,
+                        to: function() { return '../../common/main/resources/img/header/' + (global.themeMeta.loader_logo || 'dark-logo_s.svg'); }
+                    }, {
+                        from: /\{\{LOADER_LOGO_DARK\}\}/g,
+                        to: function() { return '../../common/main/resources/img/header/' + (global.themeMeta.loader_logo_dark || 'header-logo_s.svg'); }
                     }]
                 }
             },
@@ -667,6 +677,7 @@ module.exports = function(grunt) {
             // IE compatibility for babel-transpiled files - unnecessary overhead for modern builds.
             terser: {
                 options: {
+                    mangle: false,
                     format: {
                         comments: false,
                         preamble: "/* minified by terser */",
@@ -716,6 +727,7 @@ module.exports = function(grunt) {
             pkg: packageFile,
             terser: {
                 options: {
+                    mangle: false,
                     format: {
                         comments: false,
                         preamble: copyright,
@@ -883,6 +895,7 @@ module.exports = function(grunt) {
 
             terser: {
                 options: {
+                    mangle: false,
                     format: {
                         comments: false,
                         preamble: copyright,
@@ -954,6 +967,7 @@ module.exports = function(grunt) {
 
             terser: {
                 options: {
+                    mangle: false,
                     format: {
                         comments: false,
                         preamble: copyright,

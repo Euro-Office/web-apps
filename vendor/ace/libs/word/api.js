@@ -8270,8 +8270,8 @@ ApiWatermarkSettings.prototype.GetImageHeight = function (){ return new EMU(); }
 ApiWatermarkSettings.prototype.SetImageSize = function (nWidth, nHeight){};
 
 /**
- * В проверке на лок, которую мы делаем после выполнения скрипта, нужно различать действия сделанные через
- * разрешенные методы, и действия, которые пользователь пытался сам сделать с формами
+ * In the lock check that runs after script execution, distinguish actions performed through
+ * permitted methods from actions the user tried to perform on forms directly
  * @param fn
  * @param t
  * @returns {*}

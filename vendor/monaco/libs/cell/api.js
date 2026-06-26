@@ -5189,7 +5189,7 @@ ApiWorksheetFunction.prototype.FISHERINV = function (arg1) { return 0; };
  */
 
 /**
- * Сalculates or predicts a future value based on existing (historical) values by using the AAA version of the Exponential Smoothing (ETS) algorithm.
+ * Calculates or predicts a future value based on existing (historical) values by using the AAA version of the Exponential Smoothing (ETS) algorithm.
  * @memberof ApiWorksheetFunction
  * @param {ApiRange | ApiName | number} arg1 - A date for which a new value will be predicted. Must be after the last date in the timeline.
  * @param {ApiRange | ApiName | number[]} arg2 - A range or an array of numeric data that determines the historical values for which a new point will be predicted.

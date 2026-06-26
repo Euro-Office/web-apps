@@ -150,7 +150,7 @@ define([
                         me.timerId = 0;
                     },30000);
                     _.delay(function() {
-                        Common.Gateway.requestHistoryData(rev); // получаем url-ы для ревизий
+                        Common.Gateway.requestHistoryData(rev); // get URLs for revisions
                     }, 10);
                 }
             } else {
@@ -260,7 +260,7 @@ define([
         onExpiredToken: function() {
             var me = this;
             _.delay(function() {
-                Common.Gateway.requestHistoryData(me.currentRev); // получаем url-ы для ревизий
+                Common.Gateway.requestHistoryData(me.currentRev); // get URLs for revisions
             }, 10);
         },
 

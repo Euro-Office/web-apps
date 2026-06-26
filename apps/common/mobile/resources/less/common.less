@@ -1180,6 +1180,24 @@ input[type="number"]::-webkit-inner-spin-button {
 
 // Dialog with password
 .dialog {
+    &.error-dialog {
+        .error-dialog__code {
+            margin-top: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            color: @text-error;
+            text-align: left;
+            overflow-wrap: break-word;
+            display: -webkit-box;
+            -webkit-line-clamp: 7;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 120px;
+        }
+    }
+
     .modal-password {
         position: relative;
 
@@ -1239,6 +1257,7 @@ input[type="number"]::-webkit-inner-spin-button {
         color: @text-error;
     }
 }
+
 
 
 

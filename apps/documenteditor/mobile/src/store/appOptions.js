@@ -232,7 +232,7 @@ export class storeAppOptions {
         this.canReader = (!type || typeof type[1] !== 'string');
 
         this.canBranding = params.asc_getCustomization();
-        this.canBrandingExt = params.asc_getCanBranding() && (typeof this.customization == 'object' || this.config.plugins);
+        this.canBrandingExt = (typeof this.customization == 'object' || this.config.plugins);
 
         this.canFavorite = document.info && (document.info?.favorite !== undefined && document.info?.favorite !== null) && !this.isOffline;
         this.isFavorite = document.info?.favorite;

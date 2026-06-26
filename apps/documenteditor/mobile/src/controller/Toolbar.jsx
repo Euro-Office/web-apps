@@ -30,6 +30,7 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
     const docExt = storeDocumentInfo.dataDoc ? storeDocumentInfo.dataDoc.fileType : '';
     const docTitle = storeDocumentInfo.dataDoc ? storeDocumentInfo.dataDoc.title : '';
     const scrollOffsetRef = useRef(0);
+    const userHasScrolled = useRef(false);
 
     const getNavbarTotalHeight = useCallback(() => {
       	const navbarBg = document.querySelector('.navbar-bg');
@@ -99,6 +100,7 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
 
         window.addEventListener('touchstart', resetOffset);
         window.addEventListener('mousedown', resetOffset);
+        window.addEventListener('touchstart', () => { userHasScrolled.current = true; }, { once: true });
 
         return () => {
             window.removeEventListener('touchstart', resetOffset);
@@ -109,6 +111,7 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
     // Scroll handler
 
     const scrollHandler = offset => {
+        if (!userHasScrolled.current) return;
         const api = Common.EditorApi.get();
         const navbarHeight = getNavbarTotalHeight();
         const isSearchbarEnabled = document.querySelector('.subnavbar .searchbar')?.classList.contains('searchbar-enabled');
@@ -232,6 +235,12 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
         appOptions.changeViewerMode(true);
         api.asc_addRestriction(Asc.c_oAscRestrictionType.View);
         Common.Notifications.trigger('draw:stop');
+
+        // Disable the iOS keyboard overlay — mirrors showKeyboard() in turnOffViewerMode.
+        // Use AscBrowser.isSafariMobile (not Device.ios) — Device is minified in the bundle.
+        if (window.AscCommon && window.AscCommon.AscBrowser && window.AscCommon.AscBrowser.isSafariMobile && window.AscCommon.g_inputContext) {
+            window.AscCommon.g_inputContext.preventVirtualKeyboard_Hard();
+        }
     }
 
     const changeMobileView = () => {

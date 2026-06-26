@@ -359,7 +359,7 @@ const MainPage = inject('storeDocumentInfo', 'users', 'storeAppOptions', 'storeV
                             </div>
                         </CSSTransition>
                     }
-                    {appOptions.isDocReady && 
+                    {appOptions.isDocReady &&
                         <ContextMenu openOptions={handleClickToOpenOptions} />
                     }
                 </Page>

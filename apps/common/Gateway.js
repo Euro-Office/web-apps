@@ -108,6 +108,18 @@ if (window.Common === undefined) {
                 $me.trigger('insertimage', data);
             },
 
+            'insertLink': function(data) {
+                $me.trigger('insertlink', data);
+            },
+
+            'insertPlainText': function(data) {
+                $me.trigger('insertplaintext', data);
+            },
+
+            'setAssistantAvailable': function(data) {
+                $me.trigger('setassistantavailable', data);
+            },
+
             'setMailMergeRecipients': function(data) {
                 $me.trigger('setmailmergerecipients', data);
             },
@@ -438,6 +450,10 @@ if (window.Common === undefined) {
 
             submitForm: function() {
                 _postMessage({event: 'onSubmit'});
+            },
+
+            requestSmartPicker: function(selectedText, source) {
+                _postMessage({event: 'onRequestSmartPicker', data: { selectedText: selectedText || '', source: source || 'smartpicker' }});
             },
 
             on: function(event, handler){

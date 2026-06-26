@@ -208,7 +208,7 @@ define([], function () {
                 btn = header.find('#' + btnId);
             if (btn.length < 1) {
                 var iconCls = 'btn-pin';
-                btn = $('<div id="' + btnId + '" class="tool custom toolbar__icon ' + iconCls + '"></div>');
+                btn = $('<div id="' + btnId + '" class="tool custom toolbar__icon"><svg class="icon uni-scale"><use href="#' + iconCls + '"></use></svg></div>');
                 btn.on('click', _.bind(function() {
                     var tip = btn.data('bs.tooltip');
                     if (tip) tip.dontShow = true;
@@ -226,7 +226,7 @@ define([], function () {
                 btn = header.find('#id-plugindlg-' + id);
             if (btn.length<1) {
                 var iconCls = (id ==='back') ? 'btn-promote' : 'btn-' + Common.Utils.String.htmlEncode(id);
-                btn = $('<div id="id-plugindlg-' + id + '" class="tool custom toolbar__icon ' + iconCls + '"></div>');
+                btn = $('<div id="id-plugindlg-' + id + '" class="tool custom toolbar__icon"><svg class="icon uni-scale"><use href="#' + iconCls + '"></use></svg></div>');
                 btn.on('click', _.bind(function() {
                     this.fireEvent('header:click',id);
                 }, this));

@@ -1034,6 +1034,20 @@ define([
                         label: me.tipInsertHyperlink
                     };
 
+                    me.btnSmartPicker = new Common.UI.Button({
+                        id: 'tlbtn-smartpicker',
+                        cls: 'btn-toolbar x-huge icon-top',
+                        iconCls: 'toolbar__icon btn-nc-assistant',
+                        lock: [_set.slideDeleted, _set.lostConnect, _set.noSlides, _set.disableOnStart],
+                        caption: me.capSmartPicker,
+                        action: 'smart-picker',
+                        dataHint: '1',
+                        dataHintDirection: 'bottom',
+                        dataHintOffset: 'small'
+                    });
+                    me.paragraphControls.push(me.btnSmartPicker);
+                    me.lockControls.push(me.btnSmartPicker);
+
                     me.btnInsertTextArt = new Common.UI.Button({
                         id: 'tlbtn-inserttextart',
                         cls: 'btn-toolbar x-huge icon-top',
@@ -1549,6 +1563,7 @@ define([
                 _injectComponent('#slot-btn-insertequation', this.btnInsertEquation);
                 _injectComponent('#slot-btn-inssymbol', this.btnInsertSymbol);
                 _injectComponent('#slot-btn-insertlink', this.btnInsertHyperlink);
+                _injectComponent('#slot-btn-smartpicker', this.btnSmartPicker);
                 _injectComponent('#slot-btn-inserttable', this.btnInsertTable);
                 _injectComponent('#slot-btn-insertchart', this.btnInsertChart);
                 _injectComponent('#slot-btn-instextart', this.btnInsertTextArt);
@@ -1743,6 +1758,7 @@ define([
                 this.btnInsertSmartArt.updateHint(this.tipInsertSmartArt);
                 this.btnInsertEquation.updateHint(this.tipInsertEquation);
                 this.btnInsertSymbol.updateHint(this.tipInsertSymbol);
+                this.btnSmartPicker.updateHint(this.tipSmartPicker);
                 this.btnInsertTextArt.updateHint(this.tipInsertTextArt);
                 this.btnInsAudio && this.btnInsAudio.updateHint(this.tipInsertAudio);
                 this.btnInsVideo && this.btnInsVideo.updateHint(this.tipInsertVideo);

@@ -193,6 +193,7 @@ define([], function () {
             view.menuAddCommentPara.on('click', _.bind(me.addComment, me));
             view.menuAddCommentTable.on('click', _.bind(me.addComment, me));
             view.menuAddCommentImg.on('click', _.bind(me.addComment, me));
+            view.menuParaAssistant.on('click', _.bind(me.onAskNcAssistant, me));
             view.menuImgReplace.menu.on('item:click', _.bind(me.onImgReplace, me));
             view.langParaMenu.menu.on('item:click', _.bind(me.onLangMenu, me, 'para'));
             view.langTableMenu.menu.on('item:click', _.bind(me.onLangMenu, me, 'table'));

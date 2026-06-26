@@ -796,6 +796,11 @@ define([
                 }
                 svgIcon.length && !!opts.next && svgIcon.attr('href', '#' + opts.next);
 
+                if (!svgIcon.length && opts.next) {
+                    var svgUse = $(this.el).find('svg.icon use');
+                    svgUse.length && svgUse.attr('href', '#' + opts.next);
+                }
+
                 if ( !!me.options.signals ) {
                     if ( !(me.options.signals.indexOf('icon:changed') < 0) ) {
                         me.trigger('icon:changed', me, opts);

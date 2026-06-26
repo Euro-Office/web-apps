@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html style="width:100%; height:100%;">
 <head>
-    <title>ONLYOFFICE Visio Editor</title>
+    <title>{{APP_TITLE_TEXT}} Visio Editor</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=IE8"/>
     <meta name="description" content="" />

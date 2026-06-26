@@ -91,13 +91,13 @@ define([
             this._locked = false;
 
             this.OriginalFillType = Asc.c_oAscFill.FILL_TYPE_SOLID;
-            this.ShapeColor = {Value: 1, Color: 'transparent'};  // value=1 - цвет определен - прозрачный или другой, value=0 - цвет не определен, рисуем прозрачным
+            this.ShapeColor = {Value: 1, Color: 'transparent'};  // value=1 - color is defined: transparent or another color, value=0 - color is not defined, draw as transparent
             this.GradFillType = Asc.c_oAscFillGradType.GRAD_LINEAR;
             this.GradColor = { values: [0, 100], colors: ['000000', 'ffffff'], currentIdx: 0};
             this.GradRadialDirectionIdx = 0;
             this.GradLinearDirectionType = 0;
 
-            this.BorderColor = {Value: 1, Color: 'transparent'};  // value=1 - цвет определен - прозрачный или другой, value=0 - цвет не определен, рисуем прозрачным
+            this.BorderColor = {Value: 1, Color: 'transparent'};  // value=1 - color is defined: transparent or another color, value=0 - color is not defined, draw as transparent
             this.BorderSize = 0;
             this.BorderType = Asc.c_oDashType.solid;
 
@@ -632,9 +632,9 @@ define([
                     }
                 }
 
-                if (fill===null || fill===undefined || fill_type===null) { // заливка не совпадает у неск. фигур
+                if (fill===null || fill===undefined || fill_type===null) { // fills differ across several shapes
                     this.OriginalFillType = null;
-                } else if (fill_type==Asc.c_oAscFill.FILL_TYPE_NOFILL) { // заливки нет
+                } else if (fill_type==Asc.c_oAscFill.FILL_TYPE_NOFILL) { // no fill
                     this.OriginalFillType = Asc.c_oAscFill.FILL_TYPE_NOFILL;
                 } else if (fill_type==Asc.c_oAscFill.FILL_TYPE_SOLID) {
                     fill = fill.get_fill();
@@ -653,7 +653,7 @@ define([
                     this.GradColor.colors[this.GradColor.colors.length-1] = 'ffffff';
                 } else if (fill_type==Asc.c_oAscFill.FILL_TYPE_GRAD) {
                     fill = fill.get_fill();
-                    var gradfilltype = fill.get_grad_type();  // null - не совпадают у нескольких фигур
+                    var gradfilltype = fill.get_grad_type();  // null when values differ across several shapes
                     if (this._state.GradFillType !== gradfilltype || this.GradFillType !== gradfilltype) {
                         this.GradFillType = gradfilltype;
                         rec = undefined;

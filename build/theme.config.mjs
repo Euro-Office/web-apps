@@ -19,6 +19,16 @@ if (fs.existsSync(configPath)) {
   meta = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 }
 
+// Copy theme mobile overrides to a neutral stub path that all editor app.less files import.
+// Runs once at module load (before webpack starts). Generates an empty stub when the theme
+// has no mobile-overrides.less so the import in app.less always resolves.
+const overrideSrc = path.join(rootDir, 'theme', theme, 'assets', 'less', 'overrides', 'mobile-overrides.less');
+const overrideDst = path.join(rootDir, 'apps', 'common', 'mobile', 'resources', 'less', '_theme-mobile-overrides.less');
+try {
+  if (fs.existsSync(overrideSrc)) fs.copyFileSync(overrideSrc, overrideDst);
+  else fs.writeFileSync(overrideDst, '// no theme mobile overrides\n');
+} catch (e) { console.warn('[theme.config] mobile overrides copy failed:', e.message); }
+
 // Resolve a brand value with priority: env var > config.json > default.
 // Empty string in config.json is respected (explicit "hide this"), matching
 // build/Gruntfile.js _themVal semantics on the desktop side.

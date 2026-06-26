@@ -74,7 +74,7 @@ define([
             this.BorderSize         = {ptValue: 0, pxValue: 0};
             this.paragraphShade     = 'transparent';
             this._changedProps      = null;
-            this.ChangedBorders     = undefined; // undefined - не менялись, null - применялись пресеты, отправлять Borders, object - менялись отдельные границы, отправлять ChangedBorders
+            this.ChangedBorders     = undefined; // undefined - unchanged, null - presets were applied, send Borders, object - individual borders changed, send ChangedBorders
             this._noApply           = true;
             this.Margins            = undefined;
 

@@ -83,7 +83,7 @@ define([], function () { 'use strict';
             template: _.template([
                 '<span class="input-group combobox <%= cls %> combo-langs" id="<%= id %>" style="<%= style %>">',
                     '<input type="text" class="form-control">',
-                    '<span class="icon input-icon spellcheck-lang toolbar__icon btn-ic-docspell"></span>',
+                    '<svg class="icon uni-scale input-icon spellcheck-lang"><use href="#btn-ic-docspell"></use></svg>',
                     '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">',
                         '<span class="caret" />',
                     '</button>',
@@ -95,7 +95,7 @@ define([], function () { 'use strict';
                 '<li id="<%= id %>" data-value="<%= value %>">',
                     '<a tabindex="-1" type="menuitem" langval="<%= value %>">',
                         '<div>',
-                            '<i class="icon <% if (spellcheck) { %> toolbar__icon btn-ic-docspell spellcheck-lang <% } %>"></i>',
+                            '<svg class="icon uni-scale<% if (spellcheck) { %> spellcheck-lang<% } %>"><% if (spellcheck) { %><use href="#btn-ic-docspell"></use><% } %></svg>',
                             '<%= displayValue %>',
                         '</div>',
                         '<label style="opacity: 0.6"><%= displayValueEn %></label>',

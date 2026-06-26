@@ -464,7 +464,7 @@ define([], function () {
                     this.standartcolors = standartcolors;
                 }
 
-                var effectСolors = [];
+                var effectColors = [];
 
                 for (i = 0; i < 6; i++) {
                     for (j = 0; j < 10; j++) {
@@ -482,10 +482,10 @@ define([], function () {
                             effectValue: this.ThemeValues[j],
                             tip: colorName
                         };
-                        effectСolors.push(item);
+                        effectColors.push(item);
                     }
                 }
-                this.effectcolors = effectСolors;
+                this.effectcolors = effectColors;
             },
 
             getEffectColors: function () {

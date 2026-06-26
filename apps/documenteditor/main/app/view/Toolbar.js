@@ -1047,6 +1047,20 @@ define([
                     });
                     this.paragraphControls.push(this.btnInsertSymbol);
 
+                    this.btnSmartPicker = new Common.UI.Button({
+                        id: 'tlbtn-smartpicker',
+                        cls: 'btn-toolbar x-huge icon-top',
+                        iconCls: 'toolbar__icon btn-nc-assistant',
+                        lock: [_set.lostConnect, _set.disableOnStart, _set.viewMode],
+                        caption: me.capSmartPicker,
+                        action: 'smart-picker',
+                        dataHint: '1',
+                        dataHintDirection: 'bottom',
+                        dataHintOffset: 'small'
+                    });
+                    this.paragraphControls.push(this.btnSmartPicker);
+                    this.lockControls.push(this.btnSmartPicker);
+
                     this.btnDropCap = new Common.UI.Button({
                         id: 'tlbtn-dropcap',
                         cls: 'btn-toolbar x-huge icon-top',
@@ -2210,6 +2224,9 @@ define([
                 _injectComponent('#slot-btn-inssmartart', this.btnInsertSmartArt);
                 _injectComponent('#slot-btn-insequation', this.btnInsertEquation);
                 _injectComponent('#slot-btn-inssymbol', this.btnInsertSymbol);
+
+                _injectComponent('#slot-btn-smartpicker', this.btnSmartPicker);
+
                 _injectComponent('#slot-btn-pageorient', this.btnPageOrient);
                 _injectComponent('#slot-btn-pagemargins', this.btnPageMargins);
                 _injectComponent('#slot-btn-pagesize', this.btnPageSize);
@@ -2642,6 +2659,7 @@ define([
                 this.btnInsertSmartArt.updateHint(this.tipInsertSmartArt);
                 this.btnInsertEquation.updateHint(this.tipInsertEquation);
                 this.btnInsertSymbol.updateHint(this.tipInsertSymbol);
+                this.btnSmartPicker.updateHint(this.tipSmartPicker);
                 this.btnDropCap.updateHint(this.tipDropCap);
                 this.btnContentControls.updateHint(this.tipControls);
                 this.btnColumns.updateHint(this.tipColumns);

@@ -139,7 +139,7 @@ define([
                     autoWidth:       true,
                     itemTemplate: _.template([
                         '<div  class = "btn_item x-huge" id = "<%= id %>" style = "width: ' + itemWidth + 'px;height: ' + itemHeight + 'px;">',
-                        '<div class = "icon toolbar__icon options__icon <%= imageUrl %>"></div>',
+                        '<svg class=\"icon uni-scale options__icon\"><use href=\"#<%= imageUrl %>\"></use></svg>',
                         '<div class = "caption"><%= title %></div>',
                         '</div>'
                     ].join('')),

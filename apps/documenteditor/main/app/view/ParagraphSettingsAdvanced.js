@@ -66,7 +66,7 @@ define([
             this.BorderSize = {ptValue: 0, pxValue: 0};
             this.paragraphShade = 'transparent';
             this._changedProps = null;
-            this.ChangedBorders = undefined; // undefined - не менялись, null - применялись пресеты, отправлять Borders, object - менялись отдельные границы, отправлять ChangedBorders
+            this.ChangedBorders = undefined; // undefined - unchanged, null - presets were applied, send Borders, object - individual borders changed, send ChangedBorders
             this.checkGroup = 0; // 1-strike, 2-sub/super-script, 3-caps
             this._noApply = true;
             this._tabListChanged = false;
