@@ -1453,6 +1453,78 @@ define([
                                     value: [120, 235]
                                 },
                                 {
+                                    caption: 'Trade Paperback (small)',
+                                    subtitle: '13,97cm x 21,59cm',
+                                    template: pageSizeTemplate,
+                                    checkable: true,
+                                    toggleGroup: 'menuPageSize',
+                                    value: [139.7, 215.9]
+                                },
+                                {
+                                    caption: 'Trade Paperback (Large)',
+                                    subtitle: '15,24cm x 22,86cm',
+                                    template: pageSizeTemplate,
+                                    checkable: true,
+                                    toggleGroup: 'menuPageSize',
+                                    value: [152.4, 228.6]
+                                },
+                                {
+                                    caption: '6.14x9.21',
+                                    subtitle: '15,6cm x 23,39cm',
+                                    template: pageSizeTemplate,
+                                    checkable: true,
+                                    toggleGroup: 'menuPageSize',
+                                    value: [156, 233.9]
+                                },
+                                {
+                                    caption: '7x10',
+                                    subtitle: '17,78cm x 25,4cm',
+                                    template: pageSizeTemplate,
+                                    checkable: true,
+                                    toggleGroup: 'menuPageSize',
+                                    value: [177.8, 254]
+                                },
+                                {
+                                    caption: '8.25x11',
+                                    subtitle: '20,95cm x 27,94cm',
+                                    template: pageSizeTemplate,
+                                    checkable: true,
+                                    toggleGroup: 'menuPageSize',
+                                    value: [209.5, 279.4]
+                                },
+                                {
+                                    caption: 'Mass-Market Paperback',
+                                    subtitle: '10,8cm x 17,45cm',
+                                    template: pageSizeTemplate,
+                                    checkable: true,
+                                    toggleGroup: 'menuPageSize',
+                                    value: [107.95, 174.5]
+                                },
+                                {
+                                    caption: 'A Format',
+                                    subtitle: '11cm x 17,8cm',
+                                    template: pageSizeTemplate,
+                                    checkable: true,
+                                    toggleGroup: 'menuPageSize',
+                                    value: [110, 178]
+                                },
+                                {
+                                    caption: 'Penguin',
+                                    subtitle: '11,1cm x 18,1cm',
+                                    template: pageSizeTemplate,
+                                    checkable: true,
+                                    toggleGroup: 'menuPageSize',
+                                    value: [111, 181]
+                                },
+                                {
+                                    caption: 'B Format',
+                                    subtitle: '13,8cm x 21,6cm',
+                                    template: pageSizeTemplate,
+                                    checkable: true,
+                                    toggleGroup: 'menuPageSize',
+                                    value: [138, 216]
+                                },
+                                {
                                     caption: 'Super B/A3',
                                     subtitle: '30,5cm x 48,7cm',
                                     template: pageSizeTemplate,
