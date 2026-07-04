@@ -350,9 +350,6 @@ define([
             // a horizontal trackpad gesture reports deltaX, a vertical wheel deltaY -
             // either one navigates the tab bar
             var delta = e.deltaX || e.deltaY;
-            if (delta === undefined || delta === null) { // legacy mousewheel/DOMMouseScroll
-                delta = e.wheelDelta ? -e.wheelDelta : (e.detail || 0);
-            }
             if (!delta) return;
 
             // normalize line/page based deltas to pixels for a consistent feel
