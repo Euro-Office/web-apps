@@ -412,9 +412,6 @@ define([], function () {
                 '<tr class="spellcheck">',
                     '<td colspan="2"><span id="fms-chb-ignore-numbers-words"></span></td>',
                 '</tr>',
-                '<tr class="spellcheck">',
-                    '<td colspan="2"><span id="fms-chb-wavy-line"></span></td>',
-                '</tr>',
                 '<tr  class="edit">',
                     '<td colspan="2"><button type="button" class="btn btn-text-default" id="fms-btn-auto-correct" style="width:auto; display: inline-block;padding-right: 10px;padding-left: 10px;" data-hint="2" data-hint-direction="bottom" data-hint-offset="big"><%= scope.txtAutoCorrect %></button></div></td>',
                 '</tr>',
@@ -899,14 +896,6 @@ define([], function () {
                 dataHintOffset: 'small'
             });
 
-            this.chWavyLine = new Common.UI.CheckBox({
-                el: $markup.findById('#fms-chb-wavy-line'),
-                labelText: this.strSpellcheckWavyLine,
-                dataHint: '2',
-                dataHintDirection: 'left',
-                dataHintOffset: 'small'
-            });
-
             this.chDateSystem = new Common.UI.CheckBox({
                 el: $markup.findById('#fms-chb-date-1904'),
                 labelText: this.strDateFormat1904,
@@ -1241,7 +1230,6 @@ define([], function () {
 
                 this.chIgnoreUppercase.setValue(Common.Utils.InternalSettings.get("sse-spellcheck-ignore-uppercase-words"));
                 this.chIgnoreNumbers.setValue(Common.Utils.InternalSettings.get("sse-spellcheck-ignore-numbers-words"));
-                this.chWavyLine.setValue(Common.Utils.InternalSettings.get("sse-spellcheck-wavy-line"));
                 this.chDateSystem.setValue(this.api.asc_getDate1904());
             }
             if (this.mode.isEdit) {
@@ -1346,9 +1334,6 @@ define([], function () {
                 value = this.chIgnoreNumbers.isChecked();
                 Common.localStorage.setBool("sse-spellcheck-ignore-numbers-words", value);
                 Common.Utils.InternalSettings.set("sse-spellcheck-ignore-numbers-words", value);
-                value = this.chWavyLine.isChecked();
-                Common.localStorage.setBool("sse-spellcheck-wavy-line", value);
-                Common.Utils.InternalSettings.set("sse-spellcheck-wavy-line", value);
 
                 if (!this.cmbDictionaryLanguage.isDisabled()) {
                     value = this.cmbDictionaryLanguage.getValue();
@@ -1554,7 +1539,6 @@ define([], function () {
         strDictionaryLanguage: 'Dictionary language',
         strIgnoreWordsInUPPERCASE: 'Ignore words in UPPERCASE',
         strIgnoreWordsWithNumbers: 'Ignore words with numbers',
-        strSpellcheckWavyLine: 'Use wavy underline for misspelled words',
         txtAutoCorrect: 'AutoCorrect options...',
         txtFastTip: 'Real-time co-editing. All changes are saved automatically',
         txtStrictTip: 'Use the \'Save\' button to sync the changes you and others make',

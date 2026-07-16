@@ -1028,11 +1028,6 @@ define([
                     var ignoreNumbers = Common.localStorage.getBool("sse-spellcheck-ignore-numbers-words", true);
                     Common.Utils.InternalSettings.set("sse-spellcheck-ignore-numbers-words", ignoreNumbers);
                     this.api.asc_ignoreNumbers(ignoreNumbers);
-                    var wavyLine = Common.localStorage.getBool("sse-spellcheck-wavy-line", true);
-                    Common.Utils.InternalSettings.set("sse-spellcheck-wavy-line", wavyLine);
-                    var spprops = new AscCommon.CSpellCheckSettings();
-                    spprops.put_WavyLine(wavyLine);
-                    this.api.asc_setSpellCheckSettings(spprops);
                     /** spellcheck settings end **/
                 }
 

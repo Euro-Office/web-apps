@@ -3341,7 +3341,6 @@
   "SSE.Views.FileMenuPanels.MainSettingsGeneral.strShowOthersChanges": "Show changes from other users",
   "SSE.Views.FileMenuPanels.MainSettingsGeneral.strShowResolvedComments": "Show resolved comments",
   "SSE.Views.FileMenuPanels.MainSettingsGeneral.strSmoothScroll": "Snapped to the grid while scrolling",
-  "SSE.Views.FileMenuPanels.MainSettingsGeneral.strSpellcheckWavyLine": "Use wavy underline for misspelled words",
   "SSE.Views.FileMenuPanels.MainSettingsGeneral.strStrict": "Strict",
   "SSE.Views.FileMenuPanels.MainSettingsGeneral.strTabStyle": "Tab style",
   "SSE.Views.FileMenuPanels.MainSettingsGeneral.strTheme": "Interface theme",

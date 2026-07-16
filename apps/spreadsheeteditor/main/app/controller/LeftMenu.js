@@ -578,11 +578,6 @@ define([
                 this.api.asc_ignoreUppercase(value);
                 value = Common.localStorage.getBool("sse-spellcheck-ignore-numbers-words");
                 this.api.asc_ignoreNumbers(value);
-                value = Common.localStorage.getBool("sse-spellcheck-wavy-line", true);
-                Common.Utils.InternalSettings.set("sse-spellcheck-wavy-line", value);
-                var spprops = new AscCommon.CSpellCheckSettings();
-                spprops.put_WavyLine(value);
-                this.api.asc_setSpellCheckSettings(spprops);
                 value = Common.localStorage.getItem("sse-spellcheck-locale");
                 if (value) {
                     this.api.asc_setDefaultLanguage(parseInt(value));
