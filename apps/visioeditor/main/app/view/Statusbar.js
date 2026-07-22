@@ -363,7 +363,7 @@ define([
             },
 
             onBtnTabScroll: function(action, e) {
-                this.tabbar.setTabVisible(action);
+                this.tabbar.scrollByPage(action);
             },
 
             updateTabbarBorders: function() {

@@ -295,12 +295,7 @@ define([
                 elem.addEventListener ? elem.addEventListener( type, fn, false ) : elem.attachEvent( "on" + type, fn );
             };
 
-            if (Common.Utils.isMac) {
-                this.$bar[0].addEventListener('wheel', _.bind(this._onMouseWheelThrottled, this));
-            } else {
-                var eventname=(/Firefox/i.test(navigator.userAgent))? 'DOMMouseScroll' : 'mousewheel';
-                addEvent(this.$bar[0], eventname, _.bind(this._onMouseWheel,this));
-            }
+            this.$bar[0].addEventListener('wheel', _.bind(this._onMouseWheel, this), {passive: false});
             addEvent(this.$bar[0], 'dragstart', _.bind(function (event) {
                 event.dataTransfer.effectAllowed = 'copyMove';
             }, this));
@@ -349,46 +344,49 @@ define([
         },
 
         _onMouseWheel: function(e) {
-            var hidden  = this.checkInvisible(true),
-                forward = ((e.detail && -e.detail) || e.wheelDelta) < 0;
+            // nothing to scroll - let the event bubble through untouched
+            if (this.$bar[0].scrollWidth <= this.$bar[0].clientWidth) return;
 
-            if (forward) {
-                if (hidden.last) {
-                    this.setTabVisible('forward');
-                }
-            } else {
-                if (hidden.first) {
-                    this.setTabVisible('backward');
-                }
+            // a horizontal trackpad gesture reports deltaX, a vertical wheel deltaY -
+            // either one navigates the tab bar
+            var delta = e.deltaX || e.deltaY;
+            if (!delta) return;
+
+            // normalize line/page based deltas to pixels for a consistent feel
+            if (e.deltaMode === 1) {        // DOM_DELTA_LINE
+                delta *= 16;
+            } else if (e.deltaMode === 2) { // DOM_DELTA_PAGE
+                delta *= this.$bar.width();
             }
+
+            if (e.preventDefault) e.preventDefault();
+            this.scrollByDelta(delta);
+        },
+
+        // Scroll the tab bar by a logical pixel delta (positive scrolls towards the
+        // last tab). Used by both the mouse wheel and the scroll buttons so they
+        // behave consistently.
+        scrollByDelta: function(delta) {
+            if (this.tabs.length === 0 || !delta) return;
+
+            // append a trailing spacer so the last tab can be scrolled clear of the
+            // status bar buttons that overlap the right edge of the bar
+            if (delta > 0 && this.$bar.find('.separator-item').length === 0) {
+                this.$bar.append('<li class="separator-item"><span></span></li>');
+            }
+
+            // the browser clamps scrollLeft to the valid range; in RTL the end of the
+            // bar is reached by decreasing scrollLeft (negative scroll model)
+            this.$bar[0].scrollLeft += this.isRTL ? -delta : delta;
+
+            this.checkInvisible();
             Common.NotificationCenter.trigger('hints:clear');
         },
 
-        _onMouseWheelThrottled: function(e) {
-            var delta = (e.detail && -e.detail) || e.wheelDelta;
-            if (Math.abs(delta) < 10) {
-                return;
-            }
-
-            var now = Date.now();
-            if (this._lastWheelTime && now - this._lastWheelTime < 50) {
-                return;
-            }
-            this._lastWheelTime = now;
-
-            var hidden = this.checkInvisible(true);
-
-            if (delta < 0) {
-                if (hidden.last) {
-                    this.setTabVisible('forward');
-                }
-            } else {
-                if (hidden.first) {
-                    this.setTabVisible('backward');
-                }
-            }
-
-            Common.NotificationCenter.trigger('hints:clear');
+        // Scroll by roughly one page in the given direction ('forward'/'backward').
+        scrollByPage: function(direction) {
+            var page = Math.max(this.$bar.width() - 40, 40);
+            this.scrollByDelta(direction === 'backward' ? -page : page);
         },
 
         onProcessMouse: function(data) {
