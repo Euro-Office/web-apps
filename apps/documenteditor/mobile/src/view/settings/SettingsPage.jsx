@@ -26,6 +26,7 @@ import IconHelp from '@common-icons/icon-help.svg';
 import IconAbout from '@common-icons/icon-about.svg';
 import IconFeedbackForIos from '@common-ios-icons/icon-feedback.svg?ios';
 import IconFeedbackForAndroid from '@common-android-icons/icon-feedback.svg';
+import IconClose from '@common-android-icons/icon-close.svg';
 import IconReturnIos from '@common-ios-icons/icon-return.svg?ios';
 import IconReturnAndroid from '@common-android-icons/icon-return.svg';
 import IconDraw from '../../../../../common/mobile/resources/icons/draw.svg'
@@ -226,7 +227,9 @@ const SettingsPage = inject("storeAppOptions", "storeReview", "storeDocumentInfo
                     </ListItem>
                 }
                 {canCloseEditor &&
-                    <ListItem title={closeButtonText ?? t('Settings.textClose')} link="#" className='close-editor-btn no-indicator' onClick={() => Common.Notifications.trigger('close')}></ListItem>
+                    <ListItem title={closeButtonText ?? t('Settings.textClose')} link="#" className='close-editor-btn no-indicator' onClick={() => Common.Notifications.trigger('close')}>
+                        <SvgIcon slot="media" symbolId={IconClose.id} className={'icon icon-svg'} />
+                    </ListItem>
                 }
             </List>
         </Page>
