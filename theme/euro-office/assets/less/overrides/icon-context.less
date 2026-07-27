@@ -1,0 +1,58 @@
+// --------------------------------------------------------------------------
+// Context-aware SVG icon palette
+// Upstream palette: apps/common/main/resources/less/common.less
+// --------------------------------------------------------------------------
+
+// Preserve every semantic palette token by default. Components may opt into
+// a monochrome rendering by defining --icon-context-color on their SVG root.
+svg.icon {
+  color: var(--icon-context-color, var(--icon-gray-primary, #383838));
+}
+
+.icon-stroke-blue-primary {
+  stroke: var(--icon-context-color, var(--icon-blue-primary, #446eca));
+}
+
+.icon-fill-blue-primary {
+  fill: var(--icon-context-color, var(--icon-blue-primary, #446eca));
+}
+
+.icon-stroke-gray-primary {
+  stroke: var(--icon-context-color, var(--icon-gray-primary, #383838));
+}
+
+.icon-fill-gray-primary {
+  fill: var(--icon-context-color, var(--icon-gray-primary, #383838));
+}
+
+.icon-stroke-gray-secondary {
+  stroke: var(--icon-context-color, var(--icon-gray-secondary, #f3f3f3));
+}
+
+.icon-fill-gray-secondary {
+  fill: var(--icon-context-color, var(--icon-gray-secondary, #f3f3f3));
+}
+
+.icon-stroke-blue-secondary {
+  stroke: var(--icon-context-color, var(--icon-blue-secondary, #b7cff5));
+}
+
+.icon-fill-blue-secondary {
+  fill: var(--icon-context-color, var(--icon-blue-secondary, #b7cff5));
+}
+
+.icon-stroke-red {
+  stroke: var(--icon-context-color, var(--icon-red, #fca5a5));
+}
+
+.icon-fill-red {
+  fill: var(--icon-context-color, var(--icon-red, #fca5a5));
+}
+
+.icon-stroke-success {
+  stroke: var(--icon-context-color, var(--icon-success, #78b588));
+}
+
+.icon-fill-success {
+  fill: var(--icon-context-color, var(--icon-success, #78b588));
+}
