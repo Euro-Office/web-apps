@@ -1,111 +1,120 @@
 // --------------------------------------------------------------------------
-// Header Logo — per-editor-type icons
-// Upstream: apps/common/main/resources/less/header.less:176-189
-// Uses data-editor-type attribute on <body> (set in each editor's index.html)
-// to select the correct icon at runtime via CSS attribute selectors.
+// Desktop editor header
+// Upstream structure: apps/common/main/resources/less/header.less
+// Theme variables: apps/common/main/resources/less/colors-table-*.less
 // --------------------------------------------------------------------------
 
-// Shared sizing override (icons are 24×24 instead of 86×20 text logos)
-.extra #header-logo {
-  padding: 6px 6px 6px 12px;
-  i {
-    width: 20px;
-    height: 20px;
-    background-size: contain;
+// The theme is imported after the upstream color tables. Matching their
+// :root scope keeps these overrides deterministic without priority hacks.
+:root body[data-editor-type] {
+  --text-toolbar-header: @eo-header-foreground;
+  --icon-toolbar-header: @eo-header-foreground;
+
+  --header-component-normal-icon-opacity: 1;
+  --header-component-hover-icon-opacity: 1;
+  --header-component-active-icon-opacity: 1;
+  --header-component-active-hover-icon-opacity: 1;
+
+  --highlight-header-button-hover: fade(@eo-header-foreground, 16%);
+  --highlight-header-button-pressed: fade(@eo-header-foreground, 26%);
+  --highlight-header-input-hover: fade(@eo-header-foreground, 16%);
+  --highlight-header-input-pressed: fade(@eo-header-foreground, 22%);
+  --border-header-input-focused: fade(@eo-header-foreground, 55%);
+
+  // The upstream tab row draws this token as a one-pixel inset seam directly
+  // above the ribbon. It is unnecessary against the colored header.
+  --border-toolbar-active-panel-top: transparent;
+  --border-toolbar-z-clear: transparent;
+
+  .extra #header-logo {
+    padding: 6px 6px 6px 12px;
+
+    i {
+      width: 20px;
+      height: 20px;
+      background-size: contain;
+      opacity: 1;
+    }
+  }
+
+  // Header buttons use an inline SVG sprite. The context color keeps its
+  // semantic palette intact elsewhere while making this component monochrome.
+  .btn-header svg.icon {
+    --icon-context-color: var(--icon-toolbar-header);
+  }
+
+  .toolbar .extra svg.icon,
+  .btn-header svg.icon,
+  #box-document-title svg.icon {
+    color: var(--icon-toolbar-header);
+    fill: var(--icon-toolbar-header);
+  }
+
+  // The co-author group icon is not a .btn-header child.
+  .btn-users .inner-box-icon > svg {
+    color: var(--icon-toolbar-header);
+    fill: var(--icon-toolbar-header);
   }
 }
 
-// Document editor
-body[data-editor-type="document"] {
-  .extra #header-logo i,
-  .extra #header-logo.logo-light i {
-    background-image: ~"url('@{common-image-const-path}/header/icon-document.svg')";
-  }
+.eo-editor-header(@background-property; @avatar-text-property; @background; @avatar-text; @icon) {
+  @{background-property}: @background;
+  @{avatar-text-property}: @avatar-text;
 
-  &.theme-light,
-  &.theme-classic-light,
-  &.theme-dark,
-  &.theme-contrast-dark,
-  &.theme-night {
-    .extra #header-logo i,
-    .extra #header-logo.logo-light i {
-      background-image: ~"url('@{common-image-const-path}/header/icon-document-white.svg')";
+  .extra #header-logo {
+    i,
+    &.logo-light i {
+      background-image: ~"url('@{common-image-const-path}/header/icon-@{icon}-white.svg')";
     }
   }
 }
 
-// Spreadsheet editor
-body[data-editor-type="spreadsheet"] {
-  .extra #header-logo i,
-  .extra #header-logo.logo-light i {
-    background-image: ~"url('@{common-image-const-path}/header/icon-spreadsheet.svg')";
-  }
-
-  &.theme-light,
-  &.theme-classic-light,
-  &.theme-dark,
-  &.theme-contrast-dark,
-  &.theme-night {
-    .extra #header-logo i,
-    .extra #header-logo.logo-light i {
-      background-image: ~"url('@{common-image-const-path}/header/icon-spreadsheet-white.svg')";
-    }
-  }
+:root body[data-editor-type="document"] {
+  .eo-editor-header(
+    --toolbar-header-document;
+    --text-toolbar-header-on-background-document;
+    @eo-header-document-background;
+    @eo-header-document-avatar-text;
+    document
+  );
 }
 
-// Presentation editor
-body[data-editor-type="presentation"] {
-  .extra #header-logo i,
-  .extra #header-logo.logo-light i {
-    background-image: ~"url('@{common-image-const-path}/header/icon-presentation.svg')";
-  }
-
-  &.theme-light,
-  &.theme-classic-light,
-  &.theme-dark,
-  &.theme-contrast-dark,
-  &.theme-night {
-    .extra #header-logo i,
-    .extra #header-logo.logo-light i {
-      background-image: ~"url('@{common-image-const-path}/header/icon-presentation-white.svg')";
-    }
-  }
+:root body[data-editor-type="spreadsheet"] {
+  .eo-editor-header(
+    --toolbar-header-spreadsheet;
+    --text-toolbar-header-on-background-spreadsheet;
+    @eo-header-spreadsheet-background;
+    @eo-header-spreadsheet-avatar-text;
+    spreadsheet
+  );
 }
 
-// PDF editor
-body[data-editor-type="pdf"] {
-  .extra #header-logo i,
-  .extra #header-logo.logo-light i {
-    background-image: ~"url('@{common-image-const-path}/header/icon-pdf.svg')";
-  }
-
-  &.theme-light,
-  &.theme-classic-light,
-  &.theme-dark,
-  &.theme-contrast-dark,
-  &.theme-night {
-    .extra #header-logo i,
-    .extra #header-logo.logo-light i {
-      background-image: ~"url('@{common-image-const-path}/header/icon-pdf-white.svg')";
-    }
-  }
+:root body[data-editor-type="presentation"] {
+  .eo-editor-header(
+    --toolbar-header-presentation;
+    --text-toolbar-header-on-background-presentation;
+    @eo-header-presentation-background;
+    @eo-header-presentation-avatar-text;
+    presentation
+  );
 }
 
-// Visio (drawing) editor
-body[data-editor-type="drawing"] {
-  .extra #header-logo i,
-  .extra #header-logo.logo-light i {
-    background-image: ~"url('@{common-image-const-path}/header/icon-drawing.svg')";
-  }
+:root body[data-editor-type="pdf"] {
+  .eo-editor-header(
+    --toolbar-header-pdf;
+    --text-toolbar-header-on-background-pdf;
+    @eo-header-pdf-background;
+    @eo-header-pdf-avatar-text;
+    pdf
+  );
+}
 
-  &.theme-light,
-  &.theme-classic-light,
-  &.theme-dark,
-  &.theme-contrast-dark,
-  &.theme-night {
-    .extra #header-logo i,
-    .extra #header-logo.logo-light i {
-      background-image: ~"url('@{common-image-const-path}/header/icon-drawing-white.svg')";
-    }
-  }
+:root body[data-editor-type="drawing"] {
+  .eo-editor-header(
+    --toolbar-header-visio;
+    --text-toolbar-header-on-background-visio;
+    @eo-header-drawing-background;
+    @eo-header-drawing-avatar-text;
+    drawing
+  );
 }
