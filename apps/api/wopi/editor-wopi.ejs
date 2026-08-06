@@ -129,6 +129,23 @@ div {
                     "images": [{ "url": data.Values.url }]
                 });
             },
+            'Action_SetUsers': function (data) {
+                //response to UI_RequestUsers; "c" is echoed back by the host so the editor can
+                //route the list to the request that asked for it. Each user needs both "email"
+                //and "name" or Common.UI.ExternalUsers drops it from the list; "hasAccess"
+                //sorts users who can already open the file above a separator, "image" is the
+                //optional avatar. isPaginated must be present to keep the editor in
+                //server-side-search mode (undefined switches it to "fetch once, filter locally").
+                data && data.Values && docEditor.setUsers({
+                    "c": data.Values.c,
+                    "users": data.Values.users,
+                    "isPaginated": data.Values.isPaginated
+                });
+            },
+            'Action_SetActionLink': function (data) {
+                //response to UI_MakeActionLink; setActionLink takes the url as a bare string
+                data && data.Values && docEditor.setActionLink(data.Values.url);
+            },
             'Host_PostmessageReady': function (data) {
                 innerAlert('Host_PostmessageReady');
             }
@@ -248,6 +265,42 @@ div {
         var onRequestInsertImage = function (event) {
             insertImageType = event.data.c;
             _postMessage('UI_InsertGraphic', {});
+        };
+
+        var onRequestUsers = function (event) {
+            //see Common.Gateway.requestUsers: "c" is the operation type (mention/protect/info),
+            //"id" carries the user ids to resolve for c==="info", and from/count/search describe
+            //the mention autocomplete query. Forwarding search/from/count lets the host search
+            //server-side; it must then answer with isPaginated set, otherwise
+            //Common.UI.ExternalUsers caches the first response and never asks again.
+            _postMessage('UI_RequestUsers', {
+                "c": event.data.c,
+                "id": event.data.id,
+                "from": event.data.from,
+                "count": event.data.count,
+                "search": event.data.search
+            });
+        };
+
+        var onRequestSendNotify = function (event) {
+            //event.data is Comments.js' pickEMail payload: the emails are parsed out of the
+            //comment text, so they are exactly the ones the host handed over in Action_SetUsers
+            _postMessage('UI_SendNotify', {
+                "actionLink": event.data.actionLink,
+                "actionId": event.data.actionId,
+                "message": event.data.message,
+                "emails": event.data.emails
+            });
+        };
+
+        var onMakeActionLink = function (event) {
+            //event.data is {action: {type: "bookmark"|"internallink", data: <bookmark name|sheet!range>}};
+            //the host turns it into a document url carrying that anchor, and answers
+            //Action_SetActionLink. Comment links do not come through here - Comments.js builds those
+            //itself and passes them along with UI_SendNotify.
+            _postMessage('UI_MakeActionLink', {
+                "config": event.data
+            });
         };
 
         var onError = function (event) {
@@ -405,9 +458,28 @@ div {
                     "onRequestRename": fileInfo.SupportsRename && fileInfo.UserCanRename ? onRequestRename : undefined,
                     "onRequestSharingSettings": fileInfo.FileSharingPostMessage || fileInfo.FileSharingUrl ? onRequestSharingSettings : undefined,
                     "onRequestHistory": fileInfo.FileVersionUrl || fileInfo.FileVersionPostMessage ? onRequestHistory : undefined,
-                    "onRequestInsertImage": fileInfo.EnableInsertRemoteImage ? onRequestInsertImage : undefined
+                    "onRequestInsertImage": fileInfo.EnableInsertRemoteImage ? onRequestInsertImage : undefined,
+                    //onRequestUsers also answers c==="info" avatar lookups, which fire for every
+                    //user - gating it on comment rights would leave viewers without avatars
+                    "onRequestUsers": fileInfo.UserMentionPostMessage ? onRequestUsers : undefined,
+                    //the @/+ prompt follows onRequestSendNotify, so comment rights are checked here
+                    "onRequestSendNotify": permissionsComment && fileInfo.UserMentionPostMessage ? onRequestSendNotify : undefined,
+                    //"copy link to this comment/bookmark". Not gated on comment rights: bookmark
+                    //links are useful to a read-only reader too.
+                    "onMakeActionLink": fileInfo.UserMentionPostMessage ? onMakeActionLink : undefined
                 }
 			});
+
+            //Deep link into a comment/bookmark: the other half of onMakeActionLink and of the
+            //mention notifications. Set after the merges rather than inside them, so an absent
+            //param doesn't clobber an actionLink the host supplied via docs_api_config.
+            if (queryParams.actionlink) {
+                try {
+                    config.editorConfig.actionLink = JSON.parse(queryParams.actionlink);
+                } catch (e) {
+                    innerAlert("Ignoring malformed actionlink parameter");
+                }
+            }
 
             postMessageOrigin = fileInfo.PostMessageOrigin || "*";
             if (postMessageOrigin && (typeof postMessageOrigin === 'string') && postMessageOrigin.charAt(postMessageOrigin.length-1)=='/')
