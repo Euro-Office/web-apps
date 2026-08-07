@@ -317,9 +317,14 @@ define([
                 const viewport = DE.getController('Viewport').getView('Viewport');
                 viewport.hlayout.hideItemResizer('right', !isPlugin);
 
-                const widthFromStorage = Common.localStorage.getItem('de-rightmenu-width');
+                const widthFromStorage = Common.localStorage.getItem('de-rightmenu-width'),
+                    customization = this.mode && this.mode.customization,
+                    pluginsPanelWidth = customization && parseInt(customization.pluginsPanelWidth);
                 if(isPlugin && widthFromStorage) {
                     this.$el.width(parseInt(widthFromStorage));
+                } else if(isPlugin && pluginsPanelWidth > 0) {
+                    const maxPanelWidth = Math.floor(Common.Utils.innerWidth() / 2);
+                    this.$el.width(Math.max(MENU_BASE_WIDTH, Math.min(pluginsPanelWidth, maxPanelWidth)));
                 } else {
                     this.setInnerWidth(MENU_BASE_WIDTH);
                 }
