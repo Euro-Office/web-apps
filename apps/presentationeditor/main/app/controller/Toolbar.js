@@ -282,9 +282,6 @@ define([
             PE.getCollection('SlideLayouts').bind({
                 reset: me.onResetSlides.bind(this)
             });
-            Common.Gateway.on('setassistantavailable', function(available) {
-                Common.Assistant.setAvailable(!!available);
-            });
             Common.Gateway.on('setsmartpickeravailable', function(available) {
                 me._smartPickerAvailable = !!available;
                 me.toolbar.btnSmartPicker && me.toolbar.btnSmartPicker.setVisible(!!available);
