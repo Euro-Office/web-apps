@@ -124,8 +124,16 @@ if (window.Common === undefined) {
                 $me.trigger('setsmartpickeravailable', data);
             },
 
+            'setSmartPickerProviders': function(data) {
+                $me.trigger('setsmartpickerproviders', data);
+            },
+
             'setSmartPickerCancel': function() {
                 $me.trigger('setsmartpickercancel');
+            },
+
+            'setAssistantResult': function(data) {
+                $me.trigger('setassistantresult', data);
             },
 
             'setMailMergeRecipients': function(data) {
@@ -460,8 +468,22 @@ if (window.Common === undefined) {
                 _postMessage({event: 'onSubmit'});
             },
 
-            requestSmartPicker: function(selectedText, source) {
-                _postMessage({event: 'onRequestSmartPicker', data: { selectedText: selectedText || '', source: source || 'smartpicker' }});
+            // providerId targets one Nextcloud picker provider directly, so the
+            // editor can present the provider list itself instead of showing
+            // the Nextcloud provider-selection modal.
+            requestSmartPicker: function(selectedText, source, providerId) {
+                _postMessage({event: 'onRequestSmartPicker', data: {
+                    selectedText: selectedText || '',
+                    source: source || 'smartpicker',
+                    providerId: providerId || ''
+                }});
+            },
+
+            // Ask the Nextcloud host to perform one named operation on the user's
+            // behalf (see the integration's assistant.js for the allowlist). The
+            // host answers with setAssistantResult carrying the same id.
+            requestAssistant: function(id, op, params) {
+                _postMessage({event: 'onRequestAssistant', data: { id: id, op: op, params: params || {} }});
             },
 
             on: function(event, handler){

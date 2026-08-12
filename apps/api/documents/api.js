@@ -333,6 +333,7 @@
                 'onUserActionRequired': <user action callback> // send if the user needs to enter a password or select encoding/delimiters when opening a file
                 'onRequestFillingStatus': <request filling status for current role> // used in pdf-form fill forms mode
                 'onRequestSmartPicker': <request to open the Nextcloud Smart Picker>
+                'onRequestAssistant': <request one Nextcloud Assistant operation; answer with setAssistantResult>
                 'onStartFilling': <send when can start filling (form is completed and users are disconnected)> // send after startFilling method, used in pdf-form editing
             }
         }
@@ -802,9 +803,27 @@
             });
         };
 
+        // data: {providers: [{id, title, icon_url}]}. An object, not a bare array:
+        // Gateway relays these through jQuery's trigger(), which spreads an array
+        // into separate handler arguments, so a bare array arrives as its first
+        // element. Every sibling command here passes an object for the same reason.
+        var _setSmartPickerProviders = function(data) {
+            _sendCommand({
+                command: 'setSmartPickerProviders',
+                data: data
+            });
+        };
+
         var _setSmartPickerCancel = function() {
             _sendCommand({
                 command: 'setSmartPickerCancel'
+            });
+        };
+
+        var _setAssistantResult = function(data) {
+            _sendCommand({
+                command: 'setAssistantResult',
+                data: data
             });
         };
 
@@ -948,7 +967,9 @@
             insertPlainText          : _insertPlainText,
             setAssistantAvailable    : _setAssistantAvailable,
             setSmartPickerAvailable  : _setSmartPickerAvailable,
+            setSmartPickerProviders  : _setSmartPickerProviders,
             setSmartPickerCancel     : _setSmartPickerCancel,
+            setAssistantResult       : _setAssistantResult,
             setMailMergeRecipients: _setMailMergeRecipients,
             setRevisedFile      : _setRevisedFile,
             setFavorite         : _setFavorite,

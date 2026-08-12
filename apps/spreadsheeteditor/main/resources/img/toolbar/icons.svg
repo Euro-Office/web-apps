@@ -287,10 +287,8 @@
     <path d="M12.7 12a.7.7 0 1 1-1.4 0 .7.7 0 0 1 1.4 0Zm0 5a.7.7 0 1 1-1.4 0 .7.7 0 0 1 1.4 0Zm0-10a.7.7 0 1 1-1.4 0 .7.7 0 0 1 1.4 0Z" class="icon-stroke-gray-primary"/>
 </symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-more">
     <path d="M7.7 12a.7.7 0 1 1-1.4 0 .7.7 0 0 1 1.4 0Zm5 0a.7.7 0 1 1-1.4 0 .7.7 0 0 1 1.4 0Zm5 0a.7.7 0 1 1-1.4 0 .7.7 0 0 1 1.4 0Z" class="icon-stroke-gray-primary"/>
-</symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" id="btn-nc-assistant">
-  <path
-    d="M 17.385,3.538 16.416,5.653 14.308,6.615 16.416,7.584 17.385,9.692 18.347,7.584 20.462,6.615 18.347,5.653 Z M 9.692,5.846 7.769,10.077 3.538,12 7.769,13.923 9.692,18.154 11.615,13.923 15.847,12 11.615,10.077 Z m 7.693,8.462 -0.969,2.108 -2.108,0.969 2.108,0.962 0.969,2.116 0.962,-2.116 2.116,-0.962 -2.116,-0.969 z"
-    stroke="currentColor" stroke-width="0.6" stroke-linejoin="round"/>
+</symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-nc-add">
+    <path d="M7.5 12h9M12 7.5v9" stroke-linecap="butt" class="icon-stroke-gray-primary"/>
 </symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-nextitem">
     <path d="M10.43 6.43 16 12l-5.57 5.57" class="icon-stroke-gray-primary"/>
 </symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-numbering-rtl">
@@ -527,6 +525,8 @@
     <path d="M6.5 21.5h11m-9-10h11m-13-5h11m-7 10h11" class="icon-stroke-gray-primary"/>
 </symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-big-more">
     <path stroke-width="1.5" d="M14.75 14a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm-6 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" class="icon-stroke-gray-primary"/>
+</symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-big-nc-add">
+    <path d="M 5.5,14 22.5,14 M 14,5.5 14,22.5" class="icon-stroke-gray-primary"/>
 </symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-big-sheet-view">
     <path d="M14 20.5c-6.5 0-9.5-6.5-9.5-6.5s3-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3 6.5-9.5 6.5Z" class="icon-stroke-gray-primary"/>
     <path d="M16.5 14c0 .74-.322 1.406-.833 1.863A2.5 2.5 0 1 1 16.5 14Z" class="icon-stroke-gray-primary"/>
