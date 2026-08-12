@@ -128,6 +128,10 @@ if (window.Common === undefined) {
                 $me.trigger('setsmartpickerproviders', data);
             },
 
+            'insertAssistantResult': function(data) {
+                $me.trigger('insertassistantresult', data);
+            },
+
             'setSmartPickerCancel': function() {
                 $me.trigger('setsmartpickercancel');
             },

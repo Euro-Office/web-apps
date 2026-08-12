@@ -814,6 +814,14 @@
             });
         };
 
+        // data: {html, text}. Insert an Assistant result, keeping its formatting.
+        var _insertAssistantResult = function(data) {
+            _sendCommand({
+                command: 'insertAssistantResult',
+                data: data
+            });
+        };
+
         var _setSmartPickerCancel = function() {
             _sendCommand({
                 command: 'setSmartPickerCancel'
@@ -968,6 +976,7 @@
             setAssistantAvailable    : _setAssistantAvailable,
             setSmartPickerAvailable  : _setSmartPickerAvailable,
             setSmartPickerProviders  : _setSmartPickerProviders,
+            insertAssistantResult    : _insertAssistantResult,
             setSmartPickerCancel     : _setSmartPickerCancel,
             setAssistantResult       : _setAssistantResult,
             setMailMergeRecipients: _setMailMergeRecipients,
