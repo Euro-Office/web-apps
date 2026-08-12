@@ -1582,18 +1582,27 @@ define([
                     if (cur.slice(-1) === '/') {
                         cur = cur.slice(0, -1);
                     }
-                    // asc_getText() returns the formula-bar value, so appending to
-                    // a formula would write "=SUM(A1:A10)https://..." into the cell
-                    // and silently break it (#NAME?). Refuse instead of corrupting
-                    // the sheet; the user can insert into an empty cell.
-                    if (cur.charAt(0) === '=') {
+                    // Never append to a cell that already holds something.
+                    //
+                    // asc_getText() returns the formula-bar value, so appending to a
+                    // formula writes "=SUM(A1:A10)https://..." and the SDK then fails
+                    // to parse it, leaving #NAME? and losing the formula. A value
+                    // fares no better: "42" becomes "42https://..." and stops being a
+                    // number. Both are silent data loss.
+                    //
+                    // Appending, replacing and rejecting are all defensible for a
+                    // non-empty cell, so pick one and say so: reject, and point at the
+                    // paths that are unambiguous -- an empty cell, or editing the cell,
+                    // where the branch above inserts at the cursor.
+                    if (cur !== '') {
                         Common.NotificationCenter.trigger('edit:complete');
                         Common.UI.warning({
-                            msg: this.txtLinkIntoFormula || 'This cell contains a formula. Insert the link into an empty cell instead.'
+                            msg: this.txtCellNotEmpty
+                                || 'This cell is not empty. Insert the link into an empty cell, or double-click the cell to place it inside.'
                         });
                         return;
                     }
-                    this.api.asc_insertInCell(cur + data, Asc.c_oAscPopUpSelectorType.None);
+                    this.api.asc_insertInCell(data, Asc.c_oAscPopUpSelectorType.None);
                 }
                 Common.NotificationCenter.trigger('storage:link-insert', data);
                 Common.NotificationCenter.trigger('edit:complete');
