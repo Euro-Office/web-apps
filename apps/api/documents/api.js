@@ -333,7 +333,6 @@
                 'onUserActionRequired': <user action callback> // send if the user needs to enter a password or select encoding/delimiters when opening a file
                 'onRequestFillingStatus': <request filling status for current role> // used in pdf-form fill forms mode
                 'onRequestSmartPicker': <request to open the Nextcloud Smart Picker>
-                'onRequestAssistant': <request one Nextcloud Assistant operation; answer with setAssistantResult>
                 'onStartFilling': <send when can start filling (form is completed and users are disconnected)> // send after startFilling method, used in pdf-form editing
             }
         }
@@ -828,13 +827,6 @@
             });
         };
 
-        var _setAssistantResult = function(data) {
-            _sendCommand({
-                command: 'setAssistantResult',
-                data: data
-            });
-        };
-
         var _setMailMergeRecipients = function(data) {
             _sendCommand({
                 command: 'setMailMergeRecipients',
@@ -978,7 +970,6 @@
             setSmartPickerProviders  : _setSmartPickerProviders,
             insertAssistantResult    : _insertAssistantResult,
             setSmartPickerCancel     : _setSmartPickerCancel,
-            setAssistantResult       : _setAssistantResult,
             setMailMergeRecipients: _setMailMergeRecipients,
             setRevisedFile      : _setRevisedFile,
             setFavorite         : _setFavorite,
