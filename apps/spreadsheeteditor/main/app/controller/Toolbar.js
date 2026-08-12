@@ -266,9 +266,6 @@ define([
 
             Common.NotificationCenter.on('app:ready', this.onAppReady.bind(this));
             Common.NotificationCenter.on('app:face', this.onAppShowed.bind(this));
-            Common.Gateway.on('setassistantavailable', function(available) {
-                Common.Assistant.setAvailable(!!available);
-            });
             Common.Gateway.on('setsmartpickeravailable', function(available) {
                 me._smartPickerAvailable = !!available;
                 me.toolbar.btnSmartPicker && me.toolbar.btnSmartPicker.setVisible(!!available);

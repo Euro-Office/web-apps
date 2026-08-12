@@ -136,10 +136,6 @@ if (window.Common === undefined) {
                 $me.trigger('setsmartpickercancel');
             },
 
-            'setAssistantResult': function(data) {
-                $me.trigger('setassistantresult', data);
-            },
-
             'setMailMergeRecipients': function(data) {
                 $me.trigger('setmailmergerecipients', data);
             },
@@ -481,13 +477,6 @@ if (window.Common === undefined) {
                     source: source || 'smartpicker',
                     providerId: providerId || ''
                 }});
-            },
-
-            // Ask the Nextcloud host to perform one named operation on the user's
-            // behalf (see the integration's assistant.js for the allowlist). The
-            // host answers with setAssistantResult carrying the same id.
-            requestAssistant: function(id, op, params) {
-                _postMessage({event: 'onRequestAssistant', data: { id: id, op: op, params: params || {} }});
             },
 
             on: function(event, handler){
