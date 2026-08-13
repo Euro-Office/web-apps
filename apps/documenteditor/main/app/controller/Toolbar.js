@@ -35,6 +35,7 @@ define([
     'core',
     'common/main/lib/component/Window',
     'common/main/lib/util/AssistantInsert',
+    'common/main/lib/util/SmartPicker',
     'common/main/lib/view/SmartPickerMenu',
     'documenteditor/main/app/view/Toolbar',
     'documenteditor/main/app/controller/PageLayout',
@@ -272,50 +273,22 @@ define([
                 Common.Views.SmartPickerMenu.setProviders(data && data.providers);
             });
             Common.Gateway.on('setsmartpickercancel', function() {
-                // Remove the "/" only if the toolbar button inserted it; a
-                // user-typed "/" is left in place.
-                if (me._smartPickerSlashArtificial && me.api && typeof me.api['pluginMethod_InputText'] === 'function') {
-                    me.api['pluginMethod_InputText']('', '/');
-                }
-                me._smartPickerSlashInserted = false;
-                me._smartPickerSlashArtificial = false;
+                // The "/" was typed by the user, so it stays -- as it does in
+                // Nextcloud's own editors when their picker is dismissed.
+                me._smartPicker.clear();
                 Common.NotificationCenter.trigger('edit:complete');
             });
-            $(document).on('keydown', function(e) {
-                // Remember the previous keystroke so "/" can tell whether it
-                // starts a word (see _slashCanTrigger). Modifier keydowns must be
-                // skipped: on a German layout "/" is Shift+7, so recording Shift
-                // would overwrite the space that actually preceded it and the
-                // trigger could never fire. Same for AltGr layouts.
-                // Only character-producing keys count as "the previous character";
-                // key.length === 1 is that test. Enter is kept as a line break.
-                if (e.key !== '/' && (e.key.length === 1 || e.key === 'Enter')) {
-                    me._lastTypedKey = e.key;
+            me._smartPicker = Common.Utils.SmartPicker.createPending();
+            Common.Utils.SmartPicker.installTrigger({
+                isAvailable: function() { return !!me._smartPickerAvailable; },
+                onActivity: function() { me._smartPicker.clear(); },
+                getHolder: function() { return $('#editor_sdk'); },
+                onPick: function(providerId, replace) {
+                    // replace is "/" plus whatever was typed after it; the reply
+                    // deletes exactly that before inserting the link.
+                    me._smartPicker.begin(replace);
+                    Common.Gateway.requestSmartPicker('', 'toolbar', providerId);
                 }
-                // Do not test altKey: browsers report AltGr as ctrl+alt, and on
-                // several layouts AltGr is how "/" is typed at all. Block only
-                // real shortcuts.
-                if (e.key !== '/' || (e.ctrlKey && !e.altKey) || e.metaKey) return;
-                // Permissive on purpose: sdkjs creates both #area_id (the input)
-                // and #area_id_main (the scrollable holder), and which one is the
-                // keydown target varies by editor and edit state. Anchoring this
-                // to /^area_id$/ silently killed the trigger.
-                var _tid = (e.target && e.target.id) || '';
-                if (!/area_id/.test(_tid)) {
-                    return;
-                }
-
-                // Like the Nextcloud editor, "/" only triggers at the start of a
-                // word -- after a space, a newline, or at the very beginning.
-                if (!me._slashCanTrigger()) {
-                    return;
-                }
-                if (!me._smartPickerAvailable) {
-                    return;
-                }
-                e.preventDefault();
-                me.onSmartPickerMenu();
-                return;
             });
         },
 
@@ -2058,16 +2031,13 @@ define([
 
         insertLink: function(data) { // gateway
             if (!this.api) return;
-            // The flag is only trusted briefly: a host that dismisses the
-            // picker without telling us would otherwise leave it stuck on,
-            // and the next unrelated insertLink would backspace a real character.
-            var fromSmartPicker = this._isSmartPickerPending();
-            if (fromSmartPicker) {
-                this._smartPickerSlashInserted = false;
-                this._smartPickerSlashArtificial = false;
-                if (typeof this.api['pluginMethod_InputText'] === 'function') {
-                    this.api['pluginMethod_InputText']('', '/');
-                }
+            // null when this reply is not the answer to our request, in which
+            // case nothing must be deleted -- see Common.Utils.SmartPicker.
+            var replace = this._smartPicker.consume();
+            if (replace && typeof this.api['pluginMethod_InputText'] === 'function') {
+                // Delete the "/" the user typed to open the menu. It really is
+                // in the document: the trigger does not cancel the keystroke.
+                this.api['pluginMethod_InputText']('', replace);
             }
             var props = new Asc.CHyperlinkProperty();
             props.put_Value(data);
@@ -2075,7 +2045,7 @@ define([
             props.put_Text(data);
             this.api.add_Hyperlink(props);
             Common.NotificationCenter.trigger('storage:link-insert', data);
-            if (fromSmartPicker) {
+            if (replace !== null) {
                 Common.NotificationCenter.trigger('edit:complete');
             }
         },
@@ -3550,77 +3520,10 @@ define([
             // Open Nextcloud's own Smart Picker, with no provider preselected so it
             // shows its provider list. Deliberately not our caret menu: that exists
             // to keep the "/" flow inside the editor, whereas this button is the
-            // "give me the full Nextcloud picker" entry point.
-            this._smartPickerAt = (new Date()).getTime();
+            // "give me the full Nextcloud picker" entry point. No request is
+            // registered: nothing was typed to get here, so the reply must take
+            // the ordinary insertLink path and delete nothing.
             Common.Gateway.requestSmartPicker('', 'toolbar', '');
-        },
-
-
-        /**
-         * Whether "/" should open the Smart Picker at the current position.
-         *
-         * Mirrors how Nextcloud does it. NcRichContenteditable configures
-         * Tribute.js with {trigger: '/', requireLeadingSpace: true,
-         * allowSpaces: false}, and Tribute's rule (tribute.min.js) is:
-         *
-         *     m >= 0 && (0 === m || !requireLeadingSpace
-         *                || /[\xA0\s]/g.test(textBeforeCaret.substring(m-1, m)))
-         *
-         * i.e. it fires at the start of the text, or when the single character
-         * before the trigger is whitespace. Tribute reads that from the *text*,
-         * which is why it is layout-independent. The editor exposes no cheap way
-         * to read the character before the caret, so this approximates it with the
-         * last character-producing keystroke: key.length === 1 is exactly that
-         * test and excludes Shift/Alt/AltGraph/arrows/F-keys without maintaining a
-         * list. Tracking every key was the original bug -- on a German layout "/"
-         * is Shift+7, so Shift overwrote the space that preceded it.
-         *
-         * @return {Boolean} true when "/" should open the picker
-         */
-        _slashCanTrigger: function() {
-            var prev = this._lastTypedKey;
-            if (prev === undefined) return true;                 // nothing typed yet
-            if (prev === 'Enter') return true;                   // start of a new line
-            if (prev.length === 1 && /[\xA0\s]/.test(prev)) return true;
-            return false;
-        },
-
-        /** Open the native Smart Picker menu at the caret. */
-        onSmartPickerMenu: function() {
-            var me = this;
-            if (!me.api) return;
-            // Never fail silently here: this runs from a keystroke, so a thrown
-            // error would look to the user like "/" simply does nothing.
-            try {
-                Common.Views.SmartPickerMenu.show({
-                    api: me.api,
-                    holderEl: $('#editor_sdk'),
-                    onPick: function(providerId) {
-                        me._smartPickerSlashInserted = true;
-                        me._smartPickerAt = (new Date()).getTime();
-                        Common.Gateway.requestSmartPicker('', 'toolbar', providerId);
-                    }
-                });
-            } catch (err) {
-                Common.UI.warning({msg: 'Smart Picker failed to open: ' + (err && err.message)});
-            }
-        },
-
-        /**
-         * Whether a smart-picker round-trip is genuinely still in progress.
-         *
-         * @return {Boolean} true while the flag is fresh
-         */
-        _isSmartPickerPending: function() {
-            if (!this._smartPickerSlashInserted) return false;
-            var age = (new Date()).getTime() - (this._smartPickerAt || 0);
-            if (age > 120000) {
-                this._smartPickerSlashInserted = false;
-                this._smartPickerSlashArtificial = false;
-                this._smartPickerReplace = '';
-                return false;
-            }
-            return true;
         },
 
         onApiMathTypes: function(equation) {

@@ -33,6 +33,7 @@ define([
     'core',
     'common/main/lib/component/Window',
     'common/main/lib/util/AssistantInsert',
+    'common/main/lib/util/SmartPicker',
     'common/main/lib/view/SmartPickerMenu',
     'common/main/lib/view/SearchBar',
     'spreadsheeteditor/main/app/view/define',
@@ -283,59 +284,47 @@ define([
                 Common.Views.SmartPickerMenu.setProviders(data && data.providers);
             });
             Common.Gateway.on('setsmartpickercancel', function() {
-                // Nothing to undo: the button doesn't pre-insert "/", and a
-                // user-typed "/" is left in place. Just restore focus.
-                me._smartPickerSlashInserted = false;
-                me._smartPickerSlashArtificial = false;
-                me._smartPickerReplace = '';
+                // The "/" and its query were typed by the user, so they stay --
+                // as they do in Nextcloud's Text app when its picker is
+                // dismissed. Just restore focus.
+                me._smartPicker.clear();
                 Common.NotificationCenter.trigger('edit:complete');
             });
-            // Capture phase: while editing a cell the cell editor consumes the
-            // keydown before it bubbles to document, so a bubble-phase listener
-            // never sees mid-edit "/". Capture runs first, so "/" is caught both
-            // on a selected cell and mid-edit (e.g. "asdf /"); _smartPickerReplace
-            // then drives the "/" removal on insert.
-            document.addEventListener('keydown', function(e) {
-                // Remember the previous keystroke so "/" can tell whether it
-                // starts a word (see _slashCanTrigger). Modifier keydowns must be
-                // skipped: on a German layout "/" is Shift+7, so recording Shift
-                // would overwrite the space that actually preceded it and the
-                // trigger could never fire. Same for AltGr layouts.
-                // Only character-producing keys count as "the previous character";
-                // key.length === 1 is that test. Enter is kept as a line break.
-                if (e.key !== '/' && (e.key.length === 1 || e.key === 'Enter')) {
-                    me._lastTypedKey = e.key;
+            me._smartPicker = Common.Utils.SmartPicker.createPending();
+            Common.Utils.SmartPicker.installTrigger({
+                isAvailable: function() { return !!me._smartPickerAvailable; },
+                onActivity: function() { me._smartPicker.clear(); },
+                getHolder: function() { return $('#editor_sdk'); },
+                // Anchor to the active cell. There is no text caret here until a
+                // cell is being edited inline, so the caret element the other
+                // editors use sits wherever it was last left. This is how every
+                // other cell-anchored popup in this editor positions itself (see
+                // DocumentHolderExt), except that our container is
+                // position:fixed, so the holder-relative coordinates asc_get*
+                // returns have to be converted to viewport ones.
+                getAnchor: function() {
+                    if (!me.api || typeof me.api.asc_getActiveCellCoord !== 'function') {
+                        return null;
+                    }
+                    var coord = me.api.asc_getActiveCellCoord();
+                    if (!coord) return null;
+                    var holder = $('#editor_sdk')[0],
+                        rect = holder ? holder.getBoundingClientRect() : {left: 0, top: 0},
+                        // Clamp as the editor does: a cell scrolled above the
+                        // visible area reports a negative Y.
+                        y = coord.asc_getY() < 0 ? 0 : coord.asc_getY();
+                    return [
+                        Math.round(rect.left + coord.asc_getX()),
+                        Math.round(rect.top + y + coord.asc_getHeight())
+                    ];
+                },
+                onPick: function(providerId, replace) {
+                    // replace is "/" plus whatever was typed after it; the reply
+                    // deletes exactly that before inserting the link.
+                    me._smartPicker.begin(replace);
+                    Common.Gateway.requestSmartPicker('', 'toolbar', providerId);
                 }
-                // Native listener: e is already a KeyboardEvent, so there is no
-                // jQuery originalEvent to fall back to. Anchor the id match --
-                // area_id_main / area_id_parent are not the typing surface.
-                // Do not test altKey: browsers report AltGr as ctrl+alt, and on
-                // several layouts AltGr is how "/" is typed at all. Block only
-                // real shortcuts.
-                if (e.key !== '/' || (e.ctrlKey && !e.altKey) || e.metaKey) return;
-                // Permissive on purpose: sdkjs creates both #area_id (the input)
-                // and #area_id_main (the scrollable holder), and which one is the
-                // keydown target varies by editor and edit state. Anchoring this
-                // to /^area_id$/ silently killed the trigger.
-                var _tid = (e.target && e.target.id) || '';
-                if (!/area_id/.test(_tid)) {
-                    return;
-                }
-
-                if (!me._slashCanTrigger()) {
-                    return;
-                }
-                if (!me._smartPickerAvailable) {
-                    return;
-                }
-                e.preventDefault();
-                me.onSmartPickerMenu();
-                return;
-                me._smartPickerSlashInserted = true;
-                me._smartPickerAt = (new Date()).getTime();
-                me._smartPickerReplace = '/';
-                Common.Gateway.requestSmartPicker('', 'toolbar');
-            }, true);
+            });
         },
 
         setMode: function(mode) {
@@ -1144,101 +1133,13 @@ define([
             // Open Nextcloud's own Smart Picker, with no provider preselected so it
             // shows its provider list. Deliberately not our caret menu: that exists
             // to keep the "/" flow inside the editor, whereas this button is the
-            // "give me the full Nextcloud picker" entry point.
-            this._smartPickerAt = (new Date()).getTime();
+            // "give me the full Nextcloud picker" entry point. No request is
+            // registered: nothing was typed to get here, so the reply must take
+            // the ordinary insertLink path -- a real cell hyperlink, deleting
+            // nothing.
             Common.Gateway.requestSmartPicker('', 'toolbar', '');
         },
 
-
-        /**
-         * Whether "/" should open the Smart Picker at the current position.
-         *
-         * Mirrors how Nextcloud does it. NcRichContenteditable configures
-         * Tribute.js with {trigger: '/', requireLeadingSpace: true,
-         * allowSpaces: false}, and Tribute's rule (tribute.min.js) is:
-         *
-         *     m >= 0 && (0 === m || !requireLeadingSpace
-         *                || /[\xA0\s]/g.test(textBeforeCaret.substring(m-1, m)))
-         *
-         * i.e. it fires at the start of the text, or when the single character
-         * before the trigger is whitespace. Tribute reads that from the *text*,
-         * which is why it is layout-independent. The editor exposes no cheap way
-         * to read the character before the caret, so this approximates it with the
-         * last character-producing keystroke: key.length === 1 is exactly that
-         * test and excludes Shift/Alt/AltGraph/arrows/F-keys without maintaining a
-         * list. Tracking every key was the original bug -- on a German layout "/"
-         * is Shift+7, so Shift overwrote the space that preceded it.
-         *
-         * @return {Boolean} true when "/" should open the picker
-         */
-        _slashCanTrigger: function() {
-            var prev = this._lastTypedKey;
-            if (prev === undefined) return true;                 // nothing typed yet
-            if (prev === 'Enter') return true;                   // start of a new line
-            if (prev.length === 1 && /[\xA0\s]/.test(prev)) return true;
-            return false;
-        },
-
-        /** Open the native Smart Picker menu at the caret. */
-        onSmartPickerMenu: function() {
-            var me = this;
-            if (!me.api) return;
-            // Never fail silently here: this runs from a keystroke, so a thrown
-            // error would look to the user like "/" simply does nothing.
-            try {
-                Common.Views.SmartPickerMenu.show({
-                    api: me.api,
-                    holderEl: $('#editor_sdk'),
-                    // Anchor to the active cell. There is no text caret here unless a
-                    // cell is being edited inline, so the caret element the other
-                    // editors use sits wherever it was last left. This is how every
-                    // other cell-anchored popup in this editor positions itself
-                    // (see DocumentHolderExt), except that our container is
-                    // position:fixed, so the holder-relative coordinates asc_get*
-                    // returns have to be converted to viewport ones.
-                    getAnchor: function() {
-                        if (!me.api || typeof me.api.asc_getActiveCellCoord !== 'function') {
-                            return null;
-                        }
-                        var coord = me.api.asc_getActiveCellCoord();
-                        if (!coord) return null;
-                        var holder = $('#editor_sdk')[0],
-                            rect = holder ? holder.getBoundingClientRect() : {left: 0, top: 0},
-                            // Clamp as the editor does: a cell scrolled above the
-                            // visible area reports a negative Y.
-                            y = coord.asc_getY() < 0 ? 0 : coord.asc_getY();
-                        return [
-                            Math.round(rect.left + coord.asc_getX()),
-                            Math.round(rect.top + y + coord.asc_getHeight())
-                        ];
-                    },
-                    onPick: function(providerId) {
-                        me._smartPickerSlashInserted = true;
-                        me._smartPickerAt = (new Date()).getTime();
-                        Common.Gateway.requestSmartPicker('', 'toolbar', providerId);
-                    }
-                });
-            } catch (err) {
-                Common.UI.warning({msg: 'Smart Picker failed to open: ' + (err && err.message)});
-            }
-        },
-
-        /**
-         * Whether a smart-picker round-trip is genuinely still in progress.
-         *
-         * @return {Boolean} true while the flag is fresh
-         */
-        _isSmartPickerPending: function() {
-            if (!this._smartPickerSlashInserted) return false;
-            var age = (new Date()).getTime() - (this._smartPickerAt || 0);
-            if (age > 120000) {
-                this._smartPickerSlashInserted = false;
-                this._smartPickerSlashArtificial = false;
-                this._smartPickerReplace = '';
-                return false;
-            }
-            return true;
-        },
 
         onBtnPasteOptionsClick: function (btn, e) {
             var me = this;
@@ -1552,35 +1453,37 @@ define([
         
         insertLink: function(data) { // gateway
             if (!this.api) return;
-            // Only trust the flag briefly -- see _isSmartPickerPending().
-            if (this._isSmartPickerPending()) {
-                var replace = this._smartPickerReplace || '';
-                this._smartPickerSlashInserted = false;
-                this._smartPickerSlashArtificial = false;
-                this._smartPickerReplace = '';
+            // null when this reply is not the answer to our request, in which
+            // case nothing must be deleted -- see Common.Utils.SmartPicker.
+            var replace = this._smartPicker.consume();
+            if (replace !== null) {
                 // Insert the link as plain TEXT (a cell hyperlink is whole-cell
                 // and would re-link/replace the cell). NOTE: use isCellEdited,
                 // not asc_getCellEditMode (the latter isn't exported here).
                 if (this.api.isCellEdited) {
-                    // Editing (typed "/", or mid-edit + ribbon): insert at the
-                    // cursor and backspace the "/" trigger, keeping the cell in
-                    // edit mode so the user can keep typing. The ribbon button
-                    // blurs the cell-editor input, so re-focus it first or
-                    // pluginMethod's addText won't land. (text-input path never
-                    // adds a "+" the way asc_insertInCell while editing would.)
+                    // Editing the cell, which is the normal case here: typing
+                    // "/" into a selected cell starts inline editing, so the
+                    // trigger and its query are in the cell editor. Insert at
+                    // the cursor and backspace exactly those characters, keeping
+                    // the cell in edit mode so the user can keep typing. The
+                    // ribbon button blurs the cell-editor input, so re-focus it
+                    // first or pluginMethod's addText won't land. (text-input
+                    // path never adds a "+" the way asc_insertInCell while
+                    // editing would.)
                     var areaEl = document.getElementById('area_id');
                     if (areaEl && areaEl.focus) { try { areaEl.focus(); } catch (e) {} }
                     if (typeof this.api['pluginMethod_InputText'] === 'function') {
                         this.api['pluginMethod_InputText'](data, replace);
                     }
                 } else if (typeof this.api.asc_insertInCell === 'function') {
-                    // Not editing (selected cell): append to the committed cell
-                    // text via the value path (no formula operators, so no "+");
-                    // drop a trailing "/" trigger if present.
+                    // Not editing the cell -- the editor left edit mode while
+                    // the picker was open. Fall back to the committed cell text
+                    // via the value path (no formula operators, so no "+");
+                    // drop a trailing trigger if one was committed with it.
                     var cell = this.api.asc_getCellInfo && this.api.asc_getCellInfo();
                     var cur = (cell && cell.asc_getText && cell.asc_getText()) || '';
-                    if (cur.slice(-1) === '/') {
-                        cur = cur.slice(0, -1);
+                    if (replace && cur.slice(-replace.length) === replace) {
+                        cur = cur.slice(0, -replace.length);
                     }
                     // Never append to a cell that already holds something.
                     //
