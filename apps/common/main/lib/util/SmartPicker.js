@@ -43,11 +43,25 @@ define([], function () { 'use strict';
          * How long a request to the host may stay outstanding.
          *
          * A backstop, not the primary defence: any keystroke in the editor area
-         * clears the flag, and the user cannot type there while the host's
-         * picker is open. This only covers a host that neither answers nor
-         * cancels while the user also never touches the keyboard again.
+         * clears the flag (see onActivity), and the user cannot type there while
+         * the host's picker is open. This only covers a host that neither answers
+         * nor cancels while the user also never touches the keyboard again.
+         *
+         * It therefore has to outlast a person using the picker, because nothing
+         * else clears the record while that modal is in front of the editor. One
+         * minute did not: searching a name, scrolling a longer result list, or
+         * simply being interrupted takes longer than that, and expiring mid-flow
+         * does not fail safe -- insertLink still inserts the link, but consume()
+         * has already returned null, so the "/query" the user typed is left in
+         * the document beside it. Measured before this was raised: 11 s from
+         * picking a provider to confirming replaced the trigger correctly, 77 s
+         * left it behind.
+         *
+         * Expiring is only protective if the document moved under us without a
+         * keystroke, which the caret cannot do on its own -- so a generous value
+         * costs nothing that the keystroke clear was not already covering.
          */
-        PENDING_TIMEOUT: 60000,
+        PENDING_TIMEOUT: 600000,
 
         /**
          * Whether "/" should open the Smart Picker at the current position.
