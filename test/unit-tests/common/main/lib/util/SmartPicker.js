@@ -125,6 +125,46 @@
             });
         });
 
+        describe('triggerStillThere', function () {
+
+            // The word part before the caret, which is what asc_GetCurrentWord(-1)
+            // returns. "/" is punctuation, so it is not part of that word.
+            var apiWith = function (wordBeforeCaret) {
+                return {asc_GetCurrentWord: function () { return wordBeforeCaret; }};
+            };
+
+            it('permits the deletion when the query is still before the caret', function () {
+                assert.strictEqual(SmartPicker.triggerStillThere(apiWith('pro'), '/pro'), true);
+            });
+
+            it('refuses when something else is there now', function () {
+                // A co-editor's change, or the user clicking elsewhere: deleting
+                // here would eat characters that are not the trigger.
+                assert.strictEqual(SmartPicker.triggerStillThere(apiWith('bar'), '/pro'), false);
+                assert.strictEqual(SmartPicker.triggerStillThere(apiWith(''), '/pro'), false);
+                assert.strictEqual(SmartPicker.triggerStillThere(apiWith('prox'), '/pro'), false);
+            });
+
+            it('handles a bare "/" with nothing typed after it', function () {
+                // A caret sitting right after punctuation has no word before it.
+                assert.strictEqual(SmartPicker.triggerStillThere(apiWith(''), '/'), true);
+                assert.strictEqual(SmartPicker.triggerStillThere(apiWith('word'), '/'), false);
+            });
+
+            it('permits it where the editor cannot be asked', function () {
+                // asc_GetCurrentWord is exported by word/api.js only. Presentation
+                // and Spreadsheet keep the previous behaviour rather than lose the
+                // feature; they must not start refusing every deletion.
+                assert.strictEqual(SmartPicker.triggerStillThere({}, '/pro'), true);
+                assert.strictEqual(SmartPicker.triggerStillThere(null, '/pro'), true);
+            });
+
+            it('permits it when the probe throws', function () {
+                var api = {asc_GetCurrentWord: function () { throw new Error('boom'); }};
+                assert.strictEqual(SmartPicker.triggerStillThere(api, '/pro'), true);
+            });
+        });
+
         describe('createPending', function () {
 
             it('reports nothing outstanding before a request', function () {
