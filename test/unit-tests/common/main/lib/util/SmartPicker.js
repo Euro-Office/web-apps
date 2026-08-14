@@ -149,6 +149,27 @@
                 assert.strictEqual(pending.consume(), null);
             });
 
+            it('survives a person taking their time in the picker', function () {
+                // The failure this pins down: the picker is a modal in front of
+                // the editor, so nothing clears the record while it is open, and
+                // expiring mid-flow does not fail safe -- the link still gets
+                // inserted while the trigger text stays in the document. Two
+                // minutes is an ordinary amount of time to spend searching a name
+                // or being interrupted; it used to be past the limit.
+                var pending = SmartPicker.createPending();
+                var realNow = Date.now;
+                try {
+                    var now = 1000000;
+                    Date.now = function () { return now; };
+                    pending.begin('/pro');
+                    now += 120000;
+                    assert.strictEqual(pending.isPending(), true);
+                    assert.strictEqual(pending.consume(), '/pro');
+                } finally {
+                    Date.now = realNow;
+                }
+            });
+
             it('expires a stale request instead of eating a character', function () {
                 var pending = SmartPicker.createPending();
                 var realNow = Date.now;
