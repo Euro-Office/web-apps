@@ -2011,6 +2011,11 @@ define([
             // null when this reply is not the answer to our request, in which
             // case nothing must be deleted -- see Common.Utils.SmartPicker.
             var replace = this._smartPicker.consume();
+            // Only if it is still there; the primitive deletes blind. See
+            // Common.Utils.SmartPicker.triggerStillThere.
+            if (replace && !Common.Utils.SmartPicker.triggerStillThere(this.api, replace)) {
+                replace = null;
+            }
             if (replace && typeof this.api['pluginMethod_InputText'] === 'function') {
                 // Delete the "/" and the query typed after it. Both really are
                 // in the document: the trigger does not cancel the keystrokes.

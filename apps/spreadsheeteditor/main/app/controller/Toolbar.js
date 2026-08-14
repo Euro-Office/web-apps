@@ -1456,6 +1456,11 @@ define([
             // null when this reply is not the answer to our request, in which
             // case nothing must be deleted -- see Common.Utils.SmartPicker.
             var replace = this._smartPicker.consume();
+            // Only if it is still there; the primitive deletes blind. See
+            // Common.Utils.SmartPicker.triggerStillThere.
+            if (replace && !Common.Utils.SmartPicker.triggerStillThere(this.api, replace)) {
+                replace = null;
+            }
             if (replace !== null) {
                 // Insert the link as plain TEXT (a cell hyperlink is whole-cell
                 // and would re-link/replace the cell). NOTE: use isCellEdited,

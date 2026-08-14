@@ -64,6 +64,56 @@ define([], function () { 'use strict';
         PENDING_TIMEOUT: 600000,
 
         /**
+         * Whether the trigger text is still sitting where it was typed.
+         *
+         * The deletion primitive cannot answer this. pluginMethod_InputText(text,
+         * textReplace) does not match textReplace against the document at all -- it
+         * fires textReplace.length backspaces at the caret and inserts. Verified
+         * against a running editor: with "Hello world" and the caret at the end,
+         * asking it to replace "ZZZZ" -- a string that appears nowhere -- left
+         * "Hello w".
+         *
+         * So anything that moves the caret between picking a provider and the reply
+         * arriving turns the deletion into silent damage, and co-editing makes that
+         * reachable without the user doing anything: a remote change shifts this
+         * user's caret, and onActivity does not fire because a remote change is not
+         * a keystroke here. The trigger is also visible to everyone as literal text
+         * while the picker is open, so a co-author may simply tidy it away.
+         *
+         * Failure is not symmetric. Leaving a stray "/query" behind is cosmetic and
+         * the user can delete it; eating four characters of someone else's sentence
+         * is data loss that syncs to everyone. So this only permits the deletion
+         * when the text before the caret still looks like what was typed.
+         *
+         * It compares against the query rather than the whole trigger because the
+         * leading "/" is punctuation and therefore a word boundary: after "Hello
+         * /pro" the word part before the caret is "pro". A trigger of just "/"
+         * expects "", which is what a caret sitting right after punctuation gives.
+         *
+         * Editors whose api does not expose asc_GetCurrentWord (Presentation and
+         * Spreadsheet at the time of writing -- it is exported only in word/api.js)
+         * cannot be checked, and keep the previous behaviour rather than losing the
+         * feature. Exporting it there would extend this guard to them unchanged.
+         *
+         * @param {Object} api the editor api
+         * @param {String} replace the trigger text, "/" plus the query
+         * @return {Boolean} true when deleting it is safe, or cannot be checked
+         */
+        triggerStillThere: function (api, replace) {
+            if (!api || typeof api.asc_GetCurrentWord !== 'function') return true;
+
+            var expected = (replace || '').replace(/^\//, '');
+            var actual;
+            try {
+                actual = api.asc_GetCurrentWord(-1);
+            } catch (e) {
+                // Never let a probe stop an insertion; fall back to the old behaviour.
+                return true;
+            }
+            return (actual || '') === expected;
+        },
+
+        /**
          * Whether "/" should open the Smart Picker at the current position.
          *
          * The Text app passes allowedPrefixes: [' '] to @tiptap/suggestion,
