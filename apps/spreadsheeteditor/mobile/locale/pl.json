@@ -6,7 +6,7 @@
     "textEditor": "Edytor arkuszy kalkulacyjnych",
     "textEmail": "E-mail",
     "textPoweredBy": "Obsługiwane przez",
-    "textTel": "Tel",
+    "textTel": "Telefon",
     "textVersion": "Wersja"
   },
   "Common": {
@@ -827,7 +827,7 @@
       "textSpreadsheetSettings": "Ustawienia arkusza kalkulacyjnego",
       "textSpreadsheetTitle": "Tytuł arkusza kalkulacyjnego",
       "textSubject": "Temat",
-      "textTel": "Tel",
+      "textTel": "Telefon",
       "textTheme": "Motyw",
       "textTitle": "Tytuł",
       "textTop": "Górny",

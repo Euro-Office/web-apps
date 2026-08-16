@@ -6,7 +6,7 @@
     "textEditor": "Przeglądarka diagramów",
     "textEmail": "E-mail",
     "textPoweredBy": "Obsługiwane przez",
-    "textTel": "Tel",
+    "textTel": "Telefon",
     "textVersion": "Wersja"
   },
   "Common": {
@@ -179,7 +179,7 @@
       "textDone": "Gotowe",
       "textDownload": "Pobierz",
       "textDownloadAs": "Pobierz jako...",
-      "textEmail": "email:",
+      "textEmail": "e-mail:",
       "textVisioInfo": "Informacja o Przeglądarce Diagramów",
       "textVisioSettings": "Ustawienia Przeglądarki Diagramów",
       "textVisioTitle": "Nazwa Przeglądarki Diagramów",

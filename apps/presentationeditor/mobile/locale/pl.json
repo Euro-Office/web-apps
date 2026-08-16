@@ -7,7 +7,7 @@
     "textEditor": "Edytor prezentacji",
     "textEmail": "E-mail",
     "textPoweredBy": "Obsługiwane przez",
-    "textTel": "Tel"
+    "textTel": "Telefon"
   },
   "Common": {
     "Collaboration": {
@@ -131,7 +131,7 @@
         "ClipArt": "Kliparty",
         "Diagram": "Diagram",
         "Marquee": "Zaznaczenie",
-        "Media": "Media",
+        "Media": "Multimedia",
         "Median": "Mediana",
         "None": "Brak",
         "Office": "Office",
