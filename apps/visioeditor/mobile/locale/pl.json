@@ -1,6 +1,6 @@
 {
   "About": {
-    "textAbout": "O",
+    "textAbout": "O programie",
     "textAddress": "Adres",
     "textBack": "Wstecz",
     "textEditor": "Przeglądarka diagramów",
@@ -34,8 +34,8 @@
   },
   "Controller": {
     "Main": {
-      "closeButtonText": "Zamknij Plik",
-      "textAnonymous": "Anonimowy użytkownik ",
+      "closeButtonText": "Zamknij plik",
+      "textAnonymous": "Anonimowy",
       "textClose": "Zamknij",
       "textContactUs": "Skontaktuj się z działem sprzedaży",
       "titleServerVersion": "Edytor zaktualizowany",
@@ -80,7 +80,7 @@
     "errorConnectToServer": "Nie można zapisać tego dokumentu. Sprawdź ustawienia połączenia lub skontaktuj się z administratorem.<br>Po kliknięciu przycisku „OK” zostaniesz poproszony o pobranie dokumentu.",
     "errorDataEncrypted": "Otrzymano zaszyfrowane zmiany, nie można ich odszyfrować.",
     "errorEditingDownloadas": "Wystąpił błąd podczas pracy z dokumentem. Użyj opcji \"Pobierz jako\", aby zapisać kopię pliku lokalnie.",
-    "errorForceSave": "Wystąpił błąd podczas zapisywania pliku. Użyj opcji \"Pobierz jako\", aby zapisać plik na swoim komputerze lub spróbuj ponownie poźniej.",
+    "errorForceSave": "Wystąpił błąd podczas zapisywania pliku. Użyj opcji \"Pobierz jako\", aby zapisać plik na swoim komputerze lub spróbuj ponownie później.",
     "errorInconsistentExt": "Wystąpił błąd podczas otwierania pliku.<br>Zawartość pliku nie pasuje do jego rozszerzenia.",
     "errorInconsistentExtDocx": "Wystąpił błąd podczas otwierania pliku.<br>Zawartość pliku odpowiada dokumentom tekstowym (np. docx), ale jest niespójna z rozszerzeniem: %1.",
     "errorInconsistentExtPdf": "Wystąpił błąd podczas otwierania pliku.<br>Zawartość pliku odpowiada jednemu z następujących formatów: pdf/djvu/xps/oxps, ale jest niespójna z rozszerzeniem: %1.",
@@ -98,7 +98,7 @@
     "errorCopyDisabled": "Ze względów bezpieczeństwa zawartość tego dokumentu nie może być kopiowana.",
     "errorFileNotAssembled": "Ten plik jest otwierany z kopii zapasowej serwera i nie jest zapisywany w pamięci.<br>Użyj opcji „Zapisz jako...”, aby zapisać go na dysku.",
     "errorForcedViewMode": "Ten plik jest otwarty w trybie przeglądania.<br>Plik jest zablokowany do edycji lub Twoje prawa dostępu nie pozwalają na edycję.",
-    "errorDatabaseConnection": "Błąd zewnętrzny.<br>Błąd połączenia z bazą danych. Proszę o kontakt z supportem.",
+    "errorDatabaseConnection": "Błąd zewnętrzny.<br>Błąd połączenia z bazą danych. Skontaktuj się z pomocą techniczną.",
     "errorDataRange": "Nieprawidłowy zakres danych.",
     "errorDefaultMessage": "Kod błędu: %1",
     "errorDirectUrl": "Sprawdź łącze do dokumentu.<br>To łącze musi być bezpośrednim łączem do pliku do pobrania.",
@@ -139,18 +139,18 @@
     "loadImageTextText": "Ładowanie obrazu...",
     "loadImageTitleText": "Ładowanie obrazu",
     "loadingDocumentTextText": "Ładowanie dokumentu...",
-    "loadingDocumentTitleText": "Załadunek",
+    "loadingDocumentTitleText": "Ładowanie",
     "loadThemeTextText": "Ładowanie motywu...",
     "loadThemeTitleText": "Ładowanie motywu",
-    "openTextText": "Otwieram dokument...",
-    "openTitleText": "Dokument otwierający",
+    "openTextText": "Otwieranie dokumentu...",
+    "openTitleText": "Otwieranie dokumentu",
     "printTextText": "Drukowanie dokumentu...",
     "printTitleText": "Drukowanie dokumentu",
     "savePreparingText": "Przygotowywanie do zapisu",
     "savePreparingTitle": "Przygotowywanie do zapisu. Proszę czekać...",
     "saveTextText": "Zapisywanie dokumentu...",
     "saveTitleText": "Zapisywanie dokumentu",
-    "textLoadingDocument": "Załadunek",
+    "textLoadingDocument": "Ładowanie",
     "txtEditingMode": "Ustaw tryb edycji...",
     "uploadImageTextText": "Przesyłanie obrazu...",
     "uploadImageTitleText": "Przesyłanie obrazu",
@@ -164,7 +164,7 @@
       "textOk": "OK"
     },
     "Settings": {
-      "textAbout": "O",
+      "textAbout": "O programie",
       "textAddress": "adres:",
       "textApplication": "Aplikacja",
       "textApplicationSettings": "Ustawienia aplikacji",
@@ -194,10 +194,10 @@
       "textOk": "OK",
       "textOwner": "Właściciel",
       "textPoweredBy": "Obsługiwane przez",
-      "textPrint": "Wydrukować",
+      "textPrint": "Drukuj",
       "textRestartApplication": "Uruchom aplikację ponownie, aby zastosować zmiany",
       "textSameAsSystem": "Taki sam jak system",
-      "textSearch": "Znajdować",
+      "textSearch": "Znajdź",
       "textSettings": "Ustawienia",
       "textSubject": "Temat",
       "textTel": "telefon:",
@@ -215,6 +215,6 @@
     "stayButtonText": "Pozostań na tej stronie",
     "textEnterNewFileName": "Wprowadź nową nazwę pliku",
     "textRenameFile": "Zmień nazwę pliku",
-    "textSwitchToDesktop": "Przełącz na komputer stacjonarny"
+    "textSwitchToDesktop": "Przełącz na wersję desktopową"
   }
 }
