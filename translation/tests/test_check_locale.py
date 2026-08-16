@@ -2,6 +2,8 @@ import json
 import sys
 import tempfile
 import unittest
+from contextlib import redirect_stdout
+from io import StringIO
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parents[1]))
@@ -65,6 +67,15 @@ class LocaleCheckerTests(unittest.TestCase):
         result = check_locale.validate(english_path, locale_path)
         self.assertEqual(result.placeholder_mismatches, ["x"])
 
+    def test_percent_number_literal_is_not_a_placeholder(self):
+        english_path, locale_path = self.write_pair(
+            {"x": "Discount %100 and %1"},
+            {"x": "Rabat 100% i %1"},
+        )
+        result = check_locale.validate(english_path, locale_path)
+        self.assertEqual(result.placeholder_mismatches, [])
+
+
     def test_empty_and_non_string_values(self):
         english_path, locale_path = self.write_pair(
             {"empty": "value", "number": "value"},
@@ -91,6 +102,22 @@ class LocaleCheckerTests(unittest.TestCase):
         pairs = check_locale.locale_pairs(root, "pl")
         self.assertEqual(len(pairs), 1)
         self.assertFalse(pairs[0][1].exists())
+
+        output = StringIO()
+        with redirect_stdout(output):
+            exit_code = check_locale.main(["--root", str(root)])
+        self.assertEqual(exit_code, 1)
+        self.assertIn("missing locale file pl.json", output.getvalue())
+        self.assertIn("SUMMARY pairs=1", output.getvalue())
+
+    def test_fail_on_stale_is_optional_but_supported(self):
+        root = Path(tempfile.mkdtemp())
+        locale_dir = root / "apps" / "demo" / "main" / "locale"
+        locale_dir.mkdir(parents=True)
+        (locale_dir / "en.json").write_text('{"x":"ok"}', encoding="utf-8")
+        (locale_dir / "pl.json").write_text('{"x":"Dobrze", "old":"Stare"}', encoding="utf-8")
+        self.assertEqual(check_locale.main(["--root", str(root)]), 0)
+        self.assertEqual(check_locale.main(["--root", str(root), "--fail-on-stale"]), 1)
 
     def test_real_eurooffice_files_are_parseable_without_count_invariants(self):
         root = Path(__file__).parents[2]

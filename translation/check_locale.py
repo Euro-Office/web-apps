@@ -15,13 +15,13 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-# Interpolation forms used by the locale resources. Percentages such as 100%
-# are deliberately not treated as placeholders.
+# Interpolation forms used by the locale resources. Numeric placeholders use
+# the single-digit %1..%9 convention; literals such as %100 are not tokens.
 PLACEHOLDER_PATTERNS = (
     re.compile(r"\{\d+\}"),
     re.compile(r"\$\{[^{}]+\}"),
     re.compile(r"\{\{[^{}]+\}\}"),
-    re.compile(r"(?<![%\d])%\d+(?!\d)"),
+    re.compile(r"(?<![%\d])%[1-9](?!\d)"),
     re.compile(r"%[sd]"),
 )
 PathKey = tuple[str, ...]
