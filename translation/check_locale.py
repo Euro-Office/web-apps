@@ -139,8 +139,6 @@ def validate(english_path: Path, locale_path: Path) -> LocaleResult:
     locale_objects = object_paths(locale)
     # Object paths are compared as tuples, not dotted strings. This catches
     # e.g. EN {"A": {"B": "x"}} vs PL {"A": "x"}.
-    for path in sorted(english_objects & locale_objects):
-        continue
     for path in sorted(english_objects - locale_objects):
         if path and path in flatten(locale):
             result.invalid_structure.append(display_path(path))
