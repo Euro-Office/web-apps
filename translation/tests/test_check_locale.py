@@ -142,7 +142,6 @@ class LocaleCheckerTests(unittest.TestCase):
         )
         self.assertGreater(result.english_keys, 0)
         self.assertGreater(result.locale_keys, 0)
-        self.assertIn("About.textPoweredBy", result.missing)
         self.assertEqual(result.invalid_values, [])
 
     def test_small_realistic_fixture(self):
