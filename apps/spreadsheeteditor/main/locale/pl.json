@@ -177,7 +177,7 @@
   "Common.Views.AutoCorrectDialog.textReplaceText": "Zamień podczas pisania",
   "Common.Views.AutoCorrectDialog.textReplaceType": "Zamień tekst podczas pisania",
   "Common.Views.AutoCorrectDialog.textReset": "Resetuj",
-  "Common.Views.AutoCorrectDialog.textResetAll": "Resetuj wszystko",
+  "Common.Views.AutoCorrectDialog.textResetAll": "Przywróć ustawienia domyślne",
   "Common.Views.AutoCorrectDialog.textRestore": "Przywróć",
   "Common.Views.AutoCorrectDialog.textTitle": "Autokorekta",
   "Common.Views.AutoCorrectDialog.textWarnAddRec": "Rozpoznawane funkcje muszą zawierać tylko litery od A do Z, wielkie lub małe.",

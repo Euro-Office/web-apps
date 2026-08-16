@@ -1689,7 +1689,7 @@
   "Common.Views.CustomizeQuickAccessDialog.textUndo": "Cofnij",
   "Common.Views.ExternalDiagramEditor.textTitle": "Edytor wykresów",
   "Common.Views.ExternalEditor.textClose": "Zamknąć",
-  "Common.Views.ExternalEditor.textSave": "Zapisz",
+  "Common.Views.ExternalEditor.textSave": "Zapisz i wyjdź",
   "Common.Views.ExternalLinksDlg.closeButtonText": "Zamknąć",
   "Common.Views.ExternalLinksDlg.textAutoUpdate": "Automatycznie aktualizuj dane z połączonych źródeł",
   "Common.Views.ExternalLinksDlg.textChange": "Zmień źródło",
