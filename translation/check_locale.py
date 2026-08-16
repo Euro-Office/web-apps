@@ -17,12 +17,12 @@ from typing import Any
 
 # Interpolation forms used by the locale resources. Numeric placeholders use
 # the single-digit %1..%9 convention; literals such as %100 are not tokens.
-PLACEHOLDER_PATTERNS = (
-    re.compile(r"\{\d+\}"),
-    re.compile(r"\$\{[^{}]+\}"),
-    re.compile(r"\{\{[^{}]+\}\}"),
-    re.compile(r"(?<![%\d])%[1-9](?!\d)"),
-    re.compile(r"%[sd]"),
+PLACEHOLDER_PATTERN = re.compile(
+    r"\$\{[^{}]+\}"
+    r"|\{\{[^{}]+\}\}"
+    r"|(?<![${])\{\d+\}"
+    r"|(?<![%\d])%[1-9](?!\d)"
+    r"|(?<!%)%[sd]"
 )
 PathKey = tuple[str, ...]
 
@@ -90,11 +90,7 @@ def display_path(path: PathKey) -> str:
 
 def placeholders(value: Any) -> list[str]:
     """Extract and sort interpolation tokens from a locale value."""
-    found: list[str] = []
-    text = str(value)
-    for pattern in PLACEHOLDER_PATTERNS:
-        found.extend(pattern.findall(text))
-    return sorted(found)
+    return sorted(PLACEHOLDER_PATTERN.findall(str(value)))
 
 
 def structure_conflicts(
@@ -137,14 +133,13 @@ def validate(english_path: Path, locale_path: Path) -> LocaleResult:
 
     english_objects = object_paths(english)
     locale_objects = object_paths(locale)
-    # Object paths are compared as tuples, not dotted strings. This catches
-    # e.g. EN {"A": {"B": "x"}} vs PL {"A": "x"}.
-    for path in sorted(english_objects - locale_objects):
-        if path and path in flatten(locale):
-            result.invalid_structure.append(display_path(path))
-    for path in sorted(locale_objects - english_objects):
-        if path and path in flatten(english):
-            result.invalid_structure.append(display_path(path))
+    # Compare object paths as well as leaves. This catches an empty object
+    # omitted from one locale, while the root object is ignored.
+    for path in sorted((english_objects ^ locale_objects) - {()}):
+        result.invalid_structure.append(display_path(path))
+    # Also catch a path represented as an object on one side and a leaf on the
+    # other, even when the dotted spelling happens to be the same.
+    result.invalid_structure.extend(structure_conflicts(english, locale))
     result.invalid_structure = sorted(set(result.invalid_structure))
 
     for key in sorted(common):

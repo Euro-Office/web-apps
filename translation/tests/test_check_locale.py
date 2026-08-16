@@ -50,6 +50,15 @@ class LocaleCheckerTests(unittest.TestCase):
         )
         self.assertIn("DE.Controllers.ApplicationController.foo", result.invalid_structure)
 
+    def test_missing_empty_nested_object_is_invalid_structure(self):
+        english_path, locale_path = self.write_pair(
+            {"A": {}},
+            {},
+        )
+        result = check_locale.validate(english_path, locale_path)
+        self.assertEqual(result.missing, [])
+        self.assertIn("A", result.invalid_structure)
+
     def test_nested_object_vs_leaf_is_invalid_structure(self):
         english_path, locale_path = self.write_pair(
             {"A": {"B": "value"}},
@@ -66,6 +75,12 @@ class LocaleCheckerTests(unittest.TestCase):
         )
         result = check_locale.validate(english_path, locale_path)
         self.assertEqual(result.placeholder_mismatches, ["x"])
+        tokens = check_locale.placeholders("${0} {{0}} {0} %%s %s")
+        self.assertEqual(len(tokens), 4)
+        self.assertIn("${0}", tokens)
+        self.assertIn("{{0}}", tokens)
+        self.assertIn("{0}", tokens)
+        self.assertIn("%s", tokens)
 
     def test_percent_number_literal_is_not_a_placeholder(self):
         english_path, locale_path = self.write_pair(
@@ -119,15 +134,16 @@ class LocaleCheckerTests(unittest.TestCase):
         self.assertEqual(check_locale.main(["--root", str(root)]), 0)
         self.assertEqual(check_locale.main(["--root", str(root), "--fail-on-stale"]), 1)
 
-    def test_real_eurooffice_files_are_parseable_without_count_invariants(self):
+    def test_real_eurooffice_pair_runs_full_validation(self):
         root = Path(__file__).parents[2]
-        for relative in (
-            "apps/documenteditor/mobile/locale/en.json",
-            "apps/documenteditor/mobile/locale/pl.json",
-        ):
-            value = check_locale.load_json(root / relative)
-            self.assertIsInstance(value, dict)
-            self.assertTrue(value)
+        result = check_locale.validate(
+            root / "apps/documenteditor/mobile/locale/en.json",
+            root / "apps/documenteditor/mobile/locale/pl.json",
+        )
+        self.assertGreater(result.english_keys, 0)
+        self.assertGreater(result.locale_keys, 0)
+        self.assertIn("About.textPoweredBy", result.missing)
+        self.assertEqual(result.invalid_values, [])
 
     def test_small_realistic_fixture(self):
         fixture_root = Path(__file__).parent / "fixtures"
