@@ -29,7 +29,7 @@
   },
   "ContextMenu": {
     "menuCancel": "Anuluj",
-    "txtWarnUrl": "Kliknięcie tego linku może być szkodliwe dla urządzenia i danych.<br>{0}<br>Czy na pewno chcesz kontynuować?",
+    "txtWarnUrl": "Kliknięcie tego linku może być szkodliwe dla twojego urządzenia i danych.<br>{0}<br>Czy na pewno chcesz kontynuować?",
     "textOk": "OK"
   },
   "Controller": {
