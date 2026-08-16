@@ -581,7 +581,7 @@
   "PDFE.Controllers.Main.warnLicenseLimitedNoAccess": "Licencja wygasła.<br>Nie masz dostępu do edycji dokumentu.<br>Proszę skontaktować się ze swoim administratorem.",
   "PDFE.Controllers.Main.warnLicenseLimitedRenewed": "Licencja musi zostać odnowiona.<br>Masz ograniczony dostęp do edycji dokumentu.<br>Skontaktuj się ze swoim administratorem, aby uzyskać pełny dostęp.",
   "PDFE.Controllers.Main.warnNoLicense": "Osiągnięto limit jednoczesnych połączeń z edytorami %1. Ten dokument zostanie otwarty tylko do przeglądania.<br>Skontaktuj się z zespołem sprzedaży %1 w celu uzyskania osobistych warunków uaktualnienia.",
-  "PDFE.Controllers.Main.warnNoLicenseUsers": "Osiągnąłeś limit dla użytkownika. Skontaktuj się z zespołem sprzedaży %1 w celu uzyskania osobistych warunków aktualizacji.",
+  "PDFE.Controllers.Main.warnNoLicenseUsers": "Osiągnięto limit użytkowników edytorów %1. Skontaktuj się z zespołem sprzedaży %1 w celu uzyskania indywidualnych warunków aktualizacji.",
   "PDFE.Controllers.Main.warnProcessRightsChange": "Nie masz uprawnień do edycji tego pliku.",
   "PDFE.Controllers.Navigation.txtBeginning": "Początek dokumentu",
   "PDFE.Controllers.Navigation.txtGotoBeginning": "Przejdź na początek dokumentu",
