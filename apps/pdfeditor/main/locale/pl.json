@@ -890,7 +890,7 @@
   "PDFE.Views.FormsTab.capBtnPhone": "Numer telefonu",
   "PDFE.Views.FormsTab.capDateTime": "Data i czas",
   "PDFE.Views.FormsTab.capZipCode": "Kod pocztowy",
-  "PDFE.Views.FormsTab.textClear": "Wyczyść",
+  "PDFE.Views.FormsTab.textClear": "Wyczyść pola",
   "PDFE.Views.FormsTab.textClearFields": "Wyczyść wszystkie pola",
   "PDFE.Views.FormsTab.tipCheckBox": "Wstaw pole wyboru",
   "PDFE.Views.FormsTab.tipComboBox": "Wstaw pole kombi",
