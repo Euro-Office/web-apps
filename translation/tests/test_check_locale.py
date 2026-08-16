@@ -100,6 +100,15 @@ class LocaleCheckerTests(unittest.TestCase):
         self.assertEqual(result.empty, ["empty"])
         self.assertEqual(result.invalid_values, ["number"])
 
+    def test_non_string_english_values_are_rejected(self):
+        english_path, locale_path = self.write_pair(
+            {"number": 7, "nested": {"flag": True}},
+            {"number": "Siedem", "nested": {"flag": "Tak"}},
+        )
+        result = check_locale.validate(english_path, locale_path)
+        self.assertEqual(result.invalid_english_values, ["number", "nested.flag"])
+        self.assertIn("nested.flag", result.failures)
+
     def test_malformed_json_is_rejected(self):
         directory = Path(tempfile.mkdtemp())
         english_path = directory / "en.json"

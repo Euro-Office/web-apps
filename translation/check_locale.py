@@ -39,6 +39,7 @@ class LocaleResult:
     identical: list[str] = field(default_factory=list)
     placeholder_mismatches: list[str] = field(default_factory=list)
     invalid_values: list[str] = field(default_factory=list)
+    invalid_english_values: list[str] = field(default_factory=list)
     invalid_structure: list[str] = field(default_factory=list)
 
     @property
@@ -48,6 +49,7 @@ class LocaleResult:
             + self.empty
             + self.placeholder_mismatches
             + self.invalid_values
+            + self.invalid_english_values
             + self.invalid_structure
         )
 
@@ -129,6 +131,11 @@ def validate(english_path: Path, locale_path: Path) -> LocaleResult:
         missing=sorted(map(display_path, english_flat.keys() - locale_flat.keys())),
         stale=sorted(map(display_path, locale_flat.keys() - english_flat.keys())),
         invalid_structure=structure_conflicts(english, locale),
+        invalid_english_values=[
+            display_path(key)
+            for key, value in english_flat.items()
+            if not isinstance(value, str)
+        ],
     )
 
     english_objects = object_paths(english)
@@ -226,6 +233,7 @@ def main(argv: list[str] | None = None) -> int:
             f"EN={result.english_keys} {args.language.upper()}={result.locale_keys} "
             f"missing={len(result.missing)} stale={len(result.stale)} "
             f"empty={len(result.empty)} invalid_values={len(result.invalid_values)} "
+            f"invalid_english_values={len(result.invalid_english_values)} "
             f"invalid_structure={len(result.invalid_structure)} "
             f"placeholder_mismatches={len(result.placeholder_mismatches)} "
             f"identical={len(result.identical)}"
@@ -234,6 +242,7 @@ def main(argv: list[str] | None = None) -> int:
             "missing",
             "empty",
             "invalid_values",
+            "invalid_english_values",
             "invalid_structure",
             "placeholder_mismatches",
         ):
