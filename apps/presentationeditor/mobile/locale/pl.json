@@ -333,9 +333,9 @@
       "textOk": "OK",
       "textOther": "Inny",
       "textPasteImageUrl": "Wklej adres URL obrazu",
-      "textPictureFromStorage": "Zdjęcie z magazynu",
+      "textPictureFromStorage": "Obraz z magazynu",
       "textRequired": "Wymagany",
-      "textTableSize": "Rozmiar stołu"
+      "textTableSize": "Rozmiar tabeli"
     },
     "Edit": {
       "notcriticalErrorTitle": "Ostrzeżenie",
@@ -490,7 +490,7 @@
       "textNone": "Nic",
       "textNoStyles": "Brak stylów dla tego typu wykresu.",
       "textOk": "OK",
-      "textPictureFromStorage": "Zdjęcie z magazynu",
+      "textPictureFromStorage": "Obraz z magazynu",
       "textPt": "pkt",
       "textPush": "Naciskać",
       "textRequired": "Wymagany",

@@ -157,7 +157,7 @@
       "textParaInserted": "Wstawiono akapit",
       "textParaMoveFromDown": "Przesunięto w dół:",
       "textParaMoveFromUp": "Przesunięty w górę:",
-      "textParaMoveTo": "Wzruszony:",
+      "textParaMoveTo": "Przeniesiono:",
       "textPosition": "Pozycja",
       "textReject": "Odrzuć",
       "textReview": "Przegląd",
@@ -228,7 +228,7 @@
     "textRefreshPageNumbersOnly": "Odśwież wyłącznie numery stron",
     "textRows": "Wiersze",
     "txtWarnUrl": "Kliknięcie tego linku może być szkodliwe dla urządzenia i danych.<br>{0}<br>Czy na pewno chcesz kontynuować?",
-    "menuReview": "Recenzja",
+    "menuReview": "Przejrzyj",
     "menuReviewChange": "Przejrzyj zmianę"
   },
   "Draw": {
