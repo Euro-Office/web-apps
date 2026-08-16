@@ -522,5 +522,6 @@
 			"type": "typ",
 			"width": "szerokość"
 		}
-	}
+	},
+	"CEILING.PRECISE": "ZAOKR.GÓRA.DOKŁ"
 }

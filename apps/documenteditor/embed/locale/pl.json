@@ -71,5 +71,9 @@
   "DE.ApplicationView.txtFullScreen": "Pełny ekran",
   "DE.ApplicationView.txtPrint": "Drukuj",
   "DE.ApplicationView.txtSearch": "Szukaj",
-  "DE.ApplicationView.txtShare": "Udostępnij"
+  "DE.ApplicationView.txtShare": "Udostępnij",
+  "DE.ApplicationController.errorCopyDisabled": "Ze względów bezpieczeństwa zawartość tego dokumentu nie może być kopiowana.",
+  "DE.ApplicationController.errorFileNotAssembled": "Ten plik jest otwierany z kopii zapasowej serwera i nie jest zapisywany w pamięci.<br>Użyj opcji „Zapisz jako...”, aby zapisać go na dysku.",
+  "DE.ApplicationController.errorForcedViewMode": "Ten plik jest otwarty w trybie przeglądania.<br>Plik jest zablokowany do edycji lub Twoje prawa dostępu nie pozwalają na edycję.",
+  "DE.ApplicationController.txtSecurityWarningLinkOk": "Ten dokument próbuje połączyć się z %1.<br>Jeśli ufasz tej witrynie, naciśnij „OK”."
 }

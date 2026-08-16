@@ -164,7 +164,7 @@
   "DE.Controllers.ApplicationController.txtPressLink": "Naciśnij Ctrl i kliknij w link",
   "DE.Controllers.ApplicationController.txtSignedForm": "Ten dokument został podpisany i nie może być edytowany.",
   "DE.Controllers.ApplicationController.txtUntitled": "Bez Nazwy",
-  "DE.Controllers.ApplicationController.txtWarnUrl": "Kliknięcie tego linku może być szkodliwe dla urządzenia i danych.<br>Czy na pewno chcesz kontynuować?",
+  "DE.Controllers.ApplicationController.txtWarnUrl": "Kliknięcie tego linku może być szkodliwe dla urządzenia i danych.<br>{0}<br>Czy na pewno chcesz kontynuować?",
   "DE.Controllers.ApplicationController.unknownErrorText": "Nieznany błąd.",
   "DE.Controllers.ApplicationController.unsupportedBrowserErrorText": "Twoja przeglądarka nie jest wspierana.",
   "DE.Controllers.ApplicationController.uploadImageExtMessage": "Nieznany format obrazu.",
@@ -206,5 +206,9 @@
   "DE.Views.ApplicationView.txtPrint": "Drukuj",
   "DE.Views.ApplicationView.txtSearch": "Szukaj",
   "DE.Views.ApplicationView.txtShare": "Udostępnij",
-  "DE.Views.ApplicationView.txtTheme": "Motyw interfejsu"
+  "DE.Views.ApplicationView.txtTheme": "Motyw interfejsu",
+  "DE.Controllers.ApplicationController.errorCopyDisabled": "Ze względów bezpieczeństwa zawartość tego dokumentu nie może być kopiowana.",
+  "DE.Controllers.ApplicationController.errorFileNotAssembled": "Ten plik jest otwierany z kopii zapasowej serwera i nie jest zapisywany w pamięci.<br>Użyj opcji „Zapisz jako...”, aby zapisać go na dysku.",
+  "DE.Controllers.ApplicationController.errorForcedViewMode": "Ten plik jest otwarty w trybie przeglądania.<br>Plik jest zablokowany do edycji lub Twoje prawa dostępu nie pozwalają na edycję.",
+  "DE.Views.ApplicationView.textMultiplePages": "Wiele stron"
 }
