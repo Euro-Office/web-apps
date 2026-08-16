@@ -590,7 +590,7 @@
   "PDFE.Controllers.Print.txtPrintRangeInvalid": "Nieprawidłowy zakres wydruku",
   "PDFE.Controllers.Search.notcriticalErrorTitle": "Ostrzeżenie",
   "PDFE.Controllers.Search.textNoTextFound": "Nie znaleziono danych, których szukasz. Proszę dostosuj opcje wyszukiwania.",
-  "PDFE.Controllers.Search.textReplaceSkipped": "Zastąpiono. {0} zdarzenia zostały pominięte.",
+  "PDFE.Controllers.Search.textReplaceSkipped": "Dokonano zamiany. Pominięto {0} wystąpień.",
   "PDFE.Controllers.Search.textReplaceSuccess": "Wyszukiwanie zostało wykonane. {0} wystąpień zostało zastąpionych",
   "PDFE.Controllers.Search.warnReplaceString": "{0} nie jest prawidłowym znakiem specjalnym dla pola \"Zamień na\".",
   "PDFE.Controllers.Statusbar.textDisconnect": "<b>Połączenie zostało utracone</b><br>Trwa próba ponownego połączenia. Sprawdź ustawienia połączenia.",
