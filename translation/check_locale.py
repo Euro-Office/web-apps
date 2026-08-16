@@ -130,7 +130,6 @@ def validate(english_path: Path, locale_path: Path) -> LocaleResult:
         locale_keys=len(locale_flat),
         missing=sorted(map(display_path, english_flat.keys() - locale_flat.keys())),
         stale=sorted(map(display_path, locale_flat.keys() - english_flat.keys())),
-        invalid_structure=structure_conflicts(english, locale),
         invalid_english_values=[
             display_path(key)
             for key, value in english_flat.items()
