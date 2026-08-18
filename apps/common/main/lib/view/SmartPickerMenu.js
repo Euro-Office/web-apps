@@ -37,7 +37,10 @@ define([
     Common.Views = Common.Views || {};
 
     Common.Views.SmartPickerMenu = _.extend(new(function() {
-        var CONTAINER_ID = 'menu-container-smartpicker';
+        var CONTAINER_ID = 'menu-container-smartpicker',
+            // Namespaced so off() takes back exactly this menu's handler and
+            // nothing else bound to window resize.
+            RESIZE_EVENT = 'resize.smartpickermenu';
 
         var _menu,                  // Common.UI.Menu, or undefined when closed
             _providers,             // pushed in by the host
@@ -46,6 +49,7 @@ define([
             _emptyRow,              // the "no suggestion found" <li>
             _selected = -1,         // index into _visible
             _onPick,
+            _getAnchor,             // editor-supplied anchor, re-read on resize
             _point;                 // anchor captured when the menu opened
 
         /**
@@ -63,7 +67,7 @@ define([
          * @return {Array|null} [left, top] in viewport coordinates
          */
         var _caretPoint = function() {
-            var el = document.getElementById('id_target_cursor');
+            var el = document.getElementById(Common.Utils.SmartPickerIds.CARET);
             if (el) {
                 var r = el.getBoundingClientRect();
                 // Visible caret: place the menu just under it. Height is not
@@ -76,7 +80,7 @@ define([
             }
             // Fallback: the IME wrapper. Already offset past the caret bottom by
             // sdkjs, so take its top as-is.
-            var alt = document.getElementById('area_id_parent');
+            var alt = document.getElementById(Common.Utils.SmartPickerIds.IME_WRAPPER);
             if (alt && alt.getBoundingClientRect) {
                 var ar = alt.getBoundingClientRect();
                 if (ar && (ar.left || ar.top)) {
@@ -169,13 +173,33 @@ define([
                 _menu.remove();
                 _menu = undefined;
             }
+            $(window).off(RESIZE_EVENT);
             $('#' + CONTAINER_ID).remove();
             _entries = [];
             _visible = [];
             _emptyRow = undefined;
             _selected = -1;
             _onPick = undefined;
+            _getAnchor = undefined;
             _point = undefined;
+        };
+
+        /*
+         * Follow the caret after the viewport changes.
+         *
+         * _position() alone would only re-clamp the menu against the new
+         * viewport, which is not what a resize does to the thing it is anchored
+         * to: reflowing the document moves the caret, and the cell the
+         * spreadsheet anchors to moves with it. So the anchor is re-read, not
+         * remembered -- the same call _open() makes -- and only kept if it still
+         * resolves, since a caret that has gone away should leave the menu where
+         * it is rather than send it to the corner.
+         */
+        var _reanchor = function() {
+            if (!_menu) return;
+            var point = (_getAnchor && _getAnchor()) || _caretPoint();
+            if (point) _point = point;
+            _position();
         };
 
         /* Move the highlight, without moving focus away from the document. */
@@ -227,7 +251,8 @@ define([
         };
 
         /**
-         * @param {Object} options {holderEl, getAnchor, onPick}
+         * @param {Object} options {holder, getAnchor, onPick}; holder is the
+         *                 jQuery-wrapped element the container is appended to
          */
         var _open = function(options) {
             _dispose();
@@ -240,7 +265,7 @@ define([
 
             // position:fixed keeps the container independent of whether the
             // document holder is a positioned ancestor -- it is not.
-            var holder = $(options.holderEl),
+            var holder = $(options.holder),
                 container = $('<div id="' + CONTAINER_ID + '" style="position: fixed; z-index: 10000;">'
                     + '<div class="dropdown-toggle" data-toggle="dropdown"></div></div>');
             holder.append(container);
@@ -258,7 +283,8 @@ define([
             // An editor that knows better says so: the spreadsheet anchors to
             // the active cell, because it has no text caret unless a cell is
             // being edited inline.
-            _point = (options.getAnchor && options.getAnchor()) || _caretPoint();
+            _getAnchor = options.getAnchor;
+            _point = (_getAnchor && _getAnchor()) || _caretPoint();
             if (!_point) {
                 // No caret anchor: fall back to the holder's top-left.
                 var hr = holder[0] ? holder[0].getBoundingClientRect() : {left: 40, top: 60};
@@ -269,6 +295,7 @@ define([
             // wherever the container currently sits.
             _position();
             _menu.show();
+            $(window).on(RESIZE_EVENT, _reanchor);
             // Deliberately no focus() here: the user is still typing into the
             // document, and taking focus would send those keys to the list.
             _applyFilter('');
@@ -296,7 +323,7 @@ define([
              * Never fails silently: this runs from a keystroke, so a thrown
              * error would look to the user like "/" simply does nothing.
              *
-             * @param {Object} options {holderEl, getAnchor, onPick}
+             * @param {Object} options {holder, getAnchor, onPick}
              */
             open: function(options) {
                 try {
