@@ -796,7 +796,7 @@ define([], function () {
                 caption     : '--'
             });
             me.pmiAssistant = new Common.UI.MenuItem({
-                iconCls     : 'menu__icon btn-nc-add',
+                iconCls     : 'menu__icon btn-nc-assistant',
                 caption     : me.txtNcAssistant || 'Ask Nextcloud Assistant'
             });
 
