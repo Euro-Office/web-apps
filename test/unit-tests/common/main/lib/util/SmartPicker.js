@@ -117,6 +117,15 @@
                 assert.strictEqual(clean('//evil.example/i.png'), '');
             });
 
+            it('drops a backslash disguised as a host-relative path', function () {
+                // Browsers normalise "\" to "/" when parsing a url, so
+                // "/\evil.example/i.png" is the protocol-relative
+                // "//evil.example/i.png" -- a foreign origin behind a string
+                // that reads as same-origin.
+                assert.strictEqual(clean('/\\evil.example/i.png'), '');
+                assert.strictEqual(clean('\\\\evil.example/i.png'), '');
+            });
+
             it('drops non-strings and empty values', function () {
                 assert.strictEqual(clean(undefined), '');
                 assert.strictEqual(clean(null), '');
@@ -128,7 +137,10 @@
         describe('triggerStillThere', function () {
 
             // The word part before the caret, which is what asc_GetCurrentWord(-1)
-            // returns. "/" is punctuation, so it is not part of that word.
+            // returns. The answers below are the ones measured against a running
+            // Writer, not what the punctuation rule alone would suggest: with a
+            // query after it "/" is a boundary ("Hello /pro" -> "pro"), but a
+            // bare trigger answers with the punctuation itself ("Hello /" -> "/").
             var apiWith = function (wordBeforeCaret) {
                 return {asc_GetCurrentWord: function () { return wordBeforeCaret; }};
             };
@@ -146,9 +158,13 @@
             });
 
             it('handles a bare "/" with nothing typed after it', function () {
-                // A caret sitting right after punctuation has no word before it.
-                assert.strictEqual(SmartPicker.triggerStillThere(apiWith(''), '/'), true);
+                // The commonest flow of all: type "/", pick the first entry.
+                // Expecting '' here instead is what left the "/" sitting in
+                // front of every link inserted that way.
+                assert.strictEqual(SmartPicker.triggerStillThere(apiWith('/'), '/'), true);
                 assert.strictEqual(SmartPicker.triggerStillThere(apiWith('word'), '/'), false);
+                // An empty answer means the caret is not after a "/" any more.
+                assert.strictEqual(SmartPicker.triggerStillThere(apiWith(''), '/'), false);
             });
 
             it('permits it where the editor cannot be asked', function () {
@@ -225,5 +241,235 @@
                 }
             });
         });
+
+        describe('createPending activity', function () {
+
+            // Picking a provider ends the caret session at once, but the host's
+            // modal only takes focus a moment later. Keys landing in that gap go
+            // into the document behind the trigger, and used to cancel the
+            // request instead -- which left "/query" and the stray character
+            // sitting in front of the link that then arrived.
+            var atTime = function (body) {
+                var realNow = Date.now, now = 1000000;
+                Date.now = function () { return now; };
+                try {
+                    body(function (ms) { now += ms; });
+                } finally {
+                    Date.now = realNow;
+                }
+            };
+
+            it('takes a key typed during the hand-off as part of the trigger', function () {
+                atTime(function (advance) {
+                    var pending = SmartPicker.createPending();
+                    pending.begin('/f');
+                    advance(200);
+                    pending.activity('y');
+                    assert.strictEqual(pending.isPending(), true);
+                    assert.strictEqual(pending.consume(), '/fy');
+                });
+            });
+
+            it('lets Backspace take it away again, but not the "/" itself', function () {
+                atTime(function () {
+                    var pending = SmartPicker.createPending();
+                    pending.begin('/f');
+                    pending.activity('y');
+                    pending.activity('Backspace');
+                    assert.strictEqual(pending.consume(), '/f');
+
+                    pending.begin('/');
+                    pending.activity('Backspace');
+                    // Nothing of the trigger is left to shorten, so the request
+                    // is dropped rather than aimed at a "/" that has gone.
+                    assert.strictEqual(pending.isPending(), false);
+                });
+            });
+
+            it('drops the request on a key that moves the caret', function () {
+                atTime(function () {
+                    var pending = SmartPicker.createPending();
+                    pending.begin('/f');
+                    pending.activity('ArrowLeft');
+                    assert.strictEqual(pending.consume(), null);
+                });
+            });
+
+            it('drops the request once the hand-off is long over', function () {
+                atTime(function (advance) {
+                    var pending = SmartPicker.createPending();
+                    pending.begin('/f');
+                    advance(SmartPicker.HANDOFF_GRACE + 1);
+                    // Typing in the editor now means the picker is not in front
+                    // of it, so no reply is coming and the record must not sit
+                    // there waiting to delete something.
+                    pending.activity('y');
+                    assert.strictEqual(pending.isPending(), false);
+                });
+            });
+
+            it('ignores activity when nothing is outstanding', function () {
+                var pending = SmartPicker.createPending();
+                pending.activity('y');
+                assert.strictEqual(pending.isPending(), false);
+                assert.strictEqual(pending.consume(), null);
+            });
+        });
+
+        // installTrigger listens on the real document and drives the real menu,
+        // so these run in the browser harness only; `node --test` covers the
+        // pure functions above.
+        if (typeof document !== 'undefined' && typeof KeyboardEvent === 'function') {
+            describe('installTrigger', function () {
+
+                var area, menu, opened, picked, savedMenu, installed;
+
+                var press = function (key) {
+                    area.dispatchEvent(new KeyboardEvent('keydown', {
+                        key: key, bubbles: true, cancelable: true
+                    }));
+                };
+
+                // A real pointerdown, which is what the editor's canvas overlay
+                // emits -- and cancels, so no mousedown ever follows it.
+                var pointerDown = function (target) {
+                    (target || area).dispatchEvent(new MouseEvent('pointerdown', {
+                        bubbles: true, cancelable: true
+                    }));
+                };
+
+                // startSession runs from _.defer, which is _.delay(fn, 1) --
+                // a timer, not a microtask, so waiting has to outlast it.
+                var afterDefer = function (body) { setTimeout(body, 20); };
+
+                before(function () {
+                    area = document.createElement('div');
+                    area.id = 'area_id';
+                    document.body.appendChild(area);
+
+                    savedMenu = Common.Views && Common.Views.SmartPickerMenu;
+                    Common.Views = Common.Views || {};
+                    menu = Common.Views.SmartPickerMenu = {
+                        _open: false,
+                        open: function (options) { this._open = true; opened++; this._onPick = options.onPick; },
+                        close: function () { this._open = false; },
+                        isOpen: function () { return this._open; },
+                        filter: function () {},
+                        moveSelection: function () {},
+                        pickSelected: function () { this._onPick('files'); return true; },
+                        ownsElement: function () { return false; }
+                    };
+
+                    // One installation for the whole suite: it binds to the
+                    // document for good, exactly as an editor does.
+                    installed = {available: true};
+                    SmartPicker.installTrigger({
+                        isAvailable: function () { return installed.available; },
+                        onActivity: function () {},
+                        getHolder: function () { return $(document.body); },
+                        onPick: function (providerId, replace) { picked = {providerId: providerId, replace: replace}; }
+                    });
+                });
+
+                after(function () {
+                    area.parentNode.removeChild(area);
+                    Common.Views.SmartPickerMenu = savedMenu;
+                });
+
+                beforeEach(function () {
+                    opened = 0;
+                    picked = null;
+                    menu._open = false;
+                });
+
+                it('opens on "/" typed after a space', function (done) {
+                    press(' ');
+                    press('/');
+                    afterDefer(function () {
+                        assert.strictEqual(opened, 1);
+                        press('Escape');
+                        done();
+                    });
+                });
+
+                it('opens again in a new place after a click', function (done) {
+                    // The regression: "/" left lastKey as "/" for good, so
+                    // slashCanTrigger rejected every later trigger and the
+                    // feature worked exactly once per document. A click moves
+                    // the caret somewhere this cannot see, which is the same
+                    // state as "nothing typed yet".
+                    press(' ');
+                    press('/');
+                    afterDefer(function () {
+                        press('Escape');
+                        pointerDown();
+                        press('/');
+                        afterDefer(function () {
+                            assert.strictEqual(opened, 2, '"/" must trigger again after a click');
+                            press('Escape');
+                            done();
+                        });
+                    });
+                });
+
+                it('opens again after an arrow key has moved the caret', function (done) {
+                    press(' ');
+                    press('/');
+                    afterDefer(function () {
+                        press('Escape');
+                        press('ArrowRight');
+                        press('/');
+                        afterDefer(function () {
+                            assert.strictEqual(opened, 2);
+                            press('Escape');
+                            done();
+                        });
+                    });
+                });
+
+                it('still refuses a second "/" typed straight after the first', function (done) {
+                    // "//" is literal in tiptap too: the character before the
+                    // trigger is the old one, not whitespace.
+                    press(' ');
+                    press('/');
+                    afterDefer(function () {
+                        press('Escape');
+                        press('/');
+                        afterDefer(function () {
+                            assert.strictEqual(opened, 1);
+                            done();
+                        });
+                    });
+                });
+
+                it('ends the session on a pointerdown outside the menu', function (done) {
+                    // mousedown never arrives: sdkjs cancels the pointerdown on
+                    // its canvas overlay, so the browser synthesises no
+                    // compatibility mouse events at all. A session left running
+                    // here looked dismissed but reopened the host picker on the
+                    // next Enter.
+                    press(' ');
+                    press('/');
+                    afterDefer(function () {
+                        pointerDown();
+                        assert.strictEqual(menu.isOpen(), false, 'the menu must be disposed');
+                        press('Enter');
+                        assert.strictEqual(picked, null, 'Enter must not pick after the click');
+                        done();
+                    });
+                });
+
+                it('does not open when the host says the picker is unavailable', function (done) {
+                    installed.available = false;
+                    press(' ');
+                    press('/');
+                    afterDefer(function () {
+                        installed.available = true;
+                        assert.strictEqual(opened, 0);
+                        done();
+                    });
+                });
+            });
+        }
     });
 }));
