@@ -730,6 +730,7 @@
   "Common.UI.Window.textInformation": "Information",
   "Common.UI.Window.textWarning": "Warning",
   "Common.UI.Window.yesButtonText": "Yes",
+  "Common.Utils.AssistantInsert.txtInsertFailed": "The editor is busy, so the Assistant result could not be inserted. Try inserting it again.",
   "Common.Utils.Metric.txtCm": "cm",
   "Common.Utils.Metric.txtPt": "pt",
   "Common.Utils.String.textAlt": "Alt",

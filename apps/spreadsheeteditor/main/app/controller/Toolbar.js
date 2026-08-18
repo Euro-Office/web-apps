@@ -32,7 +32,6 @@
 define([
     'core',
     'common/main/lib/component/Window',
-    'common/main/lib/util/AssistantInsert',
     'common/main/lib/util/SmartPicker',
     'common/main/lib/view/SmartPickerMenu',
     'common/main/lib/view/SearchBar',
@@ -267,34 +266,10 @@ define([
 
             Common.NotificationCenter.on('app:ready', this.onAppReady.bind(this));
             Common.NotificationCenter.on('app:face', this.onAppShowed.bind(this));
-            Common.Gateway.on('setsmartpickeravailable', function(available) {
-                me._smartPickerAvailable = !!available;
-                me.toolbar.btnSmartPicker && me.toolbar.btnSmartPicker.setVisible(!!available);
-            });
-            Common.Gateway.on('insertassistantresult', function(data) {
-                // Sent when the user presses "Insert into document" in Nextcloud's
-                // own Assistant form. The host has already turned the model's
-                // markdown into HTML, so formatting survives.
-                Common.Utils.AssistantInsert.insert(me.api, data || {});
-            });
-            Common.Gateway.on('setsmartpickerproviders', function(data) {
-                // Pushed by the host rather than fetched by us: the list has to
-                // come from whichever page opens the picker, and only that page
-                // knows which providers it can actually open.
-                Common.Views.SmartPickerMenu.setProviders(data && data.providers);
-            });
-            Common.Gateway.on('setsmartpickercancel', function() {
-                // The "/" and its query were typed by the user, so they stay --
-                // as they do in Nextcloud's Text app when its picker is
-                // dismissed. Just restore focus.
-                me._smartPicker.clear();
-                Common.NotificationCenter.trigger('edit:complete');
-            });
-            me._smartPicker = Common.Utils.SmartPicker.createPending();
-            Common.Utils.SmartPicker.installTrigger({
-                isAvailable: function() { return !!me._smartPickerAvailable; },
-                onActivity: function() { me._smartPicker.clear(); },
-                getHolder: function() { return $('#editor_sdk'); },
+            // Gateway wiring, the "/" trigger and the pending record are the
+            // same in all three editors; the anchor, the cell the request came
+            // from and insertLink below are not.
+            me._smartPicker = Common.Utils.SmartPicker.install(me, {
                 // Anchor to the active cell. There is no text caret here until a
                 // cell is being edited inline, so the caret element the other
                 // editors use sits wherever it was last left. This is how every
@@ -318,11 +293,12 @@ define([
                         Math.round(rect.top + y + coord.asc_getHeight())
                     ];
                 },
-                onPick: function(providerId, replace) {
-                    // replace is "/" plus whatever was typed after it; the reply
-                    // deletes exactly that before inserting the link.
-                    me._smartPicker.begin(replace);
-                    Common.Gateway.requestSmartPicker('', 'toolbar', providerId);
+                onPick: function() {
+                    // Which cell the trigger was typed into. The other two
+                    // editors get this guard from triggerStillThere, which needs
+                    // asc_GetCurrentWord -- exported only in word/api.js -- so
+                    // here the deletion is otherwise aimed blind. See insertLink.
+                    me._smartPickerCell = me.getSmartPickerCell();
                 }
             });
         },
@@ -1130,6 +1106,12 @@ define([
 
         onSmartPickerClick: function() {
             if (!this.api) return;
+            // Whatever the caret menu may still be waiting for, this reply
+            // will not be it. Dropping the record here is what keeps a request
+            // the host never answered or cancelled -- its modal closed some way
+            // that told us nothing -- from making this insertion delete a
+            // "/query" the user typed minutes ago somewhere else.
+            this._smartPicker.clear();
             // Open Nextcloud's own Smart Picker, with no provider preselected so it
             // shows its provider list. Deliberately not our caret menu: that exists
             // to keep the "/" flow inside the editor, whereas this button is the
@@ -1451,6 +1433,26 @@ define([
             Common.NotificationCenter.trigger('storage:image-insert', data);
         },
         
+        /**
+         * Where the selection is, as one comparable string.
+         *
+         * Absolute (referenceType.A) so a relative reference cannot make two
+         * different cells look alike, and prefixed with the sheet, because
+         * $B$3 on another sheet is another cell.
+         *
+         * @return {String} e.g. "0!$B$3", or '' when the api cannot say
+         */
+        getSmartPickerCell: function() {
+            if (!this.api || typeof this.api.asc_getActiveRangeStr !== 'function') return '';
+            try {
+                return this.api.asc_getActiveWorksheetIndex() + '!' +
+                    this.api.asc_getActiveRangeStr(Asc.referenceType.A);
+            } catch (e) {
+                // Never let a probe stop an insertion.
+                return '';
+            }
+        },
+
         insertLink: function(data) { // gateway
             if (!this.api) return;
             // null when this reply is not the answer to our request, in which
@@ -1461,6 +1463,18 @@ define([
             if (replace && !Common.Utils.SmartPicker.triggerStillThere(this.api, replace)) {
                 replace = null;
             }
+            // And only if the selection has not moved since the request. Both
+            // insertion paths below act on wherever the selection is now, and
+            // triggerStillThere cannot help here: asc_GetCurrentWord is exported
+            // only in word/api.js, so it always answers "cannot tell" in the
+            // spreadsheet and the deletion would go in blind. A cell reached by
+            // scrolling or by a co-author's change is not where the "/" was
+            // typed, so there is nothing of ours to delete there.
+            if (replace && this._smartPickerCell &&
+                    this._smartPickerCell !== this.getSmartPickerCell()) {
+                replace = null;
+            }
+            this._smartPickerCell = '';
             if (replace !== null) {
                 // Insert the link as plain TEXT (a cell hyperlink is whole-cell
                 // and would re-link/replace the cell). NOTE: use isCellEdited,
@@ -1475,7 +1489,17 @@ define([
                     // first or pluginMethod's addText won't land. (text-input
                     // path never adds a "+" the way asc_insertInCell while
                     // editing would.)
-                    var areaEl = document.getElementById('area_id');
+                    //
+                    // Deliberately no "is the cell empty" guard here, unlike the
+                    // branch below. That guard exists because that branch
+                    // *appends* to a value it did not read from the caret, so a
+                    // formula or a number silently becomes a broken string. This
+                    // one writes at the cursor the user put there by typing "/",
+                    // between exactly the characters they chose -- the same thing
+                    // typing any other character would do. Refusing it would
+                    // reject the feature's normal case, "Hello /f", not protect
+                    // anything.
+                    var areaEl = document.getElementById(Common.Utils.SmartPickerIds.INPUT_AREA);
                     if (areaEl && areaEl.focus) { try { areaEl.focus(); } catch (e) {} }
                     if (typeof this.api['pluginMethod_InputText'] === 'function') {
                         this.api['pluginMethod_InputText'](data, replace);
@@ -1504,10 +1528,9 @@ define([
                     // where the branch above inserts at the cursor.
                     if (cur !== '') {
                         Common.NotificationCenter.trigger('edit:complete');
-                        Common.UI.warning({
-                            msg: this.txtCellNotEmpty
-                                || 'This cell is not empty. Insert the link into an empty cell, or double-click the cell to place it inside.'
-                        });
+                        // From the locale file, as every other string this
+                        // controller shows is (see txtInvalidRange).
+                        Common.UI.warning({msg: this.txtCellNotEmpty});
                         return;
                     }
                     this.api.asc_insertInCell(data, Asc.c_oAscPopUpSelectorType.None);

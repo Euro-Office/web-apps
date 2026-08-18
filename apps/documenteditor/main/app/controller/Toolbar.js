@@ -34,7 +34,6 @@
 define([
     'core',
     'common/main/lib/component/Window',
-    'common/main/lib/util/AssistantInsert',
     'common/main/lib/util/SmartPicker',
     'common/main/lib/view/SmartPickerMenu',
     'documenteditor/main/app/view/Toolbar',
@@ -256,40 +255,9 @@ define([
 
             Common.NotificationCenter.on('app:ready', me.onAppReady.bind(me));
             Common.NotificationCenter.on('app:face', me.onAppShowed.bind(me));
-            Common.Gateway.on('setsmartpickeravailable', function(available) {
-                me._smartPickerAvailable = !!available;
-                me.toolbar.btnSmartPicker && me.toolbar.btnSmartPicker.setVisible(!!available);
-            });
-            Common.Gateway.on('insertassistantresult', function(data) {
-                // Sent when the user presses "Insert into document" in Nextcloud's
-                // own Assistant form. The host has already turned the model's
-                // markdown into HTML, so formatting survives.
-                Common.Utils.AssistantInsert.insert(me.api, data || {});
-            });
-            Common.Gateway.on('setsmartpickerproviders', function(data) {
-                // Pushed by the host rather than fetched by us: the list has to
-                // come from whichever page opens the picker, and only that page
-                // knows which providers it can actually open.
-                Common.Views.SmartPickerMenu.setProviders(data && data.providers);
-            });
-            Common.Gateway.on('setsmartpickercancel', function() {
-                // The "/" was typed by the user, so it stays -- as it does in
-                // Nextcloud's own editors when their picker is dismissed.
-                me._smartPicker.clear();
-                Common.NotificationCenter.trigger('edit:complete');
-            });
-            me._smartPicker = Common.Utils.SmartPicker.createPending();
-            Common.Utils.SmartPicker.installTrigger({
-                isAvailable: function() { return !!me._smartPickerAvailable; },
-                onActivity: function() { me._smartPicker.clear(); },
-                getHolder: function() { return $('#editor_sdk'); },
-                onPick: function(providerId, replace) {
-                    // replace is "/" plus whatever was typed after it; the reply
-                    // deletes exactly that before inserting the link.
-                    me._smartPicker.begin(replace);
-                    Common.Gateway.requestSmartPicker('', 'toolbar', providerId);
-                }
-            });
+            // Gateway wiring, the "/" trigger and the pending record are the
+            // same in all three editors; only insertLink below is not.
+            me._smartPicker = Common.Utils.SmartPicker.install(me);
         },
 
         setMode: function(mode) {
@@ -3522,6 +3490,12 @@ define([
 
         onSmartPickerClick: function() {
             if (!this.api) return;
+            // Whatever the caret menu may still be waiting for, this reply
+            // will not be it. Dropping the record here is what keeps a request
+            // the host never answered or cancelled -- its modal closed some way
+            // that told us nothing -- from making this insertion delete a
+            // "/query" the user typed minutes ago somewhere else.
+            this._smartPicker.clear();
             // Open Nextcloud's own Smart Picker, with no provider preselected so it
             // shows its provider list. Deliberately not our caret menu: that exists
             // to keep the "/" flow inside the editor, whereas this button is the
