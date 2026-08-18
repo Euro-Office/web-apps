@@ -23,10 +23,15 @@
  *   - Accepting an entry replaces "/" plus the query with the picker's result,
  *     the way tiptap's command() does deleteRange(range) before inserting.
  *
- * Writer, Presentation and Spreadsheet share all of that. Only the insertion
- * itself genuinely differs per editor, so only that stays in the controllers.
+ * Writer, Presentation and Spreadsheet share all of that, and share it through
+ * install() rather than by copy. Only what genuinely differs per editor stays in
+ * the controllers: how insertLink puts the reply into the document, and -- in
+ * the spreadsheet, which has no text caret until a cell is being edited -- where
+ * the menu is anchored.
  */
-define([], function () { 'use strict';
+define([
+    'common/main/lib/util/AssistantInsert'
+], function () { 'use strict';
 
     Common.Utils = Common.Utils || {};
 
@@ -36,6 +41,32 @@ define([], function () { 'use strict';
 
     // Held down while typing a character; they must never be mistaken for one.
     var MODIFIER_KEYS = ['Shift', 'Control', 'Alt', 'AltGraph', 'Meta', 'CapsLock', 'Dead'];
+
+    // Keys that change what is before the caret without typing a character, so
+    // the last one typed stops describing it. Tab is here for the spreadsheet,
+    // where it commits the cell and moves to the next one.
+    var CARET_MOVED_KEYS = CARET_KEYS.concat(['Backspace', 'Tab']);
+
+    // sdkjs element ids this feature reaches for, named once here rather than
+    // spelled out at each use. Shared with SmartPickerMenu, which anchors to
+    // two of them.
+    var IDS = Common.Utils.SmartPickerIds = {
+        // The scrollable document holder every editor renders into. Menus and
+        // popups in these editors are appended to it.
+        HOLDER: 'editor_sdk',
+        // The hidden input sdkjs types into. Matched as a prefix, not exactly:
+        // it also creates #area_id_main (the scrollable holder) and
+        // #area_id_parent, and which of them is the keydown target varies by
+        // editor and by edit state.
+        INPUT_AREA: 'area_id',
+        // The blinking caret itself, a 2x13px element the drawing document
+        // moves with the cursor (declared in each editor's api.js).
+        CARET: 'id_target_cursor',
+        // The IME wrapper, which sdkjs places below the caret.
+        IME_WRAPPER: 'area_id_parent'
+    };
+
+    var INPUT_AREA_RE = new RegExp(IDS.INPUT_AREA);
 
     Common.Utils.SmartPicker = {
 
@@ -63,6 +94,24 @@ define([], function () { 'use strict';
          */
         PENDING_TIMEOUT: 600000,
 
+        /*
+         * How long after picking a provider a keystroke still counts as part of
+         * the trigger rather than as proof that no reply is coming.
+         *
+         * Picking ends the caret session at once, but the host's modal only
+         * takes focus a moment later, so there is a real gap in which a
+         * keystroke still lands in the document, immediately behind the "/query"
+         * that is about to be deleted. Treating that as "the picker never
+         * opened" was wrong twice over -- the reply IS ours, and the extra
+         * character is part of what has to go -- and it showed as the trigger
+         * and the stray character surviving in front of the inserted link.
+         *
+         * Three seconds is far longer than the hand-off (a postMessage and a
+         * modal mount) and far shorter than a person reading the picker, so it
+         * separates the two cases without needing to know which one is running.
+         */
+        HANDOFF_GRACE: 3000,
+
         /**
          * Whether the trigger text is still sitting where it was typed.
          *
@@ -85,10 +134,19 @@ define([], function () { 'use strict';
          * is data loss that syncs to everyone. So this only permits the deletion
          * when the text before the caret still looks like what was typed.
          *
-         * It compares against the query rather than the whole trigger because the
-         * leading "/" is punctuation and therefore a word boundary: after "Hello
-         * /pro" the word part before the caret is "pro". A trigger of just "/"
-         * expects "", which is what a caret sitting right after punctuation gives.
+         * What "the word before the caret" means is sdkjs's answer, not a guess,
+         * and it is not the same for both shapes of trigger. Measured against a
+         * running Writer with the caret at the end:
+         *
+         *     "Hello /pro"  -> "pro"      "/pro" -> "pro"
+         *     "Hello /"     -> "/"        ""     -> ""
+         *
+         * So "/" is a boundary once a query follows it, but on its own the
+         * punctuation run is itself the current word. Expecting "" for a bare
+         * trigger -- which is what the boundary rule alone suggests -- made this
+         * refuse every deletion for the commonest flow there is: type "/", pick
+         * the first entry, and the "/" stayed in the document in front of the
+         * link.
          *
          * Editors whose api does not expose asc_GetCurrentWord (Presentation and
          * Spreadsheet at the time of writing -- it is exported only in word/api.js)
@@ -102,8 +160,9 @@ define([], function () { 'use strict';
         triggerStillThere: function (api, replace) {
             if (!api || typeof api.asc_GetCurrentWord !== 'function') return true;
 
-            var expected = (replace || '').replace(/^\//, '');
-            var actual;
+            var query = (replace || '').replace(/^\//, ''),
+                expected = query === '' ? (replace || '') : query,
+                actual;
             try {
                 actual = api.asc_GetCurrentWord(-1);
             } catch (e) {
@@ -155,7 +214,11 @@ define([], function () { 'use strict';
             if (/["'<>\s]/.test(url)) return '';
             if (/^https?:\/\//i.test(url)) return url;
             if (/^data:image\//i.test(url)) return url;
-            if (/^\/[^\/]/.test(url)) return url;                // host-relative
+            // Host-relative. The second character must be neither "/" nor "\":
+            // browsers normalise backslashes to slashes when parsing a url, so
+            // "/\host/path" is the protocol-relative "//host/path" and would
+            // fetch from a foreign origin while reading as same-origin here.
+            if (/^\/[^\/\\]/.test(url)) return url;
             return '';
         },
 
@@ -201,6 +264,34 @@ define([], function () { 'use strict';
                     return replace;
                 },
 
+                /**
+                 * A key reached the editor while a request was outstanding.
+                 *
+                 * Within the hand-off grace the key was typed into the document
+                 * behind the trigger, so it becomes part of what the reply has
+                 * to delete. After it, the picker is not in front of the editor
+                 * any more and no reply can still be coming, so the record goes.
+                 *
+                 * Backspace shortens the text again, but never past the "/"
+                 * itself: once that is gone there is no trigger left to delete.
+                 *
+                 * @param {String} key the KeyboardEvent key
+                 */
+                activity: function (key) {
+                    if (!this.isPending()) return;
+                    if (Date.now() - _at <= Common.Utils.SmartPicker.HANDOFF_GRACE) {
+                        if (typeof key === 'string' && key.length === 1) {
+                            _replace += key;
+                            return;
+                        }
+                        if (key === 'Backspace' && _replace.length > 1) {
+                            _replace = _replace.slice(0, -1);
+                            return;
+                        }
+                    }
+                    this.clear();
+                },
+
                 clear: function () {
                     _active = false;
                     _at = 0;
@@ -234,6 +325,29 @@ define([], function () { 'use strict';
                 query = null,            // null while no menu session is running
                 menu = function () { return Common.Views.SmartPickerMenu; };
 
+            /*
+             * Forget which character was typed last.
+             *
+             * lastKey stands in for "the character before the caret", so it is
+             * only meaningful while the caret is where the typing left it.
+             * Anything that moves it elsewhere -- a click, an arrow key, a
+             * Backspace, Tab into the next cell -- makes it a statement about
+             * some other position, and undefined ("nothing typed yet") is the
+             * honest answer instead.
+             *
+             * Leaving it stale is what made the feature work exactly once per
+             * document: "/" sets lastKey to "/", and slashCanTrigger then
+             * rejects every later "/" -- in any cell, any text box, any
+             * paragraph -- until a space happened to be typed first.
+             *
+             * Undefined is the permissive value, so "/" typed after clicking
+             * into the middle of a word opens the menu where tiptap, which
+             * reads the real character out of the document, would not. That is
+             * the deliberate trade: this cannot see the document, and a menu
+             * one Escape away beats a trigger that silently stops working.
+             */
+            var forgetPrevKey = function () { lastKey = undefined; };
+
             var closeSession = function () {
                 if (query === null) return;
                 query = null;
@@ -243,7 +357,8 @@ define([], function () { 'use strict';
             var startSession = function () {
                 query = '';
                 menu().open({
-                    holderEl: options.getHolder(),
+                    // jQuery-wrapped, as every getHolder() in these editors is.
+                    holder: options.getHolder(),
                     getAnchor: options.getAnchor,
                     onPick: function (providerId) {
                         // Replace the trigger and everything typed after it,
@@ -329,7 +444,7 @@ define([], function () { 'use strict';
                 // the keydown target varies by editor and edit state. Anchoring
                 // this to /^area_id$/ silently killed the trigger.
                 var targetId = (e.target && e.target.id) || '';
-                if (!/area_id/.test(targetId)) return;
+                if (!INPUT_AREA_RE.test(targetId)) return;
 
                 if (query !== null) {
                     if (handleSession(e)) {
@@ -338,14 +453,19 @@ define([], function () { 'use strict';
                         return;
                     }
                 } else {
-                    // Reaching the editor at all means the host's picker is not
-                    // in front of it, so no reply can still be coming.
-                    options.onActivity && options.onActivity();
+                    // Outside the hand-off gap, reaching the editor at all means
+                    // the host's picker is not in front of it and no reply can
+                    // still be coming. Inside it, the key was typed behind the
+                    // trigger and has to be deleted with it -- which is why the
+                    // key itself is passed on. See createPending().activity.
+                    options.onActivity && options.onActivity(e.key);
                 }
 
                 var prevKey = lastKey;
                 if (e.key.length === 1 || e.key === 'Enter') {
                     lastKey = e.key;
+                } else if (CARET_MOVED_KEYS.indexOf(e.key) >= 0) {
+                    forgetPrevKey();
                 }
 
                 // Do not test altKey: browsers report AltGr as ctrl+alt, and on
@@ -364,13 +484,95 @@ define([], function () { 'use strict';
 
             document.addEventListener('keydown', handler, true);
 
-            // Clicking anywhere moves the caret out of the match -- except in
-            // the menu itself, where the click is how an entry gets picked.
-            document.addEventListener('mousedown', function (e) {
+            /*
+             * Clicking anywhere moves the caret out of the match -- except in
+             * the menu itself, where the click is how an entry gets picked.
+             *
+             * pointerdown, not just mousedown. sdkjs handles pointerdown on its
+             * canvas overlay (#id_viewer_overlay) and cancels it, so the browser
+             * never synthesises the compatibility mousedown at all: measured in a
+             * running Writer, one click in the document area fires pointerdown
+             * and click on the overlay and no mousedown whatsoever. A
+             * mousedown-only listener therefore never ran, and the session
+             * outlived the click -- the list was hidden by the editor's own
+             * hideAll(), so it looked dismissed, while Enter much later still
+             * opened the host's picker for whatever was left highlighted.
+             *
+             * Both are bound because pointer events are what the editor cancels,
+             * not what every path emits; closeSession() and forgetPrevKey() are
+             * idempotent, so handling the same gesture twice costs nothing.
+             */
+            var onPointerDown = function (e) {
+                forgetPrevKey();
                 if (query === null) return;
                 if (menu().ownsElement(e.target)) return;
                 closeSession();
-            }, true);
+            };
+            document.addEventListener('pointerdown', onPointerDown, true);
+            document.addEventListener('mousedown', onPointerDown, true);
+        },
+
+        /**
+         * Wire one editor's Toolbar controller up to the Smart Picker.
+         *
+         * This was three copies, one per editor, and they had already drifted:
+         * different comment wording, one carrying a guard the others did not.
+         * Everything that is genuinely per-editor -- where the menu is anchored,
+         * and how insertLink puts the reply into the document -- stays with the
+         * editor; everything else is the same wiring three times, so it lives
+         * here and a fix now lands in all three at once.
+         *
+         * The controller keeps `_smartPickerAvailable`, because its own render
+         * path re-applies the button's visibility from it after a re-render.
+         *
+         * @param {Object} controller the editor's Toolbar controller
+         * @param {Object} options {getAnchor, onPick} per-editor hooks, optional
+         * @return {Object} the pending record insertLink consumes
+         */
+        install: function (controller, options) {
+            options = options || {};
+            var pending = this.createPending();
+
+            Common.Gateway.on('setsmartpickeravailable', function (available) {
+                controller._smartPickerAvailable = !!available;
+                var btn = controller.toolbar && controller.toolbar.btnSmartPicker;
+                btn && btn.setVisible(!!available);
+            });
+            Common.Gateway.on('setsmartpickerproviders', function (data) {
+                // Pushed by the host rather than fetched by us: the list has to
+                // come from whichever page opens the picker, and only that page
+                // knows which providers it can actually open.
+                Common.Views.SmartPickerMenu.setProviders(data && data.providers);
+            });
+            Common.Gateway.on('setsmartpickercancel', function () {
+                // The "/" and its query were typed by the user, so they stay --
+                // as they do in Nextcloud's Text app when its picker is
+                // dismissed. Just restore focus.
+                pending.clear();
+                Common.NotificationCenter.trigger('edit:complete');
+            });
+            Common.Gateway.on('insertassistantresult', function (data) {
+                // Sent when the user presses "Insert into document" in
+                // Nextcloud's own Assistant form. The host has already turned
+                // the model's markdown into HTML, so formatting survives.
+                Common.Utils.AssistantInsert.insert(controller.api, data || {});
+            });
+
+            Common.Utils.SmartPicker.installTrigger({
+                isAvailable: function () { return !!controller._smartPickerAvailable; },
+                onActivity: function (key) { pending.activity(key); },
+                getHolder: function () { return $('#' + IDS.HOLDER); },
+                getAnchor: options.getAnchor,
+                onPick: function (providerId, replace) {
+                    // replace is "/" plus whatever was typed after it; the reply
+                    // deletes exactly that before inserting the link.
+                    pending.begin(replace);
+                    options.onPick && options.onPick(replace);
+                    Common.Gateway.requestSmartPicker('', 'toolbar', providerId);
+                }
+            });
+
+            return pending;
         }
     };
 
