@@ -54,5 +54,8 @@
   "SSE.ApplicationView.txtFullScreen": "Pełny ekran",
   "SSE.ApplicationView.txtPrint": " Drukuj",
   "SSE.ApplicationView.txtSearch": "Szukaj",
-  "SSE.ApplicationView.txtShare": "Udostępnij"
+  "SSE.ApplicationView.txtShare": "Udostępnij",
+  "SSE.ApplicationController.errorCopyDisabled": "Ze względów bezpieczeństwa zawartość tego dokumentu nie może być kopiowana.",
+  "SSE.ApplicationController.errorFileNotAssembled": "Ten plik jest otwierany z kopii zapasowej serwera i nie jest zapisywany w pamięci.<br>Użyj opcji „Zapisz jako...”, aby zapisać go na dysku.",
+  "SSE.ApplicationController.errorForcedViewMode": "Ten plik jest otwarty w trybie przeglądania.<br>Plik jest zablokowany do edycji lub Twoje prawa dostępu nie pozwalają na edycję."
 }
