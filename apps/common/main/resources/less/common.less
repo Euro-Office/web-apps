@@ -240,8 +240,11 @@ label {
             border-left: @scaled-one-px-value solid @border-toolbar;
         }
 
+        // Inverted with the move to the symbol sheet: the icon is the <svg>
+        // now, and the <span> only survives for classes that are not sprite
+        // names. Hiding the svg here left the File menu without icons.
         svg.menu-item-icon {
-            display: none;
+            display: block;
         }
 
         span.menu-item-icon {
