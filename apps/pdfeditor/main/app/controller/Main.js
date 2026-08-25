@@ -124,7 +124,7 @@ define([
 
                 this.stackMacrosRequests = [];
 
-                this._state = {isDisconnected: false, usersCount: 1, fastCoauth: true, lostEditingRights: false, licenseType: false, isDocModified: false, requireUserAction: true};
+                this._state = {isDisconnected: false, usersCount: 1, fastCoauth: true, lostEditingRights: false, isDocModified: false, requireUserAction: true};
                 this.languages = null;
 
                 // Initialize viewport
@@ -338,9 +338,6 @@ define([
                 }
 
                 me.defaultTitleText = '{{APP_TITLE_TEXT}}';
-                me.warnNoLicense  = (me.warnNoLicense || '').replace(/%1/g, '{{COMPANY_NAME}}');
-                me.warnNoLicenseUsers = (me.warnNoLicenseUsers || '').replace(/%1/g, '{{COMPANY_NAME}}');
-                me.textNoLicenseTitle = (me.textNoLicenseTitle || '').replace(/%1/g, '{{COMPANY_NAME}}');
             },
 
             loadConfig: function(data) {
@@ -511,7 +508,6 @@ define([
                 }
 
                 this.api.asc_registerCallback('asc_onGetEditorPermissions', _.bind(this.onEditorPermissions, this));
-                this.api.asc_registerCallback('asc_onLicenseChanged',       _.bind(this.onLicenseChanged, this));
                 this.api.asc_registerCallback('asc_onRunAutostartMacroses', _.bind(this.onRunAutostartMacroses, this));
                 this.api.asc_setDocInfo(docInfo);
                 this.api.asc_getEditorPermissions(this.editorConfig.licenseUrl, this.editorConfig.customerId);
@@ -1116,8 +1112,7 @@ define([
 
                 leftmenuController.getView('LeftMenu').disableMenu('all',false);
 
-                if (me.appOptions.canBranding)
-                    me.getApplication().getController('LeftMenu').leftMenu.getMenu('about').setLicInfo(me.editorConfig.customization);
+                me.getApplication().getController('LeftMenu').leftMenu.getMenu('about').setLicInfo(me.editorConfig.customization);
 
                 documentHolderController.getView().on('editcomplete', _.bind(me.onEditComplete, me));
 
@@ -1195,26 +1190,9 @@ define([
                     this.getApplication().getController('LeftMenu').leftMenu.showMenu('file:saveas');
             },
 
-            onLicenseChanged: function(params) {
-                var licType = params.asc_getLicenseType();
-                if (licType !== undefined && (this.appOptions.isPDFAnnotate || this.appOptions.isPDFFill || this.appOptions.isRestrictedEdit) &&
-                   (licType===Asc.c_oLicenseResult.Connections || licType===Asc.c_oLicenseResult.UsersCount || licType===Asc.c_oLicenseResult.ConnectionsOS || licType===Asc.c_oLicenseResult.UsersCountOS
-                   || licType===Asc.c_oLicenseResult.SuccessLimit && (this.appOptions.trialMode & Asc.c_oLicenseMode.Limited) !== 0))
-                    this._state.licenseType = licType;
-
-                if (licType !== undefined && this.appOptions.canLiveView && (licType===Asc.c_oLicenseResult.ConnectionsLive || licType===Asc.c_oLicenseResult.ConnectionsLiveOS ||
-                    licType===Asc.c_oLicenseResult.UsersViewCount || licType===Asc.c_oLicenseResult.UsersViewCountOS))
-                    this._state.licenseType = licType;
-
-                if (this._isDocReady)
-                    this.applyLicense();
-            },
-
             applyLicense: function() {
                 if (this.editorConfig.mode === 'view') {
-                    if (this.appOptions.canLiveView && (this._state.licenseType===Asc.c_oLicenseResult.ConnectionsLive || this._state.licenseType===Asc.c_oLicenseResult.ConnectionsLiveOS ||
-                        this._state.licenseType===Asc.c_oLicenseResult.UsersViewCount || this._state.licenseType===Asc.c_oLicenseResult.UsersViewCountOS ||
-                        !this.appOptions.isAnonymousSupport && !!this.appOptions.user.anonymous)) {
+                    if (!this.appOptions.isAnonymousSupport && !!this.appOptions.user.anonymous) {
                         // show warning or write to log if Common.Utils.InternalSettings.get("de-settings-coauthmode") was true ???
                         this.disableLiveViewing(true);
                     }
@@ -1227,59 +1205,6 @@ define([
                         msg  : this.warnLicenseAnonymous,
                         buttons: ['ok']
                     });
-                } else if (this._state.licenseType) {
-                    var license = this._state.licenseType,
-                        title = this.textNoLicenseTitle,
-                        buttons = ['ok'],
-                        primary = 'ok',
-                        modal = false;
-                    if ((this.appOptions.trialMode & Asc.c_oLicenseMode.Limited) !== 0 &&
-                        (license===Asc.c_oLicenseResult.SuccessLimit || this.appOptions.permissionsLicense===Asc.c_oLicenseResult.SuccessLimit)) {
-                        license = this.warnLicenseLimitedRenewed;
-                    } else if (license===Asc.c_oLicenseResult.Connections || license===Asc.c_oLicenseResult.UsersCount) {
-                        title = this.titleReadOnly;
-                        license = (license===Asc.c_oLicenseResult.Connections) ? this.tipLicenseExceeded : this.tipLicenseUsersExceeded;
-                    } else {
-                        license = (license===Asc.c_oLicenseResult.ConnectionsOS) ? this.warnNoLicense : this.warnNoLicenseUsers;
-                        buttons = [{value: 'buynow', caption: this.textBuyNow}, {value: 'contact', caption: this.textContactUs}];
-                        primary = 'buynow';
-                        modal = true;
-                    }
-
-                    if (this._state.licenseType!==Asc.c_oLicenseResult.SuccessLimit && (this.appOptions.isPDFFill || this.appOptions.isPDFAnnotate || this.appOptions.isPDFEdit || this.appOptions.isRestrictedEdit)) {
-                        this.disableEditing(true);
-                        this.api.asc_coAuthoringDisconnect();
-                        Common.NotificationCenter.trigger('api:disconnect');
-                    }
-
-                    !modal ? Common.UI.TooltipManager.showTip({ step: 'licenseError', text: license, header: title, target: '#toolbar', maxwidth: 430,
-                                                                automove: true, noHighlight: true, noArrow: true, textButton: this.textContinue}) :
-                        Common.UI.info({
-                            maxwidth: 500,
-                        title: title,
-                            msg  : license,
-                            buttons: buttons,
-                            primary: primary,
-                            callback: function(btn) {
-                                if (btn == 'buynow')
-                                    window.open('{{PUBLISHER_URL}}', "_blank");
-                                else if (btn == 'contact')
-                                    window.open('mailto:{{SALES_EMAIL}}', "_blank");
-                            }
-                        });
-                } else if (!this.appOptions.isDesktopApp && !this.appOptions.canBrandingExt &&
-                    this.editorConfig && this.editorConfig.customization && (this.editorConfig.customization.loaderName || this.editorConfig.customization.loaderLogo ||
-                        this.editorConfig.customization.font && (this.editorConfig.customization.font.size || this.editorConfig.customization.font.name))) {
-                    Common.UI.warning({
-                        title: this.textPaidFeature,
-                        msg  : this.textCustomLoader,
-                        buttons: [{value: 'contact', caption: this.textContactUs}, {value: 'close', caption: this.textClose}],
-                        primary: 'contact',
-                        callback: function(btn) {
-                            if (btn == 'contact')
-                                window.open('mailto:{{SALES_EMAIL}}', "_blank");
-                        }
-                    });
                 }
             },
 
@@ -1291,21 +1216,6 @@ define([
             },
 
             onEditorPermissions: function(params) {
-                var licType = params.asc_getLicenseType();
-                if (Asc.c_oLicenseResult.Expired === licType || Asc.c_oLicenseResult.Error === licType || Asc.c_oLicenseResult.ExpiredTrial === licType ||
-                    Asc.c_oLicenseResult.NotBefore === licType || Asc.c_oLicenseResult.ExpiredLimited === licType) {
-                    Common.UI.warning({
-                        title: Asc.c_oLicenseResult.NotBefore === licType ? this.titleLicenseNotActive : this.titleLicenseExp,
-                        msg: Asc.c_oLicenseResult.NotBefore === licType ? this.warnLicenseBefore : this.warnLicenseExp,
-                        buttons: [],
-                        closable: false
-                    });
-                    if (this._isDocReady || this._isPermissionsInited) { // receive after refresh file
-                        this.disableEditing(true);
-                        Common.NotificationCenter.trigger('api:disconnect');
-                    }
-                    return;
-                }
 
                 if ( this.onServerVersion(params.asc_getBuildVersion()) || !this.onLanguageLoaded()) return;
                 if ( this._isDocReady || this._isPermissionsInited ) {
@@ -1318,9 +1228,7 @@ define([
 
                 this.appOptions.isXpsViewer = /^(?:(djvu|xps|oxps))$/.test(this.document.fileType) || Common.Locale.getDefaultLanguage() === 'ru';
                 this.appOptions.isForm = !this.appOptions.isXpsViewer && !!window.isPDFForm;
-                this.appOptions.permissionsLicense = licType;
                 this.appOptions.canAnalytics   = params.asc_getIsAnalyticsEnable();
-                this.appOptions.canLicense     = (licType === Asc.c_oLicenseResult.Success || licType === Asc.c_oLicenseResult.SuccessLimit);
                 this.appOptions.isLightVersion = params.asc_getIsLight();
                 this.appOptions.canCoAuthoring = !this.appOptions.isLightVersion;
                 this.appOptions.isOffline      = this.api.asc_isOffline();
@@ -1331,23 +1239,23 @@ define([
                 var pdfEdit = !this.appOptions.isXpsViewer && !this.appOptions.isForm;
                 this.appOptions.canEdit = this.appOptions.isEdit = pdfEdit;
 
-                this.appOptions.canPDFAnnotate = pdfEdit && this.appOptions.canLicense && (this.permissions.edit!== false || this.permissions.comment!==false || this.appOptions.isDesktopApp && this.appOptions.isOffline);
+                this.appOptions.canPDFAnnotate = pdfEdit && (this.permissions.edit!== false || this.permissions.comment!==false || this.appOptions.isDesktopApp && this.appOptions.isOffline);
                 this.appOptions.isPDFAnnotate  = this.appOptions.canPDFAnnotate && (this.editorConfig.mode !== 'view');
-                this.appOptions.canPDFEdit     = pdfEdit && this.appOptions.canLicense && (this.permissions.edit !== false || this.appOptions.isDesktopApp && this.appOptions.isOffline);
+                this.appOptions.canPDFEdit     = pdfEdit && (this.permissions.edit !== false || this.appOptions.isDesktopApp && this.appOptions.isOffline);
                 this.appOptions.isPDFEdit      = false; // this.appOptions.canPDFEdit && this.editorConfig.mode !== 'view'; !! always open in view mode
                 // isPDFFill - can only fill forms, co-edit and save changes to file
-                this.appOptions.isPDFFill = pdfEdit && this.appOptions.canLicense && (this.permissions.fillForms!==false) && !this.appOptions.canPDFAnnotate && !this.appOptions.canPDFEdit && (this.editorConfig.mode !== 'view');
+                this.appOptions.isPDFFill = pdfEdit && (this.permissions.fillForms!==false) && !this.appOptions.canPDFAnnotate && !this.appOptions.canPDFEdit && (this.editorConfig.mode !== 'view');
                 this.appOptions.canSwitchMode = this.appOptions.isPDFAnnotate && this.appOptions.canPDFEdit; // switch between View/annotate and pdf edit
                 // this.appOptions.canCoEditing = (this.appOptions.isPDFAnnotate || this.appOptions.isPDFFill) && !(this.appOptions.isDesktopApp && this.appOptions.isOffline);
 
-                this.appOptions.canUseHistory  = pdfEdit && this.appOptions.canLicense && this.editorConfig.canUseHistory && this.appOptions.canCoAuthoring && !this.appOptions.isOffline;
+                this.appOptions.canUseHistory  = pdfEdit && this.editorConfig.canUseHistory && this.appOptions.canCoAuthoring && !this.appOptions.isOffline;
                 this.appOptions.canHistoryClose  = this.editorConfig.canHistoryClose;
                 this.appOptions.canHistoryRestore= this.editorConfig.canHistoryRestore;
 
-                this.appOptions.canComments    = pdfEdit && this.appOptions.canLicense && (this.permissions.comment===undefined ? this.appOptions.isPDFAnnotate : this.permissions.comment) && (this.editorConfig.mode !== 'view');
+                this.appOptions.canComments    = pdfEdit && (this.permissions.comment===undefined ? this.appOptions.isPDFAnnotate : this.permissions.comment) && (this.editorConfig.mode !== 'view');
                 this.appOptions.canComments    = this.appOptions.canComments && !((typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.comments===false);
                 this.appOptions.canViewComments = this.appOptions.canComments || pdfEdit && !((typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.comments===false);
-                this.appOptions.canChat        = this.appOptions.canLicense && !this.appOptions.isOffline && !(this.permissions.chat===false || (this.permissions.chat===undefined) &&
+                this.appOptions.canChat        = !this.appOptions.isOffline && !(this.permissions.chat===false || (this.permissions.chat===undefined) &&
                                                                                                                (typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.chat===false);
                 if ((typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.chat!==undefined) {
                     console.log("Obsolete: The 'chat' parameter of the 'customization' section is deprecated. Please use 'chat' parameter in the permissions instead.");
@@ -1373,9 +1281,9 @@ define([
                 this.appOptions.isEditTextSupport = this.appOptions.isEdit;
                 this.appOptions.canProtect     = (this.permissions.protect!==false);
                 this.appOptions.canHelp        = false; // temporarily disabled — was: !((typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.help===false);
-                this.appOptions.canSubmitForms = this.appOptions.canLicense && (typeof (this.editorConfig.customization) == 'object') && !!this.editorConfig.customization.submitForm && !this.appOptions.isOffline;
+                this.appOptions.canSubmitForms = (typeof (this.editorConfig.customization) == 'object') && !!this.editorConfig.customization.submitForm && !this.appOptions.isOffline;
                 // TODO: check view mode
-                this.appOptions.canFillForms   = this.appOptions.canLicense && this.appOptions.isForm && ((this.permissions.fillForms===undefined) ? (this.permissions.edit !== false) : this.permissions.fillForms) && (this.editorConfig.mode !== 'view');
+                this.appOptions.canFillForms   = this.appOptions.isForm && ((this.permissions.fillForms===undefined) ? (this.permissions.edit !== false) : this.permissions.fillForms) && (this.editorConfig.mode !== 'view');
                 this.appOptions.isAnonymousSupport = !!this.api.asc_isAnonymousSupport();
                 this.appOptions.isRestrictedEdit = !this.appOptions.isEdit && this.appOptions.canFillForms;
                 this.appOptions.canSaveToFile = this.appOptions.isEdit && this.appOptions.isDesktopApp && this.appOptions.isOffline || this.appOptions.isRestrictedEdit ||
@@ -1403,15 +1311,13 @@ define([
                 this.editorConfig.customization && Common.UI.FeaturesManager.init(this.editorConfig.customization.features, this.appOptions.canBrandingExt);
                 Common.UI.TabStyler.init(this.editorConfig.customization); // call after Common.UI.FeaturesManager.init() !!!
 
-                this.appOptions.canBranding  = params.asc_getCustomization();
-                if (this.appOptions.canBranding)
-                    appHeader.setBranding(this.editorConfig.customization, this.appOptions);
+                appHeader.setBranding(this.editorConfig.customization, this.appOptions);
 
                 this.appOptions.canFavorite = this.document.info && (this.document.info.favorite!==undefined && this.document.info.favorite!==null) && !this.appOptions.isOffline;
                 this.appOptions.canFavorite && appHeader.setFavorite(this.document.info.favorite);
 
-                this.appOptions.canUseCommentPermissions = this.appOptions.canLicense && !!this.permissions.commentGroups;
-                this.appOptions.canUseUserInfoPermissions = this.appOptions.canLicense && !!this.permissions.userInfoGroups;
+                this.appOptions.canUseCommentPermissions = !!this.permissions.commentGroups;
+                this.appOptions.canUseUserInfoPermissions = !!this.permissions.userInfoGroups;
                 AscCommon.UserInfoParser.setParser(true);
                 AscCommon.UserInfoParser.setCurrentName(this.appOptions.user.fullname);
                 this.appOptions.canUseCommentPermissions && AscCommon.UserInfoParser.setCommentPermissions(this.permissions.commentGroups);
@@ -1430,7 +1336,7 @@ define([
                     Common.NotificationCenter.on('comments:showdummy', _.bind(this.onShowDummyComment, this));
 
                 // change = true by default in editor
-                this.appOptions.canLiveView = !!params.asc_getLiveViewerSupport() && (this.editorConfig.mode === 'view') && !this.appOptions.isXpsViewer; // viewer: change=false when no flag canLiveViewer (i.g. old license), change=true by default when canLiveViewer==true
+                this.appOptions.canLiveView = (this.editorConfig.mode === 'view') && !this.appOptions.isXpsViewer;
                 this.appOptions.canChangeCoAuthoring = this.appOptions.isEdit && this.appOptions.canCoAuthoring && !(this.editorConfig.coEditing && typeof this.editorConfig.coEditing == 'object' && this.editorConfig.coEditing.change===false) ||
                                                         this.appOptions.canLiveView && !(this.editorConfig.coEditing && typeof this.editorConfig.coEditing == 'object' && this.editorConfig.coEditing.change===false);
 

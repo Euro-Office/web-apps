@@ -26,7 +26,7 @@ class CollaborationController extends Component {
         const appOptions = this.props.storeAppOptions;
         /** coauthoring begin **/
         let isFastCoauth;
-        if (appOptions.isEdit && appOptions.canLicense && !appOptions.isOffline && appOptions.canCoAuthoring) {
+        if (appOptions.isEdit && !appOptions.isOffline && appOptions.canCoAuthoring) {
             // Force ON fast co-authoring mode
             isFastCoauth = true;
             api.asc_SetFastCollaborative(isFastCoauth);

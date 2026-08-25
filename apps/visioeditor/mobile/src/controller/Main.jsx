@@ -33,7 +33,6 @@ class MainController extends Component {
         };
 
         this._state = {
-            licenseType: false,
             isDocModified: false,
             requireUserAction: true
         };
@@ -135,7 +134,6 @@ class MainController extends Component {
                 }
 
                 this.api.asc_registerCallback('asc_onGetEditorPermissions', onEditorPermissions);
-                this.api.asc_registerCallback('asc_onLicenseChanged', this.onLicenseChanged.bind(this));
                 this.api.asc_setDocInfo(docInfo);
                 this.api.asc_getEditorPermissions(this.editorConfig.licenseUrl, this.editorConfig.customerId);
 
@@ -153,36 +151,14 @@ class MainController extends Component {
             };
 
             const onEditorPermissions = params => {
-                const licType = params.asc_getLicenseType();
-                const { t } = this.props;
-                // const _t = t('Controller.Main', { returnObjects:true });
-               
-                if (Asc.c_oLicenseResult.Expired === licType ||
-                    Asc.c_oLicenseResult.Error === licType ||
-                    Asc.c_oLicenseResult.ExpiredTrial === licType ||
-                    Asc.c_oLicenseResult.NotBefore === licType ||
-                    Asc.c_oLicenseResult.ExpiredLimited === licType) {
-
-                    f7.dialog.create({
-                        title: Asc.c_oLicenseResult.NotBefore === licType ? t('Controller.Main.titleLicenseNotActive') : t('Controller.Main.titleLicenseExp'),
-                        text: Asc.c_oLicenseResult.NotBefore === licType ? t('Controller.Main.warnLicenseBefore') : t('Controller.Main.warnLicenseExp')
-                    }).open();
-                    if (this._isDocReady || this._isPermissionsInited) { // receive after refresh file
-                        Common.Notifications.trigger('api:disconnect');
-                    }
-                    return;
-                }
-
                 if ( this.onServerVersion(params.asc_getBuildVersion()) ) return;
                 if ( this._isDocReady || this._isPermissionsInited ) {
                     this.api.asc_LoadDocument();
                     return;
                 }
 
-                this.appOptions.canLicense = (licType === Asc.c_oLicenseResult.Success || licType === Asc.c_oLicenseResult.SuccessLimit);
-
                 const storeAppOptions = this.props.storeAppOptions;
-                storeAppOptions.setPermissionOptions(this.document, licType, params, this.permissions, EditorUIController.isSupportEditFeature());
+                storeAppOptions.setPermissionOptions(this.document, params, this.permissions, EditorUIController.isSupportEditFeature());
                 this.applyMode(storeAppOptions);
 
                 this._isPermissionsInited = true;
@@ -397,29 +373,9 @@ class MainController extends Component {
         this._state.requireUserAction = false;
     }
 
-    onLicenseChanged (params) {
-        const appOptions = this.props.storeAppOptions;
-        const licType = params.asc_getLicenseType();
-        if (licType !== undefined && (appOptions.canEdit || appOptions.isRestrictedEdit) && appOptions.config.mode !== 'view' &&
-            (licType === Asc.c_oLicenseResult.Connections || licType === Asc.c_oLicenseResult.UsersCount || licType === Asc.c_oLicenseResult.ConnectionsOS || licType === Asc.c_oLicenseResult.UsersCountOS
-                || licType === Asc.c_oLicenseResult.SuccessLimit && (appOptions.trialMode & Asc.c_oLicenseMode.Limited) !== 0))
-            this._state.licenseType = licType;
-
-        if (licType !== undefined && appOptions.canLiveView && (licType===Asc.c_oLicenseResult.ConnectionsLive || licType===Asc.c_oLicenseResult.ConnectionsLiveOS||
-                                                                licType===Asc.c_oLicenseResult.UsersViewCount || licType===Asc.c_oLicenseResult.UsersViewCountOS))
-            this._state.licenseType = licType;
-
-        if (this._isDocReady && this._state.licenseType)
-            this.applyLicense();
-    }
-
     applyLicense () {
         const { t } = this.props;
         const _t = t('Controller.Main', {returnObjects:true});
-
-        const warnNoLicense  = _t.warnNoLicense.replace(/%1/g, __COMPANY_NAME__);
-        const warnNoLicenseUsers = _t.warnNoLicenseUsers.replace(/%1/g, __COMPANY_NAME__);
-        const textNoLicenseTitle = _t.textNoLicenseTitle.replace(/%1/g, __COMPANY_NAME__);
 
         const appOptions = this.props.storeAppOptions;
         if (appOptions.config.mode !== 'view' && !EditorUIController.isSupportEditFeature()) {
@@ -439,9 +395,7 @@ class MainController extends Component {
         }
 
         if (appOptions.config.mode === 'view') {
-            if (appOptions.canLiveView && (this._state.licenseType===Asc.c_oLicenseResult.ConnectionsLive || this._state.licenseType===Asc.c_oLicenseResult.ConnectionsLiveOS ||
-                                            this._state.licenseType===Asc.c_oLicenseResult.UsersViewCount || this._state.licenseType===Asc.c_oLicenseResult.UsersViewCountOS ||
-                                            !appOptions.isAnonymousSupport && !!appOptions.config.user.anonymous)) {
+            if (!appOptions.isAnonymousSupport && !!appOptions.config.user.anonymous) {
                 appOptions.canLiveView = false;
                 this.api.asc_SetFastCollaborative(false);
             }
@@ -455,63 +409,7 @@ class MainController extends Component {
                 text : _t.warnLicenseAnonymous,
                 buttons: [{ text: _t.textOk }]
             }).open();
-        } else if (this._state.licenseType) {
-            let license = this._state.licenseType;
-            let buttons = [{ text: _t.textOk }];
-            let title = textNoLicenseTitle;
-            if ((appOptions.trialMode & Asc.c_oLicenseMode.Limited) !== 0 &&
-                (license === Asc.c_oLicenseResult.SuccessLimit ||
-                    appOptions.permissionsLicense === Asc.c_oLicenseResult.SuccessLimit)
-            ) {
-                license = _t.warnLicenseLimitedRenewed;
-            } else if (license === Asc.c_oLicenseResult.Connections || license === Asc.c_oLicenseResult.UsersCount) {
-                title = _t.titleReadOnly;
-                license = (license===Asc.c_oLicenseResult.Connections) ? _t.tipLicenseExceeded : _t.tipLicenseUsersExceeded;
-            } else {
-                license = (license === Asc.c_oLicenseResult.ConnectionsOS) ? warnNoLicense : warnNoLicenseUsers;
-                buttons = [{
-                    text: _t.textBuyNow,
-                    bold: true,
-                    onClick: function() {
-                        window.open(`${__PUBLISHER_URL__}`, "_blank");
-                    }
-                },
-                    {
-                        text: _t.textContactUs,
-                        onClick: function() {
-                            window.open(`mailto:${__SALES_EMAIL__}`, "_blank");
-                        }
-                    }];
-            }
-            if (this._state.licenseType === Asc.c_oLicenseResult.SuccessLimit) {
-                Common.Notifications.trigger('toolbar:activatecontrols');
-            } else {
-                Common.Notifications.trigger('toolbar:activatecontrols');
-                this.api.asc_coAuthoringDisconnect();
-                Common.Notifications.trigger('api:disconnect');
-            }
-
-            f7.dialog.create({
-                title: title,
-                text : license,
-                buttons: buttons
-            }).open();
         } else {
-            if (!appOptions.isDesktopApp && !appOptions.canBrandingExt &&
-                appOptions.config && appOptions.config.customization && (appOptions.config.customization.loaderName || appOptions.config.customization.loaderLogo)) {
-                f7.dialog.create({
-                    title: _t.textPaidFeature,
-                    text  : _t.textCustomLoader,
-                    buttons: [{
-                        text: _t.textContactUs,
-                        bold: true,
-                        onClick: () => {
-                            window.open(`mailto:${__SALES_EMAIL__}`, "_blank");
-                        }
-                    },
-                        { text: _t.textClose }]
-                }).open();
-            }
             Common.Notifications.trigger('toolbar:activatecontrols');
         }
     }

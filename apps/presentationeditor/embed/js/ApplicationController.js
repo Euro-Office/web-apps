@@ -529,22 +529,7 @@ PE.ApplicationController = new(function(){
     }
 
     function onEditorPermissions(params) {
-        var licType = params.asc_getLicenseType();
-        if (Asc.c_oLicenseResult.Expired === licType || Asc.c_oLicenseResult.Error === licType || Asc.c_oLicenseResult.ExpiredTrial === licType ||
-            Asc.c_oLicenseResult.NotBefore === licType || Asc.c_oLicenseResult.ExpiredLimited === licType) {
-                common.controller.modals.showWarning({
-                    title: Asc.c_oLicenseResult.NotBefore === licType ? me.titleLicenseNotActive : me.titleLicenseExp,
-                    message: Asc.c_oLicenseResult.NotBefore === licType ? me.warnLicenseBefore : me.warnLicenseExp,
-                    buttons: []
-                });
-        
-                $('#dlg-warning').css('z-index', 20002);
-                $('#dlg-warning button.close, #dlg-warning .modal-footer').remove();
-            return;
-        }
-
-        appOptions.canBranding  = params.asc_getCustomization();
-        appOptions.canBranding && setBranding(config.customization);
+        setBranding(config.customization);
 
         var $parent = labelDocName.parent();
         var _left_width = common.utils.getPosition($parent).left,
@@ -932,10 +917,6 @@ PE.ApplicationController = new(function(){
         errorInconsistentExtPptx: 'An error has occurred while opening the file.<br>The file content corresponds to presentations (e.g. pptx), but the file has the inconsistent extension: %1.',
         errorInconsistentExtPdf: 'An error has occurred while opening the file.<br>The file content corresponds to one of the following formats: pdf/djvu/xps/oxps, but the file has the inconsistent extension: %1.',
         errorInconsistentExt: 'An error has occurred while opening the file.<br>The file content does not match the file extension.',
-        titleLicenseExp: 'License expired',
-        titleLicenseNotActive: 'License not active',
-        warnLicenseBefore: 'License not active. Please contact your administrator.',
-        warnLicenseExp: 'Your license has expired. Please update your license and refresh the page.',
         errorEditingDownloadas: 'An error occurred during the work with the document.<br>Use the \'Download as...\' option to save the file backup copy to your computer hard drive.',
         errorToken: 'The document security token is not correctly formed.<br>Please contact your Document Server administrator.',
         txtPressLink: 'Click the link to open it',

@@ -77,7 +77,7 @@ define([
                 weakCompare     : function(obj1, obj2){return obj1.type === obj2.type;}
             });
 
-            this._state = {isDisconnected: false, licenseType: false, isDocModified: false, isFormDisconnected: false};
+            this._state = {isDisconnected: false, isDocModified: false, isFormDisconnected: false};
             this._isDisabled = false;
 
             this.view = this.createView('ApplicationView').render();
@@ -188,10 +188,6 @@ define([
             });
 
             window.onbeforeunload = _.bind(this.onBeforeUnload, this);
-
-            this.warnNoLicense  = this.warnNoLicense.replace(/%1/g, '{{COMPANY_NAME}}');
-            this.warnNoLicenseUsers = this.warnNoLicenseUsers.replace(/%1/g, '{{COMPANY_NAME}}');
-            this.textNoLicenseTitle = this.textNoLicenseTitle.replace(/%1/g, '{{COMPANY_NAME}}');
         },
 
         onDocumentResize: function() {
@@ -623,7 +619,6 @@ define([
 
             this.api.asc_registerCallback('asc_onGetEditorPermissions', _.bind(this.onEditorPermissions, this));
             this.api.asc_registerCallback('asc_onRunAutostartMacroses', _.bind(this.onRunAutostartMacroses, this));
-            this.api.asc_registerCallback('asc_onLicenseChanged',       _.bind(this.onLicenseChanged, this));
             this.api.asc_setDocInfo(docInfo);
             this.api.asc_getEditorPermissions(this.editorConfig.licenseUrl, this.editorConfig.customerId);
             this.api.asc_enableKeyEvents(true);
@@ -638,20 +633,6 @@ define([
         },
 
         onEditorPermissions: function(params) {
-            var licType = params.asc_getLicenseType();
-            if (Asc.c_oLicenseResult.Expired === licType || Asc.c_oLicenseResult.Error === licType || Asc.c_oLicenseResult.ExpiredTrial === licType ||
-                Asc.c_oLicenseResult.NotBefore === licType || Asc.c_oLicenseResult.ExpiredLimited === licType) {
-                Common.UI.warning({
-                    title: Asc.c_oLicenseResult.NotBefore === licType ? this.titleLicenseNotActive : this.titleLicenseExp,
-                    msg: Asc.c_oLicenseResult.NotBefore === licType ? this.warnLicenseBefore : this.warnLicenseExp,
-                    buttons: [],
-                    closable: false
-                });
-                if (this._isDocReady || this._isPermissionsInited) { // receive after refresh file
-                    Common.NotificationCenter.trigger('api:disconnect');
-                }
-                return;
-            }
 
             if ( this.onServerVersion(params.asc_getBuildVersion())) return;
             if ( this._isDocReady || this._isPermissionsInited ) {
@@ -664,20 +645,17 @@ define([
                 this.permissions.edit = this.permissions.review = false;
 
             this.appOptions.isOffline      = this.api.asc_isOffline();
-            this.appOptions.trialMode      = params.asc_getLicenseMode();
             this.appOptions.isBeta         = params.asc_getIsBeta();
-            this.appOptions.canLicense     = (licType === Asc.c_oLicenseResult.Success || licType === Asc.c_oLicenseResult.SuccessLimit);
-            this.appOptions.canSubmitForms = this.appOptions.canLicense && (typeof (this.editorConfig.customization) == 'object') && !this.appOptions.isOffline &&
+            this.appOptions.canSubmitForms = (typeof (this.editorConfig.customization) == 'object') && !this.appOptions.isOffline &&
                                             !!this.editorConfig.customization.submitForm && (typeof this.editorConfig.customization.submitForm !== 'object' || this.editorConfig.customization.submitForm.visible!==false);
 
             var type = /^(?:(pdf))$/.exec(this.document.fileType); // can fill forms only in pdf format
             this.appOptions.isOFORM = !!(type && typeof type[1] === 'string');
-            this.appOptions.canFillForms = this.appOptions.canLicense && this.appOptions.isOFORM && ((this.permissions.fillForms===undefined) ? (this.permissions.edit !== false) : this.permissions.fillForms) &&
+            this.appOptions.canFillForms = this.appOptions.isOFORM && ((this.permissions.fillForms===undefined) ? (this.permissions.edit !== false) : this.permissions.fillForms) &&
                                            (this.editorConfig.mode !== 'view') && !this._state.isFormDisconnected;
             this.api.asc_setViewMode(!this.appOptions.canFillForms);
 
-            this.appOptions.canBranding  = params.asc_getCustomization();
-            this.appOptions.canBranding && this.setBranding(this.appOptions.customization);
+            this.setBranding(this.appOptions.customization);
 
             this.appOptions.canDownload       = this.permissions.download !== false;
             this.appOptions.canPrint          = (this.permissions.print !== false);
@@ -838,17 +816,6 @@ define([
             Common.NotificationCenter.trigger('api:disconnect');
         },
 
-        onLicenseChanged: function(params) {
-            var licType = params.asc_getLicenseType();
-            if (licType !== undefined && this.appOptions.canFillForms &&
-                (licType===Asc.c_oLicenseResult.Connections || licType===Asc.c_oLicenseResult.UsersCount || licType===Asc.c_oLicenseResult.ConnectionsOS || licType===Asc.c_oLicenseResult.UsersCountOS
-                    || licType===Asc.c_oLicenseResult.SuccessLimit && (this.appOptions.trialMode & Asc.c_oLicenseMode.Limited) !== 0))
-                this._state.licenseType = licType;
-
-            if (this._isDocReady)
-                this.applyLicense();
-        },
-
         applyLicense: function() {
             if (!this.appOptions.isAnonymousSupport && !!this.appOptions.user.anonymous) {
                 this.api.asc_coAuthoringDisconnect();
@@ -857,45 +824,6 @@ define([
                     title: this.notcriticalErrorTitle,
                     msg  : this.warnLicenseAnonymous,
                     buttons: ['ok']
-                });
-            } else if (this._state.licenseType) {
-                var license = this._state.licenseType,
-                    title = this.textNoLicenseTitle,
-                    buttons = ['ok'],
-                    primary = 'ok',
-                    modal = false;
-                if ((this.appOptions.trialMode & Asc.c_oLicenseMode.Limited) !== 0 &&
-                    (license===Asc.c_oLicenseResult.SuccessLimit || this.appOptions.permissionsLicense===Asc.c_oLicenseResult.SuccessLimit)) {
-                    license = this.warnLicenseLimitedRenewed;
-                } else if (license===Asc.c_oLicenseResult.Connections || license===Asc.c_oLicenseResult.UsersCount) {
-                    title = this.titleReadOnly;
-                    license = (license===Asc.c_oLicenseResult.Connections) ? this.tipLicenseExceeded : this.tipLicenseUsersExceeded;
-                } else {
-                    license = (license===Asc.c_oLicenseResult.ConnectionsOS) ? this.warnNoLicense : this.warnNoLicenseUsers;
-                    buttons = [{value: 'buynow', caption: this.textBuyNow}, {value: 'contact', caption: this.textContactUs}];
-                    primary = 'buynow';
-                    modal = true;
-                }
-
-                if (this._state.licenseType!==Asc.c_oLicenseResult.SuccessLimit && this.appOptions.canFillForms) {
-                    this.api.asc_coAuthoringDisconnect();
-                    Common.NotificationCenter.trigger('api:disconnect');
-                }
-
-                !modal ? Common.UI.TooltipManager.showTip({ step: 'licenseError', text: license, header: title, target: '#toolbar', maxwidth: 430,
-                        automove: true, noHighlight: true, noArrow: true, textButton: this.textContinue}) :
-                Common.UI.info({
-                    maxwidth: 500,
-                    title: title,
-                    msg  : license,
-                    buttons: buttons,
-                    primary: primary,
-                    callback: function(btn) {
-                        if (btn == 'buynow')
-                            window.open('{{PUBLISHER_URL}}', "_blank");
-                        else if (btn == 'contact')
-                            window.open('mailto:{{SALES_EMAIL}}', "_blank");
-                    }
                 });
             }
         },
@@ -1810,15 +1738,13 @@ define([
                 this.view.menuItemsDarkMode.setChecked(Common.UI.Themes.isContentThemeDark());
             }
 
-            if (this.appOptions.canBranding) {
-                var value = this.appOptions.customization;
-                if ( value && value.logo && (value.logo.image || value.logo.imageDark || value.logo.imageLight)) {
-                    var image = Common.UI.Themes.isDarkTheme() ? (value.logo.imageDark || value.logo.image || value.logo.imageLight) :
-                                                                 (value.logo.imageLight || value.logo.image || value.logo.imageDark);
-                    if (_logoImage !== image) {
-                        _logoImage = image;
-                        $('#header-logo img').attr('src', image);
-                    }
+            var value = this.appOptions.customization;
+            if ( value && value.logo && (value.logo.image || value.logo.imageDark || value.logo.imageLight)) {
+                var image = Common.UI.Themes.isDarkTheme() ? (value.logo.imageDark || value.logo.image || value.logo.imageLight) :
+                                                             (value.logo.imageLight || value.logo.image || value.logo.imageDark);
+                if (_logoImage !== image) {
+                    _logoImage = image;
+                    $('#header-logo img').attr('src', image);
                 }
             }
         },
@@ -2392,13 +2318,6 @@ define([
         errorServerVersion: 'The editor version has been updated. The page will be reloaded to apply the changes.',
         titleUpdateVersion: 'Version changed',
         errorUpdateVersion: 'The file version has been changed. The page will be reloaded.',
-        warnLicenseLimitedRenewed: 'License needs to be renewed.<br>You have a limited access to document editing functionality.<br>Please contact your administrator to get full access',
-        warnLicenseLimitedNoAccess: 'License expired.<br>You have no access to document editing functionality.<br>Please contact your administrator.',
-        warnNoLicense: "You've reached the limit for simultaneous connections to %1 editors. This document will be opened for viewing only.<br>Contact %1 sales team for personal upgrade terms.",
-        warnNoLicenseUsers: "You've reached the user limit for %1 editors. Contact %1 sales team for personal upgrade terms.",
-        textBuyNow: 'Visit website',
-        textNoLicenseTitle: 'License limit reached',
-        textContactUs: 'Contact sales',
         errorLoadingFont: 'Fonts are not loaded.<br>Please contact your Document Server administrator.',
         errorConnectToServer: 'The document could not be saved. Please check connection settings or contact your administrator.<br>When you click the \'OK\' button, you will be prompted to download the document.',
         errorTokenExpire: 'The document security token has expired.<br>Please contact your Document Server administrator.',
@@ -2425,24 +2344,16 @@ define([
         errorEditingSaveas: 'An error occurred during the work with the document.<br>Use the \'Save as...\' option to save the file backup copy to your computer hard drive.',
         textSaveAs: 'Save as PDF',
         textSaveAsDesktop: 'Save as...',
-        warnLicenseExp: 'Your license has expired.<br>Please update your license and refresh the page.',
-        titleLicenseExp: 'License expired',
         errorTextFormWrongFormat: 'The value entered does not match the format of the field.',
         errorInconsistentExtDocx: 'An error has occurred while opening the file.<br>The file content corresponds to text documents (e.g. docx), but the file has the inconsistent extension: %1.',
         errorInconsistentExtXlsx: 'An error has occurred while opening the file.<br>The file content corresponds to spreadsheets (e.g. xlsx), but the file has the inconsistent extension: %1.',
         errorInconsistentExtPptx: 'An error has occurred while opening the file.<br>The file content corresponds to presentations (e.g. pptx), but the file has the inconsistent extension: %1.',
         errorInconsistentExtPdf: 'An error has occurred while opening the file.<br>The file content corresponds to one of the following formats: pdf/djvu/xps/oxps, but the file has the inconsistent extension: %1.',
         errorInconsistentExt: 'An error has occurred while opening the file.<br>The file content does not match the file extension.',
-        warnLicenseBefore: 'License not active.<br>Please contact your administrator.',
-        titleLicenseNotActive: 'License not active',
         warnLicenseAnonymous: 'Access denied for anonymous users. This document will be opened for viewing only.',
         textSubmitOk: 'Your PDF form has been saved in the Complete section. You can fill out this form again and send another result.',
         textFilled: 'Filled',
         savingText: 'Saving',
-        tipLicenseExceeded: 'The document is open in read-only mode as the maximum number of simultaneous connections allowed by license has been reached.<br><br>Please try again later or contact the document owner if you need editing access.',
-        tipLicenseUsersExceeded: 'The document is open in read-only mode as the maximum number of users allowed to edit documents by license has been reached.<br><br>Please try again later or contact the document owner if you need editing access.',
-        titleReadOnly: 'Read-Only Mode',
-        textContinue: 'Continue',
         txtSignedForm: 'This document has been signed and cannot be edited.',
         errorCopyDisabled: 'For security reasons, the contents of this document cannot be copied to the clipboard.'
 
