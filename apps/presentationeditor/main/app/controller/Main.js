@@ -1076,14 +1076,14 @@ define([
                             me.api.UpdateInterfaceState();
 
                             Common.NotificationCenter.trigger('document:ready', 'main');
-                            me.applyLicense();
+                            me.applyRestrictions();
                         }
                     }, 50);
                 } else {
                     documentHolderController.getView().createDelayedElementsViewer();
                     Common.Utils.injectSvgIcons();
                     Common.NotificationCenter.trigger('document:ready', 'main');
-                    me.applyLicense();
+                    me.applyRestrictions();
                 }
 
                 // TODO bug 43960
@@ -1117,7 +1117,7 @@ define([
                     this.getApplication().getController('LeftMenu').leftMenu.showMenu('file:saveas');
             },
 
-            applyLicense: function() {
+            applyRestrictions: function() {
                 if (this.editorConfig.mode === 'view') {
                     if (!this.appOptions.isAnonymousSupport && !!this.appOptions.user.anonymous) {
                         // show warning or write to log if Common.Utils.InternalSettings.get("pe-settings-coauthmode") was true ???

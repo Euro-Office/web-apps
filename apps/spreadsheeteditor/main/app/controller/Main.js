@@ -1144,7 +1144,7 @@ define([
                                 toolbarController.onApiCoAuthoringDisconnect();
 
                             Common.NotificationCenter.trigger('document:ready', 'main');
-                            me.applyLicense();
+                            me.applyRestrictions();
                         }
                     }, 50);
                 } else {
@@ -1153,7 +1153,7 @@ define([
                     documentHolderView.createDelayedElementsViewer();
                     Common.Utils.injectSvgIcons();
                     Common.NotificationCenter.trigger('document:ready', 'main');
-                    me.applyLicense();
+                    me.applyRestrictions();
                 }
                 // TODO bug 43960
                 if (!me.appOptions.isEditMailMerge && !me.appOptions.isEditDiagram && !me.appOptions.isEditOle) {
@@ -1206,7 +1206,7 @@ define([
                 }
             },
 
-            applyLicense: function() {
+            applyRestrictions: function() {
                 if (this.editorConfig.mode === 'view') {
                     if (!this.appOptions.isAnonymousSupport && !!this.appOptions.user.anonymous) {
                         // show warning or write to log if Common.Utils.InternalSettings.get("sse-settings-coauthmode") was true ???

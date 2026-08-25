@@ -362,7 +362,7 @@ class MainController extends Component {
         this.api.Resize();
         this.api.zoomFitToPage();
 
-        this.applyLicense();
+        this.applyRestrictions();
 
         Common.Gateway.documentReady();
         f7.emit('resize');
@@ -373,7 +373,7 @@ class MainController extends Component {
         this._state.requireUserAction = false;
     }
 
-    applyLicense () {
+    applyRestrictions () {
         const { t } = this.props;
         const _t = t('Controller.Main', {returnObjects:true});
 

@@ -816,7 +816,7 @@ define([
             Common.NotificationCenter.trigger('api:disconnect');
         },
 
-        applyLicense: function() {
+        applyRestrictions: function() {
             if (!this.appOptions.isAnonymousSupport && !!this.appOptions.user.anonymous) {
                 this.api.asc_coAuthoringDisconnect();
                 Common.NotificationCenter.trigger('api:disconnect');
@@ -1596,7 +1596,7 @@ define([
             this.updateWindowTitle(true);
 
             if (this.editorConfig.mode !== 'view') // if want to open editor, but viewer is loaded
-                this.applyLicense();
+                this.applyRestrictions();
 
             Common.Gateway.on('processmouse',       _.bind(this.onProcessMouse, this));
             Common.Gateway.on('downloadas',         _.bind(this.onDownloadAs, this));

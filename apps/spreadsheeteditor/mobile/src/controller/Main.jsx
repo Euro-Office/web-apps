@@ -744,7 +744,7 @@ class MainController extends Component {
             mode: appOptions.isEdit ? 'edit' : 'view'
         });
 
-        this.applyLicense();
+        this.applyRestrictions();
 
         //R1C1 reference style
         value = LocalStorage.getBool('sse-settings-r1c1', false);
@@ -818,7 +818,7 @@ class MainController extends Component {
         window.onunload = this.onUnload.bind(this);
     }
 
-    applyLicense () {
+    applyRestrictions () {
         const { t } = this.props;
         const _t = t('Controller.Main', {returnObjects:true});
 

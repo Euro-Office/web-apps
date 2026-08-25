@@ -392,7 +392,7 @@ class MainController extends Component {
                 this.api.Resize();
                 this.api.zoomFitToWidth();
                 this.api.asc_GetDefaultTableStyles && setTimeout(() => {this.api.asc_GetDefaultTableStyles()}, 1);
-                this.applyLicense();
+                this.applyRestrictions();
 
                 Common.Notifications.trigger('document:ready');
                 Common.Gateway.documentReady();
@@ -665,7 +665,7 @@ class MainController extends Component {
             clearTimeout(this.continueSavingTimer);
     }
 
-    applyLicense () {
+    applyRestrictions () {
         const { t } = this.props;
         const _t = t('Main', {returnObjects:true});
 

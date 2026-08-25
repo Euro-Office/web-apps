@@ -586,7 +586,7 @@ class MainController extends Component {
         this.api.zoomFitToPage();
         this.api.asc_GetDefaultTableStyles && setTimeout(() => {this.api.asc_GetDefaultTableStyles()}, 1);
 
-        this.applyLicense();
+        this.applyRestrictions();
 
         Common.Gateway.documentReady();
         f7.emit('resize');
@@ -639,7 +639,7 @@ class MainController extends Component {
         }
     }
 
-    applyLicense () {
+    applyRestrictions () {
         const { t } = this.props;
         const _t = t('Controller.Main', {returnObjects:true});
 
