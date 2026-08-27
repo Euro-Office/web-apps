@@ -310,7 +310,7 @@ const EditCommentDialog = inject("storeComments")(observer(({storeComments, comm
                         </div>
                     </div>
                     <div class='wrap-textarea'>
-                        <textarea id='comment-text' placeholder='${_t.textEditComment}' autofocus>${comment.comment}</textarea>
+                        <textarea id='comment-text' placeholder='${_t.textEditComment}' autofocus>${Common.Utils.String.htmlEncode(comment.comment)}</textarea>
                     </div>
                 </div>`,
             on: {
@@ -596,7 +596,7 @@ const EditReplyDialog = inject("storeComments")(observer(({storeComments, commen
                         </div>
                     </div>
                     <div class='wrap-textarea'>
-                        <textarea id='reply-text' placeholder='${_t.textEditComment}' autofocus>${reply.reply}</textarea>
+                        <textarea id='reply-text' placeholder='${_t.textEditComment}' autofocus>${Common.Utils.String.htmlEncode(reply.reply)}</textarea>
                     </div>
                 </div>`,
             on: {

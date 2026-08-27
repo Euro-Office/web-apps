@@ -1,429 +1,188 @@
-import React, { Fragment } from 'react';
-import { Link } from 'framework7-react';
-import { Device } from '../../../../common/mobile/utils/device';
-import {
-    PlatformIcon,
-    buildFocusObjectGetters,
-    initThemeColors as commonInitThemeColors,
-    icons
-} from '../../../../common/mobile/lib/editor';
-
-/**
- * Toolbar option components for spreadsheet editor
- * @namespace
+/*
+ *
+ * (c) Copyright Ascensio System SIA 2010-2019
+ *
+ * This program is a free software product. You can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License (AGPL)
+ * version 3 as published by the Free Software Foundation. In accordance with
+ * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
+ * that Ascensio System SIA expressly excludes the warranty of non-infringement
+ * of any third-party rights.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
+ * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * You can contact Ascensio System SIA at 20A-12 Ernesta Birznieka-Upisha
+ * street, Riga, Latvia, EU, LV-1050.
+ *
+ * The  interactive user interfaces in modified source and object code versions
+ * of the Program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU AGPL version 3.
+ *
+ * Pursuant to Section 7(b) of the License you must retain the original Product
+ * logo when distributing the program. Pursuant to Section 7(e) we decline to
+ * grant you any rights under trademark law for use of our trademarks.
+ *
+ * All the Product's GUI elements, including illustrations and icon sets, as
+ * well as technical writing content are licensed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International. See the License
+ * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ *
  */
+
+/*
+ * Modified by Euro-Office, 2026: re-implemented for the current React/mobx mobile
+ * architecture. Logic ported from the pre-2020 Backbone-based mobile controllers cited per
+ * exported method below, not copied verbatim from this file's own original content.
+ */
+
+import ToolbarIconLink from '../../../../common/mobile/lib/component/ToolbarIconLink';
+import { initThemeColors } from '../../../../common/mobile/lib/initThemeColors';
+import { getTopFocusObject } from '../../../../common/mobile/lib/getTopFocusObject';
+import { toolbarIcons } from '../../../../common/mobile/lib/toolbarIcons';
+import { isObjectSelectionType, getCellSelectionTags, computeToolbarEditAddDisabled } from './selectionRules';
+import React, { Fragment } from 'react';
+
+export { initThemeColors };
+
+// ported from ONLYOFFICE/web-apps@v5.4.99.1767, apps/spreadsheeteditor/mobile/app/controller/Toolbar.js:163-198
+// (onApiCanRevert / onApiSelectionChanged). The Backbone controller toggled a
+// #toolbar-undo/#toolbar-redo `disabled` class and called disableControl(['add','edit'], islocked);
+// the actual undo/redo/lock *state* computation already lives in the modern code
+// (Main.jsx asc_onCanUndoChanged/asc_onCanRedoChanged, store/focusObjects.js setIsLocked), so this
+// object only renders buttons from the already-computed flags handed in via props — no state
+// recomputation happens here. The paired Backbone view/Toolbar.js template (exact original
+// markup/ids) was not fetched; 'toolbar-undo'/'toolbar-redo'/'toolbar-edit'/
+// 'toolbar-add' ids below are carried over from the Backbone controller's own id selectors
+// (undo/redo confirmed at Toolbar.js:163-171) and, for edit/add, inferred from that same
+// naming convention rather than confirmed against the view template.
 export const toolbarOptions = {
-    /**
-     * Renders the undo and redo toolbar buttons
-     * @param {object} props
-     * @param {boolean} props.disabledUndo - Whether undo button should be disabled
-     * @param {boolean} props.disabledRedo - Whether redo button should be disabled
-     * @param {function} props.onUndoClick - Handler for undo button click
-     * @param {function} props.onRedoClick - Handler for redo button click
-     * @returns {JSX.Element} Undo/redo buttons fragment
-     */
-    getUndoRedo: ({ disabledUndo, disabledRedo, onUndoClick, onRedoClick }) => (
-        <Fragment>
-            <Link iconOnly className={disabledUndo ? 'disabled' : ''} onClick={onUndoClick}>
-                <PlatformIcon {...icons.undo} />
-            </Link>
-            <Link iconOnly className={disabledRedo ? 'disabled' : ''} onClick={onRedoClick}>
-                <PlatformIcon {...icons.redo} />
-            </Link>
-        </Fragment>
-    ),
-    /**
-     * Renders the edit and add toolbar buttons
-     * @param {object} props
-     * @param {boolean} props.disabled - Whether buttons should be disabled
-     * @param {function} props.onEditClick - Handler for edit button click
-     * @param {function} props.onAddClick - Handler for add button click
-     * @returns {JSX.Element} Toolbar buttons fragment
-     */
-    getEditOptions: ({ disabled, onEditClick, onAddClick }) => (
-        <Fragment>
-            <Link iconOnly className={disabled ? 'disabled' : ''} id="btn-edit" href={false} onClick={onEditClick}>
-                <PlatformIcon {...icons.edit} />
-            </Link>
-            <Link iconOnly className={disabled ? 'disabled' : ''} id="btn-add" href={false} onClick={onAddClick}>
-                <PlatformIcon {...icons.add} />
-            </Link>
-        </Fragment>
-    )
+    getUndoRedo({disabledUndo, disabledRedo, onUndoClick, onRedoClick}) {
+        return (
+            <Fragment>
+                <ToolbarIconLink id="toolbar-undo" disabled={disabledUndo} onClick={onUndoClick} icon={toolbarIcons.undo} />
+                <ToolbarIconLink id="toolbar-redo" disabled={disabledRedo} onClick={onRedoClick} icon={toolbarIcons.redo} />
+            </Fragment>
+        );
+    },
+
+    // `wsProps` has no Backbone precedent at all -- confirmed by reading the full Backbone
+    // Toolbar.js: it disabled 'add'/'edit' identically from one `islocked` value with no
+    // worksheet-protection concept. wsProps.Objects is a React-era addition, but it's real and
+    // load-bearing elsewhere in this exact app: EditingPage.jsx:98,105,119 gate *editing* an
+    // already-selected object on `wsProps.Objects && store.isLockedShape` (both must be true --
+    // protection alone doesn't block editing an unlocked object), while AddingPage.jsx:80 and
+    // AddOther.jsx:31 gate *inserting a new* object on `wsProps.Objects` alone (there's no specific
+    // object yet to check the lock state of). 'edit' and 'add' therefore need genuinely different
+    // disabled logic, not the one shared flag this used to have.
+    getEditOptions({disabled, wsProps, focusOn, isShapeLocked, onEditClick, onAddClick}) {
+        const { isEditDisabled, isAddDisabled } = computeToolbarEditAddDisabled({disabled, wsProps, focusOn, isShapeLocked});
+        return (
+            <Fragment>
+                <ToolbarIconLink id="toolbar-edit" disabled={isEditDisabled} onClick={onEditClick} icon={toolbarIcons.edit} />
+                <ToolbarIconLink id="toolbar-add" disabled={isAddDisabled} onClick={onAddClick} icon={toolbarIcons.add} />
+            </Fragment>
+        );
+    }
 };
 
-/**
- * Re-export of common theme colors initialization.
- * Provides consistent API where each editor exports all its dependencies.
- * TODO: Revisit as PoC matures - consumers could import directly from common.
- */
-export const initThemeColors = commonInitThemeColors;
+export { isObjectSelectionType, getCellSelectionTags, computeToolbarEditAddDisabled };
 
-/**
- * Initializes cell info tracking and selection handling
- * Registers callbacks for selection changes and builds getter methods on the store
- * @param {object} props - Props containing MobX stores
- * @param {object} props.storeFocusObjects - Store for tracking focused objects
- * @param {object} props.storeCellSettings - Store for cell settings
- * @param {object} props.storeTextSettings - Store for text settings
- * @param {object} props.storeChartSettings - Store for chart settings
- */
-export const initCellInfo = (props) => {
+// ported from ONLYOFFICE/web-apps@v5.4.99.1767, apps/spreadsheeteditor/mobile/app/controller/edit/EditCell.js
+// (setApi / onApiSelectionChanged / onApiEditorSelectionChanged), translated to drive the
+// already-existing modern store actions: store/cellSettings.js initCellSettings/initFontSettings
+// and store/focusObjects.js resetCellInfo/setIsLocked (both actions have no other caller among
+// the enumerated files — built anticipating this wiring). The Backbone `_isEdit` guard is
+// reproduced via storeAppOptions.isEdit, read fresh on each callback fire. Also builds `intf` and
+// wires asc_onFocusObject/changeFocus, and the cell/hyperlink tagging in getSelections's backing
+// state -- ported from EditContainer.js's onApiSelectionChanged else-branch (see comment above
+// isObjectSelectionType for the one inferred piece, asc_onFocusObject's reliability). Destructures
+// the three stores it needs out of `props` up front so the long-lived callback closures below don't
+// pin the entire (much larger) injected props tree in memory.
+export function initCellInfo(props) {
+    const { storeAppOptions, storeCellSettings, storeFocusObjects } = props;
     const api = Common.EditorApi.get();
-    const storeFocusObjects = props.storeFocusObjects;
-    const storeCellSettings = props.storeCellSettings;
-    const storeTextSettings = props.storeTextSettings;
-    const storeChartSettings = props.storeChartSettings;
+    let cellSelectionTags = [];
+
+    storeFocusObjects.intf = {
+        getSelections: () => cellSelectionTags,
+        // Each Image-type matcher below binds get_ObjectValue() to a local once and guards it --
+        // matching presentationeditor's isType() defensiveness for the same asc_onFocusObject
+        // contract, rather than assuming it's always truthy (also drops the redundant repeat calls
+        // the un-guarded version had).
+        getShapeObject: () => getTopFocusObject(storeFocusObjects._focusObjects, o => {
+            const value = o.get_ObjectValue();
+            return o.get_ObjectType() === Asc.c_oAscTypeSelectElement.Image && !!value && value.get_ShapeProperties();
+        }),
+        getImageObject: () => getTopFocusObject(storeFocusObjects._focusObjects, o => {
+            const value = o.get_ObjectValue();
+            return o.get_ObjectType() === Asc.c_oAscTypeSelectElement.Image && !!value &&
+                !value.get_ChartProperties() && !value.get_ShapeProperties();
+        }),
+        getChartObject: () => getTopFocusObject(storeFocusObjects._focusObjects, o => {
+            const value = o.get_ObjectValue();
+            return o.get_ObjectType() === Asc.c_oAscTypeSelectElement.Image && !!value && value.get_ChartProperties();
+        }),
+        getParagraphObject: () => getTopFocusObject(storeFocusObjects._focusObjects, o =>
+            o.get_ObjectType() === Asc.c_oAscTypeSelectElement.Paragraph),
+    };
+
+    api.asc_registerCallback('asc_onFocusObject', (objects) => {
+        const list = Array.from(objects || []);
+        storeFocusObjects.resetFocusObjects(list);
+        storeFocusObjects.changeFocus(list.length > 0);
+    });
 
     api.asc_registerCallback('asc_onSelectionChanged', (cellInfo) => {
+        if (!storeAppOptions.isEdit) return;
+
+        storeCellSettings.initCellSettings(cellInfo);
         storeFocusObjects.resetCellInfo(cellInfo);
         storeFocusObjects.setIsLocked(cellInfo);
-        storeCellSettings.initCellSettings(cellInfo);
-        storeTextSettings.initTextSettings(cellInfo);
 
-        let graphicObjects = api.asc_getGraphicObjectProps();
-        if (graphicObjects.length > 0) {
-            storeFocusObjects.resetFocusObjects(graphicObjects);
-            if (storeFocusObjects.focusOn !== 'obj') {
-                storeFocusObjects.changeFocus(true);
-            }
-            if (storeFocusObjects.chartObject) {
-                storeChartSettings.updateChartStyles(
-                    api.asc_getChartPreviews(storeFocusObjects.chartObject.get_ChartProperties().getType())
-                );
-            }
-        } else if (storeFocusObjects.focusOn !== 'cell') {
+        // ported from EditContainer.js's onApiSelectionChanged: `else { _settings.push('cell'); if
+        // (cellInfo.asc_getHyperlink()) _settings.push('hyperlink'); }` -- the object-type branches
+        // (chart/shape/image/text) are covered by asc_onFocusObject/store.objects above instead.
+        if (!isObjectSelectionType(cellInfo.asc_getSelectionType())) {
+            cellSelectionTags = getCellSelectionTags(cellInfo);
             storeFocusObjects.changeFocus(false);
         }
     });
 
-    // Build standard getters using the common factory
-    buildFocusObjectGetters(storeFocusObjects, {
-        getParagraphObject: { type: Asc.c_oAscTypeSelectElement.Paragraph },
-        getShapeObject: {
-            type: Asc.c_oAscTypeSelectElement.Image,
-            check: obj => obj.get_ObjectValue()?.get_ShapeProperties()
-        },
-        getImageObject: { type: Asc.c_oAscTypeSelectElement.Image },
-        getChartObject: {
-            type: Asc.c_oAscTypeSelectElement.Image,
-            check: obj => obj.get_ObjectValue()?.get_ChartProperties()
-        },
-    });
-
-    // Spreadsheet-specific: getSelections with cell-specific logic
-    storeFocusObjects.intf.getSelections = () => {
-        const selections = [];
-        let isCell, isRow, isCol, isAll, isChart, isImage, isShape, isShapeText, isChartText;
-        let locked = false;
-
-        const selectionTypeMap = {
-            [Asc.c_oAscSelectionType.RangeCells]: 'isCell',
-            [Asc.c_oAscSelectionType.RangeRow]: 'isRow',
-            [Asc.c_oAscSelectionType.RangeCol]: 'isCol',
-            [Asc.c_oAscSelectionType.RangeMax]: 'isAll',
-            [Asc.c_oAscSelectionType.RangeImage]: 'isImage',
-            [Asc.c_oAscSelectionType.RangeShape]: 'isShape',
-            [Asc.c_oAscSelectionType.RangeChart]: 'isChart',
-            [Asc.c_oAscSelectionType.RangeChartText]: 'isChartText',
-            [Asc.c_oAscSelectionType.RangeShapeText]: 'isShapeText',
-        };
-
-        const selType = storeFocusObjects._cellInfo.asc_getSelectionType();
-        const flags = { isCell, isRow, isCol, isAll, isChart, isImage, isShape, isShapeText, isChartText };
-        const flagName = selectionTypeMap[selType];
-        if (flagName) flags[flagName] = true;
-
-        ({ isCell, isRow, isCol, isAll, isChart, isImage, isShape, isShapeText, isChartText } = flags);
-
-        // Determine graphic object types
-        if (isImage || isShape || isChart || isShapeText || isChartText) {
-            const graphicObjects = Common.EditorApi.get().asc_getGraphicObjectProps();
-            if (isImage || isShape || isChart) {
-                isImage = isShape = isChart = false;
-            }
-            graphicObjects
-                .filter(obj => obj.asc_getObjectType() === Asc.c_oAscTypeSelectElement.Image)
-                .forEach(obj => {
-                    const val = obj.asc_getObjectValue();
-                    locked = locked || val.asc_getLocked();
-                    if (isShapeText || isChartText) return; // Only need locked state
-                    const shapeProps = val.asc_getShapeProperties();
-                    if (shapeProps) {
-                        shapeProps.asc_getFromChart() ? isChart = true : isShape = true;
-                    } else if (val.asc_getChartProperties()) {
-                        isChart = true;
-                    } else {
-                        isImage = true;
-                    }
-                });
-        }
-
-        // Build selections array based on detected types
-        if (isChart || isChartText) {
-            selections.push('chart');
-            if (isChartText) selections.push('text');
-        } else if ((isShape || isShapeText) && !isImage) {
-            selections.push('shape');
-            if (isShapeText) selections.push('text');
-        } else if (isImage) {
-            selections.push('image');
-            if (isShape) selections.push('shape');
-        } else {
-            selections.push('cell');
-            if (storeFocusObjects._cellInfo.asc_getHyperlink()) {
-                selections.push('hyperlink');
-            }
-        }
-
-        return selections;
-    };
-};
-
-/**
- * Initializes cell styles by registering API callback
- * @param {object} storeCellSettings - MobX store for cell settings
- */
-export const initEditorStyles = (storeCellSettings) => {
-    Common.EditorApi.get().asc_registerCallback('asc_onInitEditorStyles', (styles) => {
-        storeCellSettings.initCellStyles(styles);
-    });
-};
-
-/**
- * Initializes font settings by registering API callbacks for editor fonts and selection changes
- * @param {object} props - Props containing MobX stores
- * @param {object} props.storeCellSettings - Store for cell settings
- * @param {object} props.storeTextSettings - Store for text settings
- */
-export const initFonts = (props) => {
-    const api = Common.EditorApi.get();
-    const storeCellSettings = props.storeCellSettings;
-    const storeTextSettings = props.storeTextSettings;
-
-    api.asc_registerCallback('asc_onInitEditorFonts', (fonts, select) => {
-        storeCellSettings.initEditorFonts(fonts, select);
-        storeTextSettings.initEditorFonts(fonts, select);
-    });
-
     api.asc_registerCallback('asc_onEditorSelectionChanged', (fontObj) => {
+        if (!storeAppOptions.isEdit) return;
+
         storeCellSettings.initFontSettings(fontObj);
-        storeTextSettings.initFontSettings(fontObj);
     });
-};
+}
 
+// ported from ONLYOFFICE/web-apps@v5.4.99.1767, apps/spreadsheeteditor/mobile/app/controller/edit/EditCell.js
+// (setApi / onApiInitEditorStyles), translated to drive store/cellSettings.js initCellStyles.
+// The Backbone view-rendering step (this.getView('EditCell').renderStyles(styles)) is dropped
+// since React now renders from the cellStyles observable directly.
+export function initEditorStyles(storeCellSettings) {
+    Common.EditorApi.get().asc_registerCallback('asc_onInitEditorStyles', (styles) => {
+        // array-like SDK collection, not a real Array -- see initFonts below.
+        storeCellSettings.initCellStyles(Array.from(styles || []));
+    });
+}
 
-/**
- * Context menu configuration and handlers for spreadsheet editor
- * @namespace
- */
-export const ContextMenu = {
-    /**
-     * Maps the current selection state to context menu items
-     * Analyzes cell info, selection type, and permissions to build menu options
-     * Handles cells, rows, columns, images, shapes, charts, and hyperlinks
-     * @param {object} controller - The context menu controller instance
-     * @param {object} controller.props - Controller props with permissions and state
-     * @param {function} controller.props.t - Translation function
-     * @param {boolean} controller.props.canViewComments - Whether user can view comments
-     * @param {boolean} controller.props.isDisconnected - Whether user is disconnected
-     * @param {object} controller.props.wsProps - Worksheet protection properties
-     * @param {boolean} controller.props.wsLock - Whether worksheet is locked
-     * @param {boolean} controller.props.isResolvedComments - Whether to show resolved comments
-     * @param {boolean} controller.props.isVersionHistoryMode - Whether in version history mode
-     * @param {Array} controller.extraItems - Overflow items for mobile "More" menu
-     * @returns {Array<{event: string, icon?: string, caption?: string}>} Menu items array
-     */
-    mapMenuItems(controller) {
-        const { t } = controller.props;
-        const _t = t('ContextMenu', { returnObjects: true });
-        const { canViewComments, isDisconnected, wsProps, wsLock, isResolvedComments, isVersionHistoryMode } = controller.props;
-
-        const api = Common.EditorApi.get();
-        const cellInfo = api.asc_getCellInfo();
-        const isPivot = !!cellInfo.asc_getPivotTableInfo();
-        const canFillHandle = api.asc_canFillHandle();
-        const itemsIcon = [];
-        const itemsText = [];
-
-        let isCell, isRow, isCol, isAll, isChart, isImage, isShape, isShapeText, isChartText;
-        let locked = cellInfo.asc_getLocked();
-
-        const selType = cellInfo.asc_getSelectionType();
-        const xfs = cellInfo.asc_getXfs();
-        const comments = cellInfo.asc_getComments();
-        const isSolved = comments[0] && comments[0].asc_getSolved();
-
-        const selectionTypeMap = {
-            [Asc.c_oAscSelectionType.RangeCells]: 'isCell',
-            [Asc.c_oAscSelectionType.RangeRow]: 'isRow',
-            [Asc.c_oAscSelectionType.RangeCol]: 'isCol',
-            [Asc.c_oAscSelectionType.RangeMax]: 'isAll',
-            [Asc.c_oAscSelectionType.RangeImage]: 'isImage',
-            [Asc.c_oAscSelectionType.RangeShape]: 'isShape',
-            [Asc.c_oAscSelectionType.RangeChart]: 'isChart',
-            [Asc.c_oAscSelectionType.RangeChartText]: 'isChartText',
-            [Asc.c_oAscSelectionType.RangeShapeText]: 'isShapeText',
-        };
-
-        const flags = { isCell, isRow, isCol, isAll, isChart, isImage, isShape, isShapeText, isChartText };
-        const flagName = selectionTypeMap[selType];
-        if (flagName) flags[flagName] = true;
-        ({ isCell, isRow, isCol, isAll, isChart, isImage, isShape, isShapeText, isChartText } = flags);
-
-        if ((isImage || isShape || isChart || isShapeText || isChartText) && wsProps.Objects) {
-            return [];
-        }
-
-        if (!locked && (isImage || isShape || isChart || isShapeText || isChartText)) {
-            api.asc_getGraphicObjectProps().every((obj) => {
-                if (obj.asc_getObjectType() == Asc.c_oAscTypeSelectElement.Image) {
-                    locked = obj.asc_getObjectValue().asc_getLocked();
-                }
-                return !locked;
-            });
-        }
-
-        if (locked || api.isCellEdited || isDisconnected) {
-            itemsIcon.push({ event: 'copy', icon: icons.copy.id });
-        } else if (!isVersionHistoryMode) {
-            itemsIcon.push({ event: 'cut', icon: icons.cut.id });
-            itemsIcon.push({ event: 'copy', icon: icons.copy.id });
-            itemsIcon.push({ event: 'paste', icon: icons.paste.id });
-
-            if (isImage || isShape || isChart || isShapeText || isChartText) {
-                itemsText.push({ caption: _t.menuEdit, event: 'edit' });
-            } else {
-                if (isCol) {
-                    if (!wsProps.FormatColumns) {
-                        itemsText.push({ caption: _t.menuHide, event: 'hide' });
-                        itemsText.push({ caption: _t.menuShow, event: 'show' });
-                    }
-                } else if (isRow) {
-                    if (!wsProps.FormatRows) {
-                        itemsText.push({ caption: _t.menuHide, event: 'hide' });
-                        itemsText.push({ caption: _t.menuShow, event: 'show' });
-                    }
-                } else if (isCell) {
-                    if (!locked) {
-                        itemsText.push({ caption: _t.menuCell, event: 'edit' });
-                    }
-                    if (cellInfo.asc_getMerge() != Asc.c_oAscMergeOptions.None) {
-                        if (!wsProps.FormatCells) {
-                            itemsText.push({ caption: _t.menuUnmerge, event: 'unmerge' });
-                        }
-                    } else if (cellInfo.asc_getMerge() != Asc.c_oAscMergeOptions.Merge) {
-                        if (!wsProps.FormatCells) {
-                            itemsText.push({ caption: _t.menuMerge, event: 'merge' });
-                        }
-                    }
-                    if (!wsProps.FormatCells) {
-                        itemsText.push(xfs.asc_getWrapText()
-                            ? { caption: _t.menuUnwrap, event: 'unwrap' }
-                            : { caption: _t.menuWrap, event: 'wrap' }
-                        );
-                    }
-                }
-
-                itemsText.push({
-                    caption: api.asc_getSheetViewSettings().asc_getIsFreezePane()
-                        ? _t.menuUnfreezePanes
-                        : _t.menuFreezePanes,
-                    event: 'freezePanes'
-                });
-            }
-
-            if (!isPivot && !wsLock) {
-                itemsText.push({ caption: _t.menuDelete, event: 'del' });
-            }
-
-            if (canViewComments) {
-                if (comments && comments.length && (!isSolved && !isResolvedComments || isResolvedComments)) {
-                    itemsText.push({ caption: _t.menuViewComment, event: 'viewcomment' });
-                }
-                if (isCell && comments && !comments.length && !wsProps.Objects) {
-                    itemsText.push({ caption: _t.menuAddComment, event: 'addcomment' });
-                }
-            }
-        }
-
-        // Hyperlinks
-        if (cellInfo.asc_getHyperlink() && !cellInfo.asc_getMultiselect()) {
-            if (!isVersionHistoryMode) {
-                itemsText.push({ caption: t('ContextMenu.menuEditLink'), event: 'editlink' });
-            }
-            itemsText.push({ caption: _t.menuOpenLink, event: 'openlink' });
-        } else if (!cellInfo.asc_getHyperlink() && !cellInfo.asc_getMultiselect() && !isPivot && !wsProps.InsertHyperlinks && !isVersionHistoryMode) {
-            itemsText.push({ caption: _t.menuAddLink, event: 'addlink' });
-        }
-
-        // Shape hyperlinks
-        if (isShapeText && api.asc_canAddShapeHyperlink()) {
-            if (cellInfo.asc_getHyperlink() || wsProps.InsertHyperlinks) {
-                if (!isVersionHistoryMode) {
-                    itemsText.push({ caption: t('ContextMenu.menuEditLink'), event: 'editlink' });
-                }
-                itemsText.push({ caption: _t.menuOpenLink, event: 'openlink' });
-            } else if (!isVersionHistoryMode) {
-                itemsText.push({ caption: _t.menuAddLink, event: 'addlink' });
-            }
-        }
-
-        if (canFillHandle) {
-            itemsText.push({ caption: t('ContextMenu.menuAutofill'), event: 'autofillCells' });
-        }
-
-        // Truncate for mobile
-        if (Device.phone && itemsText.length > 2) {
-            controller.extraItems = itemsText.splice(2, itemsText.length, { caption: _t.menuMore, event: 'showActionSheet' });
-        } else if (itemsText.length > 4) {
-            controller.extraItems = itemsText.splice(3, itemsText.length, { caption: _t.menuMore, event: 'showActionSheet' });
-        }
-
-        return itemsIcon.concat(itemsText);
-    },
-
-    /**
-     * Handles context menu item click events for spreadsheet-specific actions
-     * Processes cut, paste, delete, merge, wrap, hide/show, freeze panes, and more
-     * @param {object} controller - The context menu controller instance
-     * @param {object} controller.props - Controller props
-     * @param {function} controller.props.openOptions - Function to open option panels
-     * @param {function} controller.onMergeCells - Function to handle cell merge
-     * @param {string} action - The action identifier from the clicked menu item
-     * @returns {boolean} True if action was handled, false otherwise
-     */
-    handleMenuItemClick(controller, action) {
-        const api = Common.EditorApi.get();
-        const cellInfo = api.asc_getCellInfo();
-        const isRow = cellInfo.asc_getSelectionType() === Asc.c_oAscSelectionType.RangeRow;
-
-        const deleteActions = {
-            [Asc.c_oAscSelectionType.RangeRow]: () => api.asc_deleteCells(Asc.c_oAscDeleteOptions.DeleteRows),
-            [Asc.c_oAscSelectionType.RangeCol]: () => api.asc_deleteCells(Asc.c_oAscDeleteOptions.DeleteColumns),
-        };
-
-        const actionHandlers = {
-            cut: () => api.asc_Cut(),
-            paste: () => api.asc_Paste(),
-            addcomment: () => Common.Notifications.trigger('addcomment'),
-            del: () => (deleteActions[cellInfo.asc_getSelectionType()] || (() => api.asc_emptyCells(Asc.c_oAscCleanOptions.All)))(),
-            wrap: () => api.asc_setCellTextWrap(true),
-            unwrap: () => api.asc_setCellTextWrap(false),
-            edit: () => setTimeout(() => controller.props.openOptions('edit'), 400),
-            merge: () => controller.onMergeCells(),
-            unmerge: () => api.asc_mergeCells(Asc.c_oAscMergeOptions.None),
-            hide: () => api[isRow ? 'asc_hideRows' : 'asc_hideColumns'](),
-            show: () => api[isRow ? 'asc_showRows' : 'asc_showColumns'](),
-            addlink: () => setTimeout(() => controller.props.openOptions('add-link'), 400),
-            editlink: () => setTimeout(() => controller.props.openOptions('edit-link'), 400),
-            freezePanes: () => api.asc_freezePane(),
-            autofillCells: () => api.asc_fillHandleDone(),
-        };
-
-        const handler = actionHandlers[action];
-        if (!handler) return false;
-        handler();
-        return true;
-    }
-};
+// ported from ONLYOFFICE/web-apps@v5.4.99.1767, apps/spreadsheeteditor/mobile/app/controller/edit/EditCell.js
+// (setApi / onApiLoadFonts), field shape cross-checked against the desktop AGPL
+// apps/common/main/lib/controller/Fonts.js:101-121 onApiLoadFonts (same asc_onInitEditorFonts
+// callback, same {id,name,imgidx,type} shape), confirming this is a stable SDK-level contract
+// rather than a mobile-only convention. Raw fonts/select are passed straight through since
+// store/cellSettings.js initEditorFonts already re-derives the array shape itself.
+// Narrows the closure to just the one store it needs, matching initEditorStyles's convention,
+// rather than pinning the whole `props` tree for the life of this callback.
+export function initFonts(props) {
+    const { storeCellSettings } = props;
+    Common.EditorApi.get().asc_registerCallback('asc_onInitEditorFonts', (fonts, select) => {
+        // SDK callback collections are array-like, not real JS Arrays (no for-of/map/find) --
+        // confirmed via a runtime "e is not iterable" crash in documenteditor's identical
+        // asc_onInitTableTemplates wiring, and cellSettings.js's own initEditorFonts does
+        // `for (let font of fonts)` internally, so this must be converted before the call.
+        storeCellSettings.initEditorFonts(Array.from(fonts || []), select);
+    });
+}

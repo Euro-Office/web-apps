@@ -6,7 +6,7 @@ import { LocalStorage } from '../../../../common/mobile/utils/LocalStorage.mjs';
 import ContextMenuController from '../../../../common/mobile/lib/controller/ContextMenu';
 import { idContextMenuElement } from '../../../../common/mobile/lib/view/ContextMenu';
 import EditorUIController from '../lib/patch';
-import { icons } from '../../../../common/mobile/lib/editor';
+import { icons } from '../../../../common/mobile/lib/icons';
 
 @inject(stores => ({
     isEdit: stores.storeAppOptions.isEdit,

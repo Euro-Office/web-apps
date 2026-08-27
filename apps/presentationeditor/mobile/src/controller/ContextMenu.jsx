@@ -8,7 +8,7 @@ import ContextMenuController from '../../../../common/mobile/lib/controller/Cont
 import { idContextMenuElement } from '../../../../common/mobile/lib/view/ContextMenu';
 // import { Device } from '../../../../common/mobile/utils/device';
 import EditorUIController from '../lib/patch';
-import { icons } from '../../../../common/mobile/lib/editor';
+import { icons } from '../../../../common/mobile/lib/icons';
 
 @inject(stores => ({
     isEdit: stores.storeAppOptions.isEdit,

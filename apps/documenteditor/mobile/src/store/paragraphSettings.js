@@ -20,7 +20,9 @@ export class storeParagraphSettings {
     styleName = undefined;
 
     initEditorStyles (styles) {
-        this.styles = styles.get_MergedStyles();
+        // get_MergedStyles() returns an array-like SDK collection, not a real Array (no for-of) --
+        // confirmed via a runtime "e is not iterable" crash from the same pattern in tableSettings.js.
+        this.styles = Array.from(styles.get_MergedStyles() || []);
         this.styleThumbSize = {
             width   : styles.STYLE_THUMBNAIL_WIDTH,
             height  : styles.STYLE_THUMBNAIL_HEIGHT

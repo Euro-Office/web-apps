@@ -655,10 +655,23 @@ const _EditCommentController = inject('storeComments', 'users')(observer(EditCom
 const _ViewCommentsController = inject('storeComments', 'users', "storeApplicationSettings", "storeReview", "storeAppOptions")(observer(withTranslation()(ViewCommentsController)));
 const _ViewCommentsSheetsController = inject('storeComments', 'users', "storeApplicationSettings", "storeWorksheets", "storeReview", "storeAppOptions")(observer(withTranslation()(ViewCommentsSheetsController)));
 
+// Bundles the two edit-mode comment controllers editors render alongside the always-on
+// CommentsController/ViewCommentsController pair, so editors needing edit-mode comments don't
+// each hand-roll the same two-component wrapper.
+function EditCommentControllers() {
+    return (
+        <Fragment>
+            <_AddCommentController />
+            <_EditCommentController />
+        </Fragment>
+    );
+}
+
 export {
     _CommentsController as CommentsController,
     _AddCommentController as AddCommentController,
     _EditCommentController as EditCommentController,
     _ViewCommentsController as ViewCommentsController,
-    _ViewCommentsSheetsController as ViewCommentsSheetsController
+    _ViewCommentsSheetsController as ViewCommentsSheetsController,
+    EditCommentControllers
 };
