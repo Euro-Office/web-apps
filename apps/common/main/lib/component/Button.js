@@ -469,6 +469,17 @@ define([
                     parentEl.html(me.cmpEl);
                     me.$icon = me.$el.find('.icon');
                 }
+            } else if (!me.rendered) {
+                // SVG sprite approach (see templateBtnIcon): buttons bound to an
+                // existing element via `el` never run the template, so their static
+                // <i class="icon toolbar__icon btn-*"> markup survives — but the css
+                // sprite classes it relied on are gone. Convert it here the same way
+                // the template does, keeping fragment-only references.
+                me.cmpEl.find('i.icon.toolbar__icon').each(function () {
+                    var iconMatch = /btn-[^\s]+/.exec(this.className);
+                    if (iconMatch)
+                        $(this).replaceWith('<svg class="icon uni-scale"><use href="#' + iconMatch[0] + '"></use></svg>');
+                });
             }
 
             if (!me.rendered) {
