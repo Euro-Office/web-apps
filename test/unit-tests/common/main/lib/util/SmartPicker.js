@@ -515,6 +515,24 @@
                     });
                 });
 
+                it('ends the session when the window is resized', function (done) {
+                    // Following the caret through a resize was the first
+                    // attempt and made the menu jump between its two placements
+                    // and, past a certain width, leave the screen. Closing is
+                    // the answer -- but only if the session really ends, or
+                    // Enter would still reach the host's picker afterwards, the
+                    // way it did after a click-away.
+                    press(' ');
+                    press('/');
+                    afterDefer(function () {
+                        window.dispatchEvent(new Event('resize'));
+                        assert.strictEqual(menu.isOpen(), false, 'the menu must be disposed');
+                        press('Enter');
+                        assert.strictEqual(picked, null, 'Enter must not pick after the resize');
+                        done();
+                    });
+                });
+
                 it('does not open when the host says the picker is unavailable', function (done) {
                     installed.available = false;
                     press(' ');

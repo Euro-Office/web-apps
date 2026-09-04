@@ -557,6 +557,26 @@ define([
             };
             document.addEventListener('pointerdown', onPointerDown, true);
             document.addEventListener('mousedown', onPointerDown, true);
+
+            /*
+             * A resize ends the session instead of chasing the caret.
+             *
+             * Following it was tried first and does not survive a real drag.
+             * Re-anchoring on every resize event made the menu jump between its
+             * two placements -- below the caret, and flipped above it when the
+             * list no longer fits -- and past a certain window width it landed
+             * where the user could not see it at all. Both are worse than no
+             * menu: the "/" and its query are still in the document, so
+             * retyping nothing at all reopens the list where the caret now is.
+             *
+             * lastKey is deliberately left alone. A resize moves the viewport,
+             * not the caret within the text, so the character before it is
+             * still whatever was typed -- and clearing it here would let the
+             * "/" already sitting in front of the caret trigger a second time.
+             */
+            window.addEventListener('resize', function () {
+                closeSession();
+            });
         },
 
         /**

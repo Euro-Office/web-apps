@@ -37,10 +37,7 @@ define([
     Common.Views = Common.Views || {};
 
     Common.Views.SmartPickerMenu = _.extend(new(function() {
-        var CONTAINER_ID = 'menu-container-smartpicker',
-            // Namespaced so off() takes back exactly this menu's handler and
-            // nothing else bound to window resize.
-            RESIZE_EVENT = 'resize.smartpickermenu';
+        var CONTAINER_ID = 'menu-container-smartpicker';
 
         var _menu,                  // Common.UI.Menu, or undefined when closed
             _providers,             // pushed in by the host
@@ -49,7 +46,6 @@ define([
             _emptyRow,              // the "no suggestion found" <li>
             _selected = -1,         // index into _visible
             _onPick,
-            _getAnchor,             // editor-supplied anchor, re-read on resize
             _point;                 // anchor captured when the menu opened
 
         /**
@@ -173,33 +169,13 @@ define([
                 _menu.remove();
                 _menu = undefined;
             }
-            $(window).off(RESIZE_EVENT);
             $('#' + CONTAINER_ID).remove();
             _entries = [];
             _visible = [];
             _emptyRow = undefined;
             _selected = -1;
             _onPick = undefined;
-            _getAnchor = undefined;
             _point = undefined;
-        };
-
-        /*
-         * Follow the caret after the viewport changes.
-         *
-         * _position() alone would only re-clamp the menu against the new
-         * viewport, which is not what a resize does to the thing it is anchored
-         * to: reflowing the document moves the caret, and the cell the
-         * spreadsheet anchors to moves with it. So the anchor is re-read, not
-         * remembered -- the same call _open() makes -- and only kept if it still
-         * resolves, since a caret that has gone away should leave the menu where
-         * it is rather than send it to the corner.
-         */
-        var _reanchor = function() {
-            if (!_menu) return;
-            var point = (_getAnchor && _getAnchor()) || _caretPoint();
-            if (point) _point = point;
-            _position();
         };
 
         /* Move the highlight, without moving focus away from the document. */
@@ -280,11 +256,15 @@ define([
             });
             _emptyRow = $items.eq(providers.length);
 
-            // An editor that knows better says so: the spreadsheet anchors to
-            // the active cell, because it has no text caret unless a cell is
-            // being edited inline.
-            _getAnchor = options.getAnchor;
-            _point = (_getAnchor && _getAnchor()) || _caretPoint();
+            // An editor that knows better says so: the spreadsheet has no
+            // #id_target_cursor to read, so it answers with its cell editor's
+            // caret, or the active cell when no cell is being edited.
+            //
+            // Read once. The anchor is not tracked afterwards: a resize ends
+            // the session outright (Common.Utils.SmartPicker.installTrigger),
+            // so there is no viewport change left for this menu to follow.
+            var getAnchor = options.getAnchor;
+            _point = (getAnchor && getAnchor()) || _caretPoint();
             if (!_point) {
                 // No caret anchor: fall back to the holder's top-left.
                 var hr = holder[0] ? holder[0].getBoundingClientRect() : {left: 40, top: 60};
@@ -295,7 +275,6 @@ define([
             // wherever the container currently sits.
             _position();
             _menu.show();
-            $(window).on(RESIZE_EVENT, _reanchor);
             // Deliberately no focus() here: the user is still typing into the
             // document, and taking focus would send those keys to the list.
             _applyFilter('');
