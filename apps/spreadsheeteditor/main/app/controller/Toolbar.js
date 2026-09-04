@@ -270,14 +270,19 @@ define([
             // same in all three editors; the anchor, the cell the request came
             // from and insertLink below are not.
             me._smartPicker = Common.Utils.SmartPicker.install(me, {
-                // Anchor to the active cell. There is no text caret here until a
-                // cell is being edited inline, so the caret element the other
-                // editors use sits wherever it was last left. This is how every
-                // other cell-anchored popup in this editor positions itself (see
+                // Anchor to the caret if there is one, and to the active cell
+                // otherwise. The caret element the other two editors use is no
+                // help here: it belongs to the drawing document and sits
+                // wherever it was last left, so the cell editor's own caret is
+                // asked first (SmartPicker.cellEditorCaret) and this is the
+                // fallback for a cell merely selected. That is how every other
+                // cell-anchored popup in this editor positions itself (see
                 // DocumentHolderExt), except that our container is
                 // position:fixed, so the holder-relative coordinates asc_get*
                 // returns have to be converted to viewport ones.
                 getAnchor: function() {
+                    var caret = Common.Utils.SmartPicker.cellEditorCaret();
+                    if (caret) return caret;
                     if (!me.api || typeof me.api.asc_getActiveCellCoord !== 'function') {
                         return null;
                     }
