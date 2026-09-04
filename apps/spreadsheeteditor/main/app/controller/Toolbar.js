@@ -1481,9 +1481,28 @@ define([
             }
             this._smartPickerCell = '';
             if (replace !== null) {
-                // Insert the link as plain TEXT (a cell hyperlink is whole-cell
-                // and would re-link/replace the cell). NOTE: use isCellEdited,
-                // not asc_getCellEditMode (the latter isn't exported here).
+                // Insert the link as plain TEXT, and only as plain text.
+                //
+                // A spreadsheet hyperlink is a property of the cell, not of a
+                // run inside it: asc_insertHyperlink ends in
+                // WorksheetView.setSelectionInfo("hyperlink"), which does
+                // getRange3(r, c, r, c).setValue(text) and then
+                // range.setHyperlink(...) -- it overwrites the whole cell with
+                // the link text and links the whole cell. The file format is
+                // the same shape; a <hyperlink> refers to a cell reference,
+                // never to part of a cell's text.
+                //
+                // So "Hello " + a link is not a thing a spreadsheet can hold.
+                // Inserting a real hyperlink here would silently drop the
+                // "Hello ", which is the data loss the branch below refuses to
+                // do. Plain text keeps what the user typed, and is why the same
+                // "/" flow yields a clickable link in an empty cell -- there
+                // the whole cell is the url, so sdkjs auto-links it on commit
+                // -- and non-clickable text when something precedes it. That
+                // difference is the format's, not this branch's.
+                //
+                // NOTE: use isCellEdited, not asc_getCellEditMode (the latter
+                // isn't exported here).
                 if (this.api.isCellEdited) {
                     // Editing the cell, which is the normal case here: typing
                     // "/" into a selected cell starts inline editing, so the
@@ -1544,6 +1563,36 @@ define([
                 Common.NotificationCenter.trigger('edit:complete');
                 return;
             }
+
+            // No session: the toolbar button, which asks for a real cell
+            // hyperlink rather than text at a caret. Guarded the same way the
+            // "/" path above is, and for the same reason -- a cell hyperlink is
+            // whole-cell, so this overwrites whatever the cell already holds
+            // (WorksheetView.setSelectionInfo "hyperlink" does setValue(text)
+            // and then setHyperlink over the range). Until now this path never
+            // looked: a cell with text lost it to the raw url, and a cell being
+            // edited had its whole text made the link's label, selection and
+            // all. One omission, not three bugs.
+            var cellInfo = this.api.asc_getCellInfo && this.api.asc_getCellInfo(),
+                cellText = (cellInfo && cellInfo.asc_getText && cellInfo.asc_getText()) || '';
+            if (cellText !== '') {
+                Common.NotificationCenter.trigger('edit:complete');
+                Common.UI.warning({msg: this.txtCellNotEmpty});
+                return;
+            }
+            // A cell being edited is refused even when it reads empty. The text
+            // above comes from the model (_getSelectionInfoCell calls
+            // getValueForEdit), which cannot see the cell editor's uncommitted
+            // buffer -- so "empty" here means "nothing committed yet", and what
+            // is in the editor is exactly what this would overwrite. Its own
+            // message, because "the cell is not empty" is not what happened and
+            // the way out is a different one.
+            if (this.api.isCellEdited) {
+                Common.NotificationCenter.trigger('edit:complete');
+                Common.UI.warning({msg: this.txtFinishEditing});
+                return;
+            }
+
             var props = new Asc.asc_CHyperlink();
             props.asc_setHyperlinkUrl(data);
             props.asc_setText(data);

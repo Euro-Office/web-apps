@@ -2167,6 +2167,7 @@
   "SSE.Controllers.Toolbar.txtDeleteCells": "Delete cells",
   "SSE.Controllers.Toolbar.txtExpand": "Expand and sort",
   "SSE.Controllers.Toolbar.txtExpandSort": "The data next to the selection will not be sorted. Do you want to expand the selection to include the adjacent data or continue with sorting the currently selected cells only?",
+  "SSE.Controllers.Toolbar.txtFinishEditing": "Finish editing this cell first, then add the link. To insert one where the cursor is, type \"/\" in the cell.",
   "SSE.Controllers.Toolbar.txtFormula": "Formula",
   "SSE.Controllers.Toolbar.txtFractionDiagonal": "Skewed fraction",
   "SSE.Controllers.Toolbar.txtFractionDifferential_1": "dx over dy",
