@@ -63,7 +63,13 @@ define([
         // moves with the cursor (declared in each editor's api.js).
         CARET: 'id_target_cursor',
         // The IME wrapper, which sdkjs places below the caret.
-        IME_WRAPPER: 'area_id_parent'
+        IME_WRAPPER: 'area_id_parent',
+        // Spreadsheet only: the caret the cell editor draws while a cell is
+        // being edited inline, and the container it is positioned inside
+        // (sdkjs cell/view/CellEditorView.js, _init). The grid editor; the
+        // formula bar builds the same pair under the "-menu" suffix.
+        CELL_CARET: 'ce-cursor',
+        CELL_EDITOR: 'ce-canvas-outer'
     };
 
     var INPUT_AREA_RE = new RegExp(IDS.INPUT_AREA);
@@ -197,6 +203,47 @@ define([
             if (prevKey === undefined) return true;              // nothing typed yet
             if (prevKey === 'Enter') return true;                // start of a new line
             return prevKey.length === 1 && /[\xA0\s]/.test(prevKey);
+        },
+
+        /**
+         * Where the spreadsheet cell editor's caret is, in viewport coordinates.
+         *
+         * Only answers while a cell is being edited inline, which is the only
+         * time a spreadsheet has a text caret at all; the other two editors have
+         * one throughout and use SmartPickerIds.CARET instead. Anchoring to the
+         * active cell is right for a cell that is merely selected, and wrong the
+         * moment the cell holds text: after "This is a fairly long sentence /"
+         * the cell's left edge and the "/" are most of a cell's width apart.
+         *
+         * The caret cannot simply be measured. CellEditor._showCursor blinks it
+         * by toggling display, so getBoundingClientRect() answers all zeros for
+         * half of every blink interval, and a menu opening on the wrong half of
+         * a blink would land in the corner. The inline left/top/height that
+         * _updateCursorPosition writes stay put through the blink, so those are
+         * read against the container's rect instead -- the caret is a
+         * position:absolute child of it (sdkjs cell/css/main.css).
+         *
+         * Answers null for the formula bar, whose editor is a separate pair of
+         * elements under a "-menu" suffix; the active-cell anchor covers it.
+         *
+         * @return {Array|null} [left, top] just under the caret
+         */
+        cellEditorCaret: function () {
+            var caret = document.getElementById(IDS.CELL_CARET),
+                editor = document.getElementById(IDS.CELL_EDITOR);
+            if (!caret || !editor) return null;
+            // The container is display:none unless a cell is being edited.
+            var rect = editor.getBoundingClientRect();
+            if (!rect || (!rect.width && !rect.height)) return null;
+            var left = parseFloat(caret.style.left),
+                top = parseFloat(caret.style.top),
+                height = parseFloat(caret.style.height);
+            if (isNaN(left) || isNaN(top)) return null;
+            return [
+                Math.round(rect.left + left),
+                // The same 2px gap the other editors leave under the caret.
+                Math.round(rect.top + top + (isNaN(height) ? 0 : height) + 2)
+            ];
         },
 
         /**

@@ -320,6 +320,62 @@
         // so these run in the browser harness only; `node --test` covers the
         // pure functions above.
         if (typeof document !== 'undefined' && typeof KeyboardEvent === 'function') {
+            describe('cellEditorCaret', function () {
+
+                // The shape sdkjs builds in CellEditorView._init: an absolutely
+                // positioned container with the caret absolutely positioned
+                // inside it, both hidden until a cell is being edited.
+                var outer, caret;
+
+                beforeEach(function () {
+                    outer = document.createElement('div');
+                    outer.id = 'ce-canvas-outer';
+                    outer.style.cssText = 'position:absolute;left:100px;top:50px;width:80px;height:20px;';
+                    caret = document.createElement('div');
+                    caret.id = 'ce-cursor';
+                    caret.style.cssText = 'position:absolute;left:37px;top:3px;width:1px;height:14px;';
+                    outer.appendChild(caret);
+                    document.body.appendChild(outer);
+                });
+
+                afterEach(function () {
+                    outer.parentNode.removeChild(outer);
+                });
+
+                it('anchors under the caret, not at the cell edge', function () {
+                    var rect = outer.getBoundingClientRect(),
+                        point = SmartPicker.cellEditorCaret();
+                    assert.ok(point, 'a cell being edited must answer');
+                    // The whole point of finding the caret: it is 37px into the
+                    // cell, which is where a long phrase leaves the "/".
+                    assert.strictEqual(point[0], Math.round(rect.left) + 37);
+                    assert.strictEqual(point[1], Math.round(rect.top) + 3 + 14 + 2);
+                });
+
+                it('still answers while the caret is blinked off', function () {
+                    // _showCursor blinks by toggling display, so half the time
+                    // the caret's own rect is all zeros. Reading the inline
+                    // style instead is what makes this survive.
+                    caret.style.display = 'none';
+                    var point = SmartPicker.cellEditorCaret();
+                    assert.ok(point, 'a blinked-off caret is still a caret');
+                    assert.strictEqual(point[0], Math.round(outer.getBoundingClientRect().left) + 37);
+                });
+
+                it('declines when no cell is being edited', function () {
+                    // The container is display:none outside inline editing, so
+                    // it measures zero and the active-cell anchor takes over.
+                    outer.style.display = 'none';
+                    assert.strictEqual(SmartPicker.cellEditorCaret(), null);
+                });
+
+                it('declines when the caret carries no position yet', function () {
+                    caret.style.left = '';
+                    caret.style.top = '';
+                    assert.strictEqual(SmartPicker.cellEditorCaret(), null);
+                });
+            });
+
             describe('installTrigger', function () {
 
                 var area, menu, opened, picked, savedMenu, installed;
