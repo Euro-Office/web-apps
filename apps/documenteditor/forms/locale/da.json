@@ -56,7 +56,7 @@
   "Common.UI.Window.yesButtonText": "Ja",
   "Common.Views.CopyWarningDialog.textDontShow": "Vis ikke denne meddelelse igen",
   "Common.Views.CopyWarningDialog.textMsg": "Kopier, klip og indsæt handlinger ved hjælp af kontekstmenuhandlinger udføres kun på denne redigeringsfane.<br><br>For at kopiere eller indsætte til eller fra programmer uden for redigeringsfanen skal du bruge følgende tastaturkombinationer:",
-  "Common.Views.CopyWarningDialog.textTitle": "Kopier, Klip og Indsæt handlinger",
+  "Common.Views.CopyWarningDialog.textTitle": "Kopier, klip og indsæt handlinger",
   "Common.Views.CopyWarningDialog.textToCopy": "til kopiering",
   "Common.Views.CopyWarningDialog.textToCut": "For klipning",
   "Common.Views.CopyWarningDialog.textToPaste": "for sæt ind",
