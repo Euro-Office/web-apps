@@ -1641,7 +1641,7 @@
   "PE.Views.SignatureSettings.txtRemoveWarning": "Ønsker du at fjerne denne signatur?<br>Din handling kan ikke omgøres.",
   "PE.Views.SignatureSettings.txtSigned": "Gyldige signaturer er blevet tilføjet til præsentationen. Præsentationen er beskyttet mod redigering.",
   "PE.Views.SignatureSettings.txtSignedInvalid": "Nogle af de digitale signaturer i præsentationen er ugyldige eller kunne ikke verificeres. Præsentationen er beskyttet mod redigering",
-  "PE.Views.SlideSettings.strApplyAllSlides": "Anvend på alle dias",
+  "PE.Views.SlideSettings.strApplyAllSlides": "Anvend på alle slides",
   "PE.Views.SlideSettings.strBackground": "Baggrundsfarve",
   "PE.Views.SlideSettings.strBackgroundGraphics": "Vis baggrundsgrafik",
   "PE.Views.SlideSettings.strBackgroundReset": "Nulstil baggrund",
