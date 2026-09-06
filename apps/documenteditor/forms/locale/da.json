@@ -113,7 +113,7 @@
   "DE.Controllers.ApplicationController.errorUserDrop": "Der kan ikke opnås adgang til filen lige nu. ",
   "DE.Controllers.ApplicationController.errorViewerDisconnect": "Forbindesen er tabt. Du kan stadig se dokumentet, <br> men du vil ikke være i stand til at hente eller udskrive det, før forbindelsen er genetableret. ",
   "DE.Controllers.ApplicationController.mniImageFromFile": "Billede fra fil",
-  "DE.Controllers.ApplicationController.mniImageFromStorage": "Billede fra filarkiv",
+  "DE.Controllers.ApplicationController.mniImageFromStorage": "Billede fra lager",
   "DE.Controllers.ApplicationController.mniImageFromUrl": "Billede fra URL",
   "DE.Controllers.ApplicationController.notcriticalErrorTitle": "Advarsel",
   "DE.Controllers.ApplicationController.openErrorText": "Der opstod en fejl under åbning af filen.",
