@@ -301,6 +301,9 @@ define([], function () {
                 '<tr class="edit spellcheck">',
                     '<td colspan="2"><span id="fms-chb-ignore-numbers-words"></span></td>',
                 '</tr>',
+                '<tr class="edit spellcheck">',
+                    '<td colspan="2"><span id="fms-chb-wavy-line"></span></td>',
+                '</tr>',
                 '<tr class="edit">',
                     '<td colspan="2"><button type="button" class="btn btn-text-default" id="fms-btn-auto-correct" style="width:auto; display: inline-block;padding-right: 10px;padding-left: 10px;" data-hint="2" data-hint-direction="bottom" data-hint-offset="medium"><%= scope.txtAutoCorrect %></button></div></td>',
                 '</tr>',
@@ -397,6 +400,7 @@ define([], function () {
             }).on('change', function(field, newValue, oldValue, eOpts){
                 me.chIgnoreUppercase.setDisabled(field.getValue()!=='checked');
                 me.chIgnoreNumbers.setDisabled(field.getValue()!=='checked');
+                me.chWavyLine.setDisabled(field.getValue()!=='checked');
             });
 
             this.chIgnoreUppercase = new Common.UI.CheckBox({
@@ -410,6 +414,14 @@ define([], function () {
             this.chIgnoreNumbers = new Common.UI.CheckBox({
                 el: $markup.findById('#fms-chb-ignore-numbers-words'),
                 labelText: this.strIgnoreWordsWithNumbers,
+                dataHint: '2',
+                dataHintDirection: 'left',
+                dataHintOffset: 'small'
+            });
+
+            this.chWavyLine = new Common.UI.CheckBox({
+                el: $markup.findById('#fms-chb-wavy-line'),
+                labelText: this.strSpellcheckWavyLine,
                 dataHint: '2',
                 dataHintDirection: 'left',
                 dataHintOffset: 'small'
@@ -757,6 +769,7 @@ define([], function () {
                 this.chSpell.setValue(Common.Utils.InternalSettings.get("pe-settings-spellcheck"));
                 this.chIgnoreUppercase.setValue(Common.Utils.InternalSettings.get("pe-spellcheck-ignore-uppercase-words"));
                 this.chIgnoreNumbers.setValue(Common.Utils.InternalSettings.get("pe-spellcheck-ignore-numbers-words"));
+                this.chWavyLine.setValue(Common.Utils.InternalSettings.get("pe-spellcheck-wavy-line"));
             }
 
             this.chUseAltKey.setValue(Common.Utils.InternalSettings.get("pe-settings-show-alt-hints"));
@@ -827,6 +840,7 @@ define([], function () {
                 Common.localStorage.setItem("pe-settings-spellcheck", this.chSpell.isChecked() ? 1 : 0);
                 Common.localStorage.setBool("pe-spellcheck-ignore-uppercase-words", this.chIgnoreUppercase.isChecked());
                 Common.localStorage.setBool("pe-spellcheck-ignore-numbers-words", this.chIgnoreNumbers.isChecked());
+                Common.localStorage.setBool("pe-spellcheck-wavy-line", this.chWavyLine.isChecked());
             }
             Common.localStorage.setItem("pe-settings-show-alt-hints", this.chUseAltKey.isChecked() ? 1 : 0);
             Common.Utils.InternalSettings.set("pe-settings-show-alt-hints", Common.localStorage.getBool("pe-settings-show-alt-hints"));
@@ -968,6 +982,7 @@ define([], function () {
         txtStrictTip: 'Use the \'Save\' button to sync the changes you and others make',
         strIgnoreWordsInUPPERCASE: 'Ignore words in UPPERCASE',
         strIgnoreWordsWithNumbers: 'Ignore words with numbers',
+        strSpellcheckWavyLine: 'Use wavy underline for misspelled words',
         strShowOthersChanges: 'Show changes from other users',
         txtAdvancedSettings: 'Advanced Settings',
         txtQuickPrint: 'Show the Quick Print button in the editor header',
