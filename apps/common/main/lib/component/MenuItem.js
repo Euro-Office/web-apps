@@ -78,6 +78,34 @@ define([
     'common/main/lib/component/ToggleManager'
 ], function () {
     'use strict';
+    /**
+     * Icon markup for a menu item.
+     *
+     * Sprite icons are drawn from the symbol sheet, the way Common.UI.Button
+     * does it. The <span> this used to emit was painted by a CSS background
+     * from apps/<editor>/main/resources/less/sprites -- files that no longer
+     * exist, generating PNG sprites the build no longer produces -- so every
+     * menu icon in every editor came out as an empty box. The artwork was
+     * never missing: the symbols are all in the shipped icons.svg.
+     *
+     * A class that is not a sprite name still gets the span: ColorButton's
+     * swatches and the border-colour pickers use one as a coloured block, not
+     * as an icon.
+     *
+     * uni-scale is what tells bigscaling.less this svg is valid at any device
+     * pixel ratio, which is also how Button marks its own icons.
+     *
+     * @param {String} iconCls the item's iconCls
+     * @return {String} markup for the icon element
+     */
+    Common.UI.menuItemIconMarkup = function (iconCls) {
+        var cls = iconCls || '',
+            match = /btn-[^\s]+/.exec(cls);
+        return match
+            ? '<svg class="menu-item-icon uni-scale ' + cls + '"><use href="#' + match[0] + '"></use></svg>'
+            : '<span class="menu-item-icon ' + cls + '"></span>';
+    };
+
 
     Common.UI.MenuItem = Common.UI.BaseView.extend({
         options : {
@@ -108,7 +136,7 @@ define([
         template: _.template([
             '<% if (header) { %><span class="menu-item-header"><%- header %></span><% } %><% if (caption) { %><a id="<%= id %>" class="menu-item" <% if (_.isEmpty(iconCls)) { %> data-no-icon <% } %> style="<%= style %>" <% if(options.canFocused) { %> tabindex="-1" type="menuitem" <% }; if(!_.isUndefined(options.stopPropagation)) { %> data-stopPropagation="true" <% }; if(!_.isUndefined(options.dataHint)) { %> data-hint="<%= options.dataHint %>" <% }; if(!_.isUndefined(options.dataHintDirection)) { %> data-hint-direction="<%= options.dataHintDirection %>" <% }; if(!_.isUndefined(options.dataHintOffset)) { %> data-hint-offset="<%= options.dataHintOffset %>" <% }; if(options.dataHintTitle) { %> data-hint-title="<%= options.dataHintTitle %>" <% }; %> >',
                 '<% if (!_.isEmpty(iconCls)) { %>',
-                    '<span class="menu-item-icon <%= iconCls %>"></span>',
+                    '<%= Common.UI.menuItemIconMarkup(iconCls) %>',
                 '<% } else if (!_.isEmpty(iconImg)) { %>',
                     '<img src="<%= iconImg %>" class="menu-item-icon">',
                 '<% } %>',
@@ -279,7 +307,9 @@ define([
                 var firstChild = this.cmpEl.children(':first');
                 if (firstChild) {
                     firstChild.find('.menu-item-icon').removeClass(this.iconCls).addClass(iconCls);
-                    var svgIcon = firstChild.find('use.zoom-int');
+                    // The template's own <use> carries no class; the one
+                    // applyScaling injects is .zoom-int. Match either.
+                    var svgIcon = firstChild.find('.menu-item-icon use, use.zoom-int');
                     if (svgIcon.length) {
                         var re_icon_name = /btn-[^\s]+/.exec(iconCls),
                             icon_name = re_icon_name ? re_icon_name[0] : "null";

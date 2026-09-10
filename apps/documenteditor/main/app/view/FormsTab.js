@@ -570,7 +570,7 @@ define([
                             '<li id="<%= item.id %>" data-value="<%= Common.Utils.String.htmlEncode(item.value) %>"<% if (item.value === 0) { %> class="border-top"<% } %>>',
                                 '<% if (item.value === 0) { %>',
                                 '<a tabindex="-1" type="menuitem" style="display: block; padding: ' + (Common.UI.isRTL() ? '5px 24px 5px 20px' : '5px 20px 5px 24px') + ';">',
-                                    '<span class="menu-item-icon menu__icon btn-zoomup"></span>',
+                                    '<%= Common.UI.menuItemIconMarkup("menu__icon btn-zoomup") %>',
                                     '<%= Common.Utils.String.htmlEncode(item.displayValue) %>',
                                 '</a>',
                                 '<% } else { %>',
@@ -729,7 +729,7 @@ define([
                         // }
                         var menuTemplate = _.template('<a id="<%= id %>" tabindex="-1" type="menuitem" class="menu-item">'+
                             '<% if (!_.isEmpty(iconCls)) { %>'+
-                            '<span class="menu-item-icon <%= iconCls %>"></span>'+
+                            '<%= Common.UI.menuItemIconMarkup(iconCls) %>'+
                             '<% } %>'+
                             '<div><%= caption %></div>' +
                             '<% if (options.description !== null) { %><label style="cursor: pointer;white-space: normal;"><%= options.description %></label>' +
