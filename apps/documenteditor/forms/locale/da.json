@@ -73,7 +73,7 @@
   "Common.Views.OpenDialog.txtIncorrectPwd": "Kodeordet er forkert",
   "Common.Views.OpenDialog.txtOpenFile": "Angiv en adgangskode for at åbne filen",
   "Common.Views.OpenDialog.txtPassword": "Kodeord",
-  "Common.Views.OpenDialog.txtPreview": "Forhåndvisning",
+  "Common.Views.OpenDialog.txtPreview": "Forhåndsvisning",
   "Common.Views.OpenDialog.txtProtected": "Når du først indtaster adgangskoden og åbner filen, nulstilles den aktuelle adgangskode til filen.",
   "Common.Views.OpenDialog.txtTitle": "Vælg %1 indstillinger",
   "Common.Views.OpenDialog.txtTitleProtected": "Beskyttet fil",
