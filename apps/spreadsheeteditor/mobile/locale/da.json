@@ -29,12 +29,19 @@
       "textUsers": "Brugere"
     },
     "ThemeColorPalette": {
-      "textCustomColors": "Brugerdefinerede farver"
+      "textCustomColors": "Brugerdefinerede farver",
+      "textThemeColors": "Temafarver"
     },
     "Themes": {
       "dark": "Mørk",
       "light": "Lys",
-      "system": "Samme som system"
+      "system": "Samme som system",
+      "textTheme": "Tema"
+    },
+    "VersionHistory": {
+      "notcriticalErrorTitle": "Advarsel",
+      "textCurrent": "Nuværende",
+      "txtErrorLoadHistory": "Indlæsning af historik fejlede"
     }
   },
   "ContextMenu": {

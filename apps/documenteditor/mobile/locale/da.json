@@ -19,6 +19,7 @@
   },
   "Common": {
     "Collaboration": {
+      "notcriticalErrorTitle": "Advarsel",
       "textAccept": "Accepter",
       "textAcceptAllChanges": "Acceptér alle ændringer",
       "textAddComment": "Tilføj kommentar",
@@ -27,23 +28,48 @@
       "textAllChangesEditing": "Alle ændringer (redigering)",
       "textAllChangesRejectedPreview": "Alle ændringer afvist (forhåndsvisning)",
       "textAtLeast": "mindst",
+      "textBack": "Tilbage",
       "textBold": "Fed",
+      "textCancel": "Annuller",
       "textCenter": "Tilpas til midten",
       "textChart": "Diagram",
       "textCollaboration": "Samarbejde",
+      "textComments": "Kommentarer",
+      "textDeleteComment": "Slet kommentar",
+      "textDeleteReply": "Slet svar",
+      "textDone": "Afsluttet",
+      "textEdit": "Rediger",
+      "textEditComment": "Redigér kommentar",
+      "textEditReply": "Redigér svar",
+      "textEditUser": "Brugere som redigerer dokumentet:",
       "textFirstLine": "Første linie",
       "textImage": "Billede",
       "textJustify": "Juster berettiget",
       "textLeft": "Tilpas til venstre",
+      "textMessageDeleteComment": "Ønsker du at slette denne kommentar?",
+      "textMessageDeleteReply": "Ønsker du at slette dette svar?",
+      "textOk": "Ok",
+      "textResolve": "Løs",
       "textRight": "Tilpas til højre",
       "textShape": "Figur",
       "textShd": "Baggrundsfarve",
-      "textTabs": "Skift faner"
+      "textTabs": "Skift faner",
+      "textUsers": "Brugere"
+    },
+    "ThemeColorPalette": {
+      "textCustomColors": "Brugerdefinerede farver",
+      "textThemeColors": "Temafarver"
     },
     "Themes": {
       "dark": "Mørk",
       "light": "Lys",
-      "system": "Samme som system"
+      "system": "Samme som system",
+      "textTheme": "Tema"
+    },
+    "VersionHistory": {
+      "notcriticalErrorTitle": "Advarsel",
+      "textCurrent": "Nuværende",
+      "txtErrorLoadHistory": "Indlæsning af historik fejlede"
     }
   },
   "ContextMenu": {

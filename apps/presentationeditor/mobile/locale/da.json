@@ -8,12 +8,25 @@
       "notcriticalErrorTitle": "Advarsel",
       "textAddComment": "Tilføj kommentar",
       "textAddReply": "Tilføj svar",
+      "textBack": "Tilbage",
+      "textCancel": "Annuller",
       "textCollaboration": "Samarbejde",
+      "textComments": "Kommentarer",
+      "textDeleteComment": "Slet kommentar",
+      "textDeleteReply": "Slet svar",
+      "textDone": "Afsluttet",
+      "textEdit": "Rediger",
+      "textEditComment": "Redigér kommentar",
+      "textEditReply": "Redigér svar",
       "textEditUser": "Brugere som redigerer dokumentet:",
+      "textMessageDeleteComment": "Ønsker du at slette denne kommentar?",
+      "textMessageDeleteReply": "Ønsker du at slette dette svar?",
+      "textOk": "Ok",
       "textResolve": "Løs",
       "textUsers": "Brugere"
     },
     "ThemeColorPalette": {
+      "textCustomColors": "Brugerdefinerede farver",
       "textThemeColors": "Temafarver"
     },
     "Themes": {
