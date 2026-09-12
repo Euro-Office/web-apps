@@ -38,7 +38,7 @@
     "VersionHistory": {
       "notcriticalErrorTitle": "Advarsel",
       "textCurrent": "Nuværende",
-      "txtErrorLoadHistory": "Indlæsningshistorik fejlede"
+      "txtErrorLoadHistory": "Indlæsning af historik fejlede"
     }
   },
   "ContextMenu": {
