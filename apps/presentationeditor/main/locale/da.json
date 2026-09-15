@@ -1380,7 +1380,7 @@
   "PE.Views.DocumentHolder.txtScriptsAfter": "Manuskripter efter tekst",
   "PE.Views.DocumentHolder.txtScriptsBefore": "Manuskripter før tekst",
   "PE.Views.DocumentHolder.txtSelectAll": "Vælg alle",
-  "PE.Views.DocumentHolder.txtShowBottomLimit": "Vis nederste linje",
+  "PE.Views.DocumentHolder.txtShowBottomLimit": "Vis nederste grænse",
   "PE.Views.DocumentHolder.txtShowCloseBracket": "Vis lukke klamme",
   "PE.Views.DocumentHolder.txtShowDegree": "Vis grader",
   "PE.Views.DocumentHolder.txtShowOpenBracket": "Vis åbnings klamme",
