@@ -1293,7 +1293,7 @@
   "SSE.Controllers.Main.warnLicenseLimitedNoAccess": "Licens udløbet. <br>Du har ikke adgang til at redigere. <br>Kontakt venligst din administrator.",
   "SSE.Controllers.Main.warnLicenseLimitedRenewed": "Licens skal fornyes.<br>Du har begrænset adgang til at redigere dokumenter.<br>Kontakt venligst din administrator for at få fuld adgang.",
   "SSE.Controllers.Main.warnNoLicense": "Du har nået grænsen for antal samtidige forbindelser til %1 værktøjer. Dokumentet åbnes for læsning.<br>Kontakt %1 salgsteamet for betingelser for opgradering.",
-  "SSE.Controllers.Main.warnNoLicenseUsers": "Du har nået grænsen for brugere af %1 redigeringsværktøj. Kontakt %1 salgsafdeling for at høre om dine opgraderingsmuligheder.",
+  "SSE.Controllers.Main.warnNoLicenseUsers": "Du har nået grænsen for brugere af %1-redigeringsværktøj. Kontakt %1-salgsafdelingen for at høre om dine opgraderingsmuligheder.",
   "SSE.Controllers.Main.warnProcessRightsChange": "Du er blevet nægtet rettighederne til at redigere denne fil.",
   "SSE.Controllers.PivotTable.strSheet": "Ark",
   "SSE.Controllers.Print.strAllSheets": "Alle ark",

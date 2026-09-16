@@ -684,7 +684,7 @@
     "warnLicenseLimitedNoAccess": "Licensen er udløbet. Du har ikke adgang til at redigere dokumenter. Kontakt din administrator.",
     "warnLicenseLimitedRenewed": "Licensen skal fornyes. Du har begrænset adgang til dokumentredigeringsfunktioner.<br>Kontakt din administrator for at få fuld adgang",
     "warnNoLicense": "Du har nået grænsen for antal samtidige forbindelser til %1 værktøjer. Dokumentet åbnes for læsning. Kontakt %1 salgsteamet for betingelser for opgradering.",
-    "warnNoLicenseUsers": "Du har nået grænsen for brugere af %1 redigeringsværktøj. Kontakt %1 salgsafdeling for at høre om dine opgraderingsmuligheder.",
+    "warnNoLicenseUsers": "Du har nået grænsen for brugere af %1-redigeringsværktøj. Kontakt %1-salgsafdelingen for at høre om dine opgraderingsmuligheder.",
     "warnProcessRightsChange": "Du har ikke rettigheder til at redigere denne fil."
   },
   "Settings": {
