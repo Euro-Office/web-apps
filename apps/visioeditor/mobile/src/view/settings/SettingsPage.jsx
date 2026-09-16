@@ -126,7 +126,7 @@ const SettingsPage = inject('storeAppOptions', 'storeVisioInfo', 'storeToolbarSe
                 }
                 {canCloseEditor &&
                     <ListItem title={closeButtonText ?? t('View.Settings.textClose')} link="#" className='close-editor-btn no-indicator' onClick={() => Common.Notifications.trigger('close')}>
-                        <SvgIcon slot="media" symbolId={IconClose.id} className={'icon icon-svg'} />
+                        {Device.android && <SvgIcon slot="media" symbolId={IconClose.id} className={'icon icon-svg'} />}
                     </ListItem>
                 }
             </List>
