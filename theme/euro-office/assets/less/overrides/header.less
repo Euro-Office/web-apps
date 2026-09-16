@@ -87,6 +87,16 @@
   );
 }
 
+// PDF forms run inside the document editor and therefore expose
+// data-editor-type="document". The shared header mixin reads the document
+// token for the toolbar but the PDF token for its extra/title sections, so
+// both tokens must use the PDF identity color to avoid a two-tone header.
+:root body.pdf-form {
+  --toolbar-header-document: @eo-header-pdf-background;
+  --toolbar-header-pdf: @eo-header-pdf-background;
+  --text-toolbar-header-on-background-pdf: @eo-header-pdf-avatar-text;
+}
+
 :root body[data-editor-type="spreadsheet"] {
   .eo-editor-header(
     --toolbar-header-spreadsheet;
