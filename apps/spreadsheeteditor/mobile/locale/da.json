@@ -88,7 +88,7 @@
     "textDoNotShowAgain": "Vis ikke igen",
     "textOk": "OK",
     "txtWarnUrl": "Hvis du klikker på dette link, kan det være skadeligt for din enhed og dine data. Denne placering kan være usikker:<br>{0}<br>Er du sikker på, at du vil fortsætte?",
-    "warnMergeLostData": "Kun data for øverste venstre celle forbliver i fusionerede celler.<br>Er du sikker på at du vil fortsætte?"
+    "warnMergeLostData": "Kun data for øverste venstre celle forbliver i flettede celler.<br>Er du sikker på at du vil fortsætte?"
   },
   "Controller": {
     "Main": {
@@ -299,7 +299,7 @@
     "errorFileRequest": "Ekstern fejl.<br>Filanmodning. Kontakt support.",
     "errorFileSizeExceed": "Filens størrelse overskrider serverens grænse.<br>Kontakt din administrator for at høre nærmere.",
     "errorFileVKey": "Ekstern fejl.<br>Forkert sikkerhedsnøgle. Kontakt support.",
-    "errorFillRange": "Kunne ikke fylde de valgte celler.<br>Alle de fusionerede celler skal være samme størrelse. ",
+    "errorFillRange": "Kunne ikke fylde de valgte celler.<br>Alle de flettede celler skal være samme størrelse. ",
     "errorForceSave": "Der opstod en fejl under lagring af filen. Brug 'Hent som' for at gemme filen lokalt, eller prøv igen senere.",
     "errorFormulaInPivotFieldName": "Der kan ikke indtastes en formel for et element- eller feltnavn i en pivottabelrapport.",
     "errorFormulaName": "En fejl i formlen.<br>Forkert formelnavn.",
