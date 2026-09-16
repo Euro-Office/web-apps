@@ -196,7 +196,7 @@
       "textVersionHistory": "Versionshistorik",
       "textWarningRestoreVersion": "Den aktuelle fil gemmes i versionshistorikken.",
       "titleWarningRestoreVersion": "Vil du gendanne denne version?",
-      "txtErrorLoadHistory": "Indlæsning af historik fejlede"
+      "txtErrorLoadHistory": "Historikken kunne ikke indlæses."
     }
   },
   "ContextMenu": {
@@ -435,7 +435,7 @@
     "criticalErrorExtText": "Tryk på 'OK' for at gå tilbage til dokumentlisten.",
     "criticalErrorExtTextClose": "Tryk på 'OK' for at lukke editoren.",
     "criticalErrorTitle": "Fejl",
-    "downloadErrorText": "Hentning mislykkedes.",
+    "downloadErrorText": "Filen kunne ikke hentes.",
     "errorAccessDeny": "Du forsøger at udføre en handling, du ikke har rettigheder til.<br>Kontakt din administrator.",
     "errorBadImageUrl": "Billed-URL er forkert",
     "errorComboSeries": "For at lave et kombinationsdiagram skal du markere mindst to dataserier.",
@@ -463,8 +463,8 @@
     "errorKeyEncrypt": "Ukendt nøgledeskriptor",
     "errorKeyExpire": "Nøgledeskriptoren er udløbet",
     "errorLoadingFont": "Skrifttyper er ikke indlæst.<br>Kontakt administratoren af din Document Server.",
-    "errorMailMergeLoadFile": "Indlæsningen mislykkedes.",
-    "errorMailMergeSaveFile": "Fletning mislykkedes",
+    "errorMailMergeLoadFile": "Filen kunne ikke indlæses.",
+    "errorMailMergeSaveFile": "Fletningen kunne ikke gennemføres.",
     "errorNoTOC": "Der er ingen indholdsfortegnelse at opdatere. Du kan indsætte en fra fanen \"Referencer\".",
     "errorPasswordIsNotCorrect": "Den adgangskode, du har angivet, er ikke korrekt. Kontrollér, at CAPS LOCK ikke er slået til, og at du skriver store og små bogstaver korrekt.",
     "errorPDFFormsLocked": "Handlingen kan ikke udføres, fordi den ændrer låste formularer.",
@@ -474,7 +474,7 @@
     "errorSessionToken": "Forbindelsen til serveren er afbrudt. Genindlæs siden.",
     "errorSetPassword": "Adgangskoden kunne ikke oprettes.",
     "errorStockChart": "Forkert rækkefølge. For at bygge et kursdiagram skal du placere dataene på arket i følgende rækkefølge:<br> åbningskurs, højeste kurs, laveste kurs, lukkekurs.",
-    "errorSubmit": "Send mislykkedes.",
+    "errorSubmit": "Afsendelsen kunne ikke gennemføres.",
     "errorTextFormWrongFormat": "Den indtastede værdi stemmer ikke overens med feltets format.",
     "errorToken": "Dokumentets sikkerhedstoken er ikke oprettet korrekt.<br>Kontakt administratoren af din Document Server.",
     "errorTokenExpire": "Dokumentets sikkerhedstoken er udløbet.<br>Kontakt administratoren af din Document Server.",

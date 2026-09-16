@@ -58,7 +58,7 @@
       "textVersionHistory": "Versionshistorik",
       "textWarningRestoreVersion": "Den aktuelle fil gemmes i versionshistorikken.",
       "titleWarningRestoreVersion": "Vil du gendanne denne version?",
-      "txtErrorLoadHistory": "Indlæsning af historik fejlede"
+      "txtErrorLoadHistory": "Historikken kunne ikke indlæses."
     }
   },
   "ContextMenu": {
@@ -259,7 +259,7 @@
     "criticalErrorExtText": "Tryk på 'OK' for at gå tilbage til dokumentlisten.",
     "criticalErrorExtTextClose": "Tryk på 'OK' for at lukke editoren.",
     "criticalErrorTitle": "Fejl",
-    "downloadErrorText": "Hentning mislykkedes.",
+    "downloadErrorText": "Filen kunne ikke hentes.",
     "errNoDuplicates": "Der blev ikke fundet nogen dublerede værdier.",
     "errorAccessDeny": "Du forsøger at udføre en handling, du ikke har rettigheder til.<br>Kontakt din administrator.",
     "errorArgsRange": "En fejl i formlen.<br>Forkert argumentområde.",

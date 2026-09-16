@@ -61,7 +61,7 @@
       "textVersionHistory": "Versionshistorik",
       "textWarningRestoreVersion": "Den aktuelle fil gemmes i versionshistorikken.",
       "titleWarningRestoreVersion": "Vil du gendanne denne version?",
-      "txtErrorLoadHistory": "Indlæsning af historik fejlede"
+      "txtErrorLoadHistory": "Historikken kunne ikke indlæses."
     }
   },
   "ContextMenu": {
@@ -195,7 +195,7 @@
     "criticalErrorExtText": "Tryk på 'OK' for at gå tilbage til dokumentlisten.",
     "criticalErrorExtTextClose": "Tryk på 'OK' for at lukke editoren.",
     "criticalErrorTitle": "Fejl",
-    "downloadErrorText": "Hentning mislykkedes.",
+    "downloadErrorText": "Filen kunne ikke hentes.",
     "errorAccessDeny": "Du forsøger at udføre en handling, du ikke har rettigheder til.<br>Kontakt din administrator.",
     "errorBadImageUrl": "Billed-URL er forkert",
     "errorComboSeries": "For at lave et kombinationsdiagram skal du markere mindst to dataserier.",
