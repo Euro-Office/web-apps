@@ -2762,7 +2762,7 @@
   "DE.Views.MailMergeSettings.textPortal": "Gem",
   "DE.Views.MailMergeSettings.textPreview": "Forhåndsvis resultater",
   "DE.Views.MailMergeSettings.textReadMore": "Læs mere",
-  "DE.Views.MailMergeSettings.textSendMsg": "Alle mailbeskeder er klar og vil blive sent ud inden for et tidsrum. <br> Hastigheden afhænger af din mail service. <br> Du kan fortsætte med, at arbejde med dokumentet eller lukke det. Efter dette er gennemførtm, vil der blive sendt en notifikation til din registrerings emailadresse.  ",
+  "DE.Views.MailMergeSettings.textSendMsg": "Alle mailbeskeder er klar og vil blive sent ud inden for et tidsrum. <br> Hastigheden afhænger af din mail service. <br> Du kan fortsætte med, at arbejde med dokumentet eller lukke det. Efter dette er gennemførtm, vil der blive sendt en notifikation til din registrerings emailadresse. ",
   "DE.Views.MailMergeSettings.textTo": "Til",
   "DE.Views.MailMergeSettings.txtFirst": "Til første instans",
   "DE.Views.MailMergeSettings.txtFromToError": "\"Fra\" værdi skal være mindre end \"Til\" værdien",
