@@ -408,7 +408,7 @@
   "PDFE.Controllers.InsTab.txtButtons": "Knapper",
   "PDFE.Controllers.InsTab.txtFractionDiagonal": "Skrå fraktion",
   "PDFE.Controllers.InsTab.txtFractionHorizontal": "Lineær fraktion",
-  "PDFE.Controllers.InsTab.txtLargeOperator_Conjunction": "Kile",
+  "PDFE.Controllers.InsTab.txtLargeOperator_Conjunction": "Logisk og",
   "PDFE.Controllers.InsTab.txtLimitLog_Custom_1": "Begrænset eksempel",
   "PDFE.Controllers.InsTab.txtLimitLog_Custom_2": "Maksimum eksempel",
   "PDFE.Controllers.InsTab.txtLimitLog_Ln": "Naturlig logaritme",
