@@ -10,6 +10,14 @@
   --text-toolbar-header: @eo-header-foreground;
   --icon-toolbar-header: @eo-header-foreground;
 
+  // Keep the active tab visible when its brand color is also used as the
+  // header background in the light themes.
+  --highlight-header-tab-underline-document: @eo-header-foreground;
+  --highlight-header-tab-underline-spreadsheet: @eo-header-foreground;
+  --highlight-header-tab-underline-presentation: @eo-header-foreground;
+  --highlight-header-tab-underline-pdf: @eo-header-foreground;
+  --highlight-header-tab-underline-visio: @eo-header-foreground;
+
   --header-component-normal-icon-opacity: 1;
   --header-component-hover-icon-opacity: 1;
   --header-component-active-icon-opacity: 1;
