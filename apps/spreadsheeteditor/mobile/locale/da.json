@@ -522,7 +522,7 @@
       "textSelectedRange": "Markeret område",
       "textShape": "Figur",
       "textSheet": "Ark",
-      "textSortAndFilter": "Sortèr og filtrer",
+      "textSortAndFilter": "Sortér og filtrer",
       "textThisRowHint": "Vælg kun denne række i den angivne kolonne",
       "textTotalsTableHint": "Returnerer resultatrækkerne for tabellen eller de angivne kolonner",
       "txtExpand": "Udvid og sorter",
@@ -531,7 +531,7 @@
       "txtNo": "Nej",
       "txtNotUrl": "Feltet skal indeholde en URL i formatet \"https://www.example.com\"",
       "txtSorting": "Sorterer",
-      "txtSortSelected": "Sortèr valgte",
+      "txtSortSelected": "Sortér det markerede",
       "txtYes": "Ja"
     },
     "Edit": {
@@ -740,8 +740,8 @@
       "textWrapText": "Ombryd tekst",
       "textYen": "Yen",
       "txtNotUrl": "Feltet skal indeholde en URL i formatet \"https://www.example.com\"",
-      "txtSortHigh2Low": "Sortèr højest til lavest",
-      "txtSortLow2High": "Sortèr lavest til højest"
+      "txtSortHigh2Low": "Sortér højest til lavest",
+      "txtSortLow2High": "Sortér lavest til højest"
     },
     "Settings": {
       "advCSVOptions": "Vælg CSV-muligheder",
