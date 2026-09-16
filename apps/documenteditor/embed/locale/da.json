@@ -26,7 +26,7 @@
   "DE.ApplicationController.errorUpdateVersionOnDisconnect": "Internetforbindelsen er blevet genoprettet og filversionen er blevet ændret.<br>Før du kan fortsætte arbejdet, skal du hente filen eller kopiere indholdet for at sikre, at intet vil blive tabt - og derefter genindlæse denne side.",
   "DE.ApplicationController.errorUserDrop": "Der kan ikke opnås adgang til filen lige nu. ",
   "DE.ApplicationController.notcriticalErrorTitle": "Advarsel",
-  "DE.ApplicationController.openErrorText": "Der skete en fejl under åbningen af filen",
+  "DE.ApplicationController.openErrorText": "Der skete en fejl under åbningen af filen.",
   "DE.ApplicationController.scriptLoadError": "Forbindelsen er for langsom, og nogle komponenter kunne ikke indlæses. Indlæs siden igen.",
   "DE.ApplicationController.textAnonymous": "Anonym",
   "DE.ApplicationController.textClear": "Ryd alle felter",

@@ -483,7 +483,7 @@
     "errorUsersExceed": "Det maksimale antal brugere i din aftale er overskredet.",
     "errorViewerDisconnect": "Forbindelsen er afbrudt. Du kan stadig se dokumentet,<br>men du kan ikke hente eller udskrive det, før forbindelsen er genoprettet, og siden er genindlæst.",
     "notcriticalErrorTitle": "Advarsel",
-    "openErrorText": "Der skete en fejl under åbningen af filen",
+    "openErrorText": "Der skete en fejl under åbningen af filen.",
     "saveErrorText": "Der opstod en fejl under lagring af filen.",
     "scriptLoadError": "Forbindelsen er for langsom, og nogle komponenter kunne ikke indlæses. Genindlæs siden.",
     "splitDividerErrorText": "Antallet af rækker skal være deleligt med %1",

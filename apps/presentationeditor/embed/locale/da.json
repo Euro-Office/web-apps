@@ -20,7 +20,7 @@
   "PE.ApplicationController.errorUpdateVersionOnDisconnect": "Internetforbindelsen er blevet genoprettet og filversionen er blevet ændret.<br>Før du kan fortsætte arbejdet, skal du hente filen eller kopiere indholdet for at sikre, at intet vil blive tabt - og derefter genindlæse denne side.",
   "PE.ApplicationController.errorUserDrop": "Der kan ikke opnås adgang til filen lige nu. ",
   "PE.ApplicationController.notcriticalErrorTitle": "Advarsel",
-  "PE.ApplicationController.openErrorText": "Der skete en fejl under åbningen af filen",
+  "PE.ApplicationController.openErrorText": "Der skete en fejl under åbningen af filen.",
   "PE.ApplicationController.scriptLoadError": "Forbindelsen er for langsom, og nogle af komponenterne kunne ikke indlæses. Genindlæs siden.",
   "PE.ApplicationController.textAnonymous": "Anonymt",
   "PE.ApplicationController.textGuest": "Gæst",

@@ -22,7 +22,7 @@
   "SSE.ApplicationController.errorUpdateVersionOnDisconnect": "Internetforbindelsen er blevet genoprettet og filversionen er blevet ændret.<br>Før du kan fortsætte arbejdet, skal du hente filen eller kopiere indholdet for at sikre, at intet vil blive tabt - og derefter genindlæse denne side.",
   "SSE.ApplicationController.errorUserDrop": "Der kan ikke opnås adgang til filen lige nu. ",
   "SSE.ApplicationController.notcriticalErrorTitle": "Advarsel",
-  "SSE.ApplicationController.openErrorText": "Der skete en fejl under åbningen af filen",
+  "SSE.ApplicationController.openErrorText": "Der skete en fejl under åbningen af filen.",
   "SSE.ApplicationController.scriptLoadError": "Forbindelsen er for langsom, og nogle af komponenterne kunne ikke indlæses. Genindlæs siden.",
   "SSE.ApplicationController.textAnonymous": "Anonymt",
   "SSE.ApplicationController.textGuest": "Gæst",
