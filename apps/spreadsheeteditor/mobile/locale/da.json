@@ -88,7 +88,7 @@
     "textDoNotShowAgain": "Vis ikke igen",
     "textOk": "OK",
     "txtWarnUrl": "Hvis du klikker på dette link, kan det være skadeligt for din enhed og dine data. Denne placering kan være usikker:<br>{0}<br>Er du sikker på, at du vil fortsætte?",
-    "warnMergeLostData": "Kun data for øverste venstre celle forbliver i flettede celler.<br>Er du sikker på at du vil fortsætte?"
+    "warnMergeLostData": "Kun data for øverste venstre celle forbliver i flettede celler. <br>Er du sikker på at du vil fortsætte?"
   },
   "Controller": {
     "Main": {
@@ -299,7 +299,7 @@
     "errorFileRequest": "Ekstern fejl.<br>Filanmodning. Kontakt support.",
     "errorFileSizeExceed": "Filens størrelse overskrider serverens grænse.<br>Kontakt din administrator for at høre nærmere.",
     "errorFileVKey": "Ekstern fejl.<br>Forkert sikkerhedsnøgle. Kontakt support.",
-    "errorFillRange": "Kunne ikke fylde de valgte celler.<br>Alle de flettede celler skal være samme størrelse. ",
+    "errorFillRange": "Kunne ikke fylde de valgte celler.<br>Alle de flettede celler skal være samme størrelse.",
     "errorForceSave": "Der opstod en fejl under lagring af filen. Brug 'Hent som' for at gemme filen lokalt, eller prøv igen senere.",
     "errorFormulaInPivotFieldName": "Der kan ikke indtastes en formel for et element- eller feltnavn i en pivottabelrapport.",
     "errorFormulaName": "En fejl i formlen.<br>Forkert formelnavn.",
@@ -358,8 +358,8 @@
     "errorUserDrop": "Der kan ikke opnås adgang til filen lige nu.",
     "errorUsersExceed": "Det maksimale antal brugere i din aftale er overskredet.",
     "errorViewerDisconnect": "Forbindelsen er afbrudt. Du kan stadig se dokumentet,<br>men du kan ikke hente eller udskrive det, før forbindelsen er genoprettet, og siden er genindlæst.",
-    "errorWrongBracketsCount": "\nEn fejl i formlen.<br>Forkert antal parenteser.",
-    "errorWrongOperator": "En fejl i den indtastede formel. Forkert symbol eller funktion er indtastet. <br> Ret fejlen.",
+    "errorWrongBracketsCount": "En fejl i formlen.<br>Forkert antal parenteser.",
+    "errorWrongOperator": "En fejl i den indtastede formel. Forkert symbol eller funktion er indtastet.<br>Ret fejlen.",
     "errRemDuplicates": "Der blev fundet og slettet {0} dublerede værdier. {1} unikke værdier er tilbage.",
     "notcriticalErrorTitle": "Advarsel",
     "openErrorText": "Der skete en fejl under åbningen af filen.",
@@ -899,7 +899,7 @@
       "txtVi": "vietnamesisk",
       "txtZh": "kinesisk",
       "txtZhtw": "kinesisk (traditionelt)",
-      "warnDownloadAs": "Hvis du fortsætter med at gemme i dette format, vil alle funktioner på nær teksten blive tabt.<br> Er du sikker på at du vil fortsætte?",
+      "warnDownloadAs": "Hvis du fortsætter med at gemme i dette format, vil alle funktioner på nær teksten blive tabt.<br>Er du sikker på at du vil fortsætte?",
       "warnDownloadCsv": "CSV-formatet kan hverken gemme flere ark eller andet end tekst.<br>Tryk på OK for kun at gemme det aktive ark som CSV.<br>Klik på Annuller, og vælg et andet format, hvis hele regnearket skal bevares.",
       "warnDownloadOds": "Gemmer du filen i dette format, kan formler, celleformatering eller indlejrede objekter gå tabt, fordi formatet ikke understøtter dem.<br>Er du sikker på, at du vil fortsætte?"
     }
