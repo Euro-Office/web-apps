@@ -1870,7 +1870,7 @@
   "PE.Views.FileMenuPanels.DocumentInfo.txtModifyDate": "Sidst redigeret",
   "PE.Views.FileMenuPanels.DocumentInfo.txtNo": "Nej",
   "PE.Views.FileMenuPanels.DocumentInfo.txtOwner": "Ejer",
-  "PE.Views.FileMenuPanels.DocumentInfo.txtPlacement": "Lokation",
+  "PE.Views.FileMenuPanels.DocumentInfo.txtPlacement": "Placering",
   "PE.Views.FileMenuPanels.DocumentInfo.txtPresentationInfo": "Oplysninger om præsentationen",
   "PE.Views.FileMenuPanels.DocumentInfo.txtProperties": "Egenskaber",
   "PE.Views.FileMenuPanels.DocumentInfo.txtPropertyTitleConflictError": "Der findes allerede en egenskab med denne titel",
