@@ -416,7 +416,7 @@
   "PDFE.Controllers.InsTab.txtLimitLog_LogBase": "Logaritme",
   "PDFE.Controllers.InsTab.txtLimitLog_Max": "Maksimum",
   "PDFE.Controllers.InsTab.txtLines": "Linje",
-  "PDFE.Controllers.InsTab.txtMatrix_Dots_Baseline": "Basislinje prikker",
+  "PDFE.Controllers.InsTab.txtMatrix_Dots_Baseline": "Grundlinjeprikker",
   "PDFE.Controllers.InsTab.txtMatrix_Dots_Center": "Midterlinje prikker",
   "PDFE.Controllers.InsTab.txtMatrix_Dots_Vertical": "Lodrette prikker",
   "PDFE.Controllers.InsTab.txtOperator_Custom_1": "Udbytte",
