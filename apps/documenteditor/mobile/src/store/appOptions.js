@@ -20,7 +20,6 @@ export class storeAppOptions {
             changeReaderMode: action,
 
             canBrandingExt: observable,
-            canBranding: observable,
 
             isDocReady: observable,
             changeDocReady: action,
@@ -105,7 +104,6 @@ export class storeAppOptions {
     }
 
     canBrandingExt = true;
-    canBranding = true;
 
     isDocReady = false;
     changeDocReady (value) {
@@ -178,12 +176,11 @@ export class storeAppOptions {
         AscCommon.UserInfoParser.setParser(true);
         AscCommon.UserInfoParser.setCurrentName(this.user.fullname);
     }
-    setPermissionOptions (document, licType, params, permissions, isSupportEditFeature) {
+    setPermissionOptions (document, params, permissions, isSupportEditFeature) {
         if (params.asc_getRights() !== Asc.c_oRights.Edit)
             permissions.edit = permissions.review = false;
         this.review = (permissions.review === undefined) ? (permissions.edit !== false) : permissions.review;
         this.canAnalytics = params.asc_getIsAnalyticsEnable();
-        this.canLicense = (licType === Asc.c_oLicenseResult.Success || licType === Asc.c_oLicenseResult.SuccessLimit);
         this.isLightVersion = params.asc_getIsLight();
         this.buildVersion = params.asc_getBuildVersion();
         this.canCoAuthoring = !this.isLightVersion;
@@ -192,17 +189,16 @@ export class storeAppOptions {
         this.canRequestEditRights = this.config.canRequestEditRights;
         this.canEdit = (permissions.edit !== false || permissions.review === true) && // can edit or review
             (this.config.canRequestEditRights || this.config.mode !== 'view') && // if mode=="view" -> canRequestEditRights must be defined
-            (!this.isReviewOnly || this.canLicense) && // if isReviewOnly==true -> canLicense must be true
             isSupportEditFeature;
-        this.isEdit = this.canLicense && this.canEdit && this.config.mode !== 'view';
-        this.canReview = this.canLicense && this.isEdit && (permissions.review===true);
-        this.canUseHistory = this.canLicense && this.config.canUseHistory && this.canCoAuthoring && !this.isDesktopApp && !this.isOffline;
+        this.isEdit = this.canEdit && this.config.mode !== 'view';
+        this.canReview = this.isEdit && (permissions.review===true);
+        this.canUseHistory = this.config.canUseHistory && this.canCoAuthoring && !this.isDesktopApp && !this.isOffline;
         this.canRename = this.config.canRename;
         this.canHistoryClose = this.config.canHistoryClose;
         this.canHistoryRestore= this.config.canHistoryRestore;
-        this.canUseMailMerge = this.canLicense && this.canEdit && !this.isDesktopApp;
-        this.canSendEmailAddresses = this.canLicense && this.config.canSendEmailAddresses && this.canEdit && this.canCoAuthoring;
-        this.canComments = this.canLicense && (permissions.comment === undefined ? this.isEdit : permissions.comment) && (this.config.mode !== 'view');
+        this.canUseMailMerge = this.canEdit && !this.isDesktopApp;
+        this.canSendEmailAddresses = this.config.canSendEmailAddresses && this.canEdit && this.canCoAuthoring;
+        this.canComments = (permissions.comment === undefined ? this.isEdit : permissions.comment) && (this.config.mode !== 'view');
         this.canComments = this.canComments && !((typeof (this.customization) == 'object') && this.customization.comments===false);
         this.canViewComments = this.canComments || !((typeof (this.customization) == 'object') && this.customization.comments===false);
         this.canEditComments = this.isOffline || !permissions.editCommentAuthorOnly;
@@ -212,23 +208,22 @@ export class storeAppOptions {
             if (permissions.editCommentAuthorOnly===undefined && permissions.deleteCommentAuthorOnly===undefined)
                 this.canEditComments = this.canDeleteComments = this.isOffline;
         }
-        this.canChat = this.canLicense && !this.isOffline && (permissions.chat !== false);
-        this.canEditStyles = this.canLicense && this.canEdit;
+        this.canChat = !this.isOffline && (permissions.chat !== false);
+        this.canEditStyles = this.canEdit;
         this.canPrint = (permissions.print !== false);
         this.fileKey = document.key;
         this.isXpsViewer = /^(?:(djvu|xps|oxps))$/.exec(document.fileType);
         this.typeForm = document.fileType === 'pdf'; // can fill forms only in pdf format
         this.isOForm = document.fileType === 'oform';
-        this.canFillForms = this.canLicense && this.typeForm && ((permissions.fillForms === undefined) ? this.isEdit : permissions.fillForms) && (this.config.mode !== 'view');
+        this.canFillForms = this.typeForm && ((permissions.fillForms === undefined) ? this.isEdit : permissions.fillForms) && (this.config.mode !== 'view');
         this.isForm = !this.isXpsViewer && !!window.isPDFForm;
         this.canProtect = permissions.protect !== false;
-        this.canSubmitForms = this.canLicense && !this.isOffline && (typeof (this.customization) == 'object') && !!this.customization.submitForm &&
+        this.canSubmitForms = !this.isOffline && (typeof (this.customization) == 'object') && !!this.customization.submitForm &&
                               (typeof this.customization.submitForm !== 'object' || this.customization.submitForm.visible!==false);
         this.isEditableForms = this.isForm && this.canSubmitForms;
         this.isRestrictedEdit = !this.isEdit && (this.canComments || this.canFillForms) && isSupportEditFeature;
         if (this.isRestrictedEdit && this.canComments && this.canFillForms) // must be one restricted mode, priority for filling forms
             this.canComments = false;
-        this.trialMode = params.asc_getLicenseMode();
 
         const type = /^(?:(pdf|djvu|xps|oxps))$/.exec(document.fileType);
 
@@ -236,7 +231,6 @@ export class storeAppOptions {
         this.canDownload = permissions.download !== false;
         this.canReader = (!type || typeof type[1] !== 'string');
 
-        this.canBranding = params.asc_getCustomization();
         this.canBrandingExt = (typeof this.customization == 'object' || this.config.plugins);
 
         this.canFavorite = document.info && (document.info?.favorite !== undefined && document.info?.favorite !== null) && !this.isOffline;
@@ -245,15 +239,15 @@ export class storeAppOptions {
         if ( this.isLightVersion ) {
             this.canUseHistory = this.canReview = this.isReviewOnly = false;
         }
-        this.canUseReviewPermissions = this.canLicense && (!!permissions.reviewGroups || this.customization
+        this.canUseReviewPermissions = (!!permissions.reviewGroups || this.customization
             && this.customization.reviewPermissions && (typeof (this.customization.reviewPermissions) == 'object'));
-        this.canUseCommentPermissions = this.canLicense && !!permissions.commentGroups;
-        this.canUseUserInfoPermissions = this.canLicense && !!permissions.userInfoGroups;
+        this.canUseCommentPermissions = !!permissions.commentGroups;
+        this.canUseUserInfoPermissions = !!permissions.userInfoGroups;
         this.canUseReviewPermissions && AscCommon.UserInfoParser.setReviewPermissions(permissions.reviewGroups, this.customization.reviewPermissions);
         this.canUseCommentPermissions && AscCommon.UserInfoParser.setCommentPermissions(permissions.commentGroups);
         this.canUseUserInfoPermissions && AscCommon.UserInfoParser.setUserInfoPermissions(permissions.userInfoGroups);
 
-        this.canLiveView = !!params.asc_getLiveViewerSupport() && (this.config.mode === 'view') && !(type && typeof type[1] === 'string') && isSupportEditFeature;
+        this.canLiveView = (this.config.mode === 'view') && !(type && typeof type[1] === 'string') && isSupportEditFeature;
         this.isAnonymousSupport = !!Common.EditorApi.get().asc_isAnonymousSupport();
         this.canCopy = permissions.copy !== false;
     }
