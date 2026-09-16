@@ -902,7 +902,7 @@
   "SSE.Controllers.Main.errorDefaultMessage": "Fejlkode: %1",
   "SSE.Controllers.Main.errorDeleteColumnContainsLockedCell": "Du forsøger at slette en kolonne, der indeholder en låst celle. Låste celler kan ikke slettes, mens regnearket er beskyttet.<br>For at slette en låst celle skal du fjerne beskyttelsen af ​​arket. Du kan blive bedt om at indtaste en adgangskode.",
   "SSE.Controllers.Main.errorDeleteRowContainsLockedCell": "Du forsøger at slette en række, der indeholder en låst celle. Låste celler kan ikke slettes, mens regnearket er beskyttet.<br>For at slette en låst celle skal du fjerne beskyttelsen af ​​arket. Du kan blive bedt om at indtaste en adgangskode.",
-  "SSE.Controllers.Main.errorEditingDownloadas": "Der opstod en fejl under arbejdet med dokumentet. <br> Brug \"Hent som\" valgmuligheden for at gemme en sikkerhedsversion til din computers harddisk.",
+  "SSE.Controllers.Main.errorEditingDownloadas": "Der opstod en fejl under arbejdet med dokumentet.<br>Brug 'Hent som' til at gemme en sikkerhedskopi på din computer.",
   "SSE.Controllers.Main.errorEditingSaveas": "Der opstod en fejl under arbejdet med dokumentet. <br> Brug \"gem som...\" valgmuligheden for at gemme en sikkerhedsversion til din computers harddisk.",
   "SSE.Controllers.Main.errorEditView": "Den eksisterende arkvisning kan ikke redigeres og nye kan ikke oprettes p.t., da enkelte redigeres.",
   "SSE.Controllers.Main.errorEmailClient": "Ingen e-mail klient fundet.",

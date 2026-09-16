@@ -97,7 +97,7 @@
   "DE.Controllers.ApplicationController.errorConnectToServer": "Dokumentet kunne ikke gemmes. Tjek forbindelsesindstillingerne, eller kontakt din administrator.<br>Når du klikker på 'OK' knappen, vil du blive bedt om at hente dokumentet.",
   "DE.Controllers.ApplicationController.errorDataEncrypted": "Krypterede ændringer er blevet modtaget, men de kan ikke dekrypteres. ",
   "DE.Controllers.ApplicationController.errorDefaultMessage": "Fejlkode: %1",
-  "DE.Controllers.ApplicationController.errorEditingDownloadas": "Der opstod en fejl under arbejdet med dokumentet.<br>Brug muligheden 'Hent som...' til at gemme sikkerhedskopien af ​​filen på din computers harddisk.",
+  "DE.Controllers.ApplicationController.errorEditingDownloadas": "Der opstod en fejl under arbejdet med dokumentet.<br>Brug 'Hent som...' til at gemme en sikkerhedskopi på din computer.",
   "DE.Controllers.ApplicationController.errorEditingSaveas": "Der opstod en fejl under arbejdet med dokumentet. <br> Brug \"gem som...\" valgmuligheden for at gemme en sikkerhedsversion til din computers harddisk.",
   "DE.Controllers.ApplicationController.errorFilePassProtect": "Dokumentet er beskyttet af en adgangskode og kunne ikke åbnes.",
   "DE.Controllers.ApplicationController.errorFileSizeExceed": "Filens størrelse overstiger grænsen, som er sat for din server.<br>Kontakt din Document Server-administrator for at få flere oplysninger.",

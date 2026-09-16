@@ -867,7 +867,7 @@
   "PE.Controllers.Main.errorDataEncrypted": "Krypterede ændringer er blevet modtaget, men de kan ikke dekrypteres. ",
   "PE.Controllers.Main.errorDataRange": "Forkert datainterval",
   "PE.Controllers.Main.errorDefaultMessage": "Fejlkode: %1",
-  "PE.Controllers.Main.errorEditingDownloadas": "Der opstod en fejl under arbejdet med dokumentet. <br> Brug \"Hent som\" valgmuligheden for at gemme en sikkerhedsversion til din computers harddisk.",
+  "PE.Controllers.Main.errorEditingDownloadas": "Der opstod en fejl under arbejdet med dokumentet.<br>Brug 'Hent som' til at gemme en sikkerhedskopi på din computer.",
   "PE.Controllers.Main.errorEditingSaveas": "Der opstod en fejl under arbejdet med dokumentet. <br> Brug \"gem som...\" valgmuligheden for at gemme en sikkerhedsversion til din computers harddisk.",
   "PE.Controllers.Main.errorEmailClient": "Ingen e-mail klient fundet.",
   "PE.Controllers.Main.errorFilePassProtect": "Dokumentet er beskyttet af en adgangskode og kunne ikke åbnes.",
