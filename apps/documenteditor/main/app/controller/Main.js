@@ -1342,6 +1342,10 @@ define([
                         this.api.zoom(zf > 0 ? zf : 100);
                 }
 
+                if (Common.localStorage.getBool("de-pageless-mode", false)) {
+                    this.api.SetPagelessMode(true);
+                }
+
                 value = Common.localStorage.getItem("de-show-hiddenchars");
                 me.api.put_ShowParaMarks((value!==null) ? eval(value) : false);
 
