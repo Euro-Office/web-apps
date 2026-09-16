@@ -14,9 +14,21 @@
       "notcriticalErrorTitle": "Advarsel",
       "textAddComment": "Tilføj kommentar",
       "textAddReply": "Tilføj svar",
+      "textBack": "Tilbage",
+      "textCancel": "Annuller",
       "textCollaboration": "Samarbejde",
+      "textComments": "Kommentarer",
+      "textDeleteComment": "Slet kommentar",
+      "textDeleteReply": "Slet svar",
+      "textDone": "Afsluttet",
+      "textEdit": "Rediger",
+      "textEditComment": "Redigér kommentar",
+      "textEditReply": "Redigér svar",
       "textEditUser": "Brugere som redigerer dokumentet:",
+      "textMessageDeleteComment": "Ønsker du at slette denne kommentar?",
+      "textMessageDeleteReply": "Ønsker du at slette dette svar?",
       "textNoComments": "Ingen kommentarer",
+      "textOk": "Ok",
       "textReopen": "Åbn igen",
       "textResolve": "Løs",
       "textSharingSettings": "Delingsindstillinger",
@@ -27,6 +39,7 @@
       "textNoFill": "Intet fyld"
     },
     "ThemeColorPalette": {
+      "textCustomColors": "Brugerdefinerede farver",
       "textStandartColors": "Standardfarver",
       "textThemeColors": "Temafarver"
     },
@@ -48,7 +61,7 @@
       "textVersionHistory": "Versionshistorik",
       "textWarningRestoreVersion": "Den aktuelle fil gemmes i versionshistorikken.",
       "titleWarningRestoreVersion": "Vil du gendanne denne version?",
-      "txtErrorLoadHistory": "Indlæsningshistorik fejlede"
+      "txtErrorLoadHistory": "Indlæsning af historik fejlede"
     }
   },
   "ContextMenu": {

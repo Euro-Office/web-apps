@@ -37,23 +37,28 @@
     },
     "ThemeColorPalette": {
       "textCustomColors": "Brugerdefinerede farver",
-      "textStandartColors": "Standardfarver"
+      "textStandartColors": "Standardfarver",
+      "textThemeColors": "Temafarver"
     },
     "Themes": {
       "dark": "Mørk",
       "light": "Lys",
-      "system": "Samme som system"
+      "system": "Samme som system",
+      "textTheme": "Tema"
     },
     "VersionHistory": {
+      "notcriticalErrorTitle": "Advarsel",
       "textAnonymous": "Anonym",
       "textBack": "Tilbage",
       "textCancel": "Annuller",
+      "textCurrent": "Nuværende",
       "textOk": "OK",
       "textRestore": "Gendan",
       "textVersion": "Version",
       "textVersionHistory": "Versionshistorik",
       "textWarningRestoreVersion": "Den aktuelle fil gemmes i versionshistorikken.",
-      "titleWarningRestoreVersion": "Vil du gendanne denne version?"
+      "titleWarningRestoreVersion": "Vil du gendanne denne version?",
+      "txtErrorLoadHistory": "Indlæsning af historik fejlede"
     }
   },
   "ContextMenu": {
