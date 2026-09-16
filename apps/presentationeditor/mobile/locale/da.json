@@ -199,7 +199,7 @@
     "errorAccessDeny": "Du forsøger at udføre en handling, du ikke har rettigheder til.<br>Kontakt din administrator.",
     "errorBadImageUrl": "Billed-URL er forkert",
     "errorComboSeries": "For at lave et kombinationsdiagram skal du markere mindst to dataserier.",
-    "errorConnectToServer": "Kan ikke gemme dette dokument. Tjek dine forbindelsesindstillinger, eller kontakt din administrator.<br>Når du klikker på knappen 'OK', bliver du bedt om at downloade dokumentet.",
+    "errorConnectToServer": "Kan ikke gemme dette dokument. Tjek dine forbindelsesindstillinger, eller kontakt din administrator.<br>Når du klikker på knappen 'OK', bliver du bedt om at hente dokumentet.",
     "errorCopyDisabled": "Af sikkerhedsgrunde kan indholdet i dette dokument ikke kopieres.",
     "errorFileNotAssembled": "Filen er åbnet fra en sikkerhedskopi på serveren og er ikke gemt i lageret.<br>Brug 'Gem som...' for at gemme den på et drev.",
     "errorForcedViewMode": "Filen er åbnet i visningstilstand.<br>Enten er filen låst for redigering, eller også tillader dine rettigheder det ikke.",

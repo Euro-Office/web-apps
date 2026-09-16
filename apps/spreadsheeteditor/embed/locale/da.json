@@ -16,7 +16,7 @@
   "SSE.ApplicationController.errorDefaultMessage": "Fejlkode: %1",
   "SSE.ApplicationController.errorFilePassProtect": "Dokumentet er beskyttet af en adgangskode og kunne ikke åbnes.",
   "SSE.ApplicationController.errorFileSizeExceed": "Filens størrelse overstiger grænsen, som er sat for din server.<br>Kontakt din Document Server-administrator for at få flere oplysninger.",
-  "SSE.ApplicationController.errorForceSave": "Der skete en fejl under gemning af filen. Brug 'Download som' for at gemme filen på din computers harddisk eller prøv igen senere.",
+  "SSE.ApplicationController.errorForceSave": "Der skete en fejl under gemning af filen. Brug 'Hent som' for at gemme filen på din computers harddisk eller prøv igen senere.",
   "SSE.ApplicationController.errorLoadingFont": "Skrifttyper er ikke indlæst.<br>Kontakt din Document Server-administrator.",
   "SSE.ApplicationController.errorTokenExpire": "Dokumentets sikkerhedstoken er udløbet.<br>Kontakt din Document Server-administrator. ",
   "SSE.ApplicationController.errorUpdateVersionOnDisconnect": "Internetforbindelsen er blevet genoprettet og filversionen er blevet ændret.<br>Før du kan fortsætte arbejdet, skal du hente filen eller kopiere indholdet for at sikre, at intet vil blive tabt - og derefter genindlæse denne side.",

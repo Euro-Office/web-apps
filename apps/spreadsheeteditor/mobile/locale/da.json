@@ -275,7 +275,7 @@
     "errorChangeOnProtectedSheet": "Den celle eller det diagram, du forsøger at ændre, ligger på et beskyttet ark. Fjern beskyttelsen af arket for at ændre noget. Du kan blive bedt om at indtaste en adgangskode.",
     "errorCircularReference": "Der er en eller flere cirkulære henvisninger, hvor en formel henviser til sin egen celle enten direkte eller indirekte.<br>Prøv at fjerne eller ændre henvisningerne, eller flyt formlerne til andre celler.",
     "errorComboSeries": "For at lave et kombinationsdiagram skal du markere mindst to dataserier.",
-    "errorConnectToServer": "Kan ikke gemme dette dokument. Tjek dine forbindelsesindstillinger, eller kontakt din administrator.<br>Når du klikker på knappen 'OK', bliver du bedt om at downloade dokumentet.",
+    "errorConnectToServer": "Kan ikke gemme dette dokument. Tjek dine forbindelsesindstillinger, eller kontakt din administrator.<br>Når du klikker på knappen 'OK', bliver du bedt om at hente dokumentet.",
     "errorCopyDisabled": "Af sikkerhedsgrunde kan indholdet i dette dokument ikke kopieres.",
     "errorFileNotAssembled": "Filen er åbnet fra en sikkerhedskopi på serveren og er ikke gemt i lageret.<br>Brug 'Gem som...' for at gemme den på et drev.",
     "errorForcedViewMode": "Filen er åbnet i visningstilstand.<br>Enten er filen låst for redigering, eller også tillader dine rettigheder det ikke.",
