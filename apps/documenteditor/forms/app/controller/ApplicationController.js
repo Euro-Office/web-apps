@@ -189,9 +189,9 @@ define([
 
             window.onbeforeunload = _.bind(this.onBeforeUnload, this);
 
-            this.warnNoLicense  = this.warnNoLicense.replace(/%1/g, '{{COMPANY_NAME}}');
-            this.warnNoLicenseUsers = this.warnNoLicenseUsers.replace(/%1/g, '{{COMPANY_NAME}}');
-            this.textNoLicenseTitle = this.textNoLicenseTitle.replace(/%1/g, '{{COMPANY_NAME}}');
+            this.warnNoLicense  = (this.warnNoLicense || "warnNoLicense").replace(/%1/g, '{{COMPANY_NAME}}');
+            this.warnNoLicenseUsers = (this.warnNoLicenseUsers || "warnNoLicenseUsers").replace(/%1/g, '{{COMPANY_NAME}}');
+            this.textNoLicenseTitle = (this.textNoLicenseTitle || "textNoLicenseTitle").replace(/%1/g, '{{COMPANY_NAME}}');
         },
 
         onDocumentResize: function() {
