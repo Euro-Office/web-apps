@@ -14,7 +14,7 @@
   "SSE.ApplicationController.downloadTextText": "Henter regneark...",
   "SSE.ApplicationController.errorAccessDeny": "Du prøver at foretage en handling, som du ikke har rettigheder til.<br> Kontakt din Document Server-administrator.",
   "SSE.ApplicationController.errorDefaultMessage": "Fejlkode: %1",
-  "SSE.ApplicationController.errorFilePassProtect": "Dokumentet er beskyttet af et kodeord og kunne ikke åbnes.",
+  "SSE.ApplicationController.errorFilePassProtect": "Dokumentet er beskyttet af en adgangskode og kunne ikke åbnes.",
   "SSE.ApplicationController.errorFileSizeExceed": "Filens størrelse overstiger grænsen, som er sat for din server.<br>Kontakt din Document Server-administrator for at få flere oplysninger.",
   "SSE.ApplicationController.errorForceSave": "Der skete en fejl under gemning af filen. Brug 'Download som' for at gemme filen på din computers harddisk eller prøv igen senere.",
   "SSE.ApplicationController.errorLoadingFont": "Skrifttyper er ikke indlæst.<br>Kontakt din Document Server-administrator.",

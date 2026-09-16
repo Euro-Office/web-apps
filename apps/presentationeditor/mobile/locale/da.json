@@ -173,7 +173,7 @@
       "titleServerVersion": "Redigeringsværktøj opdateret",
       "titleUpdateVersion": "Version ændret",
       "txtIncorrectPwd": "Adgangskoden er forkert",
-      "txtProtected": "Når du indtaster kodeordet og åbner filen, vil det nuværende kodeord til filen blive nulstillet.",
+      "txtProtected": "Når du indtaster adgangskoden og åbner filen, vil det nuværende adgangskode til filen blive nulstillet.",
       "warnLicenseAnonymous": "Anonyme brugere har ikke adgang.<br>Dokumentet åbnes kun til visning.",
       "warnLicenseBefore": "Licensen er ikke aktiv.<br>Kontakt din administrator.",
       "warnLicenseExp": "Licensen er udløbet. Forny licensen, og genindlæs siden.",

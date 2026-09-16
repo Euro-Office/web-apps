@@ -16,7 +16,7 @@
   "DE.ApplicationController.errorAccessDeny": "Du prøver at foretage en handling, som du ikke har rettighederne til.<br>Kontakt din Document Server-administrator.",
   "DE.ApplicationController.errorDefaultMessage": "Fejlkode: %1",
   "DE.ApplicationController.errorEditingDownloadas": "Der opstod en fejl under arbejdet med dokumentet. <br> Brug \"download som...\" valgmuligheden for at gemme en sikkerhedsversion til din computers harddisk.",
-  "DE.ApplicationController.errorFilePassProtect": "Dokumentet er beskyttet af et kodeord og kunne ikke åbnes.",
+  "DE.ApplicationController.errorFilePassProtect": "Dokumentet er beskyttet af en adgangskode og kunne ikke åbnes.",
   "DE.ApplicationController.errorFileSizeExceed": "Filens størrelse overstiger grænsen, som er sat for din server.<br>Kontakt din Document Server-administrator for at få flere oplysninger.",
   "DE.ApplicationController.errorForceSave": "Der skete en fejl under gemning af filen. Brug 'Download som' for at gemme filen på din computers harddisk eller prøv igen senere.",
   "DE.ApplicationController.errorLoadingFont": "Skrifttyper er ikke indlæst.<br>Kontakt din Document Server-administrator.",
