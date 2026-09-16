@@ -62,7 +62,7 @@
     }
   },
   "ContextMenu": {
-    "errorCopyCutPaste": "Kopiering, klip og indsæt handlinger ved hjælp af kontekstmenuen udføres kun i den aktuelle fil.",
+    "errorCopyCutPaste": "Kopiér, klip og indsæt via kontekstmenuen virker kun inden for den aktuelle fil.",
     "errorInvalidLink": "Linkreferencen findes ikke. Ret linket, eller slet det.",
     "menuAddComment": "Tilføj kommentar",
     "menuAddLink": "Tilføj link",
