@@ -59,6 +59,7 @@
       "textBuyNow": "Besøg hjemmeside",
       "textHasMacros": "Filen indeholder makroer.<br>Ønsker du at køre makroer?",
       "textNo": "Nej",
+      "textNoLicenseTitle": "Licensbegrænsning nået",
       "textPaidFeature": "Betalt funktion",
       "textReplaceSkipped": "Erstatningen er blevet oprettet. {0} gentagelser blev sprunget over.",
       "textReplaceSuccess": "Søgningen er blevet gennemført. Forekomster erstattet: {0}",
@@ -66,7 +67,9 @@
       "textYes": "Ja",
       "titleUpdateVersion": "Version ændret",
       "txtIncorrectPwd": "Adgangskoden er forkert",
-      "txtProtected": "Når du indtaster kodeordet og åbner filen, vil det nuværende kodeord til filen blive nulstillet."
+      "txtProtected": "Når du indtaster kodeordet og åbner filen, vil det nuværende kodeord til filen blive nulstillet.",
+      "warnNoLicense": "Du har nået grænsen for antal samtidige forbindelser til %1 værktøjer. Dokumentet åbnes for læsning. Kontakt %1 salgsteamet for betingelser for opgradering.",
+      "warnNoLicenseUsers": "Du har nået grænsen for brugere af %1 redigeringsværktøj. Kontakt %1 salgsafdeling for at høre om dine opgraderingsmuligheder."
     }
   },
   "Draw": {
@@ -78,6 +81,11 @@
     "criticalErrorExtText": "Tryk på 'OK' for at gå tilbage til dokumentlisten.",
     "errorComboSeries": "For at lave et kombinationsdiagram, vælg mindst to serier med data.",
     "errorConnectToServer": "Kan ikke gemme dette dokument. Tjek dine forbindelsesindstillinger, eller kontakt din administrator.<br>Når du klikker på knappen 'OK', bliver du bedt om at downloade dokumentet.",
+    "errorDefaultMessage": "Fejlkode: %1",
+    "errorInconsistentExtDocx": "Der opstod en fejl under åbning af filen.<br>Filens indhold svarer til tekstdokumenter (fx docx), men filen har den uoverensstemmende filtype: %1.",
+    "errorInconsistentExtPdf": "Der opstod en fejl under åbning af filen.<br>Filens indhold svarer til et af følgende formater: pdf/djvu/xps/oxps, men filen har den uoverensstemmende filtype: %1.",
+    "errorInconsistentExtPptx": "Der opstod en fejl under åbning af filen.<br>Filens indhold svarer til præsentationer (fx pptx), men filen har den uoverensstemmende filtype: %1.",
+    "errorInconsistentExtXlsx": "Der opstod en fejl under åbning af filen.<br>Filens indhold svarer til regneark (fx xlsx), men filen har den uoverensstemmende filtype: %1.",
     "errorSetPassword": "Kodeord kunne ikke gemmes.",
     "errorUserDrop": "Der kan ikke opnås adgang til filen lige nu. ",
     "errorUsersExceed": "Det maksimale antal af brugere tilladt i din aftale er nået. ",
@@ -202,7 +210,7 @@
       "textSlideNumber": "Dias nummer",
       "textSmoothly": "Glat",
       "textSplit": "Dele",
-      "textStartOnClick": "Start på Klik",
+      "textStartOnClick": "Start ved klik",
       "textTable": "Tabel",
       "textText": "Tekst",
       "textTheme": "Tema",
