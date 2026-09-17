@@ -2361,6 +2361,7 @@
   "DE.Views.FileMenuPanels.Settings.strFontRender": "Skrifttype hentydning",
   "DE.Views.FileMenuPanels.Settings.strIgnoreWordsInUPPERCASE": "Ignorer ord med STORE BOGSTAVER",
   "DE.Views.FileMenuPanels.Settings.strIgnoreWordsWithNumbers": "Ignorer ord med tal",
+  "DE.Views.FileMenuPanels.Settings.strKeyboardShortcuts": "Tastaturgenveje",
   "DE.Views.FileMenuPanels.Settings.strMacrosSettings": "Makroindstillinger",
   "DE.Views.FileMenuPanels.Settings.strPasteButton": "Vis knappen for Indsæt-optioner når indhold indsættes",
   "DE.Views.FileMenuPanels.Settings.strShowChanges": "Real tids samarbejdsændringer",
