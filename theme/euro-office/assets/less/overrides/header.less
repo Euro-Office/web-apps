@@ -109,3 +109,39 @@ body[data-editor-type="drawing"] {
     }
   }
 }
+
+// --------------------------------------------------------------------------
+// Per-editor application accent
+// A narrow strip adds editor identity without recoloring the full header or
+// overriding any light, dark, night, or high-contrast theme tokens.
+// --------------------------------------------------------------------------
+
+:root body[data-editor-type] #viewport {
+  box-sizing: border-box;
+  border-top: 8px solid transparent;
+}
+
+:root body[data-editor-type="document"] #viewport {
+  border-top-color: @eo-app-accent-document;
+}
+
+// PDF forms run inside the document editor and expose data-editor-type="document".
+:root body.pdf-form #viewport {
+  border-top-color: @eo-app-accent-pdf;
+}
+
+:root body[data-editor-type="spreadsheet"] #viewport {
+  border-top-color: @eo-app-accent-spreadsheet;
+}
+
+:root body[data-editor-type="presentation"] #viewport {
+  border-top-color: @eo-app-accent-presentation;
+}
+
+:root body[data-editor-type="pdf"] #viewport {
+  border-top-color: @eo-app-accent-pdf;
+}
+
+:root body[data-editor-type="drawing"] #viewport {
+  border-top-color: @eo-app-accent-drawing;
+}
