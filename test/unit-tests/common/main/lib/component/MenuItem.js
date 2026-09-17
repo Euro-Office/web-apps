@@ -1,26 +1,6 @@
-/*
- * (c) Copyright Ascensio System SIA 2010-2024
- *
- * This program is a free software product. You can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
- *
- * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
- *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU AGPL version 3.
- *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
- *
+/*!
+ * SPDX-FileCopyrightText: 2026 Nextcloud GmbH or an Nextcloud affiliate company and Euro-Office contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 /**
@@ -148,6 +128,34 @@ define([
             assert.equal(tagOf(icon), 'svg', 'sprite is an svg, not a blank span');
             assert.equal(icon.find('use').attr('href'), '#btn-copy');
             assert.isFalse(icon.hasClass('menu-item-icon-color'), 'old swatch class is gone');
+        });
+
+        it('setIconCls clears the icon and takes it back again', function(){
+            // DocumentHolderExt sets '' when the selection carries no shape,
+            // then a btn-* again on the next selection.
+            item = renderItem(domPlaceholder, {caption: 'Direction', iconCls: 'menu__icon btn-text-orient-hor'});
+
+            item.setIconCls('');
+            assert.equal(item.cmpEl.find('use').length, 0, 'empty class draws no symbol');
+
+            item.setIconCls('menu__icon btn-text-orient-rup');
+
+            var icon = item.cmpEl.find('.menu-item-icon');
+            assert.equal(icon.length, 1);
+            assert.equal(tagOf(icon), 'svg', 'the icon comes back');
+            assert.equal(icon.find('use').attr('href'), '#btn-text-orient-rup');
+        });
+
+        it('setIconCls leaves an iconImg alone', function(){
+            // A plugin icon is an <img> the item owns; it is not ours to
+            // replace with a symbol from the sheet.
+            item = renderItem(domPlaceholder, {caption: 'Plugin', iconImg: 'plugin.png'});
+            item.setIconCls('btn-copy');
+
+            var icon = item.cmpEl.find('.menu-item-icon');
+            assert.equal(icon.length, 1);
+            assert.equal(tagOf(icon), 'img', 'the img survives');
+            assert.equal(icon.attr('src'), 'plugin.png');
         });
 
         it('applyScaling leaves a swatch alone above ratio 2', function(){

@@ -303,10 +303,16 @@ define([
         },
 
         setIconCls: function(iconCls) {
-            if (this.rendered && !_.isEmpty(this.iconCls)) {
+            if (this.rendered) {
                 var firstChild = this.cmpEl.children(':first');
                 if (firstChild.length) {
-                    var iconEl = firstChild.find('.menu-item-icon'),
+                    // Guarding on this.iconCls instead would strand an item
+                    // the first time it is set empty: DocumentHolderExt calls
+                    // setIconCls('') when the selection has no shape, and the
+                    // btn-* it passes on the next selection would never reach
+                    // the DOM again. MenuItemCustom's <img> is left out -- a
+                    // plugin icon is not ours to swap.
+                    var iconEl = firstChild.find('span.menu-item-icon, svg.menu-item-icon'),
                         wasSprite = iconEl.length > 0 && iconEl[0].nodeName.toLowerCase() === 'svg',
                         isSprite = /btn-[^\s]+/.test(iconCls || '');
 
