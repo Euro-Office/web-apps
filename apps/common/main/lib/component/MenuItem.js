@@ -78,6 +78,34 @@ define([
     'common/main/lib/component/ToggleManager'
 ], function () {
     'use strict';
+    /**
+     * Icon markup for a menu item.
+     *
+     * Sprite icons are drawn from the symbol sheet, the way Common.UI.Button
+     * does it. The <span> this used to emit was painted by a CSS background
+     * from apps/<editor>/main/resources/less/sprites -- files that no longer
+     * exist, generating PNG sprites the build no longer produces -- so every
+     * menu icon in every editor came out as an empty box. The artwork was
+     * never missing: the symbols are all in the shipped icons.svg.
+     *
+     * A class that is not a sprite name still gets the span: ColorButton's
+     * swatches and the border-colour pickers use one as a coloured block, not
+     * as an icon.
+     *
+     * uni-scale is what tells bigscaling.less this svg is valid at any device
+     * pixel ratio, which is also how Button marks its own icons.
+     *
+     * @param {String} iconCls the item's iconCls
+     * @return {String} markup for the icon element
+     */
+    Common.UI.menuItemIconMarkup = function (iconCls) {
+        var cls = iconCls || '',
+            match = /btn-[^\s]+/.exec(cls);
+        return match
+            ? '<svg class="menu-item-icon uni-scale ' + cls + '"><use href="#' + match[0] + '"></use></svg>'
+            : '<span class="menu-item-icon ' + cls + '"></span>';
+    };
+
 
     Common.UI.MenuItem = Common.UI.BaseView.extend({
         options : {
@@ -108,7 +136,7 @@ define([
         template: _.template([
             '<% if (header) { %><span class="menu-item-header"><%- header %></span><% } %><% if (caption) { %><a id="<%= id %>" class="menu-item" <% if (_.isEmpty(iconCls)) { %> data-no-icon <% } %> style="<%= style %>" <% if(options.canFocused) { %> tabindex="-1" type="menuitem" <% }; if(!_.isUndefined(options.stopPropagation)) { %> data-stopPropagation="true" <% }; if(!_.isUndefined(options.dataHint)) { %> data-hint="<%= options.dataHint %>" <% }; if(!_.isUndefined(options.dataHintDirection)) { %> data-hint-direction="<%= options.dataHintDirection %>" <% }; if(!_.isUndefined(options.dataHintOffset)) { %> data-hint-offset="<%= options.dataHintOffset %>" <% }; if(options.dataHintTitle) { %> data-hint-title="<%= options.dataHintTitle %>" <% }; %> >',
                 '<% if (!_.isEmpty(iconCls)) { %>',
-                    '<span class="menu-item-icon <%= iconCls %>"></span>',
+                    '<%= Common.UI.menuItemIconMarkup(iconCls) %>',
                 '<% } else if (!_.isEmpty(iconImg)) { %>',
                     '<img src="<%= iconImg %>" class="menu-item-icon">',
                 '<% } %>',
@@ -275,15 +303,38 @@ define([
         },
 
         setIconCls: function(iconCls) {
-            if (this.rendered && !_.isEmpty(this.iconCls)) {
+            if (this.rendered) {
                 var firstChild = this.cmpEl.children(':first');
-                if (firstChild) {
-                    firstChild.find('.menu-item-icon').removeClass(this.iconCls).addClass(iconCls);
-                    var svgIcon = firstChild.find('use.zoom-int');
-                    if (svgIcon.length) {
-                        var re_icon_name = /btn-[^\s]+/.exec(iconCls),
-                            icon_name = re_icon_name ? re_icon_name[0] : "null";
-                        svgIcon.attr('href', '#' + icon_name);
+                if (firstChild.length) {
+                    // Guarding on this.iconCls instead would strand an item
+                    // the first time it is set empty: DocumentHolderExt calls
+                    // setIconCls('') when the selection has no shape, and the
+                    // btn-* it passes on the next selection would never reach
+                    // the DOM again. MenuItemCustom's <img> is left out -- a
+                    // plugin icon is not ours to swap.
+                    var iconEl = firstChild.find('span.menu-item-icon, svg.menu-item-icon'),
+                        wasSprite = iconEl.length > 0 && iconEl[0].nodeName.toLowerCase() === 'svg',
+                        isSprite = /btn-[^\s]+/.test(iconCls || '');
+
+                    if (iconEl.length && wasSprite !== isSprite) {
+                        // The element kind follows the class: a sprite name is
+                        // an <svg><use> into icons.svg, anything else a <span>
+                        // the colour pickers paint as a swatch. Crossing from
+                        // one to the other has to replace the element -- a
+                        // span has no <use> to repoint, and an svg left
+                        // holding a swatch class draws nothing at all.
+                        iconEl.first().replaceWith(Common.UI.menuItemIconMarkup(iconCls));
+                        iconEl.slice(1).remove();   // a stale svg applyScaling injected beside a span
+                    } else {
+                        iconEl.removeClass(this.iconCls).addClass(iconCls);
+                        // The template's own <use> carries no class; the one
+                        // applyScaling injects is .zoom-int. Match either.
+                        var svgIcon = firstChild.find('.menu-item-icon use, use.zoom-int');
+                        if (svgIcon.length) {
+                            var re_icon_name = /btn-[^\s]+/.exec(iconCls),
+                                icon_name = re_icon_name ? re_icon_name[0] : "null";
+                            svgIcon.attr('href', '#' + icon_name);
+                        }
                     }
                 }
             }
@@ -455,12 +506,19 @@ define([
                 var firstChild = this.cmpEl.children(':first');
 
                 if (ratio > 2) {
-                    if (!firstChild.find('svg.menu-item-icon').length) {
-                        var iconCls = me.iconCls,
-                            re_icon_name = /btn-[^\s]+/.exec(iconCls),
-                            icon_name = re_icon_name ? re_icon_name[0] : "null",
-                            rtlCls = (iconCls ? iconCls.indexOf('icon-rtl') : -1) > -1 ? 'icon-rtl' : '',
-                            svg_icon = '<svg class="menu-item-icon uni-scale %rtlCls"><use href="#%iconname"></use></svg>'.replace('%iconname', icon_name).replace('%rtlCls', rtlCls);
+                    var iconCls = me.iconCls,
+                        re_icon_name = /btn-[^\s]+/.exec(iconCls || '');
+
+                    // Only a sprite name has a symbol to point at. A class
+                    // that is not one is a colour swatch, and injecting an
+                    // <svg><use href="#null"> beside it drew an empty box over
+                    // the colour. Sprite items already carry the svg the
+                    // template printed, so nothing is injected for them
+                    // either; this is left for a hand-written template that
+                    // still emits the old <span class="menu-item-icon btn-">.
+                    if (re_icon_name && !firstChild.find('svg.menu-item-icon').length) {
+                        var rtlCls = (iconCls.indexOf('icon-rtl') > -1) ? 'icon-rtl' : '',
+                            svg_icon = '<svg class="menu-item-icon uni-scale %rtlCls"><use href="#%iconname"></use></svg>'.replace('%iconname', re_icon_name[0]).replace('%rtlCls', rtlCls);
 
                         firstChild.find('span.menu-item-icon').after(svg_icon);
                     }
