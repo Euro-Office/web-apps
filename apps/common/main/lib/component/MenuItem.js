@@ -305,15 +305,30 @@ define([
         setIconCls: function(iconCls) {
             if (this.rendered && !_.isEmpty(this.iconCls)) {
                 var firstChild = this.cmpEl.children(':first');
-                if (firstChild) {
-                    firstChild.find('.menu-item-icon').removeClass(this.iconCls).addClass(iconCls);
-                    // The template's own <use> carries no class; the one
-                    // applyScaling injects is .zoom-int. Match either.
-                    var svgIcon = firstChild.find('.menu-item-icon use, use.zoom-int');
-                    if (svgIcon.length) {
-                        var re_icon_name = /btn-[^\s]+/.exec(iconCls),
-                            icon_name = re_icon_name ? re_icon_name[0] : "null";
-                        svgIcon.attr('href', '#' + icon_name);
+                if (firstChild.length) {
+                    var iconEl = firstChild.find('.menu-item-icon'),
+                        wasSprite = iconEl.length > 0 && iconEl[0].nodeName.toLowerCase() === 'svg',
+                        isSprite = /btn-[^\s]+/.test(iconCls || '');
+
+                    if (iconEl.length && wasSprite !== isSprite) {
+                        // The element kind follows the class: a sprite name is
+                        // an <svg><use> into icons.svg, anything else a <span>
+                        // the colour pickers paint as a swatch. Crossing from
+                        // one to the other has to replace the element -- a
+                        // span has no <use> to repoint, and an svg left
+                        // holding a swatch class draws nothing at all.
+                        iconEl.first().replaceWith(Common.UI.menuItemIconMarkup(iconCls));
+                        iconEl.slice(1).remove();   // a stale svg applyScaling injected beside a span
+                    } else {
+                        iconEl.removeClass(this.iconCls).addClass(iconCls);
+                        // The template's own <use> carries no class; the one
+                        // applyScaling injects is .zoom-int. Match either.
+                        var svgIcon = firstChild.find('.menu-item-icon use, use.zoom-int');
+                        if (svgIcon.length) {
+                            var re_icon_name = /btn-[^\s]+/.exec(iconCls),
+                                icon_name = re_icon_name ? re_icon_name[0] : "null";
+                            svgIcon.attr('href', '#' + icon_name);
+                        }
                     }
                 }
             }
@@ -485,12 +500,19 @@ define([
                 var firstChild = this.cmpEl.children(':first');
 
                 if (ratio > 2) {
-                    if (!firstChild.find('svg.menu-item-icon').length) {
-                        var iconCls = me.iconCls,
-                            re_icon_name = /btn-[^\s]+/.exec(iconCls),
-                            icon_name = re_icon_name ? re_icon_name[0] : "null",
-                            rtlCls = (iconCls ? iconCls.indexOf('icon-rtl') : -1) > -1 ? 'icon-rtl' : '',
-                            svg_icon = '<svg class="menu-item-icon uni-scale %rtlCls"><use href="#%iconname"></use></svg>'.replace('%iconname', icon_name).replace('%rtlCls', rtlCls);
+                    var iconCls = me.iconCls,
+                        re_icon_name = /btn-[^\s]+/.exec(iconCls || '');
+
+                    // Only a sprite name has a symbol to point at. A class
+                    // that is not one is a colour swatch, and injecting an
+                    // <svg><use href="#null"> beside it drew an empty box over
+                    // the colour. Sprite items already carry the svg the
+                    // template printed, so nothing is injected for them
+                    // either; this is left for a hand-written template that
+                    // still emits the old <span class="menu-item-icon btn-">.
+                    if (re_icon_name && !firstChild.find('svg.menu-item-icon').length) {
+                        var rtlCls = (iconCls.indexOf('icon-rtl') > -1) ? 'icon-rtl' : '',
+                            svg_icon = '<svg class="menu-item-icon uni-scale %rtlCls"><use href="#%iconname"></use></svg>'.replace('%iconname', re_icon_name[0]).replace('%rtlCls', rtlCls);
 
                         firstChild.find('span.menu-item-icon').after(svg_icon);
                     }
