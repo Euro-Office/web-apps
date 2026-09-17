@@ -876,6 +876,7 @@
   "PDFE.Views.ImageSettingsAdvanced.textTitle": "Billede - avancerede indstillinger",
   "PDFE.Views.ImageSettingsAdvanced.textWidth": "Bredde",
   "PDFE.Views.InsTab.capBtnDateTime": "Dato og tid",
+  "PDFE.Views.InsTab.capBtnInsHeaderFooter": "Sidehoved/sidefod",
   "PDFE.Views.InsTab.capBtnPageNum": "Sidetal",
   "PDFE.Views.InsTab.capInsertChart": "Diagram",
   "PDFE.Views.InsTab.capInsertEquation": "Ligning",
