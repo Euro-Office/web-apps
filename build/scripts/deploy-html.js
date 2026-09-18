@@ -28,9 +28,15 @@
 
 const fs   = require('fs');
 const path = require('path');
+const { loadThemeMeta, themeValue } = require('./lib/theme-config');
+const { meta: themeMeta } = loadThemeMeta(
+    path.resolve(__dirname, '..', '..'),
+    'deploy-html'
+);
 
 const REPO_ROOT  = path.resolve(__dirname, '..', '..');
 const BUILD_ROOT = process.env.BUILD_ROOT;
+const APP_TITLE_TEXT = themeValue(themeMeta, 'APP_TITLE_TEXT', 'app_title', 'Euro Office');
 
 if (!BUILD_ROOT) {
     console.error('deploy-html: BUILD_ROOT must be set');
@@ -73,7 +79,9 @@ for (const { editor, subpath } of DIRS) {
 
     for (const filename of deploys) {
         const content  = fs.readFileSync(path.join(srcDir, filename), 'utf8');
-        const replaced = content.replace(/@@SRC_ROOT@@/g, SRC_ROOT);
+        const replaced = content
+            .replace(/@@SRC_ROOT@@/g, SRC_ROOT)
+            .replace(/\{\{APP_TITLE_TEXT\}\}/g, APP_TITLE_TEXT);
         const destName = filename.replace('.html.deploy', '.html');
         fs.writeFileSync(path.join(destDir, destName), replaced, 'utf8');
     }

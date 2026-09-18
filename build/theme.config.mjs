@@ -163,7 +163,7 @@ export function themeReplacements(productVersion) {
       replace: 'global.key = assignKey; window.key = assignKey;',
     },
     { search: tok('PRODUCT_VERSION'),         replace: productVersion,                                                                      flags: 'g' },
-    { search: tok('APP_TITLE_TEXT'),           replace: tv(process.env.APP_TITLE_TEXT,           'app_title',               'ONLYOFFICE'),  flags: 'g' },
+    { search: tok('APP_TITLE_TEXT'),           replace: tv(process.env.APP_TITLE_TEXT,           'app_title',               'Euro Office'),  flags: 'g' },
     { search: tok('COMPANY_NAME'),             replace: tv(process.env.COMPANY_NAME,             'company_name',            'ONLYOFFICE'),  flags: 'g' },
     { search: tok('PUBLISHER_NAME'),           replace: tv(process.env.PUBLISHER_NAME,           'publisher_name',          'Ascensio System SIA'), flags: 'g' },
     { search: tok('PUBLISHER_URL'),            replace: tv(process.env.PUBLISHER_URL,            'publisher_url',           'https://www.onlyoffice.com'), flags: 'g' },
