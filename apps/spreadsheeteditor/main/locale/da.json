@@ -709,7 +709,7 @@
   "SSE.Controllers.DocumentHolder.textSym": "sym",
   "SSE.Controllers.DocumentHolder.tipIsLocked": "Elementet bliver redigeret af en anden bruger.",
   "SSE.Controllers.DocumentHolder.txtAboveAve": "Over gennemsnit",
-  "SSE.Controllers.DocumentHolder.txtAddBottom": "Tilføj nederste ramme",
+  "SSE.Controllers.DocumentHolder.txtAddBottom": "Tilføj nederste kant",
   "SSE.Controllers.DocumentHolder.txtAddFractionBar": "Tilføj fraktionsbar",
   "SSE.Controllers.DocumentHolder.txtAddHor": "Tilføj vandret linje",
   "SSE.Controllers.DocumentHolder.txtAddLB": "Tilføj venstre nederste linje",
