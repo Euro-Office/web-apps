@@ -316,15 +316,22 @@ define([
                         wasSprite = iconEl.length > 0 && iconEl[0].nodeName.toLowerCase() === 'svg',
                         isSprite = /btn-[^\s]+/.test(iconCls || '');
 
-                    if (iconEl.length && wasSprite !== isSprite) {
+                    if (iconEl.length && (iconEl.length > 1 || wasSprite !== isSprite)) {
                         // The element kind follows the class: a sprite name is
                         // an <svg><use> into icons.svg, anything else a <span>
                         // the colour pickers paint as a swatch. Crossing from
                         // one to the other has to replace the element -- a
                         // span has no <use> to repoint, and an svg left
                         // holding a swatch class draws nothing at all.
+                        // More than one of them means applyScaling injected an
+                        // svg beside the span a hand-written template printed.
+                        // wasSprite reads the first in document order, which is
+                        // that span, so the pair looks unchanged on the way to
+                        // a swatch class and the leftover svg would keep its
+                        // <use> and draw an empty box. Collapse to one element
+                        // whenever there is more than one, whatever the kind.
                         iconEl.first().replaceWith(Common.UI.menuItemIconMarkup(iconCls));
-                        iconEl.slice(1).remove();   // a stale svg applyScaling injected beside a span
+                        iconEl.slice(1).remove();
                     } else {
                         iconEl.removeClass(this.iconCls).addClass(iconCls);
                         // The template's own <use> carries no class; the one
@@ -506,9 +513,6 @@ define([
                 var firstChild = this.cmpEl.children(':first');
 
                 if (ratio > 2) {
-                    var iconCls = me.iconCls,
-                        re_icon_name = /btn-[^\s]+/.exec(iconCls || '');
-
                     // Only a sprite name has a symbol to point at. A class
                     // that is not one is a colour swatch, and injecting an
                     // <svg><use href="#null"> beside it drew an empty box over
@@ -516,11 +520,10 @@ define([
                     // template printed, so nothing is injected for them
                     // either; this is left for a hand-written template that
                     // still emits the old <span class="menu-item-icon btn-">.
-                    if (re_icon_name && !firstChild.find('svg.menu-item-icon').length) {
-                        var rtlCls = (iconCls.indexOf('icon-rtl') > -1) ? 'icon-rtl' : '',
-                            svg_icon = '<svg class="menu-item-icon uni-scale %rtlCls"><use href="#%iconname"></use></svg>'.replace('%iconname', re_icon_name[0]).replace('%rtlCls', rtlCls);
-
-                        firstChild.find('span.menu-item-icon').after(svg_icon);
+                    // The markup is the helper's, so the shape of a menu icon
+                    // is written down in exactly one place.
+                    if (/btn-[^\s]+/.test(me.iconCls || '') && !firstChild.find('svg.menu-item-icon').length) {
+                        firstChild.find('span.menu-item-icon').after(Common.UI.menuItemIconMarkup(me.iconCls));
                     }
                 }
             }

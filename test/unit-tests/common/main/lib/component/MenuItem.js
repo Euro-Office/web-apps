@@ -168,6 +168,29 @@ define([
             assert.equal(item.cmpEl.find('use').length, 0, 'no href="#null" left behind');
         });
 
+        it('setIconCls collapses an injected svg and its span back to one element', function(){
+            // applyScaling injects an svg beside the span a hand-written
+            // template printed. No template in the tree still pairs such a
+            // span with a btn-* class, so this builds the pair by hand: the
+            // leftover svg used to survive the swap and draw an empty box
+            // over the swatch, because the span comes first in document
+            // order and made the pair look like it was already a swatch.
+            item = renderItem(domPlaceholder, {
+                caption : 'Border colour',
+                iconCls : 'btn-copy',
+                template: _.template('<a tabindex="-1" type="menuitem"><span class="menu-item-icon <%= iconCls %>"></span><%= caption %></a>')
+            });
+            item.applyScaling(3);
+            assert.equal(item.cmpEl.find('.menu-item-icon').length, 2, 'the pair is set up');
+
+            item.setIconCls('menu-item-icon-color');
+
+            var icon = item.cmpEl.find('.menu-item-icon');
+            assert.equal(icon.length, 1, 'the injected svg is gone');
+            assert.equal(tagOf(icon), 'span');
+            assert.equal(item.cmpEl.find('use').length, 0, 'no href="#null" left behind');
+        });
+
         it('applyScaling keeps the single template svg above ratio 2', function(){
             item = renderItem(domPlaceholder, {caption: 'Copy', iconCls: 'btn-copy'});
             item.applyScaling(3);
