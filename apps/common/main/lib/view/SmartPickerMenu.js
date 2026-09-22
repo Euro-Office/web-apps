@@ -142,7 +142,10 @@ define([
             }));
 
             var menu = new Common.UI.Menu({
-                cls: 'shifted-right',
+                // smart-picker-menu only sizes the provider icons: they arrive
+                // as full-bleed artwork and would otherwise read a size larger
+                // than the editor's own menu icons (dropdown-menu.less).
+                cls: 'shifted-right smart-picker-menu',
                 menuAlign: 'tl-bl',
                 items: items
             });
