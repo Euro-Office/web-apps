@@ -653,7 +653,7 @@
   "Common.Views.PasswordDialog.txtIncorrectPwd": "Bekræftelse af adgangskoden er ikke identisk",
   "Common.Views.PasswordDialog.txtPassword": "Adgangskode",
   "Common.Views.PasswordDialog.txtRepeat": "Gentag adgangskode",
-  "Common.Views.PasswordDialog.txtTitle": "Indstil adgangskode",
+  "Common.Views.PasswordDialog.txtTitle": "Angiv adgangskode",
   "Common.Views.PasswordDialog.txtWarning": "Advarsel! Hvis du mister eller glemmer adgangskoden, kan den ikke genoprettes. Opbevar den et sikkert sted.",
   "Common.Views.PluginDlg.textDock": "Fastgør plugin",
   "Common.Views.PluginDlg.textLoading": "Indlæser",
