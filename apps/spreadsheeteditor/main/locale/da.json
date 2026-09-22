@@ -2658,7 +2658,7 @@
   "SSE.Views.CreatePivotDialog.textTitle": "Opret pivottabel",
   "SSE.Views.CreatePivotDialog.txtEmpty": "Dette felt skal udfyldes",
   "SSE.Views.CreateSparklineDialog.textDataRange": "Kildedataområde",
-  "SSE.Views.CreateSparklineDialog.textDestination": "Vælg, hvor mini diagrammer skal placeres",
+  "SSE.Views.CreateSparklineDialog.textDestination": "Vælg, hvor minidiagrammerne skal placeres",
   "SSE.Views.CreateSparklineDialog.textInvalidRange": "Ugyldigt celleområde",
   "SSE.Views.CreateSparklineDialog.textSelectData": "Vælg data",
   "SSE.Views.CreateSparklineDialog.textTitle": "Opret minidiagrammer",
