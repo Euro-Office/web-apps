@@ -1178,7 +1178,7 @@
   "DE.Controllers.Main.errorCopyDisabled": "Af sikkerhedsgrunde kan indholdet af dette dokument ikke kopieres.",
   "DE.Controllers.Main.errorDatabaseConnection": "Ekstern fejl.<br>Fejl i databaseforbindelsen. Kontakt support, hvis fejlen fortsætter.",
   "DE.Controllers.Main.errorDataEncrypted": "Krypterede ændringer er blevet modtaget, men de kan ikke dekrypteres.",
-  "DE.Controllers.Main.errorDataRange": "Forkert datainterval",
+  "DE.Controllers.Main.errorDataRange": "Forkert dataområde.",
   "DE.Controllers.Main.errorDefaultMessage": "Fejlkode: %1",
   "DE.Controllers.Main.errorDirectUrl": "Bekræft linket til dokumentet.<br>Dette link skal være et direkte link til filen til hent.",
   "DE.Controllers.Main.errorEditingDownloadas": "Der opstod en fejl under arbejdet med dokumentet.<br>Brug 'Hent som' til at gemme en sikkerhedskopi på din computer.",

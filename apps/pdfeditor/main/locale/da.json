@@ -1294,7 +1294,7 @@
   "PDFE.Controllers.Main.errorCopyDisabled": "Af sikkerhedsgrunde kan indholdet i dette dokument ikke kopieres.",
   "PDFE.Controllers.Main.errorDatabaseConnection": "Ekstern fejl.<br>Fejl i databaseforbindelsen. Kontakt support, hvis fejlen fortsætter.",
   "PDFE.Controllers.Main.errorDataEncrypted": "Krypterede ændringer er blevet modtaget, men de kan ikke dekrypteres.",
-  "PDFE.Controllers.Main.errorDataRange": "Forkert datainterval",
+  "PDFE.Controllers.Main.errorDataRange": "Forkert dataområde.",
   "PDFE.Controllers.Main.errorDefaultMessage": "Fejlkode: %1",
   "PDFE.Controllers.Main.errorDirectUrl": "Bekræft linket til dokumentet.<br>Dette link skal være et direkte link til filen til hent.",
   "PDFE.Controllers.Main.errorEditingDownloadas": "Der opstod en fejl under arbejdet med dokumentet.<br>Brug 'Hent som' til at gemme en sikkerhedskopi på din computer.",

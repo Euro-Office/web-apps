@@ -205,7 +205,7 @@
     "errorForcedViewMode": "Filen er åbnet i visningstilstand.<br>Enten er filen låst for redigering, eller også tillader dine rettigheder det ikke.",
     "errorDatabaseConnection": "Ekstern fejl.<br>Fejl i databaseforbindelsen. Kontakt support.",
     "errorDataEncrypted": "Krypterede ændringer er blevet modtaget, men de kan ikke dekrypteres.",
-    "errorDataRange": "Forkert datainterval",
+    "errorDataRange": "Forkert dataområde.",
     "errorDefaultMessage": "Fejlkode: %1",
     "errorDirectUrl": "Kontrollér linket til dokumentet.<br>Linket skal være et direkte link til filen, så den kan hentes.",
     "errorEditingDownloadas": "Der opstod en fejl under arbejdet med dokumentet.<br>Brug muligheden 'Hent' for at gemme en sikkerhedskopi lokalt.",
