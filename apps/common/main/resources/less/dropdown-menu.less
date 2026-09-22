@@ -194,6 +194,34 @@
                 margin-left: calc(-1*@x-small-btn-icon-size - 2px);
             }
     }
+
+    // Smart Picker provider icons.
+    //
+    // These come from whichever Nextcloud apps registered a reference provider,
+    // and their artwork fills its box edge to edge. The editor's own menu icons
+    // do not: measured off the same 20px slot in a document editor, their ink
+    // is 12-18px wide and 14px tall (cut 15x14, copy 14x14, paste 12x14, print
+    // 16x14, add comment 18x15), while a provider icon fills the slot (files
+    // 20x16, profile 16x16). The like-for-like pair is the chain link, the same
+    // glyph in both menus: 16px wide as the editor's own "Link" item, 20px as
+    // the picker's "Any link". So at the box size a provider icon reads a size
+    // larger than everything above it in the same menu; 16px is what the rest
+    // of the menu already looks like.
+    //
+    // The 20px slot and the caption's padding are untouched; the smaller icon
+    // is re-centred inside the slot, which is what the extra 16px in the
+    // margin below does (same formula as .custom-icon, with 16 for 20).
+    &.smart-picker-menu > li > a > img.menu-item-icon {
+        width: 16px;
+        height: 16px;
+        margin: 0 0 0 calc(-1*(@x-small-btn-icon-size-ie + 8px + 16px) / 2);
+        margin: 0 0 0 calc(-1*(@x-small-btn-icon-size + 8px + 16px) / 2);
+
+        .rtl & {
+            margin: 0 calc(-1*(@x-small-btn-icon-size-ie + 8px + 16px) / 2) 0 0;
+            margin: 0 calc(-1*(@x-small-btn-icon-size + 8px + 16px) / 2) 0 0;
+        }
+    }
     &.shifted-left {
         & > li:not(.shifted-right) {
             & > a {
