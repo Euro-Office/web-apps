@@ -515,7 +515,7 @@
     },
     "Settings": {
       "mniSlideStandard": "Standard (4:3)",
-      "mniSlideWide": "Widescreen (16:9)",
+      "mniSlideWide": "Bredformat (16:9)",
       "notcriticalErrorTitle": "Advarsel",
       "textAbout": "Om",
       "textAddress": "adresse:",
@@ -541,7 +541,7 @@
       "textEmail": "e-mail:",
       "textEnableAll": "Aktivér alle",
       "textEnableAllMacrosWithoutNotification": "Aktivér alle makroer uden notifikation",
-      "textFeedback": "Feedback & support",
+      "textFeedback": "Feedback og support",
       "textFind": "Søg",
       "textFindAndReplace": "Søg og erstat",
       "textFindAndReplaceAll": "Søg og erstat alle",
