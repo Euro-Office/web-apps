@@ -868,7 +868,7 @@
   "Common.Views.OpenDialog.txtOther": "Andre",
   "Common.Views.OpenDialog.txtPassword": "Adgangskode",
   "Common.Views.OpenDialog.txtPreview": "Forhåndsvisning",
-  "Common.Views.OpenDialog.txtProtected": "Når du indtastet kodeorderet og åbner filen, nulstilles det aktuelle adgangskode til filen.",
+  "Common.Views.OpenDialog.txtProtected": "Når du indtaster adgangskoden og åbner filen, nulstilles den aktuelle adgangskode til filen.",
   "Common.Views.OpenDialog.txtSemicolon": "Semikolon",
   "Common.Views.OpenDialog.txtSpace": "Mellemrum",
   "Common.Views.OpenDialog.txtTab": "Tabulator",

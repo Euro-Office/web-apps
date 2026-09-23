@@ -827,7 +827,7 @@
     "txtDownloadTxt": "Hent TXT",
     "txtIncorrectPwd": "Adgangskoden er forkert",
     "txtOk": "OK",
-    "txtProtected": "Når du angiver adgangskoden og åbner filen, nulstilles den nuværende adgangskode"
+    "txtProtected": "Når du indtaster adgangskoden og åbner filen, nulstilles den nuværende adgangskode."
   },
   "Toolbar": {
     "btnRestartNow": "Genstart nu",
