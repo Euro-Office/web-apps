@@ -1021,7 +1021,7 @@
   "Common.Views.RenameDialog.textName": "Filnavn",
   "Common.Views.RenameDialog.txtInvalidName": "Filnavnet må ikke indeholde nogle af følgende tegn: ",
   "Common.Views.ReviewChanges.hintNext": "Til næste ændring",
-  "Common.Views.ReviewChanges.hintPrev": "Til forrige ændringer",
+  "Common.Views.ReviewChanges.hintPrev": "Til forrige ændring",
   "Common.Views.ReviewChanges.strFast": "Hurtig",
   "Common.Views.ReviewChanges.strFastDesc": "Realtids co-redigering. Alle ændringer bliver gemt automatisk",
   "Common.Views.ReviewChanges.strStrict": "Striks",
