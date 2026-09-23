@@ -844,7 +844,7 @@ define([
                                                                     '<% if(typeof stopPropagation !== "undefined") { %> data-stopPropagation="true" <% } %>',
                                                                     'class="<% if (checked) { %> checked <% } %>" >',
                                                                     '<% if (typeof iconCls !== "undefined") { %>',
-                                                                        '<span class="menu-item-icon <%= iconCls %>"></span>',
+                                                                        '<%= Common.UI.menuItemIconMarkup(iconCls) %>',
                                                                     '<% } %>',
                                                                 '<%= caption %>',
                                                                 '</a>'
