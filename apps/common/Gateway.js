@@ -120,6 +120,22 @@ if (window.Common === undefined) {
                 $me.trigger('setassistantavailable', data);
             },
 
+            'setSmartPickerAvailable': function(data) {
+                $me.trigger('setsmartpickeravailable', data);
+            },
+
+            'setSmartPickerProviders': function(data) {
+                $me.trigger('setsmartpickerproviders', data);
+            },
+
+            'insertAssistantResult': function(data) {
+                $me.trigger('insertassistantresult', data);
+            },
+
+            'setSmartPickerCancel': function() {
+                $me.trigger('setsmartpickercancel');
+            },
+
             'setMailMergeRecipients': function(data) {
                 $me.trigger('setmailmergerecipients', data);
             },
@@ -452,8 +468,15 @@ if (window.Common === undefined) {
                 _postMessage({event: 'onSubmit'});
             },
 
-            requestSmartPicker: function(selectedText, source) {
-                _postMessage({event: 'onRequestSmartPicker', data: { selectedText: selectedText || '', source: source || 'smartpicker' }});
+            // providerId targets one Nextcloud picker provider directly, so the
+            // editor can present the provider list itself instead of showing
+            // the Nextcloud provider-selection modal.
+            requestSmartPicker: function(selectedText, source, providerId) {
+                _postMessage({event: 'onRequestSmartPicker', data: {
+                    selectedText: selectedText || '',
+                    source: source || 'smartpicker',
+                    providerId: providerId || ''
+                }});
             },
 
             on: function(event, handler){

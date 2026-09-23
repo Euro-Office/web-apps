@@ -34,6 +34,8 @@
 define([
     'core',
     'common/main/lib/component/Window',
+    'common/main/lib/util/SmartPicker',
+    'common/main/lib/view/SmartPickerMenu',
     'documenteditor/main/app/view/Toolbar',
     'documenteditor/main/app/controller/PageLayout',
 ], function () {
@@ -253,6 +255,9 @@ define([
 
             Common.NotificationCenter.on('app:ready', me.onAppReady.bind(me));
             Common.NotificationCenter.on('app:face', me.onAppShowed.bind(me));
+            // Gateway wiring, the "/" trigger and the pending record are the
+            // same in all three editors; only insertLink below is not.
+            me._smartPicker = Common.Utils.SmartPicker.install(me);
         },
 
         setMode: function(mode) {
@@ -1994,12 +1999,28 @@ define([
 
         insertLink: function(data) { // gateway
             if (!this.api) return;
+            // null when this reply is not the answer to our request, in which
+            // case nothing must be deleted -- see Common.Utils.SmartPicker.
+            var replace = this._smartPicker.consume();
+            // Only if it is still there; the primitive deletes blind. See
+            // Common.Utils.SmartPicker.triggerStillThere.
+            if (replace && !Common.Utils.SmartPicker.triggerStillThere(this.api, replace)) {
+                replace = null;
+            }
+            if (replace && typeof this.api['pluginMethod_InputText'] === 'function') {
+                // Delete the "/" the user typed to open the menu. It really is
+                // in the document: the trigger does not cancel the keystroke.
+                this.api['pluginMethod_InputText']('', replace);
+            }
             var props = new Asc.CHyperlinkProperty();
             props.put_Value(data);
             props.put_Bookmark(null);
             props.put_Text(data);
             this.api.add_Hyperlink(props);
             Common.NotificationCenter.trigger('storage:link-insert', data);
+            if (replace !== null) {
+                Common.NotificationCenter.trigger('edit:complete');
+            }
         },
 
         insertPlainText: function(data) {
@@ -3468,9 +3489,20 @@ define([
         },
 
         onSmartPickerClick: function() {
-            if (this.api && typeof this.api['asc_GetSelectedText'] === 'function') {
-                Common.Gateway.requestSmartPicker(this.api['asc_GetSelectedText']() || '', 'toolbar');
-            }
+            if (!this.api) return;
+            // Whatever the caret menu may still be waiting for, this reply
+            // will not be it. Dropping the record here is what keeps a request
+            // the host never answered or cancelled -- its modal closed some way
+            // that told us nothing -- from making this insertion delete a
+            // "/query" the user typed minutes ago somewhere else.
+            this._smartPicker.clear();
+            // Open Nextcloud's own Smart Picker, with no provider preselected so it
+            // shows its provider list. Deliberately not our caret menu: that exists
+            // to keep the "/" flow inside the editor, whereas this button is the
+            // "give me the full Nextcloud picker" entry point. No request is
+            // registered: nothing was typed to get here, so the reply must take
+            // the ordinary insertLink path and delete nothing.
+            Common.Gateway.requestSmartPicker('', 'toolbar', '');
         },
 
         onApiMathTypes: function(equation) {
@@ -3911,11 +3943,9 @@ define([
             Common.Utils.InternalSettings.set('toolbar-active-tab', !editmode && !compactview);
 
             me.toolbar.render(_.extend({isCompactView: editmode ? compactview : true}, config));
-
-            // Smart Picker button visibility: show only when assistant is available.
-            Common.Gateway.on('setassistantavailable', function(available) {
-                me.toolbar.btnSmartPicker && me.toolbar.btnSmartPicker.setVisible(!!available);
-            });
+            if (me._smartPickerAvailable !== undefined) {
+                me.toolbar.btnSmartPicker && me.toolbar.btnSmartPicker.setVisible(me._smartPickerAvailable);
+            }
 
             var tab = {action: 'review', caption: me.toolbar.textTabCollaboration, dataHintTitle: 'U', layoutname: 'toolbar-collaboration'};
             var $panel = me.application.getController('Common.Controllers.ReviewChanges').createToolbarPanel();
