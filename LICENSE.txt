@@ -659,3 +659,17 @@ specific requirements.
 if any, to sign a "copyright disclaimer" for the program, if necessary.
 For more information on this, and how to apply and follow the GNU AGPL, see
 <http://www.gnu.org/licenses/>.
+
+                              NON-CODE CONTENT
+
+  Certain non-code elements included in the Program or its distribution,
+including but not limited to illustrations, icon sets, and technical
+writing or documentation content, are licensed under the Creative Commons
+Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0).  For the
+avoidance of doubt, this license applies solely to such non-code content
+and does not modify or replace the licensing terms applicable to the
+Program's source code, which remains subject to the GNU Affero General
+Public License v3.0 (AGPLv3) above.  Nothing in this section limits any
+obligation to retain copyright notices, attribution, origin information,
+or Appropriate Legal Notices under the AGPLv3.  The full license text is
+available at: <https://creativecommons.org/licenses/by-sa/4.0/legalcode>
