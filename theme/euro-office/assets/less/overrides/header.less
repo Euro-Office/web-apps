@@ -117,31 +117,40 @@ body[data-editor-type="drawing"] {
 // --------------------------------------------------------------------------
 
 :root body[data-editor-type] #viewport {
-  box-sizing: border-box;
-  border-top: 8px solid transparent;
+  top: @eo-app-accent-height;
 }
 
-:root body[data-editor-type="document"] #viewport {
-  border-top-color: @eo-app-accent-document;
+:root body[data-editor-type] #viewport::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: @eo-app-accent-height;
+  background: var(--eo-app-accent);
+}
+
+:root body[data-editor-type="document"] {
+  --eo-app-accent: @eo-app-accent-document;
 }
 
 // PDF forms run inside the document editor and expose data-editor-type="document".
-:root body.pdf-form #viewport {
-  border-top-color: @eo-app-accent-pdf;
+:root body.pdf-form {
+  --eo-app-accent: @eo-app-accent-pdf;
 }
 
-:root body[data-editor-type="spreadsheet"] #viewport {
-  border-top-color: @eo-app-accent-spreadsheet;
+:root body[data-editor-type="spreadsheet"] {
+  --eo-app-accent: @eo-app-accent-spreadsheet;
 }
 
-:root body[data-editor-type="presentation"] #viewport {
-  border-top-color: @eo-app-accent-presentation;
+:root body[data-editor-type="presentation"] {
+  --eo-app-accent: @eo-app-accent-presentation;
 }
 
-:root body[data-editor-type="pdf"] #viewport {
-  border-top-color: @eo-app-accent-pdf;
+:root body[data-editor-type="pdf"] {
+  --eo-app-accent: @eo-app-accent-pdf;
 }
 
-:root body[data-editor-type="drawing"] #viewport {
-  border-top-color: @eo-app-accent-drawing;
+:root body[data-editor-type="drawing"] {
+  --eo-app-accent: @eo-app-accent-drawing;
 }
