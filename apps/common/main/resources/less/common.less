@@ -242,11 +242,9 @@ label {
 
         // Inverted with the move to the symbol sheet: the icon is the <svg>
         // now, and the <span> only survives for classes that are not sprite
-        // names. Hiding the svg here left the File menu without icons.
-        svg.menu-item-icon {
-            display: block;
-        }
-
+        // names. Hiding the svg here left the File menu without icons, and
+        // both kinds want the same box, so they share one rule.
+        svg.menu-item-icon,
         span.menu-item-icon {
             display: block;
         }
@@ -287,9 +285,14 @@ label {
                         background-position-x: @button-small-active-icon-offset-x;
                     }
 
+                    // The symbols colour their own paths from
+                    // --icon-gray-primary, and document CSS cannot select
+                    // into the shadow tree a <use> builds. Custom properties
+                    // do inherit through it, so the pressed colour has to
+                    // arrive as the variable the symbols read; a fill on the
+                    // <svg> reaches nothing. Semantic accents are left alone.
                     svg.menu-item-icon {
-                        fill: @icon-normal-pressed-ie;
-                        fill: @icon-normal-pressed;
+                        --icon-gray-primary: var(--icon-normal-pressed);
                     }
                 }
 
@@ -723,7 +726,11 @@ body {
 
 // SVG icon default colors
 // v2 icons use stroke="currentColor", so we set color for inheritance
-svg.icon {
+// menu-item-icon is the menus' equivalent of .icon and needs the same
+// default, or a path that falls through to stroke="currentColor" takes the
+// menu's text colour while its classed siblings take the icon colour.
+svg.icon,
+svg.menu-item-icon {
     color: var(--icon-gray-primary, #383838);
     fill: none;  // v2 icons use stroke, not fill
 }

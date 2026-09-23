@@ -334,9 +334,10 @@ define([
                         iconEl.slice(1).remove();
                     } else {
                         iconEl.removeClass(this.iconCls).addClass(iconCls);
-                        // The template's own <use> carries no class; the one
-                        // applyScaling injects is .zoom-int. Match either.
-                        var svgIcon = firstChild.find('.menu-item-icon use, use.zoom-int');
+                        // Neither <use> carries a class, the template's
+                        // nor the one applyScaling injects, so match on the
+                        // icon element that holds it.
+                        var svgIcon = firstChild.find('.menu-item-icon use');
                         if (svgIcon.length) {
                             var re_icon_name = /btn-[^\s]+/.exec(iconCls),
                                 icon_name = re_icon_name ? re_icon_name[0] : "null";

@@ -1,5 +1,5 @@
 /*!
- * SPDX-FileCopyrightText: 2026 Nextcloud GmbH or an Nextcloud affiliate company and Euro-Office contributors
+ * SPDX-FileCopyrightText: 2026 Nextcloud GmbH or a Nextcloud affiliate company and Euro-Office contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
@@ -189,6 +189,26 @@ define([
             assert.equal(icon.length, 1, 'the injected svg is gone');
             assert.equal(tagOf(icon), 'span');
             assert.equal(item.cmpEl.find('use').length, 0, 'no href="#null" left behind');
+        });
+
+        it('setIconCls collapses an injected pair to a single svg', function(){
+            // The swatch case above collapses to a span. Crossing the other
+            // way has to leave one svg carrying the new symbol, not the span
+            // the template printed with a sprite class still on it.
+            item = renderItem(domPlaceholder, {
+                caption : 'Copy',
+                iconCls : 'btn-copy',
+                template: _.template('<a tabindex="-1" type="menuitem"><span class="menu-item-icon <%= iconCls %>"></span><%= caption %></a>')
+            });
+            item.applyScaling(3);
+            assert.equal(item.cmpEl.find('.menu-item-icon').length, 2, 'the pair is set up');
+
+            item.setIconCls('btn-paste');
+
+            var icon = item.cmpEl.find('.menu-item-icon');
+            assert.equal(icon.length, 1, 'collapsed to one element');
+            assert.equal(tagOf(icon), 'svg', 'a sprite class leaves an svg behind');
+            assert.equal(icon.find('use').attr('href'), '#btn-paste');
         });
 
         it('applyScaling keeps the single template svg above ratio 2', function(){

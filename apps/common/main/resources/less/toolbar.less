@@ -1197,9 +1197,12 @@
                 background-position-x: @button-small-active-icon-offset-x;
             }
 
+            // A checked item takes the pressed background, so its icon
+            // follows. As in the File menu's active row, the colour has to
+            // arrive as the variable the symbols read: a fill on the <svg>
+            // never reaches paths that live in a <use> shadow tree.
             svg.menu-item-icon {
-                fill: @icon-normal-pressed-ie;
-                fill: @icon-normal-pressed;
+                --icon-gray-primary: var(--icon-normal-pressed);
             }
         }
     }
