@@ -53,7 +53,7 @@
   "SSE.ApplicationController.warnLicenseExp": "Licensen er udløbet. Forny den, og indlæs siden igen.",
   "SSE.ApplicationView.txtDownload": "Hent",
   "SSE.ApplicationView.txtEmbed": "Indlejre",
-  "SSE.ApplicationView.txtFileLocation": "Åben filplacering",
+  "SSE.ApplicationView.txtFileLocation": "Åbn filplacering",
   "SSE.ApplicationView.txtFullScreen": "Fuld skærm",
   "SSE.ApplicationView.txtPrint": "Udskriv",
   "SSE.ApplicationView.txtSearch": "Søg",

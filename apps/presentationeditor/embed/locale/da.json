@@ -53,7 +53,7 @@
   "PE.ApplicationController.warnLicenseExp": "Licensen er udløbet. Forny den, og indlæs siden igen.",
   "PE.ApplicationView.txtDownload": "Hent",
   "PE.ApplicationView.txtEmbed": "Indlejre",
-  "PE.ApplicationView.txtFileLocation": "Åben filplacering",
+  "PE.ApplicationView.txtFileLocation": "Åbn filplacering",
   "PE.ApplicationView.txtFullScreen": "Fuld skærm",
   "PE.ApplicationView.txtPrint": "Udskriv",
   "PE.ApplicationView.txtSearch": "Søg",
