@@ -682,25 +682,9 @@ DE.ApplicationController = new(function(){
     }
 
     function onEditorPermissions(params) {
-        var licType = params.asc_getLicenseType();
-        if (Asc.c_oLicenseResult.Expired === licType || Asc.c_oLicenseResult.Error === licType || Asc.c_oLicenseResult.ExpiredTrial === licType ||
-            Asc.c_oLicenseResult.NotBefore === licType || Asc.c_oLicenseResult.ExpiredLimited === licType) {
-                common.controller.modals.showWarning({
-                    title: Asc.c_oLicenseResult.NotBefore === licType ? me.titleLicenseNotActive : me.titleLicenseExp,
-                    message: Asc.c_oLicenseResult.NotBefore === licType ? me.warnLicenseBefore : me.warnLicenseExp,
-                    buttons: []
-                });
-        
-                $('#dlg-warning').css('z-index', 20002);
-                $('#dlg-warning button.close, #dlg-warning .modal-footer').remove();
-            return;
-        }
-
-        appOptions.canLicense     = (licType === Asc.c_oLicenseResult.Success || licType === Asc.c_oLicenseResult.SuccessLimit);
         appOptions.canFillForms   = false; // use forms editor for filling forms
-        appOptions.canSubmitForms = appOptions.canLicense && (typeof (config.customization) == 'object') && !!config.customization.submitForm;
-        appOptions.canBranding  = params.asc_getCustomization();
-        appOptions.canBranding && setBranding(config.customization);
+        appOptions.canSubmitForms = (typeof (config.customization) == 'object') && !!config.customization.submitForm;
+        setBranding(config.customization);
 
         var type = /^(?:(docxf|oform))$/.exec(docConfig.fileType);
         appOptions.isOForm = !!(type && typeof type[1] === 'string'); // oform and docxf
@@ -1208,10 +1192,6 @@ DE.ApplicationController = new(function(){
         errorInconsistentExtPptx: 'An error has occurred while opening the file.<br>The file content corresponds to presentations (e.g. pptx), but the file has the inconsistent extension: %1.',
         errorInconsistentExtPdf: 'An error has occurred while opening the file.<br>The file content corresponds to one of the following formats: pdf/djvu/xps/oxps, but the file has the inconsistent extension: %1.',
         errorInconsistentExt: 'An error has occurred while opening the file.<br>The file content does not match the file extension.',
-        titleLicenseExp: 'License expired',
-        titleLicenseNotActive: 'License not active',
-        warnLicenseBefore: 'License not active. Please contact your administrator.',
-        warnLicenseExp: 'Your license has expired. Please update your license and refresh the page.',
         textConvertFormDownload: 'Download file as a fillable PDF form to be able to fill it out.',
         textDownloadPdf: 'Download pdf',
         errorToken: 'The document security token is not correctly formed.<br>Please contact your Document Server administrator.',

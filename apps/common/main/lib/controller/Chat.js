@@ -114,7 +114,7 @@ define([
         },
 
         onUsersChanged: function(users, currentUserId){
-            if (!this.mode.canLicense || !this.mode.canCoAuthoring) {
+            if (!this.mode.canCoAuthoring) {
                 var len = 0;
                 for (name in users) {
                     if (undefined !== name) len++;
