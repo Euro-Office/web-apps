@@ -31,6 +31,11 @@ const fs   = require('fs');
 const path = require('path');
 const less = require('less');
 const { minify } = require('terser');
+const { loadThemeMeta, themeValue } = require('./lib/theme-config');
+const { meta: themeMeta } = loadThemeMeta(
+    path.resolve(__dirname, '..', '..'),
+    'deploy-embed'
+);
 
 const REPO_ROOT  = path.resolve(__dirname, '..', '..');
 const BUILD_ROOT = process.env.BUILD_ROOT
@@ -38,6 +43,8 @@ const BUILD_ROOT = process.env.BUILD_ROOT
     : path.resolve(REPO_ROOT, 'deploy');
 const SRC_ROOT   = REPO_ROOT;
 const CFG_DIR    = path.resolve(__dirname, '..');
+
+const PUBLISHER_URL = themeValue(themeMeta, 'PUBLISHER_URL', 'publisher_url', 'https://github.com/euro-office');
 
 const EDITORS = [
     'documenteditor',
@@ -137,7 +144,10 @@ async function buildEditor(editorName) {
         if (!f.endsWith('.html')) continue;
         const p       = path.join(htmlDestDir, f);
         const content = fs.readFileSync(p, 'utf8');
-        fs.writeFileSync(p, content.replace(/@@SRC_ROOT@@/g, SRC_ROOT), 'utf8');
+        const replaced = content
+            .replace(/@@SRC_ROOT@@/g, SRC_ROOT)
+            .replace(/\{\{PUBLISHER_URL\}\}/g, PUBLISHER_URL);
+        fs.writeFileSync(p, replaced, 'utf8');
     }
 
     // 6. inline ?__inline=true scripts (mirrors inline-svgs.js SCRIPT_RE logic)

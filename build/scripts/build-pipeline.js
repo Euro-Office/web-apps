@@ -25,7 +25,7 @@
 //   PRODUCT_VERSION  required; rejected if major < 6
 //   BUILD_ROOT       default: ../deploy (matches grunt's default)
 //   BUILD_NUMBER     default: GITHUB_RUN_NUMBER, then common.json.build
-//   THEME            default: default
+//   THEME            default: euro-office
 //
 // Phase layout (wall-clock optimised):
 //   Phase 1 — all parallel:
@@ -68,7 +68,7 @@ const BUILD_NUMBER = String(
     process.env.BUILD_NUMBER || process.env.GITHUB_RUN_NUMBER || COMMON_JSON.build
 );
 
-const THEME = process.env.THEME || 'default';
+const THEME = process.env.THEME || 'euro-office';
 
 // Default every child to production so mobile (webpack.config.js defaults to
 // 'development') and desktop (defaults to 'production') agree — without this the
