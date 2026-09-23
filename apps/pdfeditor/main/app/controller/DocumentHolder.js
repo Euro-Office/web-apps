@@ -338,7 +338,8 @@ define([
                 me._isScrolling = false;
             }, 100);
 
-            var delta = event.deltaY !== undefined ? -event.deltaY : event.wheelDelta;
+            var delta = event.deltaY !== undefined ? -event.deltaY :
+                (event.wheelDelta !== undefined ? event.wheelDelta : -event.detail);
 
             if (me._ctrlPressedAtScrollStart && !event.altKey) {
                 if (delta < 0) {
@@ -424,16 +425,14 @@ define([
                         Common.UI.Menu.Manager.hideAll();
                 });
 
-                //NOTE: set mouse wheel handler
-
-                var addEvent = function( elem, type, fn ) {
-                    elem.addEventListener ? elem.addEventListener( type, fn, false ) : elem.attachEvent( "on" + type, fn );
-                };
-
-                var eventname='wheel';
-                addEvent(me.documentHolder.el, eventname, _.bind(me.handleDocumentWheel, me));
+                // Match the SDK's events: a wheel listener on this same element
+                // suppresses its legacy mousewheel handler in Chrome.
+                var onWheel = _.bind(me.handleDocumentWheel, me);
+                me.documentHolder.el.addEventListener('mousewheel', onWheel, {passive: false});
+                me.documentHolder.el.addEventListener('DOMMouseScroll', onWheel, {passive: false});
             }
 
+            // Let dialogs consume their own wheel events before handling zoom.
             document.addEventListener('wheel', _.bind(me.handleDocumentWheel, me), {passive: false});
             $(document).on('keydown', _.bind(me.handleDocumentKeyDown, me));
 
