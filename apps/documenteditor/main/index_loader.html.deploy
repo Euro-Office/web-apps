@@ -226,7 +226,7 @@
     <inline src="../../common/main/resources/img/combo-border-size/BorderSize.svg" />
     <inline src="resources/img/form-points.svg" />
     <div id="viewport"></div>
-    <script src="../../../../../../sdkjs/common/device_scale.js?__inline=true"></script>
+    <script src="../../../../sdkjs/common/device_scale.js?__inline=true"></script>
 
     <script src="../../../vendor/requirejs/require.js"></script>
     <script>

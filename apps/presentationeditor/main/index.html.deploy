@@ -461,7 +461,7 @@
     <inline src="../../common/main/resources/img/toolbar/equationicons.svg" />
     <inline src="../../common/main/resources/img/right-panels/arrows.svg" />
     <inline src="../../common/main/resources/img/combo-border-size/BorderSize.svg" />
-    <script src="../../../../../../sdkjs/common/device_scale.js?__inline=true"></script>
+    <script src="../../../../sdkjs/common/device_scale.js?__inline=true"></script>
 
     <script src="../../../vendor/requirejs/require.js"></script>
     <script>
