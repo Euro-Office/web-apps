@@ -1709,7 +1709,7 @@
   "PDFE.Views.DocumentHolder.mniImageFromUrl": "Billede fra URL",
   "PDFE.Views.DocumentHolder.originalSizeText": "Faktisk størrelse",
   "PDFE.Views.DocumentHolder.removeCommentText": "Fjern",
-  "PDFE.Views.DocumentHolder.removeHyperlinkText": "Slet Hyperlink",
+  "PDFE.Views.DocumentHolder.removeHyperlinkText": "Fjern link",
   "PDFE.Views.DocumentHolder.rightText": "Højre",
   "PDFE.Views.DocumentHolder.rowText": "Række",
   "PDFE.Views.DocumentHolder.selectText": "Vælg",
