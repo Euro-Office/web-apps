@@ -29,7 +29,7 @@
     "picomatch@<2.3.2": "2.3.2"
   },
   "devDependencies": {
-    "chai": "^5.1.0",
+    "chai": "^6.0.0",
     "mocha": "^10.2.0"
   }
 }
