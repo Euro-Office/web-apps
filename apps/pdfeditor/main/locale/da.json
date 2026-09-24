@@ -1968,7 +1968,7 @@
   "PDFE.Views.FileMenuPanels.ProtectDoc.txtEdit": "Rediger dokument",
   "PDFE.Views.FileMenuPanels.ProtectDoc.txtEditWarning": "Redigering fjerner underskrifterne fra dokumentet.<br>Fortsæt?",
   "PDFE.Views.FileMenuPanels.ProtectDoc.txtEncrypted": "Dette dokument er beskyttet med en adgangskode",
-  "PDFE.Views.FileMenuPanels.ProtectDoc.txtProtectDocument": "Kryptér dokumentet med en adgangskode",
+  "PDFE.Views.FileMenuPanels.ProtectDoc.txtProtectDocument": "Krypter dokumentet med en adgangskode",
   "PDFE.Views.FileMenuPanels.ProtectDoc.txtRequestedSignatures": "Dokumentet skal underskrives.",
   "PDFE.Views.FileMenuPanels.ProtectDoc.txtSigned": "Gyldige underskrifter er blevet tilføjet til dokumentet. Dokumentet er beskyttet mod redigering.",
   "PDFE.Views.FileMenuPanels.ProtectDoc.txtSignedInvalid": "Nogle af de digitale underskrifter i dokumentet er ugyldige eller kunne ikke verificeres. Dokumentet er beskyttet mod redigering.",
