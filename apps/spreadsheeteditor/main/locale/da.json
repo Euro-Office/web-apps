@@ -3088,7 +3088,7 @@
   "SSE.Views.FileMenu.ariaFileMenu": "Filmenu",
   "SSE.Views.FileMenu.btnBackCaption": "Gå til dokumentplacering",
   "SSE.Views.FileMenu.btnCloseEditor": "Luk fil",
-  "SSE.Views.FileMenu.btnCloseMenuCaption": "Luk menu",
+  "SSE.Views.FileMenu.btnCloseMenuCaption": "Tilbage",
   "SSE.Views.FileMenu.btnCreateNewCaption": "Opret ny",
   "SSE.Views.FileMenu.btnDownloadCaption": "Hent som",
   "SSE.Views.FileMenu.btnExitCaption": "Afslut",

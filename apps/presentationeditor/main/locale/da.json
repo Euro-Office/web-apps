@@ -2466,7 +2466,7 @@
   "PE.Views.FileMenu.btnAboutCaption": "Om",
   "PE.Views.FileMenu.btnBackCaption": "Gå til dokumentplacering",
   "PE.Views.FileMenu.btnCloseEditor": "Luk fil",
-  "PE.Views.FileMenu.btnCloseMenuCaption": "Luk menu",
+  "PE.Views.FileMenu.btnCloseMenuCaption": "Tilbage",
   "PE.Views.FileMenu.btnCreateNewCaption": "Opret ny",
   "PE.Views.FileMenu.btnDownloadCaption": "Hent som",
   "PE.Views.FileMenu.btnExitCaption": "Luk",
