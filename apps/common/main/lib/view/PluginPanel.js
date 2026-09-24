@@ -130,7 +130,7 @@ define([], function () {
                 this.iframePlugin.align        = "top";
                 this.iframePlugin.frameBorder  = 0;
                 this.iframePlugin.scrolling    = "no";
-                this.iframePlugin.allow = "camera; microphone; display-capture";
+                this.iframePlugin.allow = "camera; microphone; display-capture; local-network-access; loopback-network";
                 this.iframePlugin.onload       = _.bind(this._onLoad,this);
                 this.currentPluginFrame.append(this.iframePlugin);
 
