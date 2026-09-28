@@ -760,7 +760,7 @@
   "Common.Views.Header.textClose": "Luk fil",
   "Common.Views.Header.textCompactView": "Skjul værktøjslinjen",
   "Common.Views.Header.textHideLines": "Skjul lineal",
-  "Common.Views.Header.textHideStatusBar": "Skjul statuslinje",
+  "Common.Views.Header.textHideStatusBar": "Slå ark- og statuslinjen sammen",
   "Common.Views.Header.textPrint": "Udskriv",
   "Common.Views.Header.textReadOnly": "Skrivebeskyttet",
   "Common.Views.Header.textRemoveFavorite": "Fjern fra favoritter",
