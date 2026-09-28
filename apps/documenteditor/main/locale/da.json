@@ -32,7 +32,7 @@
   "Common.Controllers.Plugins.textRunInstalledPlugins": "Kør installerede plugins",
   "Common.Controllers.Plugins.textRunPlugin": "Kør plugin",
   "Common.Controllers.ReviewChanges.textAcceptBeforeCompare": "For at sammenligne dokumenter vil alle noterede ændringer i dokumenterne opfattes som godkendt. Ønsker du at fortsætte?",
-  "Common.Controllers.ReviewChanges.textAtLeast": "Mindst",
+  "Common.Controllers.ReviewChanges.textAtLeast": "mindst",
   "Common.Controllers.ReviewChanges.textAuto": "automatisk",
   "Common.Controllers.ReviewChanges.textBaseline": "Grundlinje",
   "Common.Controllers.ReviewChanges.textBold": "Fed",
