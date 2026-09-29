@@ -70,6 +70,32 @@
     }
 }
 
+// An <svg class="icon"> whose <use> lives inside a template conditional renders
+// empty when the condition is false. An empty inline svg has no width/height, so
+// it falls back to the 300x150 intrinsic replaced-element size and inflates its
+// row. An empty icon svg is never legitimate (nothing to paint), so collapse it
+// globally — this covers the non-spell-check rows in the language combo and
+// status-bar language menus, and any future empty-svg template.
+//
+// !important is deliberate: this is an invariant ("nothing to paint" is never
+// legitimately visible), not a default meant to be overridable. Without it,
+// higher-specificity or later-imported rules elsewhere (e.g. toolbar.less's
+// `svg.icon { display: block }` context rules) silently win and reintroduce
+// the bug — see https://github.com/Euro-Office/web-apps/issues/169.
+svg.icon:empty,
+svg.menu-item-icon:empty {
+    display: none !important;
+}
+
+// :empty only matches when a node has zero children, including whitespace —
+// so this rule alone is fragile to template reformatting (see
+// https://github.com/Euro-Office/web-apps/issues/168). Known conditional-icon
+// templates (Statusbar.js, LanguageDialog.js) additionally set this class
+// explicitly, so their empty state doesn't depend on whitespace-free markup.
+.icon-hidden {
+    display: none !important;
+}
+
 .btn-category,
 .btn-options,
 .combo-dataview,
