@@ -90,7 +90,8 @@ define([
                     'macros:pause':  _.bind(this.onClickMacrosPause, this),
                     'pointer:select': _.bind(this.onPointerType, this, 'select'),
                     'pointer:hand': _.bind(this.onPointerType, this, 'hand'),
-                    'pages:multiple': _.bind(this.onMultiplePages, this)
+                    'pages:multiple': _.bind(this.onMultiplePages, this),
+                    'pages:pageless': _.bind(this.onPagelessMode, this)
                 },
                 'Toolbar': {
                     'view:compact': _.bind(function (toolbar, state) {
@@ -106,6 +107,11 @@ define([
                         this.api.SetMultipageViewMode(isMultiple);
                         Common.localStorage.setBool("de-zoom-multipage", isMultiple);
                         this.view.btnMultiplePages.toggle(isMultiple);
+                    }, this),
+                    'pages:pagelesschanged': _.bind(function (isPageless) {
+                        this.api.SetPagelessMode(isPageless);
+                        Common.localStorage.setBool("de-pageless-mode", isPageless);
+                        this.view.btnPageless.toggle(isPageless);
                     }, this)
                 },
                 'LeftMenu': {
@@ -288,6 +294,13 @@ define([
                 this.api.SetMultipageViewMode(pressed);
                 Common.localStorage.setBool("de-zoom-multipage", pressed);
                 this.view.fireEvent('pages:multiplechanged', [pressed]);
+            }
+        },
+
+        onPagelessMode: function (pressed) {
+            if (this.api) {
+                this.api.SetPagelessMode(pressed);
+                Common.localStorage.setBool("de-pageless-mode", pressed);
             }
         },
 
