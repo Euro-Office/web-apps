@@ -14,14 +14,14 @@ jobs:
         steps:
 
           - name: Checkout web-apps
-            uses: actions/checkout@v3
+            uses: actions/checkout@v7
             with:
                 repository: euro-office/web-apps
                 ref: ${{github.ref}}
                 path: 'web-apps'
 
           - name: Checkout SDKJS
-            uses: actions/checkout@v3
+            uses: actions/checkout@v7
             with:
                 repository: euro-office/sdkjs
                 ref: ${{env.REF}}

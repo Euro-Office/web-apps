@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-node@v4
 
       - name: Checkout web-apps repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: web-apps
     
@@ -31,7 +31,7 @@ jobs:
           echo "Using branch: ${BRANCH:-default branch}"
     
       - name: Checkout web-apps repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: ONLYOFFICE/web-apps
           token: ${{ secrets.READ_PAT }}
@@ -39,7 +39,7 @@ jobs:
           path: web-apps
       
       - name: Checkout build_tools repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: ONLYOFFICE/build_tools
           token: ${{ secrets.READ_PAT }}
@@ -47,7 +47,7 @@ jobs:
           path: build_tools
     
       - name: Checkout sdkjs repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: ONLYOFFICE/sdkjs
           token: ${{ secrets.READ_PAT }}
@@ -55,7 +55,7 @@ jobs:
           path: sdkjs
 
       - name: Checkout sdkjs-forms repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: ONLYOFFICE/sdkjs-forms
           token: ${{ secrets.READ_PAT }}
