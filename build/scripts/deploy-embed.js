@@ -29,6 +29,8 @@ const BUILD_ROOT = process.env.BUILD_ROOT
 const SRC_ROOT   = REPO_ROOT;
 const CFG_DIR    = path.resolve(__dirname, '..');
 
+let PUBLISHER_URL;
+
 const EDITORS = [
     'documenteditor',
     'spreadsheeteditor',
@@ -127,7 +129,10 @@ async function buildEditor(editorName) {
         if (!f.endsWith('.html')) continue;
         const p       = path.join(htmlDestDir, f);
         const content = fs.readFileSync(p, 'utf8');
-        fs.writeFileSync(p, content.replace(/@@SRC_ROOT@@/g, SRC_ROOT), 'utf8');
+        const replaced = content
+            .replace(/@@SRC_ROOT@@/g, SRC_ROOT)
+            .replace(/\{\{PUBLISHER_URL\}\}/g, PUBLISHER_URL);
+        fs.writeFileSync(p, replaced, 'utf8');
     }
 
     // 6. inline ?__inline=true scripts (mirrors inline-svgs.js SCRIPT_RE logic)
@@ -157,6 +162,9 @@ async function buildEditor(editorName) {
 }
 
 (async () => {
+    const { themeVal } = await import('../theme.config.mjs');
+    PUBLISHER_URL = themeVal(process.env.PUBLISHER_URL, 'publisher_url', 'https://github.com/euro-office');
+
     for (const editor of EDITORS) {
         await buildEditor(editor);
     }

@@ -25,7 +25,7 @@ import { fileURLToPath } from 'url';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
-import { assertBuildEnv, themeDefines, themeFormVars, themeGlobalVars, themeReplacements } from './theme.config.mjs';
+import { applyThemeLessOverrides, assertBuildEnv, themeDefines, themeFormVars, themeGlobalVars, themeReplacements } from './theme.config.mjs';
 import { LOAD_BEARING } from './replacements.manifest.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -40,6 +40,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  */
 export function editorConfig(editorName, opts = {}) {
     assertBuildEnv();
+    applyThemeLessOverrides();
 
     const subpath = opts.subpath || 'main';
 
