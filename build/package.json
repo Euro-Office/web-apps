@@ -16,7 +16,7 @@
     "mini-css-extract-plugin": "^2.9.2",
     "sharp": "^0.35.0",
     "string-replace-loader": "3.3.0",
-    "svgo": "^3.3.3",
+    "svgo": "^4.0.0",
     "terser": "^5.20.0",
     "terser-webpack-plugin": "^5.3.11",
     "webpack": "^5.98.0",
