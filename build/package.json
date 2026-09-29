@@ -3,6 +3,9 @@
   "version": "1.0.1",
   "homepage": "http://www.onlyoffice.com",
   "private": true,
+  "scripts": {
+    "test": "npx -y mocha-headless-chrome@5.1.0 -a allow-file-access-from-files -a no-sandbox -f ../test/unit-tests/common/index.html"
+  },
   "dependencies": {
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.3",
