@@ -487,7 +487,9 @@ define([
             },
 
             onDocInfoShow: function() {
-                this.api && this.api.startGetDocInfo();
+                if (!this.api) return;
+                this._selInfo = this.api.asc_GetSelectionDocInfo ? this.api.asc_GetSelectionDocInfo() : null;
+                this.api.startGetDocInfo();
             },
 
             onGetDocInfoStart: function() {
@@ -496,18 +498,16 @@ define([
 
             onDocInfo: function(obj) {
                 if (obj && this.btnDocInfo && this.btnDocInfo.menu) {
-                    if (obj.get_PageCount()>-1)
-                        this.btnDocInfo.menu.items[0].options.value = obj.get_PageCount();
-                    if (obj.get_ParagraphCount()>-1)
-                        this.btnDocInfo.menu.items[1].options.value = obj.get_ParagraphCount();
-                    if (obj.get_WordsCount()>-1)
-                        this.btnDocInfo.menu.items[2].options.value = obj.get_WordsCount();
-                    if (obj.get_SymbolsCount()>-1)
-                        this.btnDocInfo.menu.items[3].options.value = obj.get_SymbolsCount();
-                    if (obj.get_SymbolsWSCount()>-1)
-                        this.btnDocInfo.menu.items[4].options.value = obj.get_SymbolsWSCount();
+                    var me = this,
+                        items = this.btnDocInfo.menu.items,
+                        sel = this._selInfo;
+                    ['get_PageCount', 'get_ParagraphCount', 'get_WordsCount', 'get_SymbolsCount', 'get_SymbolsWSCount'].forEach(function(getter, i) {
+                        var total = obj[getter](),
+                            part = sel ? sel[getter]() : -1;
+                        if (total>-1)
+                            items[i].options.value = part>-1 ? Common.Utils.String.format(me.txtSelectionOf, part, total) : total;
+                    });
                     if (!this.timerDocInfo) { // start timer for filling info
-                        var me = this;
                         this.timerDocInfo = setInterval(function(){
                             me.fillDocInfo();
                         }, 300);
@@ -553,7 +553,8 @@ define([
             txtWords: 'Words',
             txtParagraphs: 'Paragraphs',
             txtSymbols: 'Symbols',
-            txtSpaces: 'Symbols with spaces'
+            txtSpaces: 'Symbols with spaces',
+            txtSelectionOf: '{0} of {1}'
         }, DE.Views.Statusbar || {}));
     }
 );
