@@ -32,7 +32,6 @@ const {
     cleanDir, ensureDir, copyFile, copyDir, copyDirFiltered,
     replaceTokensIn, replaceTokensInJS, writeSVG, writeRaster, optimizeImages,
 } = require('./lib/build-utils');
-const { loadThemeMeta, themeValue } = require('./lib/theme-config');
 
 const REPO_ROOT  = path.resolve(__dirname, '..', '..');
 const BUILD_ROOT = process.env.BUILD_ROOT;
@@ -46,9 +45,8 @@ if (!BUILD_ROOT) {
 const COMMON_JSON    = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, 'build', 'common.json'), 'utf8'));
 // Mirror Gruntfile line 358: process.env['PRODUCT_VERSION'] takes precedence over common.json.
 const PKG_VERSION    = process.env.PRODUCT_VERSION || COMMON_JSON.version;
-const { meta: themeMeta } = loadThemeMeta(REPO_ROOT, 'deploy-common');
-const CUSTOMER_NAME  = themeValue(themeMeta, 'APP_CUSTOMER_NAME', 'company_name', 'Euro Office');
-const APP_TITLE_TEXT = themeValue(themeMeta, 'APP_TITLE_TEXT', 'app_title', 'Euro Office');
+let CUSTOMER_NAME;
+let APP_TITLE_TEXT;
 const APPS_SRC       = path.join(REPO_ROOT, 'apps');
 const VENDOR_SRC     = path.join(REPO_ROOT, 'vendor');
 const BUILD_OUT      = path.join(BUILD_ROOT, 'web-apps');
@@ -209,6 +207,10 @@ function deployMonaco(entry) {
 // ---- main -------------------------------------------------------------------
 
 (async () => {
+    const { themeVal } = await import('../theme.config.mjs');
+    CUSTOMER_NAME  = themeVal(process.env.APP_CUSTOMER_NAME, 'company_name', 'Euro Office');
+    APP_TITLE_TEXT = themeVal(process.env.APP_TITLE_TEXT, 'app_title', 'Euro Office');
+
     const { VENDORS } = await import('../vendor.manifest.mjs');
 
     deploySDK();

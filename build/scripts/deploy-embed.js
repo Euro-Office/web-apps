@@ -31,11 +31,6 @@ const fs   = require('fs');
 const path = require('path');
 const less = require('less');
 const { minify } = require('terser');
-const { loadThemeMeta, themeValue } = require('./lib/theme-config');
-const { meta: themeMeta } = loadThemeMeta(
-    path.resolve(__dirname, '..', '..'),
-    'deploy-embed'
-);
 
 const REPO_ROOT  = path.resolve(__dirname, '..', '..');
 const BUILD_ROOT = process.env.BUILD_ROOT
@@ -44,7 +39,7 @@ const BUILD_ROOT = process.env.BUILD_ROOT
 const SRC_ROOT   = REPO_ROOT;
 const CFG_DIR    = path.resolve(__dirname, '..');
 
-const PUBLISHER_URL = themeValue(themeMeta, 'PUBLISHER_URL', 'publisher_url', 'https://github.com/euro-office');
+let PUBLISHER_URL;
 
 const EDITORS = [
     'documenteditor',
@@ -177,6 +172,9 @@ async function buildEditor(editorName) {
 }
 
 (async () => {
+    const { themeVal } = await import('../theme.config.mjs');
+    PUBLISHER_URL = themeVal(process.env.PUBLISHER_URL, 'publisher_url', 'https://github.com/euro-office');
+
     for (const editor of EDITORS) {
         await buildEditor(editor);
     }
