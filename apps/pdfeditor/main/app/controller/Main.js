@@ -1135,8 +1135,7 @@ define([
 
                     me.appOptions.isRestrictedEdit && me.api.asc_SetHighlightRequiredFields(true);
 
-                    var timer_sl = setTimeout(function(){
-
+                    var fireDocumentReady = function() {
                         toolbarController.createDelayedElements();
                         toolbarController.activateControls();
                         documentHolderController.applyEditorMode();
@@ -1147,6 +1146,13 @@ define([
 
                         Common.NotificationCenter.trigger('document:ready', 'main');
                         me.applyLicense();
+                    };
+                    setTimeout(function(){
+                        if (!Common.Controllers.LaunchController.isScriptLoaded()) {
+                            Common.NotificationCenter.once('script:loaded', fireDocumentReady);
+                        } else {
+                            fireDocumentReady();
+                        }
                     }, 500);
                 } else {
                     Common.NotificationCenter.trigger('document:ready', 'main');
