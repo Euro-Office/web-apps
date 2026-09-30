@@ -2770,6 +2770,7 @@
   "DE.Views.FileMenuPanels.Settings.strShowComments": "Show comments in text",
   "DE.Views.FileMenuPanels.Settings.strShowOthersChanges": "Show changes from other users",
   "DE.Views.FileMenuPanels.Settings.strShowResolvedComments": "Show resolved comments",
+  "DE.Views.FileMenuPanels.Settings.strSpellcheckWavyLine": "Use wavy underline for misspelled words",
   "DE.Views.FileMenuPanels.Settings.strStrict": "Strict",
   "DE.Views.FileMenuPanels.Settings.strTabStyle": "Tab style",
   "DE.Views.FileMenuPanels.Settings.strTheme": "Interface theme",
