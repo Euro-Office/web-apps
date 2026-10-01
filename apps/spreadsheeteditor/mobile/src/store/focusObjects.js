@@ -110,6 +110,7 @@ export class storeFocusObjects {
             case Asc.c_oAscSelectionType.RangeShape:
             case Asc.c_oAscSelectionType.RangeChartText:
             case Asc.c_oAscSelectionType.RangeShapeText:
+            case Asc.c_oAscSelectionType.RangeSlicer:
                 const objects = Common.EditorApi.get().asc_getGraphicObjectProps();
                 for ( let i in objects ) {
                     if ( objects[i].asc_getObjectType() == Asc.c_oAscTypeSelectElement.Image ) {
@@ -121,7 +122,7 @@ export class storeFocusObjects {
                 }
                 break;
             default:
-                this.isLocked = info.asc_getLocked();
+                isLocked = info.asc_getLocked();
         }
         this.isLocked = isLocked;
         this.isLockedShape = isLockedShape;
