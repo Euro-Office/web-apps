@@ -387,6 +387,7 @@ define([
                 if (this.api) {
                     this.api.asc_registerCallback('asc_onCountPages',   _.bind(_onCountPages, this));
                     this.api.asc_registerCallback('asc_onCurrentPage',  _.bind(_onCurrentPage, this));
+                    this.api.asc_registerCallback('asc_onCurrentVisiblePage', _.bind(_onCurrentPage, this));
                     this.api.asc_registerCallback('asc_onGetDocInfoStart', _.bind(this.onGetDocInfoStart, this));
                     this.api.asc_registerCallback('asc_onGetDocInfoStop', _.bind(this.onGetDocInfoEnd, this));
                     this.api.asc_registerCallback('asc_onDocInfo', _.bind(this.onDocInfo, this));
