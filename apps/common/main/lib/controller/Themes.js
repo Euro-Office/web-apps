@@ -410,6 +410,7 @@ define([
                     Common.NotificationCenter.trigger('contenttheme:dark', this.isContentThemeDark());
                 } else {
                     this.api.asc_setContentDarkMode(false);
+                    Common.NotificationCenter.trigger('contenttheme:dark', false);
                 }
 
             const colors_obj = get_current_theme_colors();
@@ -570,7 +571,7 @@ define([
                 if ( set_dark != window.uitheme.iscontentdark || force ) {
                     window.uitheme.iscontentdark = set_dark;
 
-                    if ( this.isDarkTheme() )
+                    if ( this.isDarkTheme() && this.api.asc_setContentDarkMode )
                         this.api.asc_setContentDarkMode(set_dark);
 
                     if ( !(keep === false) && Common.localStorage.getItem('content-theme') != mode )
@@ -584,7 +585,7 @@ define([
                 window.uitheme.iscontentdark = !window.uitheme.iscontentdark;
                 Common.localStorage.setItem('content-theme', window.uitheme.iscontentdark ? 'dark' : 'light');
 
-                if ( this.isDarkTheme() )
+                if ( this.isDarkTheme() && this.api.asc_setContentDarkMode )
                     this.api.asc_setContentDarkMode(window.uitheme.iscontentdark);
 
                 Common.NotificationCenter.trigger('contenttheme:dark', window.uitheme.iscontentdark);
