@@ -3,5 +3,16 @@
   "extends": [
     "config:recommended",
     "github>Euro-Office/.github"
+  ],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**",
+    "**/examples/**",
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/__fixtures__/**",
+    "apps/*/main/resources/help/**"
   ]
 }
