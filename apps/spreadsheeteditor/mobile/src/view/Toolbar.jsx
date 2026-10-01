@@ -23,6 +23,7 @@ const ToolbarView = props => {
     const wsProps = props.wsProps;
     const focusOn = props.focusOn;
     const isShapeLocked = props.isShapeLocked;
+    const isTextLocked = props.isTextLocked;
     const undo_box = props.isEdit && EditorUIController.toolbarOptions ? EditorUIController.toolbarOptions.getUndoRedo({
             disabledUndo: !props.isCanUndo || isDisconnected,
             disabledRedo: !props.isCanRedo || isDisconnected,
@@ -78,6 +79,7 @@ const ToolbarView = props => {
                     wsProps,
                     focusOn,
                     isShapeLocked,
+                    isTextLocked,
                     onEditClick: () => props.openOptions('edit'),
                     onAddClick: () => props.openOptions('add')
                 })}

@@ -22,6 +22,7 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeSpreadsheetIn
     const focusOn = storeFocusObjects.focusOn;
     const isObjectLocked = storeFocusObjects.isLocked;
     const isShapeLocked = storeFocusObjects.isLockedShape;
+    const isTextLocked = storeFocusObjects.isLockedText;
     const isEditCell = storeFocusObjects.isEditCell;
     const editFormulaMode = storeFocusObjects.editFormulaMode;
 
@@ -311,6 +312,7 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeSpreadsheetIn
             wsProps={wsProps}
             focusOn={focusOn}
             isShapeLocked={isShapeLocked}
+            isTextLocked={isTextLocked}
             isVersionHistoryMode={isVersionHistoryMode}
             closeHistory={closeHistory}
             isOpenModal={props.isOpenModal}
