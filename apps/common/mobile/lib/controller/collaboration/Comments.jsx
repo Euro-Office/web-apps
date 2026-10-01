@@ -652,6 +652,15 @@ class ViewCommentsSheetsController extends ViewCommentsController {
 const _CommentsController = inject('storeAppOptions', 'storeComments', 'users', "storeApplicationSettings")(observer(CommentsController));
 const _AddCommentController = inject('storeAppOptions', 'storeComments', 'users')(observer(AddCommentController));
 const _EditCommentController = inject('storeComments', 'users')(observer(EditCommentController));
+
+// mounts add/edit comment controllers, per Euro-Office/web-apps#98 (n-goncalves)
+const EditCommentControllers = () => (
+    <Fragment>
+        <_AddCommentController />
+        <_EditCommentController />
+    </Fragment>
+);
+
 const _ViewCommentsController = inject('storeComments', 'users', "storeApplicationSettings", "storeReview", "storeAppOptions")(observer(withTranslation()(ViewCommentsController)));
 const _ViewCommentsSheetsController = inject('storeComments', 'users', "storeApplicationSettings", "storeWorksheets", "storeReview", "storeAppOptions")(observer(withTranslation()(ViewCommentsSheetsController)));
 
@@ -659,6 +668,7 @@ export {
     _CommentsController as CommentsController,
     _AddCommentController as AddCommentController,
     _EditCommentController as EditCommentController,
+    EditCommentControllers,
     _ViewCommentsController as ViewCommentsController,
     _ViewCommentsSheetsController as ViewCommentsSheetsController
 };
