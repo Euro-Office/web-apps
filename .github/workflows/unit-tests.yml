@@ -40,3 +40,7 @@ jobs:
       - name: Run build script tests
         working-directory: build
         run: npm run test:scripts
+
+      - name: Run mobile unit tests
+        working-directory: build
+        run: npm run test:mobile
