@@ -435,7 +435,7 @@
     "textDelete": "Slet",
     "textDuplicate": "Dupliker",
     "textErrNameExists": "Der findes allerede et ark med dette navn.",
-    "textErrNameWrongChar": "Et arknavn ikke indeholde disse tegn: \\, /, *, ?, [, ], :",
+    "textErrNameWrongChar": "Et arknavn kan ikke indeholde disse tegn: \\, /, *, ?, [, ], : og må ikke begynde eller slutte med en apostrof",
     "textErrNotEmpty": "Ark navn skal udfyldes",
     "textErrorLastSheet": "Projektmappen skal have mindst ét synligt ark.",
     "textErrorRemoveSheet": "Kan ikke slette regneark.",

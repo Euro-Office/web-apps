@@ -4516,7 +4516,7 @@
   "SSE.Views.Statusbar.itemTabColor": "Fanefarve",
   "SSE.Views.Statusbar.itemUnProtect": "Ophæv beskyttelsen",
   "SSE.Views.Statusbar.RenameDialog.errNameExists": "Et ark med dette navn eksiterer allerede.",
-  "SSE.Views.Statusbar.RenameDialog.errNameWrongChar": "Et arknavn kan ikke indeholde følgende tegn: \\ / *? []:",
+  "SSE.Views.Statusbar.RenameDialog.errNameWrongChar": "Et arknavn kan ikke indeholde følgende tegn: \\ / * ? [ ] : og må ikke begynde eller slutte med en apostrof",
   "SSE.Views.Statusbar.RenameDialog.labelSheetName": "Ark navn",
   "SSE.Views.Statusbar.selectAllSheets": "Vælg alle ark",
   "SSE.Views.Statusbar.sheetIndexText": "Ark {0} af {1}",
