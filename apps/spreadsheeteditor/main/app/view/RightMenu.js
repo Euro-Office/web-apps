@@ -32,6 +32,7 @@
 var SCALE_MIN = 40;
 var MENU_SCALE_PART = 260;
 var MENU_BASE_WIDTH = 220;
+var MENU_MAX_WIDTH = 600; // keep in sync with the right-panel resizer max in Viewport.js
 
 define([
     'text!spreadsheeteditor/main/app/template/RightMenu.template',
@@ -294,9 +295,14 @@ define([
                 const viewport = SSE.getController('Viewport').getView('Viewport');
                 viewport.hlayout.hideItemResizer('right', !isPlugin);
 
-                const widthFromStorage = Common.localStorage.getItem('sse-rightmenu-width');
+                const widthFromStorage = Common.localStorage.getItem('sse-rightmenu-width'),
+                    customization = this.mode && this.mode.customization,
+                    pluginsPanelWidth = customization && parseInt(customization.pluginsPanelWidth);
                 if(isPlugin && widthFromStorage) {
                     this.$el.width(parseInt(widthFromStorage));
+                } else if(isPlugin && pluginsPanelWidth > 0) {
+                    const maxPanelWidth = Math.min(Math.floor(Common.Utils.innerWidth() / 2), MENU_MAX_WIDTH);
+                    this.$el.width(Math.min(Math.max(MENU_SCALE_PART, pluginsPanelWidth), maxPanelWidth));
                 } else {
                     this.setInnerWidth(MENU_BASE_WIDTH);
                 }
