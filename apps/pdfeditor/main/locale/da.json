@@ -1421,7 +1421,7 @@
   "PDFE.Controllers.Main.textTryUndoRedo": "Fortryd og Gentag er slået fra i tilstanden Hurtig fællesredigering.<br>Klik på knappen 'Striks tilstand' for at skifte til striks fællesredigering, hvor du kan redigere filen, uden at andre forstyrrer, og hvor dine ændringer først sendes, når du har gemt dem. Du kan skifte mellem tilstandene under editorens avancerede indstillinger.",
   "PDFE.Controllers.Main.textTryUndoRedoWarn": "Fortryd/omgør-funktionen er deaktiveret for hurtig medredigeringstilstand.",
   "PDFE.Controllers.Main.textUndo": "Fortryd",
-  "PDFE.Controllers.Main.textUpdateVersion": "Dokumentet kan ikke redigeres lige nu.<br>Forsøger at opdatere filen, vent et øjeblik …",
+  "PDFE.Controllers.Main.textUpdateVersion": "Dokumentet kan ikke redigeres lige nu.<br>Filen forsøges opdateret, vent et øjeblik...",
   "PDFE.Controllers.Main.textUpdating": "Opdaterer",
   "PDFE.Controllers.Main.tipLicenseExceeded": "Dokumentet er åbnet skrivebeskyttet, fordi licensens grænse for samtidige forbindelser er nået.<br><br>Prøv igen senere, eller kontakt ejeren af dokumentet, hvis du har brug for at redigere det.",
   "PDFE.Controllers.Main.tipLicenseUsersExceeded": "Dokumentet er åbnet skrivebeskyttet, fordi licensens grænse for brugere med redigeringsadgang er nået.<br><br>Prøv igen senere, eller kontakt ejeren af dokumentet, hvis du har brug for at redigere det.",
