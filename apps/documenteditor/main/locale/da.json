@@ -1186,7 +1186,7 @@
   "DE.Controllers.Main.errorEditProtectedRange": "Det markerede er beskyttet, og du kan derfor ikke redigere det.",
   "DE.Controllers.Main.errorEmailClient": "Ingen e-mail klient fundet.",
   "DE.Controllers.Main.errorEmptyTOC": "Opret en indholdsfortegnelse ved at anvende en overskriftstypografi fra typografigalleriet på den valgte tekst.",
-  "DE.Controllers.Main.errorFileNotAssembled": "Filen er åbnet fra en sikkerhedskopi på serveren og er ikke gemt i lageret.<br>Brug \"Gem som...\" for at gemme den på et drev.",
+  "DE.Controllers.Main.errorFileNotAssembled": "Filen er åbnet fra en sikkerhedskopi på serveren og er ikke gemt i lageret.<br>Brug \"Gem som\" for at gemme den på et drev.",
   "DE.Controllers.Main.errorFilePassProtect": "Dokumentet er beskyttet af en adgangskode og kunne ikke åbnes.",
   "DE.Controllers.Main.errorFileSizeExceed": "Filens størrelse overgår begrænsningen, som er sat for din server.<br>Kontakt din Document Server-administrator for at få flere oplysninger.",
   "DE.Controllers.Main.errorForcedViewMode": "Filen er åbnet i visningstilstand.<br>Enten er den låst for redigering, eller også giver dine rettigheder ikke adgang til at redigere.",

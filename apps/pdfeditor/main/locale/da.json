@@ -1334,7 +1334,7 @@
   "PDFE.Controllers.Main.errorEditingDownloadas": "Der opstod en fejl under arbejdet med dokumentet.<br>Brug 'Hent som' til at gemme en sikkerhedskopi på din computer.",
   "PDFE.Controllers.Main.errorEditingSaveas": "Der opstod en fejl under arbejdet med dokumentet.<br>Brug \"gem som...\" valgmuligheden for at gemme en sikkerhedsversion til din computers harddisk.",
   "PDFE.Controllers.Main.errorEmailClient": "Ingen e-mail klient fundet.",
-  "PDFE.Controllers.Main.errorFileNotAssembled": "Filen er åbnet fra en sikkerhedskopi på serveren og er ikke gemt i lageret.<br>Brug 'Gem som...' for at gemme den på et drev.",
+  "PDFE.Controllers.Main.errorFileNotAssembled": "Filen er åbnet fra en sikkerhedskopi på serveren og er ikke gemt i lageret.<br>Brug \"Gem som\" for at gemme den på et drev.",
   "PDFE.Controllers.Main.errorFilePassProtect": "Dokumentet er beskyttet af en adgangskode og kunne ikke åbnes.",
   "PDFE.Controllers.Main.errorFileSizeExceed": "Filens størrelse overgår begrænsningen, som er sat for din server.<br>Kontakt din Document Server-administrator for at få flere oplysninger.",
   "PDFE.Controllers.Main.errorForcedViewMode": "Filen er åbnet i visningstilstand.<br>Enten er filen låst for redigering, eller også tillader dine rettigheder det ikke.",

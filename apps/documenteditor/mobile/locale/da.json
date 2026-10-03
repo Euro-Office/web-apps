@@ -442,7 +442,7 @@
     "errorCompare": "Funktionen Sammenlign dokumenter er ikke tilgængelig under fællesredigering.",
     "errorConnectToServer": "Dokumentet kan ikke gemmes. Kontrollér dine forbindelsesindstillinger, eller kontakt administratoren.<br>Når du klikker på OK, bliver du bedt om at hente dokumentet.",
     "errorCopyDisabled": "Af sikkerhedsgrunde kan indholdet i dette dokument ikke kopieres.",
-    "errorFileNotAssembled": "Filen er åbnet fra en sikkerhedskopi på serveren og er ikke gemt i lageret.<br>Brug 'Gem som...' for at gemme den på et drev.",
+    "errorFileNotAssembled": "Filen er åbnet fra en sikkerhedskopi på serveren og er ikke gemt i lageret.<br>Brug \"Gem som\" for at gemme den på et drev.",
     "errorForcedViewMode": "Filen er åbnet i visningstilstand.<br>Enten er filen låst for redigering, eller også tillader dine rettigheder det ikke.",
     "errorDatabaseConnection": "Ekstern fejl.<br>Fejl i databaseforbindelsen. Kontakt support.",
     "errorDataEncrypted": "Krypterede ændringer er blevet modtaget, men de kan ikke dekrypteres.",

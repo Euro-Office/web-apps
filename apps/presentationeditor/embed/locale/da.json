@@ -17,7 +17,7 @@
   "PE.ApplicationController.errorCopyDisabled": "Af sikkerhedsgrunde kan indholdet af dette dokument ikke kopieres.",
   "PE.ApplicationController.errorDefaultMessage": "Fejlkode: %1",
   "PE.ApplicationController.errorEditingDownloadas": "Der opstod en fejl under arbejdet med dokumentet.<br>Brug 'Hent som' til at gemme en sikkerhedskopi på din computer.",
-  "PE.ApplicationController.errorFileNotAssembled": "Filen er åbnet fra en sikkerhedskopi på serveren og er ikke gemt i lageret.<br>Brug \"Gem som...\" for at gemme den på et drev.",
+  "PE.ApplicationController.errorFileNotAssembled": "Filen er åbnet fra en sikkerhedskopi på serveren og er ikke gemt i lageret.<br>Brug \"Gem som\" for at gemme den på et drev.",
   "PE.ApplicationController.errorFilePassProtect": "Dokumentet er beskyttet af en adgangskode og kunne ikke åbnes.",
   "PE.ApplicationController.errorFileSizeExceed": "Filens størrelse overstiger grænsen, som er sat for din server.<br>Kontakt din Document Server-administrator for at få flere oplysninger.",
   "PE.ApplicationController.errorForcedViewMode": "Filen er åbnet i visningstilstand.<br>Enten er den låst for redigering, eller også giver dine rettigheder ikke adgang til at redigere.",
