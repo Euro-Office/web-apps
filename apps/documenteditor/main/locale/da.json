@@ -928,7 +928,7 @@
   "Common.Views.ReviewChanges.mniMMFromUrl": "Fra URL",
   "Common.Views.ReviewChanges.mniSettings": "Sammenligningsindstillinger",
   "Common.Views.ReviewChanges.strFast": "Hurtig",
-  "Common.Views.ReviewChanges.strFastDesc": "Realtids co-redigering. Alle ændringer bliver gemt automatisk",
+  "Common.Views.ReviewChanges.strFastDesc": "Realtids co-redigering. Alle ændringer bliver gemt automatisk.",
   "Common.Views.ReviewChanges.strStrict": "Striks",
   "Common.Views.ReviewChanges.strStrictDesc": "Brug \"gem\"-knappen for at synkronisere ændringer du og andre laver",
   "Common.Views.ReviewChanges.textEnable": "Aktivér",
