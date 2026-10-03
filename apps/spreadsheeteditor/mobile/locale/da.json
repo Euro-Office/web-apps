@@ -242,7 +242,7 @@
       "warnLicenseBefore": "Licensen er ikke aktiv.<br>Kontakt din administrator.",
       "warnLicenseExp": "Licensen er udløbet. Forny licensen, og genindlæs siden.",
       "warnLicenseLimitedNoAccess": "Licensen er udløbet. Du har ikke adgang til at redigere dokumenter. Kontakt din administrator.",
-      "warnLicenseLimitedRenewed": "Licensen skal fornyes. Du har begrænset adgang til dokumentredigeringsfunktioner.<br>Kontakt din administrator for at få fuld adgang",
+      "warnLicenseLimitedRenewed": "Licensen skal fornyes. Du har begrænset adgang til dokumentredigeringsfunktioner.<br>Kontakt din administrator for at få fuld adgang.",
       "warnNoLicense": "Du har nået grænsen for antal samtidige forbindelser til %1 værktøjer. Dokumentet åbnes for læsning. Kontakt %1 salgsteamet for betingelser for opgradering.",
       "warnNoLicenseUsers": "Du har nået grænsen for brugere af %1-redigeringsværktøj. Kontakt %1-salgsafdelingen for at høre om dine opgraderingsmuligheder.",
       "warnProcessRightsChange": "Du har ikke rettigheder til at redigere filen."
@@ -306,7 +306,7 @@
     "errorFormulaParsing": "Intern fejl under fortolkning af formlen.",
     "errorFrmlMaxLength": "Formlen kan ikke tilføjes, fordi den er længere end det tilladte antal tegn.<br>Ret den, og prøv igen.",
     "errorFrmlMaxReference": "Du kan ikke gemme denne formel da den har for mange værdier,<br>cellehenvisninger og/eller navne.",
-    "errorFrmlMaxTextLength": "Tekstværdier i formler må højst fylde 255 tegn.<br>Brug funktionen CONCATENATE eller sammenkædningsoperatoren (&)",
+    "errorFrmlMaxTextLength": "Tekstværdier i formler må højst fylde 255 tegn.<br>Brug funktionen CONCATENATE eller sammenkædningsoperatoren (&).",
     "errorFrmlWrongReferences": "Funktionen henviser til et ark, der ikke findes.<br>Kontrollér dataene, og prøv igen.",
     "errorFTChangeTableRangeError": "Handlingen kunne ikke gennemføres for det valgte celleområde.<br>Vælg et område, så den første tabelrække er på samme række,<br>og den resulterende tabel overlapper den nuværende.",
     "errorFTRangeIncludedOtherTables": "Handlingen kunne ikke gennemføres for det valgte celleområde.<br>Vælg et område, som ikke indeholder andre tabeller.",

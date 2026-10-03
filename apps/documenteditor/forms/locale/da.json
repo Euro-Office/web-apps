@@ -177,7 +177,7 @@
   "DE.Controllers.ApplicationController.warnLicenseBefore": "Licensen er ikke aktiv.<br>Kontakt din administrator.",
   "DE.Controllers.ApplicationController.warnLicenseExp": "Din licens er udløbet.<br>Opdater din licens, og genindlæs siden.",
   "DE.Controllers.ApplicationController.warnLicenseLimitedNoAccess": "Licens udløbet.<br>Du har ikke adgang til at redigere.<br>Kontakt din administrator.",
-  "DE.Controllers.ApplicationController.warnLicenseLimitedRenewed": "Licens skal fornyes.<br>Du har begrænset adgang til at redigere dokumenter.<br>Kontakt din administrator for at få fuld adgang",
+  "DE.Controllers.ApplicationController.warnLicenseLimitedRenewed": "Licens skal fornyes.<br>Du har begrænset adgang til at redigere dokumenter.<br>Kontakt din administrator for at få fuld adgang.",
   "DE.Controllers.ApplicationController.warnNoLicense": "Du har nået grænsen for antal samtidige forbindelser til %1 værktøjer. Dokumentet åbnes for læsning.<br>Kontakt %1 salgsteamet for betingelser for opgradering.",
   "DE.Controllers.ApplicationController.warnNoLicenseUsers": "Du har nået grænsen for brugere af %1-redigeringsværktøj. Kontakt %1-salgsafdelingen for at høre om dine opgraderingsmuligheder.",
   "DE.Controllers.ApplicationController.warnStartFilling": "Formularen er ved at blive udfyldt.<br>Filen kan ikke redigeres imens.",

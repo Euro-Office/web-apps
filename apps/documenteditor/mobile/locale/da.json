@@ -653,7 +653,7 @@
     "textDialogProtectedEditComments": "Du må kun indsætte kommentarer i dette dokument",
     "textDialogProtectedFillForms": "Du må kun udfylde formularer i dette dokument",
     "textDialogProtectedOnlyView": "Du må kun se dette dokument",
-    "textDocumentProtected": "Dokumentet er beskyttet. Redigeringsindstillinger er ikke tilgængelige",
+    "textDocumentProtected": "Dokumentet er beskyttet. Redigeringsindstillinger er ikke tilgængelige.",
     "textDownloadPdf": "Hent PDF",
     "textGuest": "Gæst",
     "textHasMacros": "Filen indeholder makroer.<br>Ønsker du at køre makroer?",
@@ -682,7 +682,7 @@
     "warnLicenseBefore": "Licensen er ikke aktiv.<br>Kontakt din administrator.",
     "warnLicenseExp": "Licensen er udløbet. Forny licensen, og genindlæs siden.",
     "warnLicenseLimitedNoAccess": "Licensen er udløbet. Du har ikke adgang til at redigere dokumenter. Kontakt din administrator.",
-    "warnLicenseLimitedRenewed": "Licensen skal fornyes. Du har begrænset adgang til dokumentredigeringsfunktioner.<br>Kontakt din administrator for at få fuld adgang",
+    "warnLicenseLimitedRenewed": "Licensen skal fornyes. Du har begrænset adgang til dokumentredigeringsfunktioner.<br>Kontakt din administrator for at få fuld adgang.",
     "warnNoLicense": "Du har nået grænsen for antal samtidige forbindelser til %1 værktøjer. Dokumentet åbnes for læsning. Kontakt %1 salgsteamet for betingelser for opgradering.",
     "warnNoLicenseUsers": "Du har nået grænsen for brugere af %1-redigeringsværktøj. Kontakt %1-salgsafdelingen for at høre om dine opgraderingsmuligheder.",
     "warnProcessRightsChange": "Du har ikke rettigheder til at redigere denne fil."
