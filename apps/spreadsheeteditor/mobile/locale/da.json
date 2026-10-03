@@ -97,7 +97,7 @@
       "errorOpensource": "I den gratis Community-udgave kan dokumenter kun åbnes til visning. Adgang til mobileditorerne kræver en kommerciel licens.",
       "errorServerVersion": "Programmet er blevet opdateret. Siden genindlæses for at anvende ændringerne.",
       "errorUpdateVersion": "Filversionen er blevet ændret. Siden genindlæses.",
-      "leavePageText": "Du har ændringer i dokumentet, der ikke er gemt. Klik på 'Bliv på siden' for at vente på automatisk lagring. Klik på 'Forlad siden' for at kassere ændringerne.",
+      "leavePageText": "Du har ændringer i dokumentet, der ikke er gemt. Klik på \"Bliv på siden\" for at vente på automatisk lagring. Klik på \"Forlad siden\" for at kassere ændringerne.",
       "notcriticalErrorTitle": "Advarsel",
       "SDK": {
         "%1 of %2": "%1 af %2",
@@ -300,7 +300,7 @@
     "errorFileSizeExceed": "Filens størrelse overskrider serverens grænse.<br>Kontakt din administrator for at høre nærmere.",
     "errorFileVKey": "Ekstern fejl.<br>Forkert sikkerhedsnøgle. Kontakt support.",
     "errorFillRange": "Det valgte celleområde kunne ikke udfyldes.<br>Alle flettede celler skal have samme størrelse.",
-    "errorForceSave": "Filen kunne ikke gemmes. Brug 'Hent som' til at gemme den lokalt, eller prøv igen senere.",
+    "errorForceSave": "Filen kunne ikke gemmes. Brug \"Hent som\" til at gemme den lokalt, eller prøv igen senere.",
     "errorFormulaInPivotFieldName": "Der kan ikke indtastes en formel for et element- eller feltnavn i en pivottabelrapport.",
     "errorFormulaName": "En fejl i formlen.<br>Forkert formelnavn.",
     "errorFormulaParsing": "Intern fejl under fortolkning af formlen.",
@@ -457,7 +457,7 @@
   },
   "Toolbar": {
     "btnRestartNow": "Genstart nu",
-    "dlgLeaveMsgText": "Du har ændringer i dokumentet, der ikke er gemt. Klik på 'Bliv på siden' for at vente på automatisk lagring. Klik på 'Forlad siden' for at kassere ændringerne.",
+    "dlgLeaveMsgText": "Du har ændringer i dokumentet, der ikke er gemt. Klik på \"Bliv på siden\" for at vente på automatisk lagring. Klik på \"Forlad siden\" for at kassere ændringerne.",
     "dlgLeaveTitleText": "Du forlader appen",
     "leaveButtonText": "Forlad siden",
     "stayButtonText": "Bliv på siden",

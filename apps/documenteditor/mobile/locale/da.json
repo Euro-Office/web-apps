@@ -454,7 +454,7 @@
     "errorEmptyTOC": "Markér teksten, og vælg en overskriftstypografi i typografigalleriet. Derefter kan du oprette indholdsfortegnelsen.",
     "errorFilePassProtect": "Filen er beskyttet med en adgangskode og kunne ikke åbnes.",
     "errorFileSizeExceed": "Filens størrelse overskrider serverens grænse.<br>Kontakt din administrator.",
-    "errorForceSave": "Filen kunne ikke gemmes. Brug 'Hent som' til at gemme den lokalt, eller prøv igen senere.",
+    "errorForceSave": "Filen kunne ikke gemmes. Brug \"Hent som\" til at gemme den lokalt, eller prøv igen senere.",
     "errorInconsistentExt": "Der opstod en fejl under åbning af filen.<br>Filens indhold svarer ikke til filtypen.",
     "errorInconsistentExtDocx": "Der opstod en fejl under åbning af filen.<br>Filens indhold svarer til tekstdokumenter (fx docx), men filen har den uoverensstemmende filtype: %1.",
     "errorInconsistentExtPdf": "Der opstod en fejl under åbning af filen.<br>Filens indhold svarer til et af følgende formater: pdf/djvu/xps/oxps, men filen har den uoverensstemmende filtype: %1.",
@@ -543,7 +543,7 @@
     "errorOpensource": "I den gratis Community-udgave kan dokumenter kun åbnes til visning. Adgang til mobileditorerne kræver en kommerciel licens.",
     "errorServerVersion": "Programmet er blevet opdateret. Siden genindlæses for at anvende ændringerne.",
     "errorUpdateVersion": "Filversionen er blevet ændret. Siden genindlæses.",
-    "leavePageText": "Du har ændringer, der ikke er gemt. Klik på 'Bliv på siden' for at vente på automatisk lagring. Klik på 'Forlad siden' for at kassere ændringerne.",
+    "leavePageText": "Du har ændringer, der ikke er gemt. Klik på \"Bliv på siden\" for at vente på automatisk lagring. Klik på \"Forlad siden\" for at kassere ændringerne.",
     "notcriticalErrorTitle": "Advarsel",
     "SDK": {
       " -Section ": " -Sektion ",
@@ -832,7 +832,7 @@
   "Toolbar": {
     "btnRestartNow": "Genstart nu",
     "btnSend": "Send",
-    "dlgLeaveMsgText": "Du har ændringer, der ikke er gemt. Klik på 'Bliv på siden' for at vente på automatisk lagring. Klik på 'Forlad siden' for at kassere ændringerne.",
+    "dlgLeaveMsgText": "Du har ændringer, der ikke er gemt. Klik på \"Bliv på siden\" for at vente på automatisk lagring. Klik på \"Forlad siden\" for at kassere ændringerne.",
     "dlgLeaveTitleText": "Du forlader appen",
     "leaveButtonText": "Forlad siden",
     "stayButtonText": "Bliv på siden",
