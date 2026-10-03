@@ -1307,7 +1307,7 @@
   "PDFE.Controllers.LeftMenu.warnDownloadAs": "Hvis du fortsætter med at gemme i dette format, vil alle funktioner på nær teksten blive tabt.<br>Er du sikker på at du vil fortsætte?",
   "PDFE.Controllers.LeftMenu.warnDownloadAsPdf": "Din {0} vil blive konverteret til et formater, der kan redigeres. Dette kan tage et stykke tid. Det endelige dokument vil blive optimeret til at give dig mulighed for at redigere teksten, hvorfor den ikke nødvendigviser ligner den originale {0}. Dette er specielt, hvis den originale fil indeholder masser af grafik.",
   "PDFE.Controllers.LeftMenu.warnDownloadAsRTF": "Hvis du fortsætter med at gemme i dette format, kan noget af den nuværende formatering gå tabt.<br>Er du sikker på at du vil fortsætte?",
-  "PDFE.Controllers.Main.applyChangesTextText": "Indlæser ændringerne",
+  "PDFE.Controllers.Main.applyChangesTextText": "Indlæser ændringerne...",
   "PDFE.Controllers.Main.applyChangesTitleText": "Indlæser ændringerne",
   "PDFE.Controllers.Main.confirmMaxChangesSize": "Handlingerne fylder mere, end serveren tillader.<br>Tryk på \"Fortryd\" for at annullere din sidste handling, eller tryk på \"Fortsæt\" for at beholde den lokalt. Du skal så hente filen eller kopiere indholdet for at sikre, at intet går tabt.",
   "PDFE.Controllers.Main.convertationTimeoutText": "Konverteringstidsfrist er overskredet",
