@@ -1332,7 +1332,7 @@
   "PDFE.Controllers.Main.errorDefaultMessage": "Fejlkode: %1",
   "PDFE.Controllers.Main.errorDirectUrl": "Bekræft linket til dokumentet.<br>Dette link skal være et direkte link til filen til hent.",
   "PDFE.Controllers.Main.errorEditingDownloadas": "Der opstod en fejl under arbejdet med dokumentet.<br>Brug \"Hent som\" til at gemme en sikkerhedskopi på din computer.",
-  "PDFE.Controllers.Main.errorEditingSaveas": "Der opstod en fejl under arbejdet med dokumentet.<br>Brug \"gem som...\" valgmuligheden for at gemme en sikkerhedsversion til din computers harddisk.",
+  "PDFE.Controllers.Main.errorEditingSaveas": "Der opstod en fejl under arbejdet med dokumentet.<br>Brug \"Gem som\" til at gemme en sikkerhedskopi på din computers harddisk.",
   "PDFE.Controllers.Main.errorEmailClient": "Ingen e-mail klient fundet.",
   "PDFE.Controllers.Main.errorFileNotAssembled": "Filen er åbnet fra en sikkerhedskopi på serveren og er ikke gemt i lageret.<br>Brug \"Gem som\" for at gemme den på et drev.",
   "PDFE.Controllers.Main.errorFilePassProtect": "Dokumentet er beskyttet af en adgangskode og kunne ikke åbnes.",
