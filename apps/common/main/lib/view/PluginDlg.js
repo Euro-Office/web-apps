@@ -65,6 +65,7 @@ define([], function () {
             this.loader = (options.loader!==undefined) ? options.loader : true;
             this.frameId = options.frameId || 'plugin_iframe';
             this.guid = options.guid;
+            this.allowLocalNetworkAccess = !!options.allowLocalNetworkAccess;
             Common.UI.Window.prototype.initialize.call(this, _options);
         },
 
@@ -96,7 +97,7 @@ define([], function () {
             iframe.align        = "top";
             iframe.frameBorder  = 0;
             iframe.scrolling    = "no";
-            iframe.allow = "camera; microphone; display-capture; local-network-access; loopback-network";
+            iframe.allow = "camera; microphone; display-capture" + (this.allowLocalNetworkAccess ? "; local-network-access; loopback-network" : "");
             iframe.onload       = _.bind(this._onLoad,this);
 
             var me = this;

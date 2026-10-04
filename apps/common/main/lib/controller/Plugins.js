@@ -178,6 +178,11 @@ define([
             });
         },
 
+        isLocalNetworkAccessAllowed: function() {
+            // operator opt-in via server config security.allowLocalNetworkAccessIframes
+            return !!(this.api && this.api.asc_isLocalNetworkAccessAllowed && this.api.asc_isLocalNetworkAccessAllowed());
+        },
+
         setApi: function(api) {
             this.api = api;
 
@@ -642,6 +647,7 @@ define([
             var $panel = $('<div id="panel-plugins-' + name + '" class="plugin-panel' + (menu !== 'right' ? ' content-box' : '') + '" style="height: 100%;"></div>');
             this.viewPlugins.fireEvent(menu === 'right' ? 'plugins:addtoright' : 'plugins:addtoleft', [button, $button, $panel]);
             this.viewPlugins.pluginPanels[pluginGuid] = new Common.Views.PluginPanel({
+                allowLocalNetworkAccess: this.isLocalNetworkAccessAllowed(),
                 el: '#panel-plugins-' + name,
                 menu: menu,
                 sideMenuButton: button,
@@ -677,6 +683,7 @@ define([
 
                 var help = variation.get_Help();
                 me.pluginDlg = new Common.Views.PluginDlg({
+                    allowLocalNetworkAccess: me.isLocalNetworkAccessAllowed(),
                     guid: plugin.get_Guid(),
                     cls: isCustomWindow ? 'plain' : '',
                     header: !isCustomWindow,
@@ -1186,6 +1193,7 @@ define([
 
             var help = variation.help;
             me.customPluginsDlg[frameId] = new Common.Views.PluginDlg({
+                allowLocalNetworkAccess: me.isLocalNetworkAccessAllowed(),
                 cls: (isCustomWindow ? 'plain' : '') + (variation.transparent ? ' ' + 'no-background' : ''),
                 header: !isCustomWindow,
                 title: Common.Utils.String.htmlEncode(description),
@@ -1339,6 +1347,7 @@ define([
             var $panel = $('<div id="panel-plugins-' + frameId + '" class="plugin-panel' + (menu !== 'right' ? ' content-box' : '') + '" style="height: 100%;"></div>');
             this.viewPlugins.fireEvent(menu === 'right' ? 'plugins:addtoright' : 'plugins:addtoleft', [button, $button, $panel]);
             this.viewPlugins.customPluginPanels[frameId] = new Common.Views.PluginPanel({
+                allowLocalNetworkAccess: this.isLocalNetworkAccessAllowed(),
                 el: '#panel-plugins-' + frameId,
                 menu: menu,
                 frameId: frameId,
