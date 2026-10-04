@@ -1291,7 +1291,7 @@
         // local-network-access is always delegated here; it only takes effect if the plugin
         // iframes inside the editor delegate it too, which requires the server-side
         // security.allowLocalNetworkAccessIframes flag
-        iframe.setAttribute("allow", "autoplay; camera; microphone; display-capture; clipboard-write; local-network-access; loopback-network;");
+        iframe.setAttribute("allow", "autoplay; camera; microphone; display-capture; clipboard-write; local-network; loopback-network; local-network-access;");
 
 		if (config.type == "mobile")
 		{

@@ -97,7 +97,7 @@ define([], function () {
             iframe.align        = "top";
             iframe.frameBorder  = 0;
             iframe.scrolling    = "no";
-            iframe.allow = "camera; microphone; display-capture" + (this.allowLocalNetworkAccess ? "; local-network-access; loopback-network" : "");
+            iframe.allow = "camera; microphone; display-capture" + (this.allowLocalNetworkAccess ? "; local-network; loopback-network; local-network-access" : "");
             iframe.onload       = _.bind(this._onLoad,this);
 
             var me = this;
