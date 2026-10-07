@@ -180,7 +180,10 @@ define([
                 '<img src="<%= iconImg %>">' +
             '<% } else { %>' +
                 '<% var iconMatch = /btn-[^\\s]+/.exec(iconCls); ' +
-                'if (iconMatch) {' +
+                'var svgMatch = /svgicon\\s(\\S+)/.exec(iconCls); ' +
+                'if (svgMatch || /svgicon/.test(iconCls)) {' +
+                    'print(\'<svg class=\"icon uni-scale\"><use class=\"zoom-int\" href=\"#\' + (svgMatch ? svgMatch[1] : \'\') + \'\"></use></svg>\');' +
+                '} else if (iconMatch) {' +
                     'print(\'<svg class=\"icon uni-scale\"><use href=\"#\' + iconMatch[0] + \'\"></use></svg>\');' +
                 '} else ' +
                     'print(\'<i class=\"icon \' + iconCls + \'\">&nbsp;</i>\'); %>' +
@@ -284,7 +287,10 @@ define([
                 // SVG sprite approach - uses <svg><use href="#id"> for dark mode support
                 '<% if (iconCls != "") { ' +
                     'var iconMatch = /btn-[^\\s]+/.exec(iconCls); ' +
-                    'if (iconMatch) {' +
+                    'var svgMatch = /svgicon\\s(\\S+)/.exec(iconCls); ' +
+                    'if (svgMatch || /svgicon/.test(iconCls)) {' +
+                        'print(\'<svg class=\"icon uni-scale\"><use class=\"zoom-int\" href=\"#\' + (svgMatch ? svgMatch[1] : \'\') + \'\"></use></svg>\');' +
+                    '} else if (iconMatch) {' +
                         'print(\'<svg class=\"icon uni-scale\"><use href=\"#\' + iconMatch[0] + \'\"></use></svg>\');' +
                     '} else ' +
                         'print(\'<i class=\"icon \' + iconCls + \'\">&nbsp;</i>\'); ' +
