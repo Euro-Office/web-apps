@@ -1,0 +1,144 @@
+{
+    "About": {
+        "textAbout": "Rakenduse teave",
+        "textAddress": "Aadress",
+        "textBack": "Tagasi",
+        "textEditor": "Diagrammide kuvaja",
+        "textEmail": "E-post",
+        "textPoweredBy": "Kasutusel on",
+        "textTel": "Tel",
+        "textVersion": "Versioon"
+    },
+    "Common": {
+        "Collaboration": {
+            "notcriticalErrorTitle": "Hoiatus",
+            "textBack": "Tagasi",
+            "textCancel": "Katkesta",
+            "textCollaboration": "Ühistöö",
+            "textEditUser": "Kasutajad, kes on seda faili muutmas:",
+            "textOk": "Sobib",
+            "textSharingSettings": "Jagamise seadistused",
+            "textUsers": "Kasutajad"
+        },
+        "Themes": {
+            "dark": "Tume kujundus",
+            "light": "Hele kujundus",
+            "system": "Süsteemi kujundus",
+            "textTheme": "Kujundus"
+        }
+    },
+    "ContextMenu": {
+        "menuCancel": "Katkesta",
+        "textOk": "Sobib",
+        "txtWarnUrl": "Sellel lingil klõpsimine võib olla ohtlik sinu seadmele ja andmetele. See asukoht/aadress võib olla ebaturvaline:<br>{0}<br>Kas oled kindel, et soovid jätkata?"
+    },
+    "Controller": {
+        "Main": {
+            "advDRMOptions": "Kaitstud fail",
+            "advDRMPassword": "Salasõna",
+            "closeButtonText": "Sulge fail",
+            "criticalErrorTitle": "Viga",
+            "errorAccessDeny": "Sa proovid teha toimingut, milleks sul pole õigusi.<br>Palun võta ühendust oma süsteemi haldajaga või peakasutajaga.",
+            "errorOpensource": "Tasuta kogukonnaversiooni kasutamisel sa võid dokumente avada vaid vaatamiseks. Nutiseadmest muutmisvaate kasutamine eeldab ärilitsentsi olemasolu.",
+            "notcriticalErrorTitle": "Hoiatus",
+            "textYes": "Jah",
+            "textAnonymous": "Anonüümne",
+            "warnLicenseAnonymous": "Ligipääs on anonüümsetele kasutajatele keelatud.<br>See dokument avatakse vaid lugemisvaates.",
+            "textGuest": "Külaline",
+            "titleLicenseExp": "Litsents on aegunud",
+            "titleLicenseNotActive": "Litsents pole aktiivne",
+            "warnLicenseBefore": "Litsents pole aktiivne.<br>Palun võta ühendust oma süsteemihaldajaga või peakasutajaga.",
+            "textClose": "Sulge",
+            "errorUpdateVersion": "Selle faili versioon on muutunud. Leht laaditakse uuesti.",
+            "errorServerVersion": "Muutmisvaate versioon on uuenenud. Muudatuste rakendamiseks laaditakse leht uuesti.",
+            "textBuyNow": "Vaata veebisaiti",
+            "textContactUs": "Võta ühendust müügiosakonaga",
+            "textNo": "Ei",
+            "textNoLicenseTitle": "Litsentsi kasutajate piir on käes",
+            "textOk": "Sobib",
+            "textOpenFile": "Selle faili avamiseks sisesta salasõna",
+            "textPaidFeature": "Tasuline funktsionaalsus",
+            "leavePageText": "Sul on selles dokumendis salvestamata muudatusi. Kui kõpsad „Jää sellele lehele“, siis mingil hetkel käivitub automaatne salvestamine. Kui klõpsad „Lahku siit lehelt“, siis loobud kõikidest salvestamata muudatustest.",
+            "textCustomLoader": "Vabandust, sul pole õigust muuta laadijat. Hinnapakkumise saamiseks võta palun ühendust meie müügiosakonnaga.",
+            "warnProcessRightsChange": "Sul pole õigust muuda seda faili."
+        }
+    },
+    "Error": {
+        "errorUpdateVersionOnDisconnect": "Ühendus on taastunud ja faili versioon on muutunud.<br>Enne, kui saad tööd jätkata ja tagada, et mitte midagi ei lähe kaotsi, pead laadima faili alla või kopeerima tema sisu ning seejärel laadima selle lehe.",
+        "errorUserDrop": "See fail pole hetkel ligipääsetav.",
+        "notcriticalErrorTitle": "Hoiatus",
+        "unknownErrorText": "Tundmatu viga.",
+        "criticalErrorExtTextClose": "Muutmisvaate sulgemiseks klõpsa „Sobib“.",
+        "convertationTimeoutText": "Teisendamise aegumise ülempiir on käes.",
+        "criticalErrorExtText": "Klõpsates „Sobib“ lähed tagasi dokumentide loendisse.",
+        "criticalErrorTitle": "Viga",
+        "downloadErrorText": "Allalaadimine ei õnnestunud.",
+        "errorAccessDeny": "Sa proovid teha toimingut, milleks sul pole õigusi.<br>Palun võta ühendust oma süsteemi haldajaga või peakasutajaga.",
+        "errorBadImageUrl": "Pildi võrguaadress pole korrektne",
+        "openErrorText": "Selle faili avamisel tekkis viga",
+        "saveErrorText": "Selle faili salvestamisel tekkis viga",
+        "scriptLoadError": "Võrguühendus on liiga aeglane ja mõnede komponentide laadimine ei õnnestunud. Palun laadi kogu leht uuesti.",
+        "textOk": "Sobib",
+        "uploadImageExtMessage": "Tundmatu pildivorming.",
+        "uploadImageFileCountMessage": "Ühtegi pilti pole üleslaaditud.",
+        "uploadImageSizeMessage": "See pilt on liiga suur. Mahu lubatud ülempiir on 25 MB."
+    },
+    "View": {
+        "Edit": {
+            "notcriticalErrorTitle": "Hoiatus",
+            "textCancel": "Katkesta",
+            "textInvalidName": "Failinimes ei tohi leiduda järgnevaid tähemärke: ",
+            "textOk": "Sobib"
+        },
+        "Settings": {
+            "notcriticalErrorTitle": "Hoiatus",
+            "textClose": "Sulge",
+            "textAbout": "Teave",
+            "textAddress": "aadress:",
+            "textApplication": "Rakendus",
+            "textApplicationSettings": "Rakenduse seadistused",
+            "textAuthor": "Autor",
+            "textBack": "Tagasi"
+        }
+    },
+    "LongActions": {
+        "waitText": "Palun oota...",
+        "loadingDocumentTextText": "Laadin dokumenti…",
+        "downloadTextText": "Laadin dokumenti alla...",
+        "downloadTitleText": "Laadin dokumenti alla",
+        "applyChangesTextText": "Laadin andmeid…",
+        "applyChangesTitleText": "Laadin andmeid",
+        "loadFontsTextText": "Laadin andmeid…",
+        "loadFontsTitleText": "Laadin andmeid",
+        "loadFontTextText": "Laadin andmeid…",
+        "loadFontTitleText": "Laadin andmeid",
+        "loadImagesTextText": "Laadin pilte…",
+        "loadImagesTitleText": "Laadin pilte",
+        "loadImageTextText": "Laadin pilti…",
+        "loadImageTitleText": "Laadin pilti",
+        "loadingDocumentTitleText": "Laadin",
+        "loadThemeTextText": "Laadin kujundust…",
+        "loadThemeTitleText": "Laadin kujundust",
+        "openTextText": "Avan dokumenti…",
+        "openTitleText": "Avan dokumenti",
+        "printTextText": "Prindin dokumenti…",
+        "printTitleText": "Prindin dokumenti",
+        "savePreparingText": "Valmistun salvestama",
+        "savePreparingTitle": "Valmistun salvestama. Palun oota…",
+        "saveTextText": "Salvestan dokumenti…",
+        "saveTitleText": "Salvestan dokumenti",
+        "textLoadingDocument": "Laadin",
+        "txtEditingMode": "Seadistan muutmisrežiimi…",
+        "uploadImageTextText": "Laadin pilti üles…",
+        "uploadImageTitleText": "Laadin pilti üles"
+    },
+    "Toolbar": {
+        "btnRestartNow": "Taaskäivita kohe",
+        "dlgLeaveMsgText": "Sul on selles dokumendis salvestamata muudatusi. Kui kõpsad „Jää sellele lehele“, siis mingil hetkel käivitub automaatne salvestamine. Kui klõpsad „Lahku siit lehelt“, siis loobud kõikidest salvestamata muudatustest.",
+        "dlgLeaveTitleText": "Sa oled lahkumas rakendusest",
+        "leaveButtonText": "Lahku sellelt lehelt",
+        "stayButtonText": "Jää sellele lehele",
+        "textEnterNewFileName": "Sisesta uus failinimi",
+        "textRenameFile": "Muuda faili nime"
+    }
+}
