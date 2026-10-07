@@ -389,7 +389,7 @@ define([
                             { iconname: 'btn-page-number-bottom-center', data: { type: c_pageNumPosition.PAGE_NUM_POSITION_BOTTOM, subtype: c_pageNumPosition.PAGE_NUM_POSITION_CENTER } },
                             { iconname: 'btn-page-number-bottom-right', data: { type: c_pageNumPosition.PAGE_NUM_POSITION_BOTTOM, subtype: c_pageNumPosition.PAGE_NUM_POSITION_RIGHT } }
                         ]),
-                        itemTemplate: _.template('<div id="<%= id %>" class="item-pagenumber options__icon options__icon-huge <%= iconname %>"></div>')
+                        itemTemplate: _.template('<div id="<%= id %>" class="item-pagenumber"><svg class="icon uni-scale options__icon" style="width: 40px; height: 40px;"><use href="#<%= iconname %>"></use></svg></div>')
                     }).on('item:click', function (picker, item, record, e) {
                         me.fireEvent('headerfooter:pospick', [picker, item, record, e]);
                     });
