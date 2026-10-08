@@ -136,7 +136,8 @@ require([
             // 'Search',
             'Common.Controllers.Chat',
             'Common.Controllers.Plugins',
-            'Common.Controllers.Shortcuts'
+            'Common.Controllers.Shortcuts',
+            'Common.Controllers.ZenMode'
         ]
     });
 
@@ -162,7 +163,8 @@ require([
                 'common/main/lib/util/utils',
                 'common/main/lib/controller/Chat',
                 'common/main/lib/controller/Plugins',
-                'common/main/lib/controller/Shortcuts'
+                'common/main/lib/controller/Shortcuts',
+                'common/main/lib/controller/ZenMode'
             ], function() {
                 const code_path = 'visioeditor/main/code';
                 app.postLaunchScripts = [

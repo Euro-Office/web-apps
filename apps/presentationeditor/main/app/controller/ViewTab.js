@@ -114,7 +114,8 @@ define([
                     'macros:record':  _.bind(this.onClickMacrosRec, this),
                     'macros:pause':  _.bind(this.onClickMacrosPause, this),
                     'pointer:select': _.bind(this.onPointerType, this, 'select'),
-                    'pointer:hand': _.bind(this.onPointerType, this, 'hand')
+                    'pointer:hand': _.bind(this.onPointerType, this, 'hand'),
+                    'zenmode:request': _.bind(this.onChangeZenMode, this)
                 },
                 'Toolbar': {
                     'view:compact': _.bind(function (toolbar, state) {
@@ -470,6 +471,10 @@ define([
                 this.api.asc_setViewerTargetType(type);
                 Common.NotificationCenter.trigger('edit:complete', this.view);
             }
+        },
+
+        onChangeZenMode: function (active) {
+            Common.NotificationCenter.trigger('zenmode:request', active);
         },
 
         onTabStyleChange: function () {
