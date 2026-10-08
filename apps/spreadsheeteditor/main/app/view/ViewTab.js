@@ -63,6 +63,9 @@ define([
                     '<span class="btn-slot text font-size-normal" id="slot-lbl-zoom" style="text-align: center;margin-top: 4px;"></span>' +
                 '</div>' +
             '</div>' +
+            '<div class="group zenmode">' +
+                '<span class="btn-slot text" id="slot-btn-zenmode" style="text-align: center;"></span>' +
+            '</div>' +
             '<div class="separator long"></div>' +
             '<div class="group">' +
                 '<span class="btn-slot text x-huge" id="slot-btn-interface-theme"></span>' +
@@ -137,6 +140,9 @@ define([
                     me.fireEvent('viewtab:freeze', [item.value]);
                 }
             });
+            me.btnZenMode.on('click', _.bind(function (e) {
+                me.fireEvent('zenmode:request', [true]);
+            }, me));
             this.chFormula.on('change', function (field, value) {
                 me.fireEvent('viewtab:formula', [0, value=='checked']);
             });
@@ -384,6 +390,17 @@ define([
                 });
                 this.lockedControls.push(this.btnInterfaceTheme);
 
+                this.btnZenMode = new Common.UI.Button({
+                    cls: 'btn-toolbar x-huge icon-top',
+                    iconCls: 'toolbar__icon btn-fullscreen',
+                    lock: [_set.lostConnect, _set.disableOnStart],
+                    caption: this.textZenMode,
+                    dataHint: '1',
+                    dataHintDirection: 'bottom',
+                    dataHintOffset: 'small'
+                });
+                this.lockedControls.push(this.btnZenMode);
+
                 this.chFormula = new Common.UI.CheckBox({
                     labelText: this.textFormula,
                     value: !Common.localStorage.getBool('sse-hidden-formula'),
@@ -454,6 +471,7 @@ define([
                 this.cmbZoom.setValue(100);
                 $host.find('#slot-lbl-zoom').text(this.textZoom);
                 this.btnInterfaceTheme.render($host.find('#slot-btn-interface-theme'));
+                this.btnZenMode.render($host.find('#slot-btn-zenmode'));
                 this.chFormula.render($host.find('#slot-chk-formula'));
                 this.chStatusbar.render($host.find('#slot-chk-statusbar'));
                 this.chToolbar.render($host.find('#slot-chk-toolbar'));
@@ -490,6 +508,7 @@ define([
                     }
                     me.btnMacros && me.btnMacros.updateHint(me.tipMacros);
                     me.btnInterfaceTheme.updateHint(me.tipInterfaceTheme);
+                    me.btnZenMode.updateHint(me.tipZenMode);
                     me.btnRecMacro && me.btnRecMacro.updateHint(me.tipRecMacro);
                     me.btnPauseMacro && me.btnPauseMacro.updateHint(me.tipPauseMacro);
 
@@ -734,8 +753,10 @@ define([
             textCombineSheetAndStatusBars: 'Combine sheet and status bars',
             textAlwaysShowToolbar: 'Always show toolbar',
             textInterfaceTheme: 'Interface theme',
+            textZenMode: 'Zen Mode',
             textShowFrozenPanesShadow: 'Show frozen panes shadow',
             tipInterfaceTheme: 'Interface theme',
+            tipZenMode: 'Zen Mode',
             textLeftMenu: 'Left panel',
             textRightMenu: 'Right panel',
             txtViewNormal: 'Normal',
