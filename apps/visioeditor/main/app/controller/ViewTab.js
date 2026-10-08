@@ -81,7 +81,8 @@ define([
                     'zoom:changedbefore': _.bind(this.onZoomChanged, this),
                     'zoom:changedafter': _.bind(this.onZoomChanged, this),
                     'zoom:toslide': _.bind(this.onBtnZoomTo, this, 'toslide'),
-                    'zoom:towidth': _.bind(this.onBtnZoomTo, this, 'towidth')
+                    'zoom:towidth': _.bind(this.onBtnZoomTo, this, 'towidth'),
+                    'zenmode:request': _.bind(this.onChangeZenMode, this)
                 },
                 'Toolbar': {
                     'view:compact': _.bind(function (toolbar, state) {
@@ -192,6 +193,10 @@ define([
                     item.setChecked(Common.Utils.InternalSettings.get("settings-tab-style")===item.value, true);
                 });
             }
+        },
+
+        onChangeZenMode: function (active) {
+            Common.NotificationCenter.trigger('zenmode:request', active);
         }
 
     }, VE.Controllers.ViewTab || {}));

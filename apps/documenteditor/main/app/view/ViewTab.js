@@ -73,6 +73,9 @@ define([
                     '<span class="btn-slot text" id="slot-btn-pageless" style="text-align: center;"></span>' +
                 '</div>' +
             '</div>' +
+            '<div class="group zenmode">' +
+                '<span class="btn-slot text" id="slot-btn-zenmode" style="text-align: center;"></span>' +
+            '</div>' +
             '<div class="separator long"></div>' +
             '<div class="group">' +
                 '<span class="btn-slot text x-huge" id="slot-btn-interface-theme"></span>' +
@@ -151,6 +154,9 @@ define([
                 }, me));
                 me.btnDarkDocument.on('click', _.bind(function (e) {
                     me.fireEvent('darkmode:change', [e.pressed]);
+                }, me));
+                me.btnZenMode.on('click', _.bind(function (e) {
+                    me.fireEvent('zenmode:request', [true]);
                 }, me));
                 me.btnMultiplePages.on('click', _.bind(function (e) {
                     me.fireEvent('pages:multiple', [e.pressed]);
@@ -303,6 +309,17 @@ define([
                     dataHintOffset: 'small'
                 });
                 this.lockedControls.push(this.chRulers);
+
+                this.btnZenMode = new Common.UI.Button({
+                    cls: 'btn-toolbar x-huge icon-top',
+                    iconCls: 'toolbar__icon btn-fullscreen',
+                    lock: [_set.lostConnect, _set.disableOnStart],
+                    caption: this.textZenMode,
+                    dataHint: '1',
+                    dataHintDirection: 'bottom',
+                    dataHintOffset: 'small'
+                });
+                this.lockedControls.push(this.btnZenMode);
 
                 this.btnMultiplePages = new Common.UI.Button({
                     cls: 'btn-toolbar',
@@ -462,6 +479,7 @@ define([
                 this.chStatusbar.render($host.find('#slot-chk-statusbar'));
                 this.chToolbar.render($host.find('#slot-chk-toolbar'));
                 this.chRulers.render($host.find('#slot-chk-rulers'));
+                this.btnZenMode.render($host.find('#slot-btn-zenmode'));
                 this.btnMacros && this.btnMacros.render($host.find('#slot-btn-macros'));
                 this.chLeftMenu.render($host.find('#slot-chk-leftmenu'));
                 this.chRightMenu.render($host.find('#slot-chk-rightmenu'));
@@ -495,6 +513,7 @@ define([
                 this.btnDarkDocument.updateHint(this.tipDarkDocument);
                 this.btnMultiplePages.updateHint(this.tipMultiplePages);
                 this.btnPageless.updateHint(this.tipPageless);
+                this.btnZenMode.updateHint(this.tipZenMode);
                 this.btnZoom100.updateHint(this.tipZoom100);
                 this.btnsFitToPage.forEach(function (btn) {
                     btn.updateHint(me.tipFitToPage);
@@ -577,7 +596,9 @@ define([
             textFill: 'Fill',
             textLine: 'Line',
             textMacros: 'Macros',
-            tipMacros: 'Macros'
+            tipMacros: 'Macros',
+            textZenMode: 'Zen Mode',
+            tipZenMode: 'Zen Mode'
         }
     }()), DE.Views.ViewTab || {}));
 });

@@ -59,6 +59,9 @@ define([
                     '<span class="btn-slot text slot-btn-ftw" style="text-align: center;"></span>' +
                 '</div>' +
             '</div>' +
+            '<div class="group zenmode">' +
+                '<span class="btn-slot text" id="slot-btn-zenmode" style="text-align: center;"></span>' +
+            '</div>' +
             '<div class="separator long"></div>' +
             '<div class="group">' +
                 '<span class="btn-slot text x-huge" id="slot-btn-interface-theme"></span>' +
@@ -117,6 +120,9 @@ define([
                 }, me));
                 me.btnDarkDocument.on('click', _.bind(function (e) {
                     me.fireEvent('darkmode:change', [e.pressed]);
+                }, me));
+                me.btnZenMode.on('click', _.bind(function (e) {
+                    me.fireEvent('zenmode:request', [true]);
                 }, me));
                 me.cmbsZoom.forEach(function (cmb) {
                     cmb.on('combo:focusin', _.bind(me.onComboOpen, this, false));
@@ -192,6 +198,17 @@ define([
                     action: 'interface-theme'
                 });
                 this.lockedControls.push(this.btnInterfaceTheme);
+
+                this.btnZenMode = new Common.UI.Button({
+                    cls: 'btn-toolbar x-huge icon-top',
+                    iconCls: 'toolbar__icon btn-fullscreen',
+                    lock: [_set.lostConnect, _set.disableOnStart],
+                    caption: this.textZenMode,
+                    dataHint: '1',
+                    dataHintDirection: 'bottom',
+                    dataHintOffset: 'small'
+                });
+                this.lockedControls.push(this.btnZenMode);
 
                 this.btnDarkDocument = new Common.UI.Button({
                     cls: 'btn-toolbar x-huge icon-top',
@@ -307,6 +324,7 @@ define([
                 this.btnsFitToPage[0].render($host.find('.slot-btn-ftp'));
                 this.btnsFitToWidth[0].render($host.find('.slot-btn-ftw'));
                 this.btnInterfaceTheme.render($host.find('#slot-btn-interface-theme'));
+                this.btnZenMode.render($host.find('#slot-btn-zenmode'));
                 this.btnDarkDocument.render($host.find('#slot-btn-dark-document'));
                 this.chStatusbar.render($host.find('#slot-chk-statusbar'));
                 this.chToolbar.render($host.find('#slot-chk-toolbar'));
@@ -335,6 +353,7 @@ define([
                 var me = this;
                 this.btnNavigation && this.btnNavigation.updateHint(this.tipHeadings);
                 this.btnInterfaceTheme.updateHint(this.tipInterfaceTheme);
+                this.btnZenMode.updateHint(this.tipZenMode);
                 this.btnDarkDocument.updateHint(this.tipDarkDocument);
                 this.btnsFitToPage.forEach(function (btn) {
                     btn.updateHint(me.tipFitToPage);
@@ -392,6 +411,7 @@ define([
             textFitToPage: 'Fit To Page',
             textFitToWidth: 'Fit To Width',
             textInterfaceTheme: 'Interface theme',
+            textZenMode: 'Zen Mode',
             textStatusBar: 'Status Bar',
             textAlwaysShowToolbar: 'Always show toolbar',
             textDarkDocument: 'Dark document',
@@ -399,6 +419,7 @@ define([
             tipFitToPage: 'Fit to page',
             tipFitToWidth: 'Fit to width',
             tipInterfaceTheme: 'Interface theme',
+            tipZenMode: 'Zen Mode',
             tipDarkDocument: 'Dark document',
             textLeftMenu: 'Left panel',
             textRightMenu: 'Right panel',

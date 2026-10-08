@@ -65,6 +65,9 @@ define([
                         '<span class="btn-slot text" id="slot-btn-ftw" style="text-align: center;"></span>' +
                     '</div>' +
                 '</div>' +
+                '<div class="group zenmode">' +
+                    '<span class="btn-slot text" id="slot-btn-zenmode" style="text-align: center;"></span>' +
+                '</div>' +
                 '<div class="separator long"></div>' +
                 '<div class="group">' +
                     '<span class="btn-slot text x-huge" id="slot-btn-interface-theme"></span>' +
@@ -137,6 +140,9 @@ define([
                 }, me));
                 me.chRulers && me.chRulers.on('change', _.bind(function (checkbox, state) {
                     me.fireEvent('rulers:change', [state === 'checked']);
+                }, me));
+                me.btnZenMode.on('click', _.bind(function (e) {
+                    me.fireEvent('zenmode:request', [true]);
                 }, me));
                 me.chNotes && me.chNotes.on('change', _.bind(function (checkbox, state) {
                     me.fireEvent('notes:change', [me.chNotes, state === 'checked']);
@@ -311,6 +317,17 @@ define([
                     action: 'interface-theme'
                 });
                 this.lockedControls.push(this.btnInterfaceTheme);
+
+                this.btnZenMode = new Common.UI.Button({
+                    cls: 'btn-toolbar x-huge icon-top',
+                    iconCls: 'toolbar__icon btn-fullscreen',
+                    lock: [_set.disableOnStart],
+                    caption: this.textZenMode,
+                    dataHint: '1',
+                    dataHintDirection: 'bottom',
+                    dataHintOffset: 'small'
+                });
+                this.lockedControls.push(this.btnZenMode);
 
                 this.chStatusbar = new Common.UI.CheckBox({
                     labelText: this.textStatusBar,
@@ -493,6 +510,7 @@ define([
                 this.btnFitToSlide.render($host.find('#slot-btn-fts'));
                 this.btnFitToWidth.render($host.find('#slot-btn-ftw'));
                 this.btnInterfaceTheme.render($host.find('#slot-btn-interface-theme'));
+                this.btnZenMode.render($host.find('#slot-btn-zenmode'));
                 this.chStatusbar.render($host.find('#slot-chk-statusbar'));
                 this.chToolbar.render($host.find('#slot-chk-toolbar'));
                 this.chRulers.render($host.find('#slot-chk-rulers'));
@@ -520,6 +538,7 @@ define([
                     me.btnFitToSlide.updateHint(me.tipFitToSlide);
                     me.btnFitToWidth.updateHint(me.tipFitToWidth);
                     me.btnInterfaceTheme.updateHint(me.tipInterfaceTheme);
+                    me.btnZenMode.updateHint(me.tipZenMode);
                     me.btnGuides.updateHint(me.tipGuides);
                     me.btnGridlines.updateHint(me.tipGridlines);
                     me.btnMacros && me.btnMacros.updateHint(me.tipMacros);
@@ -701,6 +720,7 @@ define([
             textFitToSlide: 'Fit To Slide',
             textFitToWidth: 'Fit To Width',
             textInterfaceTheme: 'Interface theme',
+            textZenMode: 'Zen Mode',
             textStatusBar: 'Status Bar',
             textAlwaysShowToolbar: 'Always show toolbar',
             textRulers: 'Rulers',
@@ -708,6 +728,7 @@ define([
             tipFitToSlide: 'Fit to slide',
             tipFitToWidth: 'Fit to width',
             tipInterfaceTheme: 'Interface theme',
+            tipZenMode: 'Zen Mode',
             textGuides: 'Guides',
             tipGuides: 'Show guides',
             textShowGuides: 'Show Guides',
