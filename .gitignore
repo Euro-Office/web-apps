@@ -25,6 +25,10 @@ apps/**/main/resources/**/iconshuge*.svg
 apps/**/mobile/dist/**
 apps/**/mobile/hot/*.*
 apps/**/mobile/css/*.*
+# Emitted by the same webpack run as dist/ and css/ above, from the tracked
+# template apps/*/mobile/src/index_dev.html. Its only volatile content is the
+# contenthash-named css/ href, which is ignored on the line above.
+apps/**/mobile/index.html
 
 
 # test documents

@@ -21,8 +21,6 @@ if (fs.existsSync(configPath)) {
 }
 
 // Copy theme LESS to neutral stub paths that the upstream LESS files import.
-// Runs once at module load (before webpack starts). Generates an empty stub when the theme
-// has no file so the @import in the upstream file always resolves.
 function copyOverride(src, dst) {
   try {
     if (fs.existsSync(src)) fs.copyFileSync(src, dst);
@@ -32,18 +30,21 @@ function copyOverride(src, dst) {
 
 const themeAssetsLess = path.join(rootDir, 'theme', theme, 'assets', 'less');
 
-// Mobile overrides — imported by each mobile editor's app.less via _theme-mobile-overrides.less
-copyOverride(
-  path.join(themeAssetsLess, 'overrides', 'mobile-overrides.less'),
-  path.join(rootDir, 'apps', 'common', 'mobile', 'resources', 'less', '_theme-mobile-overrides.less'),
-);
+/**
+ * Generates the LESS import stubs required by the webpack build.
+ * Kept explicit so importing theme values from deployment scripts has no filesystem side effects.
+ */
+export function applyThemeLessOverrides() {
+  // Mobile overrides — imported by each mobile editor's app.less via _theme-mobile-overrides.less
+  copyOverride(
+    path.join(themeAssetsLess, 'overrides', 'mobile-overrides.less'),
+    path.join(rootDir, 'apps', 'common', 'mobile', 'resources', 'less', '_theme-mobile-overrides.less'),
+  );
 
-// Desktop theme entry — imported last by each desktop editor's app.less via _theme-main.less.
-// theme.less imports overrides.less which imports each override file; adding a new override
-// is purely a theme concern (add file, add @import to overrides.less — no build changes needed).
-// We generate a redirector stub (not a copy) so that theme.less's own relative @imports
-// (e.g. overrides.less) resolve from the theme directory, not from common/main/resources/less/.
-{
+  // Desktop theme entry — imported last by each desktop editor's app.less via _theme-main.less.
+  // theme.less imports overrides.less which imports each override file; adding a new override
+  // is purely a theme concern (add file, add @import to overrides.less — no build changes needed).
+  // Generate a redirector stub so theme.less's relative @imports resolve from the theme directory.
   const themeLess = path.join(themeAssetsLess, 'theme.less');
   const stubDst   = path.join(rootDir, 'apps', 'common', 'main', 'resources', 'less', '_theme-main.less');
   try {
@@ -163,7 +164,7 @@ export function themeReplacements(productVersion) {
       replace: 'global.key = assignKey; window.key = assignKey;',
     },
     { search: tok('PRODUCT_VERSION'),         replace: productVersion,                                                                      flags: 'g' },
-    { search: tok('APP_TITLE_TEXT'),           replace: tv(process.env.APP_TITLE_TEXT,           'app_title',               'ONLYOFFICE'),  flags: 'g' },
+    { search: tok('APP_TITLE_TEXT'),           replace: tv(process.env.APP_TITLE_TEXT,           'app_title',               'Euro Office'),  flags: 'g' },
     { search: tok('COMPANY_NAME'),             replace: tv(process.env.COMPANY_NAME,             'company_name',            'ONLYOFFICE'),  flags: 'g' },
     { search: tok('PUBLISHER_NAME'),           replace: tv(process.env.PUBLISHER_NAME,           'publisher_name',          'Ascensio System SIA'), flags: 'g' },
     { search: tok('PUBLISHER_URL'),            replace: tv(process.env.PUBLISHER_URL,            'publisher_url',           'https://www.onlyoffice.com'), flags: 'g' },
@@ -218,3 +219,5 @@ export function themeDefines() {
     __ATTRIBUTION__:       JSON.stringify(themeVal(process.env.ATTRIBUTION,       'attribution',       '')),
   };
 }
+
+export { themeVal };

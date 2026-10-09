@@ -1,16 +1,6 @@
 /**
- * (c) Copyright Ascensio System SIA 2010-2024
- *
- * This program is a free software product. You can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
- *
- * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * SPDX-FileCopyrightText: 2026 Euro-Office contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 /**
@@ -35,7 +25,7 @@ import { fileURLToPath } from 'url';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
-import { assertBuildEnv, themeDefines, themeFormVars, themeGlobalVars, themeReplacements } from './theme.config.mjs';
+import { applyThemeLessOverrides, assertBuildEnv, themeDefines, themeFormVars, themeGlobalVars, themeReplacements } from './theme.config.mjs';
 import { LOAD_BEARING } from './replacements.manifest.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -50,6 +40,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  */
 export function editorConfig(editorName, opts = {}) {
     assertBuildEnv();
+    applyThemeLessOverrides();
 
     const subpath = opts.subpath || 'main';
 

@@ -78,9 +78,9 @@ define([
                             '<% } %>', '>',
                             '<label>' + this.textThumbnailsSize + '</label>',
                             '<div class="thumbnails-sld-box">',
-                                '<span class="menu-item-icon menu__icon btn-thumbnail-small"></span>',
+                                '<%= Common.UI.menuItemIconMarkup("menu__icon btn-thumbnail-small") %>',
                                 '<div id="sld-thumbnails-size"></div>',
-                                '<span class="menu-item-icon menu__icon btn-thumbnail-big"></span>',
+                                '<%= Common.UI.menuItemIconMarkup("menu__icon btn-thumbnail-big") %>',
                             '</div>',
                         '</div>'
                     ].join('')),

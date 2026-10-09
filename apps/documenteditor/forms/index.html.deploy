@@ -279,7 +279,7 @@
           };
       </script>
       <!--application-->
-      <script src="../../../../../../sdkjs/common/device_scale.js?__inline=true"></script>
+      <script src="../../../../sdkjs/common/device_scale.js?__inline=true"></script>
       <script src="../../../vendor/requirejs/require.js"></script>
       <script>
           require(['app']);

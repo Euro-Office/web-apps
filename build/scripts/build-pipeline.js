@@ -1,17 +1,7 @@
 #!/usr/bin/env node
 /**
- * (c) Copyright Ascensio System SIA 2010-2024
- *
- * This program is a free software product. You can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
- *
- * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * SPDX-FileCopyrightText: 2026 Euro-Office contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 'use strict';
@@ -25,7 +15,7 @@
 //   PRODUCT_VERSION  required; rejected if major < 6
 //   BUILD_ROOT       default: ../deploy (matches grunt's default)
 //   BUILD_NUMBER     default: GITHUB_RUN_NUMBER, then common.json.build
-//   THEME            default: default
+//   THEME            default: euro-office
 //
 // Phase layout (wall-clock optimised):
 //   Phase 1 — all parallel:
@@ -68,7 +58,7 @@ const BUILD_NUMBER = String(
     process.env.BUILD_NUMBER || process.env.GITHUB_RUN_NUMBER || COMMON_JSON.build
 );
 
-const THEME = process.env.THEME || 'default';
+const THEME = process.env.THEME || 'euro-office';
 
 // Default every child to production so mobile (webpack.config.js defaults to
 // 'development') and desktop (defaults to 'production') agree — without this the

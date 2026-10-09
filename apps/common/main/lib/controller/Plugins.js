@@ -407,6 +407,13 @@ define([
             me.customButtonsArr = [];
 
             me.appOptions.canPlugins = !collection.isEmpty();
+            // 'reset' never called refreshPluginsList(), so asc_pluginsRegister()
+            // never ran for this path — background plugins stayed registered
+            // nowhere (pluginsMap empty) and could never be autostarted
+            if (me.appOptions.canPlugins) {
+                me.refreshPluginsList();
+                me.runAutoStartPlugins();
+            }
             if ( me.$toolbarPanelPlugins ) {
                 me.backgroundPlugins = [];
                 me.$toolbarPanelPlugins.empty();

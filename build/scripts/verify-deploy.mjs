@@ -1,17 +1,7 @@
 #!/usr/bin/env node
 /**
- * (c) Copyright Ascensio System SIA 2010-2024
- *
- * This program is a free software product. You can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
- *
- * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * SPDX-FileCopyrightText: 2026 Euro-Office contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 /**
@@ -124,6 +114,66 @@ for (const ed of MOBILE_EDITORS) {
         const html = fs.readFileSync(indexAbs, 'utf8');
         for (const [, ref] of html.matchAll(/href="(css\/[^"]+\.css)"/g)) {
             checkFile(`${base}/${ref}`);
+        }
+    }
+}
+
+// ---- inline residue -----------------------------------------------------
+// inline-svgs.js and deploy-embed.js both silently warn-and-leave-tag when a
+// ?__inline=true script's source can't be resolved (see inline-svgs.js SCRIPT_RE
+// handling), so a broken inline path ships to production without failing the
+// build. Walk the HTML these two scripts are actually responsible for and
+// fail on any such tag — except the one known, expected case:
+// sdkjs/common/device_scale.js. sdkjs is built as a separate bake target and
+// is never present in the web-apps image at the point this pipeline runs, so
+// that tag can never inline here; it is resolved by the browser at runtime
+// instead, via the deployed page's own URL and nginx's sdkjs alias (see
+// apps/spreadsheeteditor/main/index.html.deploy). Anything else surviving in
+// these dirs is a real regression and must fail the build.
+//
+// Scoped to inline-svgs.js's DIRS + deploy-embed.js's EDITORS (main/forms/
+// common/embed) rather than all of BUILD_OUT: apps/api/documents/*.html
+// (cache-scripts.html, preload.html) also carry an @@SRC_ROOT@@ ?__inline=true
+// tag, but that directory was dropped from DIRS when inline-svgs.js replaced
+// grunt-inline (grunt did process it — see git history), so the tag has
+// silently survived, unresolved, into shipped HTML ever since. That's a live
+// bug (preload.html is loaded at runtime by DocsAPI.DocEditor.warmUp,
+// apps/api/documents/api.js), not a benign gap — tracked separately, not
+// fixed here; this scope only avoids failing THIS check on it.
+const EXPECTED_UNRESOLVED_INLINE = /^\.\.(?:\/\.\.){3}\/sdkjs\/common\/device_scale\.js\?__inline=true$/;
+
+const INLINE_MANAGED_DIRS = [
+    'documenteditor/main', 'documenteditor/forms', 'documenteditor/embed',
+    'spreadsheeteditor/main', 'spreadsheeteditor/embed',
+    'presentationeditor/main', 'presentationeditor/embed',
+    'pdfeditor/main',
+    'visioeditor/main', 'visioeditor/embed',
+    'common',
+];
+
+function findHtmlFiles(dir) {
+    let out = [];
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        const abs = path.join(dir, entry.name);
+        if (entry.isDirectory()) out = out.concat(findHtmlFiles(abs));
+        else if (entry.name.endsWith('.html')) out.push(abs);
+    }
+    return out;
+}
+
+for (const rel of INLINE_MANAGED_DIRS) {
+    const dir = path.join(BUILD_OUT, 'apps', rel);
+    if (!fs.existsSync(dir)) continue;
+    for (const abs of findHtmlFiles(dir)) {
+        const html = fs.readFileSync(abs, 'utf8');
+        for (const match of html.matchAll(/<script[^>]+src=["']([^"']*\?__inline=true)["'][^>]*>/g)) {
+            const src = match[1];
+            if (EXPECTED_UNRESOLVED_INLINE.test(src)) {
+                console.log(`verify-deploy: ok (runtime-resolved) ${path.relative(BUILD_OUT, abs)} — ${src}`);
+                continue;
+            }
+            console.error(`verify-deploy: INLINE_RESIDUE ${path.relative(BUILD_OUT, abs)} — unresolved ${src}`);
+            failed = true;
         }
     }
 }
