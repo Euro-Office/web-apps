@@ -259,7 +259,7 @@ define([
                     itemTemplate: _.template([
                         '<a id="<%= id %>" tabindex="-1" type="menuitem" langval="<%= value %>" class="<% if (checked) { %> checked <% } %>">',
                             '<div>',
-                                '<svg class="icon uni-scale<% if (spellcheck) { %> spellcheck-lang<% } %>"><% if (spellcheck) { %><use href="#btn-ic-docspell"></use><% } %></svg>',
+                                '<svg class="icon uni-scale<% if (spellcheck) { %> spellcheck-lang<% } else { %> icon-hidden<% } %>"><% if (spellcheck) { %><use href="#btn-ic-docspell"></use><% } %></svg>',
                                 '<%= caption %>',
                             '</div>',
                             '<label style="opacity: 0.6"><%= captionEn %></label>',
