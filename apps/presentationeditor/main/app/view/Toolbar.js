@@ -1037,13 +1037,14 @@ define([
                     me.btnSmartPicker = new Common.UI.Button({
                         id: 'tlbtn-smartpicker',
                         cls: 'btn-toolbar x-huge icon-top',
-                        iconCls: 'toolbar__icon btn-nc-assistant',
+                        iconCls: 'toolbar__icon btn-big-nc-add',
                         lock: [_set.slideDeleted, _set.lostConnect, _set.noSlides, _set.disableOnStart],
                         caption: me.capSmartPicker,
                         action: 'smart-picker',
                         dataHint: '1',
                         dataHintDirection: 'bottom',
-                        dataHintOffset: 'small'
+                        dataHintOffset: 'small',
+                        visible: false
                     });
                     me.paragraphControls.push(me.btnSmartPicker);
                     me.lockControls.push(me.btnSmartPicker);
