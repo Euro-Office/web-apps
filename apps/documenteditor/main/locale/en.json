@@ -3789,6 +3789,7 @@
   "DE.Views.Statusbar.txtPageNumInvalid": "Page number invalid",
   "DE.Views.Statusbar.txtPages": "Pages",
   "DE.Views.Statusbar.txtParagraphs": "Paragraphs",
+  "DE.Views.Statusbar.txtSelectionOf": "{0} of {1}",
   "DE.Views.Statusbar.txtSpaces": "Symbols with spaces",
   "DE.Views.Statusbar.txtSymbols": "Symbols",
   "DE.Views.Statusbar.txtWordCount": "Word count",
