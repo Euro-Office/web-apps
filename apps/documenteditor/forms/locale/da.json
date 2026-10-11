@@ -73,7 +73,7 @@
   "Common.Views.ImageFromUrlDialog.txtNotUrl": "Feltet skal være en URL i \"http://www.example.com\" formatet",
   "Common.Views.OpenDialog.closeButtonText": "Luk fil",
   "Common.Views.OpenDialog.txtEncoding": "Kodning ",
-  "Common.Views.OpenDialog.txtIncorrectPwd": "Adgangskoden er forkert",
+  "Common.Views.OpenDialog.txtIncorrectPwd": "Adgangskoden er forkert.",
   "Common.Views.OpenDialog.txtOpenFile": "Angiv en adgangskode for at åbne filen",
   "Common.Views.OpenDialog.txtPassword": "Adgangskode",
   "Common.Views.OpenDialog.txtPreview": "Forhåndsvisning",
@@ -148,7 +148,7 @@
   "DE.Controllers.ApplicationController.textOf": "af",
   "DE.Controllers.ApplicationController.textRequired": "Udfyld alle obligatoriske felter for at sende formularen.",
   "DE.Controllers.ApplicationController.textSaveAs": "Gem som PDF",
-  "DE.Controllers.ApplicationController.textSaveAsDesktop": "Gem som...",
+  "DE.Controllers.ApplicationController.textSaveAsDesktop": "Gem som …",
   "DE.Controllers.ApplicationController.textSubmited": "<b>Formularen blev indsendt</b><br>Klik for at lukke tippet",
   "DE.Controllers.ApplicationController.textSubmitOk": "Din PDF-formular er gemt under Fuldførte.",
   "DE.Controllers.ApplicationController.tipLicenseExceeded": "Dokumentet er åbnet i skrivebeskyttet tilstand, fordi licensen har nået det største tilladte antal samtidige forbindelser.<br><br>Prøv igen senere, eller kontakt dokumentets ejer, hvis du har brug for at redigere det.",
@@ -172,7 +172,7 @@
   "DE.Controllers.ApplicationController.unsupportedBrowserErrorText": "Din browser understøttes ikke.",
   "DE.Controllers.ApplicationController.uploadImageExtMessage": "Ukendt billedformat.",
   "DE.Controllers.ApplicationController.uploadImageSizeMessage": "Billedet er for stort. Den maksimale størrelse er 25 MB.",
-  "DE.Controllers.ApplicationController.waitText": "Vent...",
+  "DE.Controllers.ApplicationController.waitText": "Vent …",
   "DE.Controllers.ApplicationController.warnLicenseAnonymous": "Anonyme brugere har ikke adgang.<br>Dokumentet åbnes kun til visning.",
   "DE.Controllers.ApplicationController.warnLicenseBefore": "Licensen er ikke aktiv.<br>Kontakt din administrator.",
   "DE.Controllers.ApplicationController.warnLicenseExp": "Din licens er udløbet.<br>Opdater din licens, og genindlæs siden.",
@@ -210,5 +210,5 @@
   "DE.Views.ApplicationView.txtPrint": "Udskriv",
   "DE.Views.ApplicationView.txtSearch": "Søg",
   "DE.Views.ApplicationView.txtShare": "Del",
-  "DE.Views.ApplicationView.txtTheme": "Tema"
+  "DE.Views.ApplicationView.txtTheme": "Interface-tema"
 }
