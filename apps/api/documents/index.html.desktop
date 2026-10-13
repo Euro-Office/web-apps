@@ -104,9 +104,9 @@
             function getEditorConfig(urlParams) {
                 return {
                     customization   : {
-                        goback: { url: "onlyoffice.com" }
+                        goback: { url: "" }
                         , feedback: {
-                            url: "https://helpdesk.onlyoffice.com/?desktop=true"
+                            url: "{{SUPPORT_URL}}"
                         }
                         , uiTheme: urlParams["uitheme"]
                     },
