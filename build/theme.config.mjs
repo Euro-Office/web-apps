@@ -6,6 +6,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { LOAD_BEARING } from './replacements.manifest.mjs';
+import { aboutHtml } from './about-html.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -21,8 +22,6 @@ if (fs.existsSync(configPath)) {
 }
 
 // Copy theme LESS to neutral stub paths that the upstream LESS files import.
-// Runs once at module load (before webpack starts). Generates an empty stub when the theme
-// has no file so the @import in the upstream file always resolves.
 function copyOverride(src, dst) {
   try {
     if (fs.existsSync(src)) fs.copyFileSync(src, dst);
@@ -32,18 +31,21 @@ function copyOverride(src, dst) {
 
 const themeAssetsLess = path.join(rootDir, 'theme', theme, 'assets', 'less');
 
-// Mobile overrides — imported by each mobile editor's app.less via _theme-mobile-overrides.less
-copyOverride(
-  path.join(themeAssetsLess, 'overrides', 'mobile-overrides.less'),
-  path.join(rootDir, 'apps', 'common', 'mobile', 'resources', 'less', '_theme-mobile-overrides.less'),
-);
+/**
+ * Generates the LESS import stubs required by the webpack build.
+ * Kept explicit so importing theme values from deployment scripts has no filesystem side effects.
+ */
+export function applyThemeLessOverrides() {
+  // Mobile overrides — imported by each mobile editor's app.less via _theme-mobile-overrides.less
+  copyOverride(
+    path.join(themeAssetsLess, 'overrides', 'mobile-overrides.less'),
+    path.join(rootDir, 'apps', 'common', 'mobile', 'resources', 'less', '_theme-mobile-overrides.less'),
+  );
 
-// Desktop theme entry — imported last by each desktop editor's app.less via _theme-main.less.
-// theme.less imports overrides.less which imports each override file; adding a new override
-// is purely a theme concern (add file, add @import to overrides.less — no build changes needed).
-// We generate a redirector stub (not a copy) so that theme.less's own relative @imports
-// (e.g. overrides.less) resolve from the theme directory, not from common/main/resources/less/.
-{
+  // Desktop theme entry — imported last by each desktop editor's app.less via _theme-main.less.
+  // theme.less imports overrides.less which imports each override file; adding a new override
+  // is purely a theme concern (add file, add @import to overrides.less — no build changes needed).
+  // Generate a redirector stub so theme.less's relative @imports resolve from the theme directory.
   const themeLess = path.join(themeAssetsLess, 'theme.less');
   const stubDst   = path.join(rootDir, 'apps', 'common', 'main', 'resources', 'less', '_theme-main.less');
   try {
@@ -163,7 +165,7 @@ export function themeReplacements(productVersion) {
       replace: 'global.key = assignKey; window.key = assignKey;',
     },
     { search: tok('PRODUCT_VERSION'),         replace: productVersion,                                                                      flags: 'g' },
-    { search: tok('APP_TITLE_TEXT'),           replace: tv(process.env.APP_TITLE_TEXT,           'app_title',               'ONLYOFFICE'),  flags: 'g' },
+    { search: tok('APP_TITLE_TEXT'),           replace: tv(process.env.APP_TITLE_TEXT,           'app_title',               'Euro Office'),  flags: 'g' },
     { search: tok('COMPANY_NAME'),             replace: tv(process.env.COMPANY_NAME,             'company_name',            'ONLYOFFICE'),  flags: 'g' },
     { search: tok('PUBLISHER_NAME'),           replace: tv(process.env.PUBLISHER_NAME,           'publisher_name',          'Ascensio System SIA'), flags: 'g' },
     { search: tok('PUBLISHER_URL'),            replace: tv(process.env.PUBLISHER_URL,            'publisher_url',           'https://www.onlyoffice.com'), flags: 'g' },
@@ -172,7 +174,6 @@ export function themeReplacements(productVersion) {
     { search: tok('SUPPORT_EMAIL'),            replace: tv(process.env.SUPPORT_EMAIL,            'support_email',           'support@onlyoffice.com'), flags: 'g' },
     { search: tok('SUPPORT_URL'),              replace: tv(process.env.SUPPORT_URL,              'support_url',             'https://support.onlyoffice.com'), flags: 'g' },
     { search: tok('SALES_EMAIL'),              replace: tv(process.env.SALES_EMAIL,              'sales_email',             'sales@onlyoffice.com'), flags: 'g' },
-    { search: tok('ATTRIBUTION'),              replace: tv(process.env.ATTRIBUTION,              'attribution',             ''),            flags: 'g' },
     { search: tok('HELP_URL'),                 replace: tv(process.env.HELP_URL,                 'help_url',                ''),            flags: 'g' },
     { search: tok('HELP_CENTER_WEB_DE'),       replace: tv(process.env.HELP_CENTER_WEB_DE,       'help_center_web_de',      ''),            flags: 'g' },
     { search: tok('HELP_CENTER_WEB_SSE'),      replace: tv(process.env.HELP_CENTER_WEB_SSE,      'help_center_web_sse',     ''),            flags: 'g' },
@@ -204,6 +205,7 @@ export function themeFormVars() {
  * is respected (renders nothing / hides the row in guarded views).
  */
 export function themeDefines() {
+  const about = aboutHtml(theme);
   return {
     __PUBLISHER_ADDRESS__: JSON.stringify(themeVal(process.env.PUBLISHER_ADDRESS, 'publisher_address', '20A-12 Ernesta Birznieka-Upisha street, Riga, Latvia, EU, LV-1050')),
     __SUPPORT_EMAIL__:     JSON.stringify(themeVal(process.env.SUPPORT_EMAIL,     'support_email',     'support@onlyoffice.com')),
@@ -215,6 +217,9 @@ export function themeDefines() {
     __COMPANY_NAME__:      JSON.stringify(themeVal(process.env.COMPANY_NAME,      'company_name',      'ONLYOFFICE')),
     __HELP_URL__:          JSON.stringify(themeVal(process.env.HELP_URL,          'help_url',          'https://helpcenter.onlyoffice.com')),
     __SALES_EMAIL__:       JSON.stringify(themeVal(process.env.SALES_EMAIL,       'sales_email',       'sales@onlyoffice.com')),
-    __ATTRIBUTION__:       JSON.stringify(themeVal(process.env.ATTRIBUTION,       'attribution',       '')),
+    __ABOUT_BUILD_INFO__:  JSON.stringify(about.buildInfo),
+    __ABOUT_LEGAL__:       JSON.stringify(about.legal),
   };
 }
+
+export { themeVal };

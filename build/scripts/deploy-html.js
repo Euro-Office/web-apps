@@ -1,17 +1,7 @@
 #!/usr/bin/env node
 /**
- * (c) Copyright Ascensio System SIA 2010-2024
- *
- * This program is a free software product. You can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
- *
- * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * SPDX-FileCopyrightText: 2026 Euro-Office contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 'use strict';
@@ -50,40 +40,51 @@ const DIRS = [
     { editor: 'documenteditor',     subpath: 'forms' },
 ];
 
-let totalCopied = 0;
+async function main() {
+    const { themeVal } = await import('../theme.config.mjs');
+    const APP_TITLE_TEXT = themeVal(process.env.APP_TITLE_TEXT, 'app_title', 'Euro Office');
+    let totalCopied = 0;
 
-for (const { editor, subpath } of DIRS) {
-    const srcDir  = path.join(APPS_SRC, editor, subpath);
-    const destDir = path.join(APPS_OUT, editor, subpath);
+    for (const { editor, subpath } of DIRS) {
+        const srcDir  = path.join(APPS_SRC, editor, subpath);
+        const destDir = path.join(APPS_OUT, editor, subpath);
 
-    if (!fs.existsSync(srcDir)) {
-        console.warn(`deploy-html: no source dir ${srcDir} — skipping`);
-        continue;
+        if (!fs.existsSync(srcDir)) {
+            console.warn(`deploy-html: no source dir ${srcDir} — skipping`);
+            continue;
+        }
+
+        const deploys = fs.readdirSync(srcDir).filter(f => f.endsWith('.html.deploy'));
+
+        if (deploys.length === 0) {
+            console.error(`deploy-html: no *.html.deploy files in ${srcDir}`);
+            process.exitCode = 1;
+            continue;
+        }
+
+        fs.mkdirSync(destDir, { recursive: true });
+
+        for (const filename of deploys) {
+            const content  = fs.readFileSync(path.join(srcDir, filename), 'utf8');
+            const replaced = content
+                .replace(/@@SRC_ROOT@@/g, SRC_ROOT)
+                .replace(/\{\{APP_TITLE_TEXT\}\}/g, APP_TITLE_TEXT);
+            const destName = filename.replace('.html.deploy', '.html');
+            fs.writeFileSync(path.join(destDir, destName), replaced, 'utf8');
+        }
+
+        totalCopied += deploys.length;
+        console.log(`deploy-html: ${editor}/${subpath} — ${deploys.length} file${deploys.length !== 1 ? 's' : ''}`);
     }
 
-    const deploys = fs.readdirSync(srcDir).filter(f => f.endsWith('.html.deploy'));
-
-    if (deploys.length === 0) {
-        console.error(`deploy-html: no *.html.deploy files in ${srcDir}`);
-        process.exitCode = 1;
-        continue;
+    if (process.exitCode === 1) {
+        process.exit(1);
     }
 
-    fs.mkdirSync(destDir, { recursive: true });
-
-    for (const filename of deploys) {
-        const content  = fs.readFileSync(path.join(srcDir, filename), 'utf8');
-        const replaced = content.replace(/@@SRC_ROOT@@/g, SRC_ROOT);
-        const destName = filename.replace('.html.deploy', '.html');
-        fs.writeFileSync(path.join(destDir, destName), replaced, 'utf8');
-    }
-
-    totalCopied += deploys.length;
-    console.log(`deploy-html: ${editor}/${subpath} — ${deploys.length} file${deploys.length !== 1 ? 's' : ''}`);
+    console.log(`deploy-html: done — ${totalCopied} file${totalCopied !== 1 ? 's' : ''} total`);
 }
 
-if (process.exitCode === 1) {
+main().catch(err => {
+    console.error('deploy-html failed:', err.message || err);
     process.exit(1);
-}
-
-console.log(`deploy-html: done — ${totalCopied} file${totalCopied !== 1 ? 's' : ''} total`);
+});

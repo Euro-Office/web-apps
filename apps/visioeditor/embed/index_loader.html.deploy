@@ -317,7 +317,7 @@
       <script type="text/javascript" src="../../../../sdkjs/visio/sdk-all-min.js"></script>
 
       <!--application-->
-      <script src="../../../../../../sdkjs/common/device_scale.js?__inline=true"></script>
+      <script src="../../../../sdkjs/common/device_scale.js?__inline=true"></script>
       <script type="text/javascript" src="../../../apps/visioeditor/embed/app-all.js"></script>
       <link href="../../../apps/visioeditor/embed/resources/css/app-all.css" rel="stylesheet" media="print" onload="this.media='all'">
       <script type="text/javascript">

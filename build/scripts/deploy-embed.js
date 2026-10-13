@@ -1,17 +1,7 @@
 #!/usr/bin/env node
 /**
- * (c) Copyright Ascensio System SIA 2010-2024
- *
- * This program is a free software product. You can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
- *
- * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * SPDX-FileCopyrightText: 2026 Euro-Office contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 'use strict';
@@ -38,6 +28,8 @@ const BUILD_ROOT = process.env.BUILD_ROOT
     : path.resolve(REPO_ROOT, 'deploy');
 const SRC_ROOT   = REPO_ROOT;
 const CFG_DIR    = path.resolve(__dirname, '..');
+
+let PUBLISHER_URL;
 
 const EDITORS = [
     'documenteditor',
@@ -137,7 +129,10 @@ async function buildEditor(editorName) {
         if (!f.endsWith('.html')) continue;
         const p       = path.join(htmlDestDir, f);
         const content = fs.readFileSync(p, 'utf8');
-        fs.writeFileSync(p, content.replace(/@@SRC_ROOT@@/g, SRC_ROOT), 'utf8');
+        const replaced = content
+            .replace(/@@SRC_ROOT@@/g, SRC_ROOT)
+            .replace(/\{\{PUBLISHER_URL\}\}/g, PUBLISHER_URL);
+        fs.writeFileSync(p, replaced, 'utf8');
     }
 
     // 6. inline ?__inline=true scripts (mirrors inline-svgs.js SCRIPT_RE logic)
@@ -167,6 +162,9 @@ async function buildEditor(editorName) {
 }
 
 (async () => {
+    const { themeVal } = await import('../theme.config.mjs');
+    PUBLISHER_URL = themeVal(process.env.PUBLISHER_URL, 'publisher_url', 'https://github.com/euro-office');
+
     for (const editor of EDITORS) {
         await buildEditor(editor);
     }

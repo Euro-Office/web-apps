@@ -267,16 +267,31 @@
 
         var require = {
             waitSeconds: 30,
+            baseUrl: window.customBaseUrl || "../../",
+            paths: {
+                app:           "spreadsheeteditor/main/app",
+                sdk:           "../../sdkjs/cell/sdk-all-min",
+                jquery:        "../vendor/jquery/jquery.min",
+                socketio:      "../vendor/socketio/socket.io.min",
+                xregexp:       "../vendor/xregexp/xregexp-all-min",
+                allfonts:      "../../sdkjs/common/AllFonts",
+                coapisettings: "coapisettings",
+                api:           "api/documents/api"
+            },
+            shim: {
+                sdk: { deps: ["jquery", "allfonts", "xregexp", "socketio"] }
+            },
             callback: function(){
                 clearTimeout(requireTimeoutID);
             }
         };
     </script>
 
+    <inline src="resources/img/toolbar/icons.svg" />
     <inline src="../../common/main/resources/img/toolbar/charttypes.svg" />
     <inline src="resources/img/toolbar/BorderSize.svg" />
 
-    <script src="../../../../../../sdkjs/common/device_scale.js?__inline=true"></script>
+    <script src="../../../../sdkjs/common/device_scale.js?__inline=true"></script>
 
     <script src="../../../vendor/requirejs/require.js"></script>
     <script>

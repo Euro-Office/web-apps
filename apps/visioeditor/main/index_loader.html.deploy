@@ -215,7 +215,7 @@
 
     <div id="viewport"></div>
 
-    <script src="../../../../../../sdkjs/common/device_scale.js?__inline=true"></script>
+    <script src="../../../../sdkjs/common/device_scale.js?__inline=true"></script>
 
     <script>
         var userAgent = navigator.userAgent.toLowerCase(),

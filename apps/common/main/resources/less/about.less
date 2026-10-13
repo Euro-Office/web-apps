@@ -69,6 +69,52 @@
 
     }
 
+    .asc-about-version a {
+        text-decoration: underline;
+    }
+
+    #id-about-legal {
+        max-width: 560px;
+        margin: 20px auto;
+        padding: 0 20px;
+        text-align: left;
+        font: 12px Tahoma;
+        .font-size-medium();
+        color: @text-normal-ie;
+        color: @text-normal;
+        user-select: text;
+
+        p {
+            margin: 0 0 10px;
+        }
+
+        a {
+            text-decoration: underline;
+        }
+
+        a, span {
+            white-space: nowrap;
+        }
+
+        .about-legal-heading {
+            margin: 16px 0 6px;
+            .font-weight-bold();
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: @text-secondary-ie;
+            color: @text-secondary;
+        }
+
+        table {
+            font: inherit;
+            color: inherit;
+        }
+
+        td {
+            padding: 1px 16px 1px 0;
+        }
+    }
+
     a {
         font: 12px Tahoma;
         .font-size-medium();
