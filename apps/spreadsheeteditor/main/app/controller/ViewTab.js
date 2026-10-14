@@ -36,6 +36,23 @@ define([
 ], function () {
     'use strict';
 
+    // Theme tokens sdkjs uses to draw the row/column headers, the corner box and the outline area.
+    // Source of truth: colorMap in sdkjs/common/skin.js, read by WorksheetViewSettings in
+    // sdkjs/cell/view/WorkbookView.js. 'border-toolbar' is an interface token that sdkjs also
+    // uses for the outline area separators.
+    var lightCanvasChromeTokens = [
+        'canvas-cell-title-background',
+        'canvas-cell-title-background-hover',
+        'canvas-cell-title-background-selected',
+        'canvas-cell-title-border',
+        'canvas-cell-title-border-hover',
+        'canvas-cell-title-border-selected',
+        'canvas-cell-title-text',
+        'canvas-select-all-icon',
+        'canvas-high-contrast',
+        'border-toolbar'
+    ];
+
     SSE.Controllers.ViewTab = Backbone.Controller.extend(_.extend({
         models : [],
         collections : [
@@ -289,6 +306,9 @@ define([
         },
 
         onThemeChanged: function () {
+            if (this._state.lightCanvasChrome)
+                this.setLightCanvasChrome(true);
+
             if (this.view && Common.UI.Themes.available() && this.view.btnInterfaceTheme.menu && (typeof (this.view.btnInterfaceTheme.menu) === 'object')) {
                 var current_theme = Common.UI.Themes.currentThemeId() || Common.UI.Themes.defaultThemeId(),
                     menu_item = _.findWhere(this.view.btnInterfaceTheme.menu.getItems(true), {value: current_theme});
@@ -297,6 +317,32 @@ define([
                     menu_item.setChecked(true, true);
                 }
             }
+        },
+
+        // Draws the canvas chrome (row/column headers, corner box, outline area) in the
+        // light theme's colors, whatever the interface theme. Used by the dark filter,
+        // which inverts the canvas and so turns that light chrome dark. Only the canvas
+        // tokens are overridden: scrollbars and plugins keep the current theme.
+        setLightCanvasChrome: function (on) {
+            this._state.lightCanvasChrome = on;
+            if (!this.api) return;
+
+            var colors = Common.UI.Themes.getThemeColors();
+            if (on) {
+                // Theme classes are set on body, so :root holds the light theme's values
+                var root_style = getComputedStyle(document.documentElement);
+                lightCanvasChromeTokens.forEach(function (token) {
+                    var value = root_style.getPropertyValue('--' + token).trim();
+                    // A missing token keeps the current theme's color instead of sending an empty one
+                    if (value)
+                        colors[token] = value;
+                });
+            }
+            // Filtered row numbers have no theme token: the values mirror ColorFiltering in the
+            // light and dark skins of sdkjs/common/skin.js. sdkjs keeps the last value sent, so
+            // it is sent in both states.
+            colors['ColorFiltering'] = (on || colors.type !== 'dark') ? '#008636' : '#6BEC9F';
+            this.api.asc_setSkin(colors);
         },
 
         onTabStyleChange: function () {
