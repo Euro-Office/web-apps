@@ -68,6 +68,7 @@ define([
             this._state = {};
             Common.NotificationCenter.on('uitheme:changed', this.onThemeChanged.bind(this));
             Common.NotificationCenter.on('tabstyle:changed', this.onTabStyleChange.bind(this));
+            Common.NotificationCenter.on('contenttheme:dark', _.bind(function () { this.applyDarkFilter(); }, this));
         },
 
         setApi: function (api) {
@@ -85,6 +86,7 @@ define([
                 this.api.asc_registerCallback('asc_onMacroRecordingResume', _.bind(this.updateMacroState, this, true, false));
                 this.api.asc_registerCallback('asc_onCoAuthoringDisconnect',_.bind(this.onCoAuthoringDisconnect, this));
                 Common.NotificationCenter.on('api:disconnect', _.bind(this.onCoAuthoringDisconnect, this));
+                this.applyDarkFilter();
             }
             return this;
         },
@@ -306,8 +308,7 @@ define([
         },
 
         onThemeChanged: function () {
-            if (this._state.lightCanvasChrome)
-                this.setLightCanvasChrome(true);
+            this.applyDarkFilter(true);
 
             if (this.view && Common.UI.Themes.available() && this.view.btnInterfaceTheme.menu && (typeof (this.view.btnInterfaceTheme.menu) === 'object')) {
                 var current_theme = Common.UI.Themes.currentThemeId() || Common.UI.Themes.defaultThemeId(),
@@ -317,6 +318,18 @@ define([
                     menu_item.setChecked(true, true);
                 }
             }
+        },
+
+        // The dark filter follows the shared "dark document" setting and applies in dark
+        // interface themes only.
+        applyDarkFilter: function (themeChanged) {
+            var on = Common.UI.Themes.isDarkTheme() && Common.UI.Themes.isContentThemeDark();
+            // The theme sends its own canvas chrome colors, so a theme change re-applies even when the state is unchanged
+            if (on === this._state.darkFilter && !themeChanged) return;
+            this._state.darkFilter = on;
+            document.body.classList.toggle('canvas-dark-filter', on);
+            if (on || this._state.lightCanvasChrome)
+                this.setLightCanvasChrome(on);
         },
 
         // Draws the canvas chrome (row/column headers, corner box, outline area) in the
