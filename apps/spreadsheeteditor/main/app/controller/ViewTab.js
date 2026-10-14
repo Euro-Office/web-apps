@@ -72,6 +72,10 @@ define([
                 this.applyDarkFilter();
                 this.updateDarkDocumentButton();
             }, this));
+            Common.NotificationCenter.on('document:ready', _.bind(function () {
+                this._state.documentReady = true;
+                this.showDarkDocumentInfo();
+            }, this));
         },
 
         setApi: function (api) {
@@ -355,6 +359,27 @@ define([
             document.body.classList.toggle('canvas-dark-filter', on);
             if (on || this._state.lightCanvasChrome)
                 this.setLightCanvasChrome(on);
+            this.showDarkDocumentInfo();
+        },
+
+        // Explains the dark filter the first time it is applied in this editor, whether by
+        // the button or at load (the setting is shared with the document editor). It counts
+        // as seen once the user closes it, so a box hidden behind another one comes back.
+        showDarkDocumentInfo: function () {
+            if (!this._state.darkFilter || !this._state.documentReady || !this.view || this._state.darkDocumentInfoOpen ||
+                    Common.localStorage.getBool('sse-hide-dark-document-info'))
+                return;
+
+            var me = this;
+            me._state.darkDocumentInfoOpen = true;
+            Common.UI.info({
+                width: 500,
+                msg: me.view.textDarkDocumentInfo,
+                callback: function () {
+                    me._state.darkDocumentInfoOpen = false;
+                    Common.localStorage.setBool('sse-hide-dark-document-info', true);
+                }
+            });
         },
 
         // Draws the canvas chrome (row/column headers, corner box, outline area) in the
