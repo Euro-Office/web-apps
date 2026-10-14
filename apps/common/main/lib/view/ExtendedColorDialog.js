@@ -38,15 +38,11 @@ define([
         rendered: false,
 
         initialize : function(options) {
-            options = options || {};
             Common.UI.Window.prototype.initialize.call(this, {
                 cls: 'extended-color-dlg modal-dlg',
                 tpl: this.tpl({
                     txtNew: this.textNew,
-                    txtCurrent: this.textCurrent,
-                    // Notice texts come from the palette that opens the dialog
-                    txtDarkDocumentOn: options.darkDocumentOn || '',
-                    txtDarkDocumentNotice: options.darkDocumentNotice || ''
+                    txtCurrent: this.textCurrent
                 }),
                 header: false,
                 buttons: [{value: '1', caption: this.addButtonText}, {value: '0', caption: this.cancelButtonText}],
