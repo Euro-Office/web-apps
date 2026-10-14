@@ -29,6 +29,16 @@ body {
         #ws-canvas-overlay {
             filter: invert(1) hue-rotate(180deg);
         }
+
+        // Palettes show the real colors, which the filtered sheet displays differently
+        .dark-document-notice {
+            display: block;
+        }
+
+        // Sheet tabs are not filtered, so tab colors look as chosen
+        .no-dark-document-notice .dark-document-notice {
+            display: none;
+        }
     }
 }
 
