@@ -111,7 +111,8 @@ define([
         fileMenuOpened: 'file-menu-opened',
         cantMergeShape: 'merge-shape-lock',
         cantSave: 'cant-save',
-        macrosStopped: 'macros-stopped'
+        macrosStopped: 'macros-stopped',
+        inLightTheme: 'light-theme'
     };
     for (var key in enumLock) {
         if (enumLock.hasOwnProperty(key)) {

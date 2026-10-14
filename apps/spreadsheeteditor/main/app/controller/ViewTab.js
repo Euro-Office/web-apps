@@ -68,7 +68,10 @@ define([
             this._state = {};
             Common.NotificationCenter.on('uitheme:changed', this.onThemeChanged.bind(this));
             Common.NotificationCenter.on('tabstyle:changed', this.onTabStyleChange.bind(this));
-            Common.NotificationCenter.on('contenttheme:dark', _.bind(function () { this.applyDarkFilter(); }, this));
+            Common.NotificationCenter.on('contenttheme:dark', _.bind(function () {
+                this.applyDarkFilter();
+                this.updateDarkDocumentButton();
+            }, this));
         },
 
         setApi: function (api) {
@@ -99,6 +102,7 @@ define([
                 mode: mode,
                 compactToolbar: this.toolbar.toolbar.isCompactView
             });
+            this.updateDarkDocumentButton();
             this.addListeners({
                 'ViewTab': {
                     'zoom:selected': _.bind(this.onSelectedZoomValue, this),
@@ -116,6 +120,7 @@ define([
                     'viewtab:createview': this.onCreateView,
                     'viewtab:manager': this.onOpenManager,
                     'viewtab:viewmode': this.onPreviewMode,
+                    'darkmode:change': _.bind(this.onChangeDarkMode, this),
                     'macros:click':  this.onClickMacros,
                     'macros:record':  _.bind(this.onClickMacrosRec, this),
                     'macros:pause':  _.bind(this.onClickMacrosPause, this)
@@ -309,6 +314,7 @@ define([
 
         onThemeChanged: function () {
             this.applyDarkFilter(true);
+            this.updateDarkDocumentButton();
 
             if (this.view && Common.UI.Themes.available() && this.view.btnInterfaceTheme.menu && (typeof (this.view.btnInterfaceTheme.menu) === 'object')) {
                 var current_theme = Common.UI.Themes.currentThemeId() || Common.UI.Themes.defaultThemeId(),
@@ -318,6 +324,25 @@ define([
                     menu_item.setChecked(true, true);
                 }
             }
+        },
+
+        onChangeDarkMode: function (isdarkmode) {
+            // Clicks closer than 500 ms apart are ignored and the button shows the current state again
+            if (!this._darkModeTimer) {
+                var me = this;
+                me._darkModeTimer = setTimeout(function () {
+                    me._darkModeTimer = undefined;
+                }, 500);
+                Common.UI.Themes.setContentTheme(isdarkmode ? 'dark' : 'light');
+            } else
+                this.updateDarkDocumentButton();
+        },
+
+        // The button is pressed when the shared setting is on, and locked in light interface themes
+        updateDarkDocumentButton: function () {
+            if (!this.view) return;
+            this.view.btnDarkDocument.toggle(Common.UI.Themes.isContentThemeDark(), true);
+            Common.Utils.lockControls(Common.enumLock.inLightTheme, !Common.UI.Themes.isDarkTheme(), {array: [this.view.btnDarkDocument]});
         },
 
         // The dark filter follows the shared "dark document" setting and applies in dark
