@@ -66,6 +66,7 @@ define([
             '<div class="separator long"></div>' +
             '<div class="group">' +
                 '<span class="btn-slot text x-huge" id="slot-btn-interface-theme"></span>' +
+                '<span class="btn-slot text x-huge" id="slot-btn-dark-document"></span>' +
             '</div>' +
             '<div class="separator long separator-theme"></div>' +
             '<div class="group sheet-freeze">' +
@@ -129,6 +130,10 @@ define([
                     me.fireEvent('viewtab:createview');
                 });
             }
+
+            me.btnDarkDocument.on('click', function (btn, e) {
+                me.fireEvent('darkmode:change', [btn.pressed]);
+            });
 
             me.btnFreezePanes && me.btnFreezePanes.menu && (typeof me.btnFreezePanes.menu === 'object') && me.btnFreezePanes.menu.on('item:click', function (menu, item, e) {
                 if (item.value === 'shadow') {
@@ -384,6 +389,18 @@ define([
                 });
                 this.lockedControls.push(this.btnInterfaceTheme);
 
+                this.btnDarkDocument = new Common.UI.Button({
+                    cls: 'btn-toolbar x-huge icon-top',
+                    iconCls: 'toolbar__icon btn-dark-mode',
+                    lock: [_set.inLightTheme, _set.lostConnect, _set.disableOnStart],
+                    caption: this.textDarkDocument,
+                    enableToggle: true,
+                    dataHint: '1',
+                    dataHintDirection: 'bottom',
+                    dataHintOffset: 'small'
+                });
+                this.lockedControls.push(this.btnDarkDocument);
+
                 this.chFormula = new Common.UI.CheckBox({
                     labelText: this.textFormula,
                     value: !Common.localStorage.getBool('sse-hidden-formula'),
@@ -454,6 +471,7 @@ define([
                 this.cmbZoom.setValue(100);
                 $host.find('#slot-lbl-zoom').text(this.textZoom);
                 this.btnInterfaceTheme.render($host.find('#slot-btn-interface-theme'));
+                this.btnDarkDocument.render($host.find('#slot-btn-dark-document'));
                 this.chFormula.render($host.find('#slot-chk-formula'));
                 this.chStatusbar.render($host.find('#slot-chk-statusbar'));
                 this.chToolbar.render($host.find('#slot-chk-toolbar'));
@@ -490,6 +508,7 @@ define([
                     }
                     me.btnMacros && me.btnMacros.updateHint(me.tipMacros);
                     me.btnInterfaceTheme.updateHint(me.tipInterfaceTheme);
+                    me.btnDarkDocument.updateHint(me.tipDarkDocument);
                     me.btnRecMacro && me.btnRecMacro.updateHint(me.tipRecMacro);
                     me.btnPauseMacro && me.btnPauseMacro.updateHint(me.tipPauseMacro);
 
@@ -736,6 +755,8 @@ define([
             textInterfaceTheme: 'Interface theme',
             textShowFrozenPanesShadow: 'Show frozen panes shadow',
             tipInterfaceTheme: 'Interface theme',
+            textDarkDocument: 'Dark document',
+            tipDarkDocument: 'Dark document',
             textLeftMenu: 'Left panel',
             textRightMenu: 'Right panel',
             txtViewNormal: 'Normal',
