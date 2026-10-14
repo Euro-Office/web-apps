@@ -3452,6 +3452,7 @@ define([
                 }));
                 this.mnuTabColorToolbarPicker = new Common.UI.ThemeColorPalette({
                     el: $('#id-toolbar-menu-tab-color'),
+                    cls: 'no-dark-document-notice',
                     outerMenu: { menu: this.mnuTabColorToolbar.menu, index: 0, focusOnShow: true },
                     transparent: true
                 });
