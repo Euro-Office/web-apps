@@ -352,8 +352,6 @@ define([
             var me = this;
 
             var win = new Common.UI.ExtendedColorDialog({
-                darkDocumentOn: me.textDarkDocumentOn,
-                darkDocumentNotice: me.textDarkDocumentNotice
             });
             win.on('onmodalresult', function(mr) {
                 me._isdlgopen = false;

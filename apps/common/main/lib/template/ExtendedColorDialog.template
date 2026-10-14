@@ -28,7 +28,3 @@
         </div>
     </div>
 </div>
-<div class="dark-document-notice">
-    <span class="icon"></span>
-    <b><%= txtDarkDocumentOn %></b> <%= txtDarkDocumentNotice %>
-</div>
