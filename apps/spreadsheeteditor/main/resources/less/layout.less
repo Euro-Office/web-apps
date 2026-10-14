@@ -21,6 +21,15 @@ body {
             }
         }
     }
+
+    // Dark filter: displays the grid and its overlay inverted, keeping hues.
+    // Drawing objects (ws-canvas-graphic) are not filtered.
+    &.canvas-dark-filter {
+        #ws-canvas,
+        #ws-canvas-overlay {
+            filter: invert(1) hue-rotate(180deg);
+        }
+    }
 }
 
 label {
