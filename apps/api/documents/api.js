@@ -234,6 +234,8 @@
                     leftMenu: true, // must be deprecated. use layout.leftMenu instead
                     rightMenu: true, // must be deprecated. use layout.rightMenu instead
                     hideRightMenu: true, // hide or show right panel on first loading !! default value changed in 8.1
+                    pluginsPanelWidth: 420, // default outer width (px) of right plugin panels until the user resizes,
+                                            // clamped between the default width and min(596, half the window width)
                     toolbar: true, // must be deprecated. use layout.toolbar instead
                     statusBar: true, // must be deprecated. use layout.statusBar instead
                     autosave: true,
