@@ -235,6 +235,8 @@ async function main() {
     // Runs before Phase 1 — no point building if load-bearing idioms have drifted.
     const p0 = await phase('Preflight', [
         task('verify-replacements', node, ['scripts/verify-replacements.mjs']),
+        // fixture tests for the Phase 5 sprite gate; no build output needed
+        task('verify-sprites:test', node, ['--test', 'scripts/verify-sprites.test.mjs']),
     ]);
 
     // ---- phase 1: all independent work in parallel --------------------------
