@@ -292,15 +292,18 @@ async function main() {
         task('inline-svgs', node, ['scripts/inline-svgs.js']),
     ]);
 
-    // ---- phase 5: output-side gates (Check B + Check C + Check D) -----------
+    // ---- phase 5: output-side gates (Check B + Check C + Check D + Check E) --
     // verify-bundles:        scans built bundles for surviving {{TOKEN}} literals.
     // verify-deploy:         asserts every required vendor/embed/main artifact exists.
     // verify-browser-target: asserts no hardcoded targets; consumers import browser-floor.mjs.
+    // verify-sprites:        asserts each *.html.deploy inlines the sprites its own modules
+    //                        reference; reads the sprites deploy-sprites regenerated in Phase 1.
     // All are independent reads — safe to run in parallel.
     const p4 = await phase('Phase 5 — gates', [
         task('verify-bundles',        node, ['scripts/verify-bundles.mjs']),
         task('verify-deploy',         node, ['scripts/verify-deploy.mjs']),
         task('verify-browser-target', node, ['scripts/verify-browser-target.mjs']),
+        task('verify-sprites',        node, ['scripts/verify-sprites.mjs']),
     ]);
 
     // ---- summary -------------------------------------------------------------

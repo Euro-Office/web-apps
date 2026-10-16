@@ -57,6 +57,7 @@ Phase 5 — gates (fail the build loudly)
   verify-bundles.mjs          scan built bundles for surviving {{TOKEN}} literals
   verify-deploy.mjs           assert every required artifact exists (incl. mobile)
   verify-browser-target.mjs   no hardcoded browser targets; configs import build/browser-floor.mjs
+  verify-sprites.mjs          each *.html.deploy inlines the sprites its own modules reference
 ```
 
 ---
@@ -156,6 +157,11 @@ Preflight + Phase 5. Fail the build loudly rather than ship a silent defect:
   mobile `index.html`/`dist`/`css`/`locale`).
 - `verify-browser-target.mjs` — fails if any webpack/babel/postcss config hardcodes a
   browser target instead of importing from `build/browser-floor.mjs`.
+- `verify-sprites.mjs` — follows each `*.html.deploy` page's AMD entry through the source
+  tree and fails if an icon id its modules request (`iconCls` → `btn-*`, as
+  `templateBtnIcon` renders it) is not a `<symbol>` in a sprite the page inlines. Catches
+  a missing `<inline src="….svg" />` tag, which otherwise ships as blank icons (#277, #286).
+  Icons that a shared view only shows in some editors are listed in `EDITOR_GATED`.
 
 ### `browser-floor.mjs` (config, not a script)
 Single source of truth for the mobile browser floor — `BROWSERSLIST` + `ESBUILD_TARGET`
