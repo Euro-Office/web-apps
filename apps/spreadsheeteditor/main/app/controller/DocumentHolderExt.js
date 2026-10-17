@@ -138,6 +138,7 @@ define([], function () {
                 view.mnuPivotSort.menu.on('item:click',             _.bind(me.onPivotSort, me));
                 view.mnuPivotFilter.menu.on('item:click',           _.bind(me.onPivotFilter, me));
                 view.pmiClear.menu.on('item:click',                 _.bind(me.onClear, me));
+                view.pmiRemoveCheckbox.on('click',                  _.bind(me.onRemoveCheckbox, me));
                 view.pmiSelectTable.menu.on('item:click',           _.bind(me.onSelectTable, me));
                 view.pmiInsertTable.menu.on('item:click',           _.bind(me.onInsertTable, me));
                 view.pmiDeleteTable.menu.on('item:click',           _.bind(me.onDeleteTable, me));
@@ -828,6 +829,10 @@ define([], function () {
                     }
                 }
             }
+        };
+
+        dh.onRemoveCheckbox = function() {
+            if (this.api) this.api.asc_removeCheckbox();
         };
 
         dh.onClear = function(menu, item, e) {
@@ -2729,6 +2734,9 @@ define([], function () {
                 documentHolder.pmiDeleteCells.setDisabled(isCellLocked || isTableLocked || inPivot || this._state.wsLock || isUserProtected);
                 documentHolder.pmiDeleteTable.setDisabled(isCellLocked || isTableLocked || this._state.wsLock || isUserProtected);
                 documentHolder.pmiClear.setDisabled(isCellLocked || inPivot || isUserProtected);
+                var hasCheckbox = !!(xfs && xfs.asc_getCheckbox());
+                documentHolder.pmiRemoveCheckbox.setVisible(!!(iscellmenu || isrowmenu || iscolmenu || isallmenu) && hasCheckbox);
+                documentHolder.pmiRemoveCheckbox.setDisabled(isCellLocked || isUserProtected);
                 documentHolder.pmiFilterCells.setDisabled(isCellLocked || isTableLocked|| (filterInfo==null) || inPivot || !filterInfo && !this.permissions.canModifyFilter || this._state.wsLock || isUserProtected);
                 documentHolder.pmiSortCells.setDisabled(isCellLocked || isTableLocked|| (filterInfo==null) || inPivot || !this.permissions.canModifyFilter || this._state.wsProps['Sort'] || isUserProtected);
                 documentHolder.pmiReapply.setDisabled(isCellLocked || isTableLocked|| (isApplyAutoFilter!==true) || isUserProtected);

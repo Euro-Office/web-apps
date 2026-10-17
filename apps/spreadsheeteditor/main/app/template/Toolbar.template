@@ -169,6 +169,7 @@
                 <div class="separator long"></div>
                 <div class="group">
                     <span class="btn-slot text x-huge" id="slot-btn-insslicer"></span>
+                    <span class="btn-slot text x-huge" id="slot-btn-inscheckbox"></span>
                 </div>
                 <div class="separator long"></div>
                 <div class="group">
