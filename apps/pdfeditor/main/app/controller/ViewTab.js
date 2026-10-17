@@ -79,6 +79,7 @@ define([
                     'zoom:topage': _.bind(this.onBtnZoomTo, this, 'topage'),
                     'zoom:towidth': _.bind(this.onBtnZoomTo, this, 'towidth'),
                     'darkmode:change': _.bind(this.onChangeDarkMode, this),
+                    'zenmode:request': _.bind(this.onChangeZenMode, this),
                     'macros:click':  _.bind(this.onClickMacros, this)
                 },
                 'Toolbar': {
@@ -324,6 +325,10 @@ define([
                 Common.UI.Themes.setContentTheme(isdarkmode?'dark':'light');
             } else
                 this.onContentThemeChangedToDark(Common.UI.Themes.isContentThemeDark());
+        },
+
+        onChangeZenMode: function (active) {
+            Common.NotificationCenter.trigger('zenmode:request', active);
         },
 
         onContentThemeChangedToDark: function (isdark) {

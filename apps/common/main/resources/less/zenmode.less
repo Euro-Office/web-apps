@@ -1,0 +1,109 @@
+//
+// Zen Mode Styles
+// --------------------------------------------------
+//
+// Elements with the 'zen-mode-hideable' class will be hidden when Zen mode is active.
+// Add this class to any toolbar, menu, or UI element that should be hidden in Zen mode.
+//
+// Example: <div id="toolbar" class="zen-mode-hideable">...
+//
+
+@import "variables.less";
+
+// Zen mode overlay
+.zen-mode-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 500; // Above everything
+  display: none;
+  background: transparent;
+  pointer-events: none; // Allow interaction with document
+
+  &.visible {
+    display: block;
+  }
+
+  .zen-mode-overlay-inner {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    pointer-events: auto; // Enable interaction with overlay controls
+  }
+
+  .zen-mode-overlay-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    background: @background-contrast-popover;
+    border: @scaled-one-px-value solid @border-contrast-popover;
+    color: @text-normal;
+    padding: 8px 12px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px @shadow-contrast-popover;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .zen-mode-exit-btn {
+    // .btn-toolbar sets a fixed icon-sized height (var(--x-small-btn-size)) with
+    // box-sizing: border-box, so padding must not eat into the content box.
+    padding: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: @icon-normal;
+
+    &:hover {
+      background: @highlight-button-hover;
+      border-radius: 4px;
+    }
+
+    .icon {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}
+
+
+// Apply same styles to body element when it has zen-mode class.
+// overflow: hidden on body propagates to the viewport as long as html has no overflow set.
+body.zen-mode {
+  height: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+// Common class for hideable elements - all elements with this class will be hidden in Zen mode
+// This is the preferred method for marking elements as hideable. Add class="zen-mode-hideable"
+// to any element that should be hidden when Zen mode is active.
+.zen-mode .zen-mode-hideable,
+.zen-mode #id_panel_top,
+.zen-mode #id_panel_left {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  position: absolute !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+}

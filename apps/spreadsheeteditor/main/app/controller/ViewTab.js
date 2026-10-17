@@ -97,6 +97,7 @@ define([
                     'viewtab:createview': this.onCreateView,
                     'viewtab:manager': this.onOpenManager,
                     'viewtab:viewmode': this.onPreviewMode,
+                    'zenmode:request': _.bind(this.onChangeZenMode, this),
                     'macros:click':  this.onClickMacros,
                     'macros:record':  _.bind(this.onClickMacrosRec, this),
                     'macros:pause':  _.bind(this.onClickMacrosPause, this)
@@ -309,6 +310,10 @@ define([
 
         onPreviewMode: function(value) {
             this.api && this.api.asc_SetSheetViewType(value);
+        },
+
+        onChangeZenMode: function (active) {
+            Common.NotificationCenter.trigger('zenmode:request', active);
         },
 
         onClickMacros: function() {
