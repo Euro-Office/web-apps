@@ -35,6 +35,8 @@ FROM web-base AS web-apps
     RUN cd app/translation && \
         python3 merge_and_check.py
 
+    # Changes on every commit, so declared after the cacheable steps
+    ARG BUILD_COMMITS
     RUN cd app/build && \
         BUILD_ROOT=${BUILD_ROOT} PRODUCT_VERSION=${PRODUCT_VERSION} THEME=euro-office \
         node scripts/build-pipeline.js

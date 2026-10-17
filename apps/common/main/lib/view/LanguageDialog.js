@@ -95,7 +95,7 @@ define([], function () { 'use strict';
                 '<li id="<%= id %>" data-value="<%= value %>">',
                     '<a tabindex="-1" type="menuitem" langval="<%= value %>">',
                         '<div>',
-                            '<svg class="icon uni-scale<% if (spellcheck) { %> spellcheck-lang<% } %>"><% if (spellcheck) { %><use href="#btn-ic-docspell"></use><% } %></svg>',
+                            '<svg class="icon uni-scale<% if (spellcheck) { %> spellcheck-lang<% } else { %> icon-hidden<% } %>"><% if (spellcheck) { %><use href="#btn-ic-docspell"></use><% } %></svg>',
                             '<%= displayValue %>',
                         '</div>',
                         '<label style="opacity: 0.6"><%= displayValueEn %></label>',
