@@ -163,7 +163,7 @@ class MainPage extends Component {
 
         if(!appOptions.isDisconnected && appOptions.isDocReady) {
             const { logo } = customization;
-            isBranding = appOptions.canBranding || appOptions.canBrandingExt;
+            isBranding = appOptions.canBrandingExt;
             
             if(logo && isBranding) {
                 isHideLogo = logo.visible === false;
