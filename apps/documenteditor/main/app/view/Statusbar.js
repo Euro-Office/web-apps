@@ -495,26 +495,19 @@ define([
 
             onGetDocInfoStart: function() {
                 this.infoObj = {PageCount: 0, WordsCount: 0, ParagraphCount: 0, SymbolsCount: 0, SymbolsWSCount:0};
-                this._docInfoCounting = true;
-            },
-
-            setDocInfoValues: function(obj) {
-                var me = this,
-                    items = this.btnDocInfo.menu.items,
-                    sel = this._selInfo;
-                ['get_PageCount', 'get_ParagraphCount', 'get_WordsCount', 'get_SymbolsCount', 'get_SymbolsWSCount'].forEach(function(getter, i) {
-                    var total = obj[getter](),
-                        part = sel ? sel[getter]() : -1;
-                    if (total>-1)
-                        items[i].options.value = part>-1 ? Common.Utils.String.format(me.txtSelectionOf, part, me._docInfoCounting ? '…' : total) : total;
-                });
             },
 
             onDocInfo: function(obj) {
                 if (obj && this.btnDocInfo && this.btnDocInfo.menu) {
-                    var me = this;
-                    this._docInfo = obj;
-                    this.setDocInfoValues(obj);
+                    var me = this,
+                        items = this.btnDocInfo.menu.items,
+                        sel = this._selInfo;
+                    ['get_PageCount', 'get_ParagraphCount', 'get_WordsCount', 'get_SymbolsCount', 'get_SymbolsWSCount'].forEach(function(getter, i) {
+                        var total = obj[getter](),
+                            part = sel ? sel[getter]() : -1;
+                        if (total>-1)
+                            items[i].options.value = part>-1 ? Common.Utils.String.format(me.txtSelectionOf, part, total) : total;
+                    });
                     if (!this.timerDocInfo) { // start timer for filling info
                         this.timerDocInfo = setInterval(function(){
                             me.fillDocInfo();
@@ -527,8 +520,6 @@ define([
             onGetDocInfoEnd: function() {
                 clearInterval(this.timerDocInfo);
                 this.timerDocInfo = undefined;
-                this._docInfoCounting = false;
-                this._docInfo && this.setDocInfoValues(this._docInfo);
                 this.fillDocInfo();
             },
 
