@@ -1160,8 +1160,7 @@ class MainController extends Component {
                 storeAppOptions.canComments && this.api.asc_setRestriction(Asc.c_oAscRestrictionType.OnlyComments);
                 storeAppOptions.canFillForms && this.api.asc_setRestriction(Asc.c_oAscRestrictionType.OnlyForms);
             } else {
-                // this.api.asc_setRestriction(Asc.c_oAscRestrictionType.None);
-                this.api.asc_setRestriction(Asc.c_oAscRestrictionType.View);
+                this.api.asc_setRestriction(storeAppOptions.isViewer ? Asc.c_oAscRestrictionType.View : Asc.c_oAscRestrictionType.None);
             }
         }
     };
