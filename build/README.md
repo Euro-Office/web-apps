@@ -68,6 +68,8 @@ Phase 5 — gates (fail the build loudly)
 | `PRODUCT_VERSION` | **yes** | — | e.g. `9.2.1`. Rejected if major < 6 (EuroOffice ≥ 6 gate). |
 | `BUILD_ROOT` | **yes** | `../deploy` | Absolute path to DocumentServer output root. |
 | `BUILD_NUMBER` | no | `GITHUB_RUN_NUMBER` → `common.json.build` | Appended to version string in JS bundles. Auto-increments in CI via `GITHUB_RUN_NUMBER`. |
+| `BUILD_COMMITS` | no | empty | `repo=sha` pairs separated by spaces, parent repo first (e.g. `DocumentServer=<sha> web-apps=<sha>`). Shown with GitHub links in the About dialog. Set by the parent repo's build. |
+| `BUILD_DATE` | no | today (UTC) | `YYYY-MM-DD`, shown in the About dialog. |
 | `THEME` | no | `euro-office` | Theme directory name under `theme/`. |
 | `NODE_ENV` | no | `production` | Build mode, forced onto every child. `development` = unminified, `console` kept, esbuild minifier off for mobile (so the ES target + `drop_console` do NOT run — never validate a fix on a dev build). The pipeline echoes the resolved mode in its banner (green prod / red DEV warning). |
 | `WATCH` | no | `0` | `1` = mobile webpack watch mode (live rebuild). Decoupled from `NODE_ENV`; for direct `build.js` runs only — the pipeline would hang on a watching child. |

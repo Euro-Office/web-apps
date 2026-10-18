@@ -1,0 +1,13 @@
+{
+  "sourceUrl": "https://github.com/Euro-Office",
+  "blocks": [
+    { "text": "Copyright (C) Ascensio System SIA, 2009-2026\nCopyright (C) 2026 Euro-Office contributors" },
+    { "text": "Euro-Office is a modified version of ONLYOFFICE, originally developed by Ascensio System SIA. Euro-Office is not affiliated with, endorsed by, or sponsored by Ascensio System SIA. ONLYOFFICE is a trademark of Ascensio System SIA." },
+    { "text": "This version was modified by the Euro-Office project between 2026-03-15 and {buildDate}. A complete list of modifications with dates and commit references is included with this program: [Modifications]({modificationsUrl})" },
+    { "heading": "Licence" },
+    { "text": "This program is free software, licensed under the GNU Affero General Public License version 3 (AGPL-3.0-only). You may convey and modify this work under the terms of that licence: [View licence]({licenceUrl})" },
+    { "text": "This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE." },
+    { "text": "The complete corresponding source code for this running version is available at: [Source code]({sourceUrl})" },
+    { "commits": "Build commits" }
+  ]
+}

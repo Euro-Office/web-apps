@@ -34,6 +34,8 @@ const PageAbout = props => {
 
     const nameEditor = (_t.textEditor || editors[editorType]).toUpperCase();
 
+    const buildInfo = <span dangerouslySetInnerHTML={{__html: __ABOUT_BUILD_INFO__}} />;
+
     return (
         <Page className={"about" + (!Device.phone ? " about_tablet" : Device.ios ? " about_ios" : " about_android")}>
             <Navbar title={_t.textAbout} backLink={_t.textBack} />
@@ -48,7 +50,7 @@ const PageAbout = props => {
                     </div>
                     <div className="about__editor">
                         <p className="about__text">{nameEditor}</p>
-                        <p className="about__text">{_t.textVersion} {__PRODUCT_VERSION__}</p>
+                        <p className="about__text">{_t.textVersion} {__PRODUCT_VERSION__}{buildInfo}</p>
                     </div>
                     {mailCustomer || phoneCustomer ? (
                         <div className="about__customer">
@@ -106,7 +108,7 @@ const PageAbout = props => {
                     <div className="about__logo"></div>
                     <div className="about__editor">
                         <p className="about__text">{nameEditor}</p>
-                        <p className="about__text">{_t.textVersion} {__PRODUCT_VERSION__}</p>
+                        <p className="about__text">{_t.textVersion} {__PRODUCT_VERSION__}{buildInfo}</p>
                     </div>
                     <div className="about__contacts">
                         <p className="about__text" id="settings-about-address">
@@ -121,11 +123,7 @@ const PageAbout = props => {
                     </div>
                 </Fragment>
             )}
-            {__ATTRIBUTION__ && (
-                <div className="about__attribution">
-                    <p className="about__text">{__ATTRIBUTION__}</p>
-                </div>
-            )}
+            <div className="about__legal" dangerouslySetInnerHTML={{__html: __ABOUT_LEGAL__}} />
         </Page>
     );
 };

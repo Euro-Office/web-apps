@@ -37,6 +37,7 @@ const COMMON_JSON    = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, 'build', 
 const PKG_VERSION    = process.env.PRODUCT_VERSION || COMMON_JSON.version;
 let CUSTOMER_NAME;
 let APP_TITLE_TEXT;
+let SUPPORT_URL;
 const APPS_SRC       = path.join(REPO_ROOT, 'apps');
 const VENDOR_SRC     = path.join(REPO_ROOT, 'vendor');
 const BUILD_OUT      = path.join(BUILD_ROOT, 'web-apps');
@@ -110,6 +111,7 @@ function deployAPI() {
     replaceTokensIn(apiOut, [
         [/@@SRC_ROOT@@/g, REPO_ROOT],
         [/\{\{APP_TITLE_TEXT\}\}/g, APP_TITLE_TEXT],
+        [/\{\{SUPPORT_URL\}\}/g, SUPPORT_URL],
     ], { exts: ['.html'] });
 
     console.log('deploy-common: api done');
@@ -200,6 +202,7 @@ function deployMonaco(entry) {
     const { themeVal } = await import('../theme.config.mjs');
     CUSTOMER_NAME  = themeVal(process.env.APP_CUSTOMER_NAME, 'company_name', 'Euro Office');
     APP_TITLE_TEXT = themeVal(process.env.APP_TITLE_TEXT, 'app_title', 'Euro Office');
+    SUPPORT_URL    = themeVal(process.env.SUPPORT_URL, 'support_url', 'https://github.com/euro-office');
 
     const { VENDORS } = await import('../vendor.manifest.mjs');
 
