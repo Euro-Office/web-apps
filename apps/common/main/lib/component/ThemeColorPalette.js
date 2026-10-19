@@ -738,7 +738,7 @@ define([
         textStandartColors      : 'Standard Colors',
         textRecentColors        : 'Recent Colors',
         textTransparent         : 'Transparent',
-        textDarkDocumentOn      : 'Dark Document is on:',
-        textDarkDocumentNotice  : 'sheet colors may differ (View tab).'
+        textDarkDocumentOn      : 'View > Dark Document is on:',
+        textDarkDocumentNotice  : 'sheet colors will differ on screen.'
     }, Common.UI.ThemeColorPalette || {}));
 });
