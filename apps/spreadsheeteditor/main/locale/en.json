@@ -5233,7 +5233,7 @@
   "SSE.Views.ViewTab.textCombineSheetAndStatusBars": "Combine Sheet and Status Bars",
   "SSE.Views.ViewTab.textCreate": "New",
   "SSE.Views.ViewTab.textDarkDocument": "Dark Document",
-  "SSE.Views.ViewTab.textDarkDocumentInfo": "Dark Document is a display mode for comfortable viewing. Colors on screen look different from the document's real colors. Printing, export and other users see the original colors. You can turn it off in the View tab.",
+  "SSE.Views.ViewTab.textDarkDocumentInfo": "Dark Document is a display mode for comfortable viewing. Colors on screen look different from the document's real colors, and pictures appear as negatives. Printing, export and other users see the original colors. You can turn it off in the View tab.",
   "SSE.Views.ViewTab.textDefault": "Default",
   "SSE.Views.ViewTab.textFill": "Fill",
   "SSE.Views.ViewTab.textFormula": "Formula Bar",

@@ -53,6 +53,10 @@ define([
         'border-toolbar'
     ];
 
+    // Whether the dark filter also covers drawing objects (charts, shapes, text boxes,
+    // equations, images). Raster images then display as negatives.
+    var darkFilterDrawingObjects = true;
+
     SSE.Controllers.ViewTab = Backbone.Controller.extend(_.extend({
         models : [],
         collections : [
@@ -357,6 +361,7 @@ define([
             if (on === this._state.darkFilter && !themeChanged) return;
             this._state.darkFilter = on;
             document.body.classList.toggle('canvas-dark-filter', on);
+            document.body.classList.toggle('canvas-dark-filter-objects', on && darkFilterDrawingObjects);
             if (on || this._state.lightCanvasChrome)
                 this.setLightCanvasChrome(on);
             this.showDarkDocumentInfo();

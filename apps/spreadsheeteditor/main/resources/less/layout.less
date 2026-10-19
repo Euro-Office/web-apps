@@ -23,7 +23,7 @@ body {
     }
 
     // Dark filter: displays the grid and its overlay inverted, keeping hues.
-    // Drawing objects (ws-canvas-graphic) are not filtered.
+    // Drawing objects are filtered only with canvas-dark-filter-objects.
     &.canvas-dark-filter {
         #ws-canvas,
         #ws-canvas-overlay {
@@ -38,6 +38,15 @@ body {
         // Sheet tabs are not filtered, so tab colors look as chosen
         .no-dark-document-notice .dark-document-notice {
             display: none;
+        }
+    }
+
+    // Drawing objects and the caret for text inside them, filtered like the grid.
+    // Raster images display as negatives.
+    &.canvas-dark-filter-objects {
+        #ws-canvas-graphic,
+        #id_target_cursor {
+            filter: invert(1) hue-rotate(180deg);
         }
     }
 }
