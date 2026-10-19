@@ -50,6 +50,26 @@ export function getSelections(cellInfo, focusObjects) {
     return cellInfo.asc_getHyperlink() ? ['cell', 'hyperlink'] : ['cell'];
 }
 
+// Lock state of the selection. A drawing selection takes it from the first
+// Image-type graphic object; any other selection takes the cell's lock.
+// getGraphicObjects is called only for drawing selections, and may return null.
+export function getLockState(cellInfo, getGraphicObjects) {
+    const state = { isLocked: false, isLockedShape: false, isLockedText: false };
+    if (!isObj(cellInfo.asc_getSelectionType())) {
+        state.isLocked = cellInfo.asc_getLocked();
+        return state;
+    }
+    for (const object of getGraphicObjects() ?? []) {
+        if (object.get_ObjectType() !== Asc.c_oAscTypeSelectElement.Image) continue;
+        const value = object.get_ObjectValue();
+        state.isLocked = value.asc_getLocked();
+        state.isLockedShape = value.asc_getProtectionLocked();
+        state.isLockedText = value.asc_getProtectionLockText();
+        break;
+    }
+    return state;
+}
+
 // storeFocusObjects.intf. Each getter reads the store's observables when called,
 // so the store's computeds track them through it.
 export function createCellInfoIntf(store) {
