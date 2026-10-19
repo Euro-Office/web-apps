@@ -59,7 +59,7 @@ define([
             _.template(
                 '<% var me = this; var idx = 0; %>' +
                 '<div class="dark-document-notice">' +
-                    '<span class="icon"></span>' +
+                    '<span class="notice-icon"></span>' +
                     '<b><%=me.textDarkDocumentOn%></b> <%=me.textDarkDocumentNotice%>' +
                 '</div>' +
                 '<div class="palette-inner">' +
