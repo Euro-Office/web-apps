@@ -4,7 +4,7 @@
  */
 
 import assert from 'node:assert/strict';
-import { createCellInfoIntf, getSelections, isAddDisabled, isEditDisabled, isObj } from './selectionRules.js';
+import { createCellInfoIntf, getLockState, getSelections, isAddDisabled, isEditDisabled, isObj } from './selectionRules.js';
 import { installAsc, selectElementTypes, selectedObject } from '../../../../../test/unit-tests/mobile/ascStub.js';
 
 // sdkjs common/commonDefines.js c_oAscSelectionType.
@@ -172,6 +172,67 @@ describe('SSE selectionRules', () => {
             assert.equal(isAddDisabled({ wsProps: { Objects: true, InsertHyperlinks: false, Sort: true } }), false);
             assert.equal(isAddDisabled({ wsProps: { Objects: true, InsertHyperlinks: true, Sort: false } }), false);
             assert.equal(isAddDisabled({ wsProps: undefined }), false);
+        });
+    });
+
+    describe('SSE getLockState', () => {
+        // asc_CCellInfo with its lock. Drawing selections use cellInfo(), which has no
+        // asc_getLocked, so reading the cell lock there throws.
+        const lockedCell = (selectionType, locked) => ({ ...cellInfo(selectionType), asc_getLocked: () => locked });
+        // asc_CImgProperty with only the lock getters.
+        const lockValue = ({ locked = false, shape = false, text = false } = {}) => ({
+            asc_getLocked: () => locked,
+            asc_getProtectionLocked: () => shape,
+            asc_getProtectionLockText: () => text,
+        });
+        const objectsOf = objects => () => objects;
+        const noObjects = () => { throw new Error('graphic objects read for a cell selection'); };
+        const drawingTypes = [S.RangeImage, S.RangeShape, S.RangeChart, S.RangeShapeText, S.RangeChartText, S.RangeSlicer];
+        const unlocked = { isLocked: false, isLockedShape: false, isLockedText: false };
+
+        // Rule: a cell selection takes the cell's lock.
+        it('a locked cell selection gives isLocked', () => {
+            for (const t of [S.RangeCells, S.RangeCol, S.RangeRow, S.RangeMax]) {
+                assert.deepEqual(getLockState(lockedCell(t, true), noObjects),
+                    { isLocked: true, isLockedShape: false, isLockedText: false }, t);
+            }
+        });
+
+        // Rule: an unlocked cell is unlocked, and graphic objects are only fetched for drawing selections.
+        it('an unlocked cell gives all false without reading graphic objects', () => {
+            assert.deepEqual(getLockState(lockedCell(S.RangeCells, false), noObjects), unlocked);
+        });
+
+        // Rule: a drawing selection, slicers included, takes its locks from the first Image-type object.
+        it('every drawing selection reads the first Image object\'s locks', () => {
+            const first = lockValue({ locked: true, shape: false, text: true });
+            const later = lockValue({ locked: false, shape: true, text: false });
+            const objects = [selectedObject(T.Paragraph, lockValue({ locked: true, shape: true, text: true })),
+                image(first), image(later)];
+            for (const t of drawingTypes) {
+                assert.deepEqual(getLockState(cellInfo(t), objectsOf(objects)),
+                    { isLocked: true, isLockedShape: false, isLockedText: true }, t);
+            }
+        });
+
+        // Rule: a protection-locked slicer locks its shape.
+        it('a protection-locked slicer sets isLockedShape', () => {
+            const objects = [image(lockValue({ shape: true }))];
+            assert.deepEqual(getLockState(cellInfo(S.RangeSlicer), objectsOf(objects)),
+                { isLocked: false, isLockedShape: true, isLockedText: false });
+        });
+
+        // Rule: a drawing selection with no Image-type object is unlocked.
+        it('a drawing selection with no Image object gives all false', () => {
+            for (const t of drawingTypes) {
+                assert.deepEqual(getLockState(cellInfo(t), objectsOf([])), unlocked, t);
+                assert.deepEqual(getLockState(cellInfo(t), objectsOf([selectedObject(T.Paragraph, lockValue({ locked: true }))])), unlocked, t);
+            }
+        });
+
+        // Rule: the SDK may return null for the graphic objects; that reads as no objects.
+        it('a drawing selection whose graphic objects are null gives all false', () => {
+            assert.deepEqual(getLockState(cellInfo(S.RangeShape), objectsOf(null)), unlocked);
         });
     });
 });
