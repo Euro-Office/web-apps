@@ -757,7 +757,7 @@ define([
             tipInterfaceTheme: 'Interface theme',
             textDarkDocument: 'Dark document',
             tipDarkDocument: 'Dark document',
-            textDarkDocumentInfo: 'Dark Document is a display mode for comfortable viewing. Colors on screen look different from the document\'s real colors, and pictures appear as negatives. Printing, export and other users see the original colors. You can turn it off in the View tab.',
+            textDarkDocumentInfo: 'Dark Document has been enabled. It reduces brightness by transforming colors on your screen only; printing, export and other users see the original colors. For accurate color edits, turn it off in the View tab.',
             textLeftMenu: 'Left panel',
             textRightMenu: 'Right panel',
             txtViewNormal: 'Normal',
