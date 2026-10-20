@@ -40,8 +40,9 @@ define([
             // Listen for Zen mode requests
             Common.NotificationCenter.on('zenmode:request', _.bind(this._onZenModeRequest, this));
 
-            // Also listen for escape key to exit Zen mode
-            $(document).on('keydown.zenmode', _.bind(this._onKeyDown, this));
+            // Escape exits Zen mode; the handler is bound while Zen mode is active
+            // so that handlers registered earlier (the editor itself) see the key first
+            this._onKeyDown = _.bind(this._onKeyDown, this);
         },
 
         onLaunch: function() {
@@ -72,6 +73,9 @@ define([
 
             this.isZenMode = true;
 
+            // Exit on Escape while Zen mode is active
+            $(document).on('keydown.zenmode', this._onKeyDown);
+
             // Collapse an open toolbar "More" panel (narrow screens) so it does not
             // stay expanded after the toolbars are hidden and Zen mode is left again
             var toolbarController = this.getApplication().getController('Toolbar');
@@ -84,7 +88,6 @@ define([
             // Show the Zen mode overlay
             if (this.overlay) {
                 this.overlay.show();
-                this.overlay.$el.addClass('visible');
             }
 
             // Trigger window resize event to ensure all UI components update their layout
@@ -102,10 +105,12 @@ define([
 
             this.isZenMode = false;
 
+            // Stop listening for Escape
+            $(document).off('keydown.zenmode', this._onKeyDown);
+
             // Hide the Zen mode overlay first
             if (this.overlay) {
                 this.overlay.hide();
-                this.overlay.$el.removeClass('visible');
             }
 
             // Remove Zen mode class from body
@@ -122,11 +127,17 @@ define([
          * Handler for keyboard events (ESC to exit Zen mode)
          */
         _onKeyDown: function(e) {
-            if (this.isZenMode && e.keyCode === Common.UI.Keys.ESC) {
-                this.exit();
-                e.preventDefault();
-                e.stopPropagation();
-            }
+            if (e.keyCode !== Common.UI.Keys.ESC) return;
+
+            // a modal window is open: its own Esc handling (closing the dialog) wins
+            if (parseInt($('.modals-mask').attr('counter') || '0', 10) > 0) return;
+
+            // keymaster (Common.util.Shortcuts) preventDefaults every Esc that matches a
+            // registered shortcut, so an already-prevented event is not a signal that the
+            // editor consumed the key; Zen mode always exits on plain Esc instead
+            this.exit();
+            e.preventDefault();
+            e.stopPropagation();
         }
 
     }, Common.Controllers.ZenMode || {}));
