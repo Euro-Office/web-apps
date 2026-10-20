@@ -1,7 +1,165 @@
 {
-  "Controller": {
-    "Main": {
-      "closeButtonText": "Stäng dokument"
+    "Controller": {
+        "Main": {
+            "closeButtonText": "Stäng fil",
+            "advDRMOptions": "Skyddad fil",
+            "advDRMPassword": "Lösenord",
+            "criticalErrorTitle": "Fel",
+            "notcriticalErrorTitle": "Varning",
+            "textBuyNow": "Besök webbsida",
+            "textClose": "Stäng",
+            "textGuest": "Gäst",
+            "textNo": "Nej",
+            "textOk": "Ok",
+            "textOpenFile": "Ange ett lösenord för att öppna filen",
+            "textPaidFeature": "Betalfunktion",
+            "textYes": "Ja",
+            "errorAccessDeny": "Du försöker utföra en åtgärd som du inte har behörighet till.<br>Vänligen kontakta din administratör.",
+            "errorUpdateVersion": "Filversionen har ändrats. Sidan kommer att uppdateras.",
+            "leavePageText": "Du har osparade ändringar i det här dokumentet. Klicka på 'Stanna kvar på den här sidan' och vänta på den automatiskt sparas. Klicka på 'Lämna den här sidan' för att kasta alla de osparade ändringarna.",
+            "textAnonymous": "Anonym",
+            "titleLicenseExp": "Licens har löpt ut",
+            "titleLicenseNotActive": "Licens är inte aktiv",
+            "titleUpdateVersion": "Version ändrad",
+            "txtIncorrectPwd": "Lösenord är inkorrekt",
+            "warnLicenseAnonymous": "Åtkomst nekad för anonym användare.<br>Det här dokumentet kommer att öppnas enbart för lässyften.",
+            "warnLicenseBefore": "Licens är inte aktiv.<br>Vänligen kontakta din administratör.",
+            "warnLicenseExp": "Din licens har löpt ut. Vänligen uppdatera din licens och uppdatera sidan.",
+            "warnProcessRightsChange": "Du har inte behörighet att redigera filen."
+        }
+    },
+    "About": {
+        "textAbout": "Om",
+        "textEmail": "E-post",
+        "textTel": "Telefon",
+        "textVersion": "Version",
+        "textBack": "Tillbaka",
+        "textAddress": "Adress"
+    },
+    "LongActions": {
+        "loadImageTextText": "Läser in bild...",
+        "openTextText": "Öppnar dokument...",
+        "applyChangesTextText": "Läser in data...",
+        "applyChangesTitleText": "Läser in data",
+        "downloadTextText": "Laddar ner dokument...",
+        "downloadTitleText": "Laddar ner dokument",
+        "loadFontsTextText": "Läser in data...",
+        "loadFontsTitleText": "Läser in data",
+        "loadFontTextText": "Läser in data...",
+        "loadFontTitleText": "Läser in data",
+        "loadImagesTextText": "Läser in bilder...",
+        "loadImagesTitleText": "Läser in bilder",
+        "loadImageTitleText": "Läser in bild",
+        "loadingDocumentTextText": "Läser in dokument...",
+        "loadingDocumentTitleText": "Läser in",
+        "loadThemeTextText": "Läser in tema...",
+        "loadThemeTitleText": "Läser in tema",
+        "openTitleText": "Öppnar dokument",
+        "printTextText": "Skriver ut dokument...",
+        "printTitleText": "Skriver ut dokument",
+        "savePreparingText": "Förbereder att spara",
+        "savePreparingTitle": "Förbereder att spara. Vänligen vänta...",
+        "saveTextText": "Sparar dokument...",
+        "saveTitleText": "Sparar dokument",
+        "textLoadingDocument": "Läser in",
+        "txtEditingMode": "Ställer in redigeringsläge...",
+        "uploadImageTextText": "Laddar upp bild...",
+        "uploadImageTitleText": "Laddar upp bild",
+        "waitText": "Vänligen vänta..."
+    },
+    "Toolbar": {
+        "btnRestartNow": "Starta om nu",
+        "leaveButtonText": "Lämna den här sidan",
+        "stayButtonText": "Stanna kvar på den här sidan",
+        "textEnterNewFileName": "Ange ett nytt filnamn",
+        "textRenameFile": "Byt filnamn",
+        "dlgLeaveTitleText": "Du lämnar applikationen"
+    },
+    "View": {
+        "Settings": {
+            "textLastModified": "Senast ändrad",
+            "notcriticalErrorTitle": "Varning",
+            "textAbout": "Om",
+            "textApplication": "Applikation",
+            "textApplicationSettings": "Applikationsinställningar",
+            "textBack": "Tillbaka",
+            "textClose": "Stäng",
+            "textComment": "Kommentar",
+            "textCreated": "Skapad",
+            "textDark": "Mörkt",
+            "textDarkTheme": "Mörkt tema",
+            "textDownload": "Ladda ner",
+            "textDownloadAs": "Ladda ner som...",
+            "textEmail": "e-post:",
+            "textFeedback": "Återkoppling & support",
+            "textHelp": "Hjälp",
+            "textLastModifiedBy": "Senast ändrad av",
+            "textLight": "Ljust",
+            "textLoading": "Läser in...",
+            "textLocation": "Plats",
+            "textOk": "Ok",
+            "textOwner": "Ägare",
+            "textPrint": "Skriv ut",
+            "textRestartApplication": "Vänligen starta om applikationen för att ändringarna ska träda i kraft",
+            "textSearch": "Hitta",
+            "textSettings": "Inställningar",
+            "textTel": "telefon:",
+            "textTheme": "Tema",
+            "textTitle": "Titel",
+            "textUploaded": "Uppladdad",
+            "textVersion": "Version",
+            "textAddress": "adress:",
+            "textAuthor": "Författare",
+            "textDone": "Färdigt",
+            "textSubject": "Ämne"
+        },
+        "Edit": {
+            "notcriticalErrorTitle": "Varning",
+            "textCancel": "Avbryt",
+            "textInvalidName": "Filnamnet får inte innehålla följande tecknen: ",
+            "textOk": "Ok"
+        }
+    },
+    "Error": {
+        "textOk": "OK",
+        "criticalErrorTitle": "Fel",
+        "errorDefaultMessage": "Felkod: %1",
+        "notcriticalErrorTitle": "Varning",
+        "unknownErrorText": "Okänt fel.",
+        "uploadImageExtMessage": "Okänt bildformat.",
+        "uploadImageSizeMessage": "Bilden är för stor. Den maximala storleken är 25 MB.",
+        "criticalErrorExtTextClose": "Tryck 'OK' för att stänga redigeraren.",
+        "downloadErrorText": "Nedladdning misslyckades.",
+        "errorAccessDeny": "Du försöker utföra en åtgärd du inte har behörighet till.<br>Vänligen kontakta din administratör.",
+        "errorBadImageUrl": "Bild-URL är inkorrekt",
+        "errorCopyDisabled": "För säkerhetsskäl kan inte innehållet i det här dokumentet kopieras.",
+        "errorEmailClient": "Ingen e-postklient kunde hittas",
+        "errorFilePassProtect": "Filen är lösenordsskyddad och kunde inte öppnas.",
+        "errorFileSizeExceed": "Filstorleken överträffar din servers begränsningar.<br>Vänligen kontakta din administratör.",
+        "errorSetPassword": "Lösenord kunde inte ställas in.",
+        "saveErrorText": "Ett fel inträffade när filen skulle sparas",
+        "openErrorText": "Ett fel inträffade när filen skulle öppnas",
+        "scriptLoadError": "Anslutningen är för långsam, några delar kunde inte läsas in. Vänligen uppdatera sidan.",
+        "uploadImageFileCountMessage": "Inga bilder uppladdade."
+    },
+    "Common": {
+        "Collaboration": {
+            "notcriticalErrorTitle": "Varning",
+            "textBack": "Tillbaka",
+            "textCancel": "Avbryt",
+            "textOk": "Ok",
+            "textUsers": "Användare",
+            "textEditUser": "Användare som redigerar filen:",
+            "textSharingSettings": "Inställningar för delning"
+        },
+        "Themes": {
+            "dark": "Mörk",
+            "light": "Ljus",
+            "textTheme": "Tema"
+        }
+    },
+    "ContextMenu": {
+        "menuCancel": "Avbryt",
+        "textOk": "Ok"
     }
-  }
 }

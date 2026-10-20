@@ -54,5 +54,8 @@
   "PE.ApplicationView.txtFullScreen": "Pełny ekran",
   "PE.ApplicationView.txtPrint": "Drukuj",
   "PE.ApplicationView.txtSearch": "Szukaj",
-  "PE.ApplicationView.txtShare": "Udostępnij"
+  "PE.ApplicationView.txtShare": "Udostępnij",
+  "PE.ApplicationController.errorCopyDisabled": "Ze względów bezpieczeństwa zawartość tego dokumentu nie może być kopiowana.",
+  "PE.ApplicationController.errorFileNotAssembled": "Ten plik jest otwierany z kopii zapasowej serwera i nie jest zapisywany w pamięci.<br>Użyj opcji „Zapisz jako...”, aby zapisać go na dysku.",
+  "PE.ApplicationController.errorForcedViewMode": "Ten plik jest otwarty w trybie przeglądania.<br>Plik jest zablokowany do edycji lub Twoje prawa dostępu nie pozwalają na edycję."
 }

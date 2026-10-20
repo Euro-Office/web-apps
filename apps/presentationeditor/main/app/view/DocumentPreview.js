@@ -368,6 +368,7 @@ define([
                 toolbar.needShowSynchTip = true;
             }
 
+            $('body').addClass('slideshow-active');
             Common.UI.BaseView.prototype.show.call(this,arguments);
 
             var iconEl = $('.icon', this.btnPlay.cmpEl);
@@ -405,6 +406,7 @@ define([
 
         hide: function() {
             Common.UI.BaseView.prototype.hide.call(this,arguments);
+            $('body').removeClass('slideshow-active');
 
             $('#viewport-vbox-layout').css('z-index','auto');
             Common.NotificationCenter.trigger('layout:changed', 'preview');

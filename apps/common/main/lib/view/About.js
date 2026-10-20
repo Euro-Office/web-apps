@@ -60,9 +60,6 @@ define([
                     return '<tr>' + td +
                         '<label class="asc-about-desc-name">' + label + '</label>' +
                         '<label class="asc-about-desc" dir="ltr">' + value + '</label></td></tr>';
-                case 'attribution':
-                    return '<tr><td colspan="3" align="center" style="padding: 20px 0 10px 0;">' +
-                        '<label class="asc-about-desc">' + value + '</label></td></tr>';
                 default:
                     return '<tr>' + td +
                         '<label class="asc-about-desc-name">' + label + '</label>' +
@@ -90,7 +87,8 @@ define([
                         '<td align="center"><label class="asc-about-version">' + options.appName.toUpperCase() + '</label></td>',
                     '</tr>',
                     '<tr>',
-                        '<td align="center"><label class="asc-about-version" id="id-about-licensor-version-name">' + this.txtVersion + this.txtVersionNum + '</label></td>',
+                        '<td align="center"><label class="asc-about-version" id="id-about-licensor-version-name">' + this.txtVersion + this.txtVersionNum + '</label>',
+                            '<label class="asc-about-version">' + __ABOUT_BUILD_INFO__ + '</label></td>',
                     '</tr>',
                 '</table>',
                 '<table id="id-about-licensor-info" cols="3" style="width: 100%;" class="margin-bottom">',
@@ -108,7 +106,8 @@ define([
                         '<td align="center"><label class="asc-about-version">' + options.appName.toUpperCase()  + '</label></td>',
                     '</tr>',
                     '<tr>',
-                        '<td align="center"><label style="padding-bottom: 29px;" class="asc-about-version" id="id-about-licensee-version-name">' + this.txtVersion + this.txtVersionNum + '</label></td>',
+                        '<td align="center"><label style="padding-bottom: 29px;" class="asc-about-version" id="id-about-licensee-version-name">' + this.txtVersion + this.txtVersionNum + '</label>',
+                            '<label class="asc-about-version">' + __ABOUT_BUILD_INFO__ + '</label></td>',
                     '</tr>',
                     '<tr>',
                         '<td align="center" class="padding-small">',
@@ -153,9 +152,7 @@ define([
                     '<%= scope.renderRow("heading", "", publishername) %>',
                     '<%= scope.renderRow("link", "", publisherurl) %>',
                 '</table>',
-                '<table id="id-about-attribution" cols="1" style="width: 100%;">',
-                    '<%= scope.renderRow("attribution", "", attribution) %>',
-                '</table>'
+                '<div id="id-about-legal">' + __ABOUT_LEGAL__ + '</div>'
             ].join(''));
             this.menu = options.menu;
         },
@@ -170,7 +167,6 @@ define([
                     publisherurl: '{{PUBLISHER_URL}}',
                     supportemail: '{{SUPPORT_EMAIL}}',
                     phonenum: '{{PUBLISHER_PHONE}}',
-                    attribution: '{{ATTRIBUTION}}',
                     scope: this
                 }));
 

@@ -6,6 +6,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { LOAD_BEARING } from './replacements.manifest.mjs';
+import { aboutHtml } from './about-html.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -173,7 +174,6 @@ export function themeReplacements(productVersion) {
     { search: tok('SUPPORT_EMAIL'),            replace: tv(process.env.SUPPORT_EMAIL,            'support_email',           'support@onlyoffice.com'), flags: 'g' },
     { search: tok('SUPPORT_URL'),              replace: tv(process.env.SUPPORT_URL,              'support_url',             'https://support.onlyoffice.com'), flags: 'g' },
     { search: tok('SALES_EMAIL'),              replace: tv(process.env.SALES_EMAIL,              'sales_email',             'sales@onlyoffice.com'), flags: 'g' },
-    { search: tok('ATTRIBUTION'),              replace: tv(process.env.ATTRIBUTION,              'attribution',             ''),            flags: 'g' },
     { search: tok('HELP_URL'),                 replace: tv(process.env.HELP_URL,                 'help_url',                ''),            flags: 'g' },
     { search: tok('HELP_CENTER_WEB_DE'),       replace: tv(process.env.HELP_CENTER_WEB_DE,       'help_center_web_de',      ''),            flags: 'g' },
     { search: tok('HELP_CENTER_WEB_SSE'),      replace: tv(process.env.HELP_CENTER_WEB_SSE,      'help_center_web_sse',     ''),            flags: 'g' },
@@ -205,6 +205,7 @@ export function themeFormVars() {
  * is respected (renders nothing / hides the row in guarded views).
  */
 export function themeDefines() {
+  const about = aboutHtml(theme);
   return {
     __PUBLISHER_ADDRESS__: JSON.stringify(themeVal(process.env.PUBLISHER_ADDRESS, 'publisher_address', '20A-12 Ernesta Birznieka-Upisha street, Riga, Latvia, EU, LV-1050')),
     __SUPPORT_EMAIL__:     JSON.stringify(themeVal(process.env.SUPPORT_EMAIL,     'support_email',     'support@onlyoffice.com')),
@@ -216,7 +217,8 @@ export function themeDefines() {
     __COMPANY_NAME__:      JSON.stringify(themeVal(process.env.COMPANY_NAME,      'company_name',      'ONLYOFFICE')),
     __HELP_URL__:          JSON.stringify(themeVal(process.env.HELP_URL,          'help_url',          'https://helpcenter.onlyoffice.com')),
     __SALES_EMAIL__:       JSON.stringify(themeVal(process.env.SALES_EMAIL,       'sales_email',       'sales@onlyoffice.com')),
-    __ATTRIBUTION__:       JSON.stringify(themeVal(process.env.ATTRIBUTION,       'attribution',       '')),
+    __ABOUT_BUILD_INFO__:  JSON.stringify(about.buildInfo),
+    __ABOUT_LEGAL__:       JSON.stringify(about.legal),
   };
 }
 

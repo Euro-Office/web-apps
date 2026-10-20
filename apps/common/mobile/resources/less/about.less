@@ -70,11 +70,47 @@
         margin-top: 12px;
     }
 
-    &__attribution {
-        text-align: center;
+    &__legal {
         margin-top: 16px;
         padding-left: 16px;
         padding-right: 16px;
+        font-size: 12px;
+        line-height: 16px;
+        text-align: left;
+        color: @text-normal;
+
+        p {
+            margin: 0 0 10px;
+        }
+
+        a {
+            text-decoration: underline;
+        }
+
+        a, span {
+            white-space: nowrap;
+        }
+
+        .about-legal-heading {
+            margin: 16px 0 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: @text-secondary;
+        }
+
+        .about-legal-commits {
+            border-collapse: collapse;
+
+            td {
+                padding: 1px 16px 1px 0;
+                text-align: left;
+            }
+
+            td:last-child {
+                white-space: nowrap;
+            }
+        }
     }
 }
 

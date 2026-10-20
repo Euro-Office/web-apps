@@ -52,5 +52,11 @@
   "VE.ApplicationView.txtFullScreen": "Pełny ekran",
   "VE.ApplicationView.txtPrint": "Drukuj",
   "VE.ApplicationView.txtSearch": "Szukaj",
-  "VE.ApplicationView.txtShare": "Udostępnij"
+  "VE.ApplicationView.txtShare": "Udostępnij",
+  "VE.ApplicationController.errorCopyDisabled": "Ze względów bezpieczeństwa zawartość tego dokumentu nie może być kopiowana.",
+  "VE.ApplicationController.errorFileNotAssembled": "Ten plik jest otwierany z kopii zapasowej serwera i nie jest zapisywany w pamięci.<br>Użyj opcji „Zapisz jako...”, aby zapisać go na dysku.",
+  "VE.ApplicationController.errorForcedViewMode": "Ten plik jest otwarty w trybie przeglądania.<br>Plik jest zablokowany do edycji lub Twoje prawa dostępu nie pozwalają na edycję.",
+  "VE.ApplicationController.txtNo": "NIE",
+  "VE.ApplicationController.txtOpenWarning": "Kliknięcie tego linku może być szkodliwe dla Twojego urządzenia i danych. Aby chronić swój komputer, klikaj tylko linki pochodzące z zaufanych źródeł. Ta lokalizacja może być niebezpieczna:<br>%1<br>Czy na pewno chcesz kontynuować?",
+  "VE.ApplicationController.txtYes": "Tak"
 }
