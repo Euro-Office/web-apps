@@ -517,6 +517,7 @@
   "Common.define.smartArt.textVerticalPictureAccentList": "Vertical picture accent list",
   "Common.define.smartArt.textVerticalPictureList": "Vertical picture list",
   "Common.define.smartArt.textVerticalProcess": "Vertical process",
+  "Common.Translation.textExitZenMode": "Exit Zen Mode",
   "Common.Translation.textMoreButton": "More",
   "Common.Translation.tipFileLocked": "Document is locked for editing. You can make changes and save it as local copy later.",
   "Common.Translation.tipFileReadOnly": "The file is read-only. To keep your changes, save the file with a new name or in a different location.",
@@ -3071,6 +3072,7 @@
   "PDFE.Views.ViewTab.textRightMenu": "Right Panel",
   "PDFE.Views.ViewTab.textStatusBar": "Status Bar",
   "PDFE.Views.ViewTab.textTabStyle": "Tab style",
+  "PDFE.Views.ViewTab.textZenMode": "Zen Mode",
   "PDFE.Views.ViewTab.textZoom": "Zoom",
   "PDFE.Views.ViewTab.tipDarkDocument": "Dark document",
   "PDFE.Views.ViewTab.tipEditMode": "Add or edit text, shapes, images etc.",
@@ -3078,5 +3080,6 @@
   "PDFE.Views.ViewTab.tipFitToWidth": "Fit to width",
   "PDFE.Views.ViewTab.tipHeadings": "Headings",
   "PDFE.Views.ViewTab.tipInterfaceTheme": "Interface theme",
-  "PDFE.Views.ViewTab.tipRecognize": "Edit text"
+  "PDFE.Views.ViewTab.tipRecognize": "Edit text",
+  "PDFE.Views.ViewTab.tipZenMode": "Zen Mode"
 }
