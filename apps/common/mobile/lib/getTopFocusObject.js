@@ -5,6 +5,8 @@
 
 // Value of the last focus object of the given type (and matching predicate, if
 // given), or undefined. objects are asc_CSelectedObject-like items.
+// The predicate receives the item's value (get_ObjectValue()), not the
+// asc_CSelectedObject itself.
 export function getTopFocusObject(objects, type, predicate) {
     for (let i = objects.length - 1; i >= 0; i--) {
         if (objects[i].get_ObjectType() !== type) continue;
