@@ -139,23 +139,41 @@ describe('SSE selectionRules', () => {
 
     // Rules: worksheet protection gates both Edit and Add.
     describe('SSE toolbar protection gates', () => {
-        const locked = { focusOn: 'obj', wsProps: { Objects: true }, isShapeLocked: true, isTextLocked: true };
+        // A protection-locked drawing on a sheet with Objects protected.
+        const locked = { focusOn: 'obj', wsProps: { Objects: true }, isShapeLocked: true };
 
         it('Edit follows disabled', () => {
             assert.equal(isEditDisabled({ disabled: true }), true);
             assert.equal(isEditDisabled({ disabled: false }), false);
         });
 
-        it('Edit is disabled for a protected, locked drawing whose text is locked too', () => {
-            assert.equal(isEditDisabled({ disabled: false, ...locked }), true);
+        // Rule: on a locked drawing, Edit stays enabled only for selected text
+        // whose lock is not truthy; null and undefined read as unlocked.
+        it('Edit is disabled for a locked picture, chart or slicer without text, whatever the text lock', () => {
+            for (const isTextLocked of [null, undefined, false, true]) {
+                assert.equal(isEditDisabled({ ...locked, hasText: false, isTextLocked }), true, String(isTextLocked));
+            }
         });
 
-        it('Edit stays enabled when any one condition is missing', () => {
-            assert.equal(isEditDisabled({ ...locked, focusOn: 'cell' }), false);
-            assert.equal(isEditDisabled({ ...locked, wsProps: { Objects: false } }), false);
-            assert.equal(isEditDisabled({ ...locked, wsProps: undefined }), false);
-            assert.equal(isEditDisabled({ ...locked, isShapeLocked: false }), false);
-            assert.equal(isEditDisabled({ ...locked, isTextLocked: false }), false);
+        it('Edit stays enabled for a locked group with text and a null text lock', () => {
+            assert.equal(isEditDisabled({ ...locked, hasText: true, isTextLocked: null }), false);
+        });
+
+        it('Edit follows the text lock for a locked shape with text', () => {
+            assert.equal(isEditDisabled({ ...locked, hasText: true, isTextLocked: false }), false);
+            assert.equal(isEditDisabled({ ...locked, hasText: true, isTextLocked: true }), true);
+        });
+
+        it('Edit is disabled for a locked shape with unlocked text that is not selected', () => {
+            assert.equal(isEditDisabled({ ...locked, hasText: false, isTextLocked: false }), true);
+        });
+
+        it('Edit stays enabled off a drawing, without Objects protection, or for an unlocked drawing', () => {
+            const noText = { ...locked, hasText: false, isTextLocked: true };
+            assert.equal(isEditDisabled({ ...noText, focusOn: 'cell' }), false);
+            assert.equal(isEditDisabled({ ...noText, wsProps: { Objects: false } }), false);
+            assert.equal(isEditDisabled({ ...noText, wsProps: undefined }), false);
+            assert.equal(isEditDisabled({ ...noText, isShapeLocked: false }), false);
         });
 
         it('Add follows disabled', () => {
