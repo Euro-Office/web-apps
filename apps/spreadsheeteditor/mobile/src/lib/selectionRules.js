@@ -85,11 +85,14 @@ export function createCellInfoIntf(store) {
     };
 }
 
-// Toolbar Edit: off for a protection-locked drawing whose text is locked too
-// (the text editor stays reachable otherwise). wsProps is undefined until the
-// sheet's protection is known, which reads as unprotected.
-export function isEditDisabled({ disabled, wsProps, focusOn, isShapeLocked, isTextLocked }) {
-    return !!(disabled || (focusOn === 'obj' && wsProps?.Objects && isShapeLocked && isTextLocked));
+// Toolbar Edit: off exactly when the edit panel would offer no editor. On a
+// protection-locked drawing only the text editor is left, and only when the
+// selection has text whose lock is not truthy (null and undefined read as
+// unlocked, as in the panel). wsProps is undefined until the sheet's
+// protection is known, which reads as unprotected.
+export function isEditDisabled({ disabled, wsProps, focusOn, isShapeLocked, isTextLocked, hasText }) {
+    return !!(disabled ||
+        (focusOn === 'obj' && wsProps?.Objects && isShapeLocked && !(hasText && !isTextLocked)));
 }
 
 // Toolbar Add: off when protection removes every tab of the add panel.
