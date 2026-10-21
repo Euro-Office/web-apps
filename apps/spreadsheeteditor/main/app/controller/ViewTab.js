@@ -172,6 +172,7 @@ define([
         },
 
         onCoAuthoringDisconnect: function() {
+            this.view && Common.Utils.lockControls(Common.enumLock.lostConnect, true, {array: [this.view.btnDarkDocument]});
             this.SetDisabled(true);
         },
 
