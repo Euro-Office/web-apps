@@ -391,8 +391,9 @@ define([
 
         // Draws the canvas chrome (row/column headers, corner box, outline area) in the
         // light theme's colors, whatever the interface theme. Used by the dark filter,
-        // which inverts the canvas and so turns that light chrome dark. Only the canvas
-        // tokens are overridden: scrollbars and plugins keep the current theme.
+        // which inverts the canvas and so turns that light chrome dark. Only the tokens of
+        // lightCanvasChromeTokens are overridden, so scrollbars keep the current theme.
+        // sdkjs also sends the skin to running plugins, which receive these light values too.
         setLightCanvasChrome: function (on) {
             this._state.lightCanvasChrome = on;
 
