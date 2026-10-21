@@ -147,7 +147,8 @@ describe('PE sdkEvents', () => {
         });
     });
 
-    // Rule: always clears; re-pulls only when the list had already been fetched.
+    // Rule: the handler only clears the style list; it never fetches previews,
+    // not even for a list that was already fetched.
     describe('PE initTableTemplates', () => {
         function tableStore(arrayStyles) {
             const store = recorder(['setStyles'], { arrayStyles });
@@ -160,25 +161,17 @@ describe('PE sdkEvents', () => {
             assert.equal(api.callbacks('asc_onInitTableTemplates').length, 1);
         });
 
-        it('clears and does not re-pull a list that was never fetched', async () => {
-            const store = tableStore([]);
-            api.asc_getTableStylesPreviews = () => assert.fail('must not fetch');
-            initTableTemplates(store);
-            api.emit('asc_onInitTableTemplates');
-            await tick(5);
-            assert.deepEqual(store.calls, [['initTableTemplates']]);
-        });
-
-        it('clears, then re-pulls a fetched list after a deferral', async () => {
-            const store = tableStore([{}]);
-            const previews = [];
-            api.asc_getTableStylesPreviews = () => previews;
-            initTableTemplates(store);
-            api.emit('asc_onInitTableTemplates');
-            assert.deepEqual(store.calls, [['initTableTemplates']]);
-            await tick(5);
-            assert.deepEqual(store.calls, [['initTableTemplates'], ['setStyles', previews]]);
-        });
+        for (const [label, arrayStyles] of [['never fetched', []], ['already fetched', [{}]]]) {
+            it(`clears a list that was ${label} and makes no preview call`, async () => {
+                const store = tableStore(arrayStyles);
+                api.asc_getTableStylesPreviews = () => assert.fail('must not fetch');
+                initTableTemplates(store);
+                api.emit('asc_onInitTableTemplates');
+                await tick(5);
+                assert.deepEqual(store.calls, [['initTableTemplates']]);
+                assert.deepEqual(store.arrayStyles, []);
+            });
+        }
     });
 
     // Rules: previews for the selected chart's type; combo types skipped.
