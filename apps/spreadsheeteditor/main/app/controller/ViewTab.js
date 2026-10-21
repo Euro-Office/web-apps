@@ -356,6 +356,7 @@ define([
         // The dark filter follows the shared "dark document" setting and applies in dark
         // interface themes only.
         applyDarkFilter: function (themeChanged) {
+            if (!this.api) return;
             var on = Common.UI.Themes.isDarkTheme() && Common.UI.Themes.isContentThemeDark();
             // The theme sends its own canvas chrome colors, so a theme change re-applies even when the state is unchanged
             if (on === this._state.darkFilter && !themeChanged) return;
@@ -393,7 +394,6 @@ define([
         // tokens are overridden: scrollbars and plugins keep the current theme.
         setLightCanvasChrome: function (on) {
             this._state.lightCanvasChrome = on;
-            if (!this.api) return;
 
             var colors = Common.UI.Themes.getThemeColors();
             if (on) {
