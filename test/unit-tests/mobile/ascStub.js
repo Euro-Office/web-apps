@@ -32,13 +32,25 @@ export function createApi() {
     };
 }
 
+// Sets a global and returns an uninstaller that restores the previous value,
+// deleting the global only if there was none, so a nested suite's uninstall
+// can't strip a global an outer suite installed.
+function installGlobal(name, value) {
+    const existed = Object.hasOwn(globalThis, name);
+    const previous = globalThis[name];
+    globalThis[name] = value;
+    return () => {
+        if (existed) globalThis[name] = previous;
+        else delete globalThis[name];
+    };
+}
+
 // Installs the global `Common` the mobile modules read; returns an uninstaller.
 export function installCommon({ api, themeColor }) {
-    globalThis.Common = {
+    return installGlobal('Common', {
         EditorApi: { get: () => api },
         Utils: { ThemeColor: themeColor },
-    };
-    return () => { delete globalThis.Common; };
+    });
 }
 
 // sdkjs enum values (common/commonDefines.js), for installAsc().
@@ -53,6 +65,5 @@ export const chartTypes = {
 // Installs the global `Asc` with the given enums, e.g.
 // { c_oAscTypeSelectElement: selectElementTypes }; returns an uninstaller.
 export function installAsc(enums) {
-    globalThis.Asc = enums;
-    return () => { delete globalThis.Asc; };
+    return installGlobal('Asc', enums);
 }
