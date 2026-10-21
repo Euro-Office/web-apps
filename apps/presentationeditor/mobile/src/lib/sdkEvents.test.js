@@ -82,6 +82,7 @@ describe('PE sdkEvents', () => {
         // CAscThemeInfo: get_Image, get_Index.
         const themeInfo = (index, image) => ({ get_Index: () => index, get_Image: () => image });
 
+        // Rule: the built-in theme at index i is drawn from sprite row i, 40 px per row.
         it('maps built-in themes to sprite offsets and document themes to their thumbnail, built-in first', () => {
             const store = recorder(methods);
             initEditorStyles(store);
@@ -91,8 +92,8 @@ describe('PE sdkEvents', () => {
             ]);
             assert.deepEqual(store.calls, [['addArrayThemes', [
                 { themeId: 0, offsety: 0 },
-                { themeId: 1, offsety: 38 },
-                { themeId: 2, offsety: 76 },
+                { themeId: 1, offsety: 40 },
+                { themeId: 2, offsety: 80 },
                 { imageUrl: 'data:doc', themeId: 7, offsety: 0 },
             ]]]);
         });

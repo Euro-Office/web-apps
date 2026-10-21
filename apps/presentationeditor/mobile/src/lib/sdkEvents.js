@@ -8,8 +8,9 @@ import { createFocusObjectsIntf } from './focusObjectTags.js';
 
 export { initThemeColors } from '../../../../common/mobile/lib/themeColors.js';
 
-// Row height of the built-in theme thumbnails in resources/img/themes/themes.png.
-const THEME_SPRITE_ROW_HEIGHT = 38;
+// Row height of the built-in theme thumbnails in resources/img/themes/themes.png
+// (88 x 440: 11 rows of 40 px, drawn at natural size by .item-theme).
+const THEME_SPRITE_ROW_HEIGHT = 40;
 
 export function initFonts(storeTextSettings) {
     bindEditorFonts([storeTextSettings]);
