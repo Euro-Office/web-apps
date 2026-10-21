@@ -15,9 +15,10 @@ const slideValue = (locks = {}) => ({
     get_LockTransition: () => !!locks.transition,
     get_LockTiming: () => !!locks.timing,
 });
-const shapeValue = ({ isLocked = false, fromChart = false } = {}) => ({
+const shapeValue = ({ isLocked = false, fromChart = false, fromImage = false } = {}) => ({
     get_Locked: () => isLocked,
     get_FromChart: () => fromChart,
+    get_FromImage: () => fromImage,
 });
 
 const paragraph = isLocked => selectedObject(T.Paragraph, locked(isLocked));
@@ -75,6 +76,14 @@ describe('PE focusObjectTags', () => {
         it('a locked shape, or a chart\'s shape, gives nothing', () => {
             assert.deepEqual(tags([shape({ isLocked: true })]), []);
             assert.deepEqual(tags([shape({ fromChart: true })]), []);
+        });
+
+        it('a picture\'s shape entry gives shape but no text', () => {
+            assert.deepEqual(tags([slide(), image(false), shape({ fromImage: true })]), ['slide', 'image', 'shape']);
+        });
+
+        it('a picture selected with a text shape still gives text', () => {
+            assert.deepEqual(tags([slide(), image(false), shape({ fromImage: false })]), ['text', 'slide', 'image', 'shape']);
         });
 
         it('hyperlink is kept with text and dropped without it', () => {
