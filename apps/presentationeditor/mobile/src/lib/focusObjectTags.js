@@ -39,7 +39,9 @@ export function filterFocusObjects(objects) {
                 // A chart's own shape entry is covered by the chart panel.
                 if (!value.get_FromChart() && !value.get_Locked()) {
                     tags.push('shape');
-                    hasText = true;
+                    // A picture's shape props have no text; merged props stay
+                    // FromImage only if every selected drawing is a picture.
+                    if (!value.get_FromImage()) hasText = true;
                 }
                 break;
             case type.Hyperlink:
