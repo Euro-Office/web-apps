@@ -3,10 +3,8 @@
 // black at #ececec). 1 gives the full inversion.
 @dark-filter-contrast: 0.85;
 @dark-filter: invert(1) hue-rotate(180deg) contrast(@dark-filter-contrast);
-//@dark-filter-transition: filter 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-//@dark-filter-transition: filter 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+// The filter fades in and out over this transition.
 @dark-filter-transition: filter 1.25s cubic-bezier(0.22, 1, 0.36, 1);
-//@dark-filter-transition: filter 0.5s cubic-bezier(0.65, 0, 0.35, 1);
 
 body {
     width: 100%;
@@ -32,10 +30,7 @@ body {
         }
     }
 
-    // Dark filter: displays the grid and its overlay inverted, keeping hues.
-    // Drawing objects are filtered only with canvas-dark-filter-objects.
-
-    
+    // The transition sits on the canvases themselves, so it runs in both directions.
     #ws-canvas,
     #ws-canvas-overlay,
     #ws-canvas-graphic,
@@ -43,11 +38,12 @@ body {
         transition: @dark-filter-transition;
     }
 
+    // Dark filter: displays the grid and its overlay inverted, keeping hues.
+    // Drawing objects are filtered only with canvas-dark-filter-objects.
     &.canvas-dark-filter {
         #ws-canvas,
         #ws-canvas-overlay {
             filter: @dark-filter;
-            transition: @dark-filter-transition;
         }
 
         // Palettes show the real colors, which the filtered sheet displays differently
@@ -68,22 +64,16 @@ body {
         #ws-canvas-graphic,
         #id_target_cursor {
             filter: @dark-filter;
-            transition: @dark-filter-transition;
         }
     }
 
-    // Users who ask their system for less motion get an instant switch. Listed with the
-    // body classes so it overrides the transitions declared under them.
+    // Users who ask their system for less motion get an instant switch.
     @media (prefers-reduced-motion: reduce) {
-        &,
-        &.canvas-dark-filter,
-        &.canvas-dark-filter-objects {
-            #ws-canvas,
-            #ws-canvas-overlay,
-            #ws-canvas-graphic,
-            #id_target_cursor {
-                transition: none;
-            }
+        #ws-canvas,
+        #ws-canvas-overlay,
+        #ws-canvas-graphic,
+        #id_target_cursor {
+            transition: none;
         }
     }
 }
