@@ -281,9 +281,11 @@ const StyleTemplates = inject("storeFocusObjects","storeTableSettings")(observer
     const [stateId, setId] = useState(styleId);
     const styles =  storeTableSettings.arrayStyles;
 
+    // Refetch whenever the list is mounted and empty: on first mount, and when
+    // asc_onInitTableTemplates clears it while open. An empty result can't loop.
     useEffect(() => {
         if(!styles.length) onGetTableStylesPreviews();
-    }, []);
+    }, [styles.length]);
 
     return (
         <div className="dataview table-styles">
@@ -330,7 +332,7 @@ const PageStyleOptions = props => {
 
     return (
         <Page>
-            <Navbar title={_t.textOptions} backLink={_t.textBack} onBackClick={props.onGetTableStylesPreviews}>
+            <Navbar title={_t.textOptions} backLink={_t.textBack}>
                 {Device.phone &&
                     <NavRight>
                         <Link sheetClose='#edit-sheet'>
@@ -643,7 +645,6 @@ const PageStyle = props => {
                     <List>
                         <ListItem title={_t.textStyleOptions} link={'/edit-table-style-options/'} routeProps={{
                             onCheckTemplateChange: props.onCheckTemplateChange,
-                            onGetTableStylesPreviews: props.onGetTableStylesPreviews,
                         }}/>
                     </List>
                 </Tab>
