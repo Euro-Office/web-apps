@@ -49,14 +49,9 @@ export function initFocusObjects(storeFocusObjects) {
 export function initTableTemplates(storeTableSettings) {
     const api = Common.EditorApi.get();
     // The SDK only regenerates table templates while this callback is registered.
-    api.asc_registerCallback('asc_onInitTableTemplates', () => {
-        const hadStyles = storeTableSettings.arrayStyles.length > 0;
-        storeTableSettings.initTableTemplates();
-        // An empty list refetches on its next mount; a fetched one may be on screen.
-        if (hadStyles) {
-            setTimeout(() => storeTableSettings.setStyles(api.asc_getTableStylesPreviews()), 1);
-        }
-    });
+    // Clear only: the style list refetches itself while mounted, so previews are
+    // never regenerated with the edit panel closed.
+    api.asc_registerCallback('asc_onInitTableTemplates', () => storeTableSettings.initTableTemplates());
 }
 
 const isComboChart = type => {
