@@ -142,7 +142,7 @@ define([
                     me.fireEvent('rulers:change', [state === 'checked']);
                 }, me));
                 me.btnZenMode.on('click', _.bind(function (e) {
-                    me.fireEvent('zenmode:request', [true]);
+                    me.fireEvent('zenmode:request');
                 }, me));
                 me.chNotes && me.chNotes.on('change', _.bind(function (checkbox, state) {
                     me.fireEvent('notes:change', [me.chNotes, state === 'checked']);

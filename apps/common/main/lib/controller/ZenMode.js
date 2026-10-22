@@ -36,6 +36,8 @@ define([
         initialize: function() {
             this.isZenMode = false;
             this.overlay = null;
+            this.api = null;
+            this._rulers = undefined;
 
             // Listen for Zen mode requests
             Common.NotificationCenter.on('zenmode:request', _.bind(this._onZenModeRequest, this));
@@ -45,10 +47,14 @@ define([
             this._onKeyDown = _.bind(this._onKeyDown, this);
         },
 
+        setApi: function(api) {
+            this.api = api;
+        },
+
         onLaunch: function() {
             // Create the Zen mode overlay
             this.overlay = new Common.UI.ZenModeOverlay();
-            this.overlay.on('zenmode:exit', _.bind(this.exit, this));
+            this.overlay.on('zenmode:exit', _.bind(this._onOverlayExit, this));
             this.overlay.render();
             $('body').append(this.overlay.$el);
         },
@@ -75,6 +81,14 @@ define([
 
             // Exit on Escape while Zen mode is active
             $(document).on('keydown.zenmode', this._onKeyDown);
+
+            // Hide the rulers through the api as well: the CSS hiding alone leaves the
+            // viewer (sdkjs) positioning the document with the ruler offsets, so the
+            // rulers' space is not reclaimed. The user's setting is restored on exit.
+            if (this.api && this.api.asc_GetViewRulers && this.api.asc_SetViewRulers) {
+                this._rulers = this.api.asc_GetViewRulers();
+                this.api.asc_SetViewRulers(false);
+            }
 
             // Collapse an open toolbar "More" panel (narrow screens) so it does not
             // stay expanded after the toolbars are hidden and Zen mode is left again
@@ -116,11 +130,28 @@ define([
             // Remove Zen mode class from body
             $('body').removeClass('zen-mode');
 
+            // Restore the ruler state from before Zen mode
+            if (this.api && this.api.asc_SetViewRulers && this._rulers !== undefined) {
+                this.api.asc_SetViewRulers(this._rulers);
+                this._rulers = undefined;
+            }
+
             // Trigger window resize event to ensure all UI components update their layout
             $(window).trigger('resize');
 
             // Notify that Zen mode has been exited
             Common.NotificationCenter.trigger('zenmode:changed', false);
+        },
+
+        /**
+         * The overlay exit button hides itself when leaving Zen mode; hand the
+         * focus it still holds back to the document. Fired here and not inside
+         * exit() so the LeftMenu.showMenu exit path keeps the focus on the
+         * File menu or panel that is opening.
+         */
+        _onOverlayExit: function() {
+            this.exit();
+            Common.NotificationCenter.trigger('edit:complete');
         },
 
         /**
@@ -131,6 +162,10 @@ define([
 
             // a modal window is open: its own Esc handling (closing the dialog) wins
             if (parseInt($('.modals-mask').attr('counter') || '0', 10) > 0) return;
+
+            // a non-modal window (search bar, SSE filter dropdown, comment popover)
+            // has the focus: it handles Esc itself, so Zen mode stays
+            if ($(e.target).closest('.asc-window').length) return;
 
             // keymaster (Common.util.Shortcuts) preventDefaults every Esc that matches a
             // registered shortcut, so an already-prevented event is not a signal that the

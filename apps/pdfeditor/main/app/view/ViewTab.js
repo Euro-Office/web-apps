@@ -122,7 +122,7 @@ define([
                     me.fireEvent('darkmode:change', [e.pressed]);
                 }, me));
                 me.btnZenMode.on('click', _.bind(function (e) {
-                    me.fireEvent('zenmode:request', [true]);
+                    me.fireEvent('zenmode:request');
                 }, me));
                 me.cmbsZoom.forEach(function (cmb) {
                     cmb.on('combo:focusin', _.bind(me.onComboOpen, this, false));

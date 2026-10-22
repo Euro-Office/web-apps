@@ -71,8 +71,9 @@ body.zen-mode {
 // Common class for hideable elements - all elements with this class will be hidden in Zen mode
 // This is the preferred method for marking elements as hideable. Add class="zen-mode-hideable"
 // to any element that should be hidden when Zen mode is active.
-.zen-mode .zen-mode-hideable,
-.zen-mode #id_panel_top,
-.zen-mode #id_panel_left {
+// The rulers (#id_panel_top / #id_panel_left) are not listed here: the ZenMode
+// controller hides and restores them through asc_SetViewRulers, which also
+// makes the viewer reclaim their space.
+.zen-mode .zen-mode-hideable {
   display: none !important;
 }

@@ -688,6 +688,7 @@
   "Common.define.smartArt.textVerticalPictureAccentList": "Vertical picture accent list",
   "Common.define.smartArt.textVerticalPictureList": "Vertical picture list",
   "Common.define.smartArt.textVerticalProcess": "Vertical process",
+  "Common.Translation.textExitZenMode": "Exit Zen Mode",
   "Common.Translation.textMoreButton": "More",
   "Common.Translation.tipFileLocked": "Document is locked for editing. You can make changes and save it as local copy later.",
   "Common.Translation.tipFileReadOnly": "The file is read-only. To keep your changes, save the file with a new name or in a different location.",
@@ -3558,6 +3559,7 @@
   "PE.Views.ViewTab.textStatusBar": "Status Bar",
   "PE.Views.ViewTab.textStopMacro": "Stop recording",
   "PE.Views.ViewTab.textTabStyle": "Tab style",
+  "PE.Views.ViewTab.textZenMode": "Zen Mode",
   "PE.Views.ViewTab.textZoom": "Zoom",
   "PE.Views.ViewTab.tipFitToSlide": "Fit to slide",
   "PE.Views.ViewTab.tipFitToWidth": "Fit to width",
@@ -3572,5 +3574,6 @@
   "PE.Views.ViewTab.tipResumeMacro": "Resume recording",
   "PE.Views.ViewTab.tipSelectTool": "Select tool",
   "PE.Views.ViewTab.tipSlideMaster": "Slide master",
-  "PE.Views.ViewTab.tipStopMacro": "Stop recording"
+  "PE.Views.ViewTab.tipStopMacro": "Stop recording",
+  "PE.Views.ViewTab.tipZenMode": "Zen Mode"
 }

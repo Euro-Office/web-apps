@@ -91,7 +91,7 @@ define([
                     me.fireEvent('zoom:towidth', [me.btnFitToWidth]);
                 });
                 me.btnZenMode.on('click', _.bind(function (e) {
-                    me.fireEvent('zenmode:request', [true]);
+                    me.fireEvent('zenmode:request');
                 }, me));
                 me.chToolbar && me.chToolbar.on('change', _.bind(function(checkbox, state) {
                     me.fireEvent('toolbar:setcompact', [me.chToolbar, state !== 'checked']);
