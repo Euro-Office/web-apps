@@ -113,7 +113,7 @@ define([
             assert.isFalse(calls[1][1]);
         });
 
-        it('does not fire change when the state does not change', function(){
+        it('does not fire change when setValue(true) is called on a checked radio', function(){
             var radio = createRadio({checked: true});
             var fired = 0;
             radio.on('change', function () { fired++; });
