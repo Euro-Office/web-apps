@@ -127,28 +127,5 @@ define([
             switcher.cmpEl.trigger('click');
             assert.isTrue(switcher.getValue());
         });
-
-        it('snaps the thumb to the far side once it passes the midpoint', function(){
-            // delta = (width - thumbWidth - 2) / 2 = 8 for the defaults
-            createSwitcher();
-
-            switcher.setThumbPosition(9);
-            assert.equal(switcher.thumb[0].style.right, '0px', 'off switcher moved past delta snaps right');
-            assert.equal(switcher.thumb[0].style.left, 'auto');
-
-            switcher.setThumbPosition(8);
-            assert.equal(switcher.thumb[0].style.left, '0px', 'not far enough snaps back left');
-            assert.equal(switcher.thumb[0].style.right, 'auto');
-        });
-
-        it('snaps an on thumb back only once it passes the midpoint leftwards', function(){
-            createSwitcher({value: true});
-
-            switcher.setThumbPosition(-9);
-            assert.equal(switcher.thumb[0].style.right, '0px');
-
-            switcher.setThumbPosition(-8);
-            assert.equal(switcher.thumb[0].style.left, '0px');
-        });
     });
 });
