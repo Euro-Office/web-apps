@@ -168,7 +168,7 @@ define([
             if (this.rendered) {
                 var lastValue = this.$radio.hasClass('checked');
                 this.setRawValue(value);
-                if (suspendchange !== true && lastValue !== value)
+                if (suspendchange !== true && lastValue !== this.$radio.hasClass('checked'))
                     this.trigger('change', this, this.$radio.is(':checked'));
             } else {
                 this.options.checked = value;
