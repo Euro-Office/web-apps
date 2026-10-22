@@ -105,6 +105,18 @@ define([
             assert.equal(calls[0][2], 'unchecked');
         });
 
+        // Pins current behaviour that settings panels rely on, see #350
+        it('fires change for boolean input even when the state does not change', function(){
+            createCheckBox();
+            var calls = [];
+            chb.on('change', function (cmp, value, lastValue) { calls.push([value, lastValue]); });
+
+            chb.setValue(false);
+            chb.setValue('unchecked');
+
+            assert.deepEqual(calls, [['unchecked', 'unchecked']]);
+        });
+
         it('does not fire change when suspendchange is set', function(){
             createCheckBox();
             var fired = 0;
