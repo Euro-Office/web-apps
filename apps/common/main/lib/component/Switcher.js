@@ -178,11 +178,6 @@ define([
             return this;
         },
 
-        setThumbPosition: function(x) {
-            var isOn = (this.value) ? (x < -this.delta) : (x > this.delta);
-            this.thumb.css((isOn) ? {right: 0, left: 'auto'} : {left: 0, right: 'auto'});
-        },
-
         setValue: function(value) {
             this.value = (value===true);
             this.cmpEl.toggleClass('on', this.value);
