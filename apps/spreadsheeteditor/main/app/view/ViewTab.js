@@ -141,7 +141,7 @@ define([
                 }
             });
             me.btnZenMode.on('click', _.bind(function (e) {
-                me.fireEvent('zenmode:request', [true]);
+                me.fireEvent('zenmode:request');
             }, me));
             this.chFormula.on('change', function (field, value) {
                 me.fireEvent('viewtab:formula', [0, value=='checked']);

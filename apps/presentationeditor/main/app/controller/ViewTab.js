@@ -473,8 +473,10 @@ define([
             }
         },
 
-        onChangeZenMode: function (active) {
-            Common.NotificationCenter.trigger('zenmode:request', active);
+        onChangeZenMode: function () {
+            Common.NotificationCenter.trigger('zenmode:request', true);
+            // return the focus to the document: the Zen Mode button keeps it and is then hidden
+            Common.NotificationCenter.trigger('edit:complete', this.view);
         },
 
         onTabStyleChange: function () {
