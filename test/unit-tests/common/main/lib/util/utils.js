@@ -373,6 +373,7 @@ define([
         it('tells dark from light by perceived brightness', function(){
             assert.isTrue(new Common.Utils.RGBColor('#000000').isDark());
             assert.isTrue(new Common.Utils.RGBColor('#0000ff').isDark());
+            assert.isTrue(new Common.Utils.RGBColor('#808080').isDark());
             assert.isFalse(new Common.Utils.RGBColor('#ffffff').isDark());
             assert.isFalse(new Common.Utils.RGBColor('#ffff00').isDark());
         });
