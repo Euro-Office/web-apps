@@ -134,8 +134,7 @@ define([
                 fillOnChangeVisibility: true,
                 itemTemplate: _.template([
                     '<div class="item-icon-box" id="<%= id %>" style="">',
-                        '<img src="data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" ' +
-                            'class="combo-wrap-item options__icon options__icon-huge <%= icon %>"',
+                        '<svg class="icon uni-scale options__icon combo-wrap-item"><use href="#<%= icon %>"></use></svg>',
                     '</div>'
                 ].join('')),
                 ariaLabel: this.textWrap
