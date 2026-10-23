@@ -361,6 +361,9 @@ define([
         },
 
         showMenu: function(menu, opts, suspendAfter) {
+            // the menu lives inside the toolbars hidden in Zen mode; leaving Zen mode first
+            // keeps it visible and keyboard input enabled (exiting when not active is a no-op)
+            Common.NotificationCenter.trigger('zenmode:request', false);
             var re = /^(\w+):?(\w*)$/.exec(menu);
             if ( re[1] == 'file' ) {
                 if (!Common.Controllers.LaunchController.isScriptLoaded()) return;

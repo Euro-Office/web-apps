@@ -1089,6 +1089,7 @@ define([
                 this.formulaInput = celleditorController.getView('CellEditor').$el.find('textarea');
 
                 SSE.getController('Common.Controllers.Shortcuts').setApi(me.api);
+                SSE.getController('Common.Controllers.ZenMode').setApi(me.api);
 
                 if (me.appOptions.isEdit) {
                     Common.UI.FeaturesManager.canChange('spellcheck') && spellcheckController.setApi(me.api).setMode(me.appOptions);

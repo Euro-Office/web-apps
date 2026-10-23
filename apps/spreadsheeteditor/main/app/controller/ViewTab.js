@@ -97,6 +97,7 @@ define([
                     'viewtab:createview': this.onCreateView,
                     'viewtab:manager': this.onOpenManager,
                     'viewtab:viewmode': this.onPreviewMode,
+                    'zenmode:request': _.bind(this.onChangeZenMode, this),
                     'macros:click':  this.onClickMacros,
                     'macros:record':  _.bind(this.onClickMacrosRec, this),
                     'macros:pause':  _.bind(this.onClickMacrosPause, this)
@@ -309,6 +310,12 @@ define([
 
         onPreviewMode: function(value) {
             this.api && this.api.asc_SetSheetViewType(value);
+        },
+
+        onChangeZenMode: function () {
+            Common.NotificationCenter.trigger('zenmode:request', true);
+            // return the focus to the document: the Zen Mode button keeps it and is then hidden
+            Common.NotificationCenter.trigger('edit:complete', this.view);
         },
 
         onClickMacros: function() {
