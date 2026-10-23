@@ -795,6 +795,38 @@
             });
         };
 
+        var _setSmartPickerAvailable = function(data) {
+            _sendCommand({
+                command: 'setSmartPickerAvailable',
+                data: data
+            });
+        };
+
+        // data: {providers: [{id, title, icon_url}]}. An object, not a bare array:
+        // Gateway relays these through jQuery's trigger(), which spreads an array
+        // into separate handler arguments, so a bare array arrives as its first
+        // element. Every sibling command here passes an object for the same reason.
+        var _setSmartPickerProviders = function(data) {
+            _sendCommand({
+                command: 'setSmartPickerProviders',
+                data: data
+            });
+        };
+
+        // data: {html, text}. Insert an Assistant result, keeping its formatting.
+        var _insertAssistantResult = function(data) {
+            _sendCommand({
+                command: 'insertAssistantResult',
+                data: data
+            });
+        };
+
+        var _setSmartPickerCancel = function() {
+            _sendCommand({
+                command: 'setSmartPickerCancel'
+            });
+        };
+
         var _setMailMergeRecipients = function(data) {
             _sendCommand({
                 command: 'setMailMergeRecipients',
@@ -934,6 +966,10 @@
             insertLink          : _insertLink,
             insertPlainText          : _insertPlainText,
             setAssistantAvailable    : _setAssistantAvailable,
+            setSmartPickerAvailable  : _setSmartPickerAvailable,
+            setSmartPickerProviders  : _setSmartPickerProviders,
+            insertAssistantResult    : _insertAssistantResult,
+            setSmartPickerCancel     : _setSmartPickerCancel,
             setMailMergeRecipients: _setMailMergeRecipients,
             setRevisedFile      : _setRevisedFile,
             setFavorite         : _setFavorite,
