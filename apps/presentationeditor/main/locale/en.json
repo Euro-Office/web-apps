@@ -2669,6 +2669,7 @@
   "PE.Views.FileMenuPanels.Settings.strPasteButton": "Show the Paste Options button when the content is pasted",
   "PE.Views.FileMenuPanels.Settings.strRTLSupport": "RTL interface",
   "PE.Views.FileMenuPanels.Settings.strShowOthersChanges": "Show changes from other users",
+  "PE.Views.FileMenuPanels.Settings.strSpellcheckWavyLine": "Use wavy underline for misspelled words",
   "PE.Views.FileMenuPanels.Settings.strStrict": "Strict",
   "PE.Views.FileMenuPanels.Settings.strTabStyle": "Tab style",
   "PE.Views.FileMenuPanels.Settings.strTheme": "Interface theme",
