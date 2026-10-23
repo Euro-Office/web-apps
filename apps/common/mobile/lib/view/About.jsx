@@ -8,8 +8,7 @@ const PageAbout = props => {
     const { t } = useTranslation();
     const _t = t("About", { returnObjects: true });
     const store = props.storeAppOptions;
-    const isCanBranding = store.canBranding;
-    const licInfo = isCanBranding ? store.customization : null;
+    const licInfo = store.customization;
     const customer = licInfo ? licInfo.customer : null;
     const {
         name: nameCustomer = null,
