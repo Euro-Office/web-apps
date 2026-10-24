@@ -36,3 +36,8 @@ jobs:
         env:
           PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
         run: npm test
+
+      - name: Run mobile unit tests
+        if: ${{ !cancelled() }}
+        working-directory: build
+        run: npm run test:mobile
