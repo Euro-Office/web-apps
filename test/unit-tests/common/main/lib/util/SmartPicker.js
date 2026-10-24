@@ -270,6 +270,16 @@
                 });
             });
 
+            it('keeps the request through a modifier held for a capital letter', function () {
+                atTime(function () {
+                    var pending = SmartPicker.createPending();
+                    pending.begin('/f');
+                    pending.activity('Shift');
+                    pending.activity('X');
+                    assert.strictEqual(pending.consume(), '/fX');
+                });
+            });
+
             it('lets Backspace take it away again, but not the "/" itself', function () {
                 atTime(function () {
                     var pending = SmartPicker.createPending();
