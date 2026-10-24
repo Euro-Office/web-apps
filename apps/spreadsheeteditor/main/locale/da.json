@@ -1882,7 +1882,7 @@
   "SSE.Controllers.Toolbar.errorMaxRows": "FEJL! Det maksimale antal af dataserier pr. diagram er 255.",
   "SSE.Controllers.Toolbar.errorStockChart": "Forkert rækkefølge. For at bygge et aktiediagram placer dataen på arket i følgende orden:<br> Åbningspris, maks pris, min. pris, lukke pris.",
   "SSE.Controllers.Toolbar.helpCellFormat": "Få nem adgang til alle indstillinger for ark, rækker og kolonner.",
-  "SSE.Controllers.Toolbar.helpCellFormatHeader": "Ny knap: Formatér",
+  "SSE.Controllers.Toolbar.helpCellFormatHeader": "Ny knap: Format",
   "SSE.Controllers.Toolbar.helpChartElements": "Slå diagrammets elementer til og fra med nogle få klik.",
   "SSE.Controllers.Toolbar.helpChartElementsHeader": "Visning af diagramelementer",
   "SSE.Controllers.Toolbar.helpCommentFilter": "Skift mellem åbne og løste kommentarer i panelet til venstre, og se kun dem, du har brug for.",
