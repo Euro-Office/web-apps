@@ -18,10 +18,10 @@ export class storeSlideSettings {
         });
     }
 
-    arrayLayouts;
+    arrayLayouts = [];
     slideLayoutIndex = -1;
     fillColor = undefined;
-    arrayThemes;
+    arrayThemes = [];
     slideThemeIndex;
     
     getFillColor (slideObject) {

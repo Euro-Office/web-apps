@@ -69,7 +69,7 @@ const PageTheme = props => {
                     </NavRight>
                 }
             </Navbar>
-            {arrayThemes.length && (
+            {arrayThemes.length > 0 && (
                 <List className="multi-column slide-theme__list">
                     {arrayThemes.map(theme => {
                         return (
@@ -112,7 +112,7 @@ const PageLayout = props => {
                     </NavRight>
                 }
             </Navbar>
-            {arrayLayouts.length && 
+            {arrayLayouts.length > 0 && 
                 arrayLayouts.map((layouts, index) => {
                     return (
                         <List className="multi-column slide-layout__list" key={index}>
