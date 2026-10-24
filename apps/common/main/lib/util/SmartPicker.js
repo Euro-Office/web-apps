@@ -327,6 +327,9 @@ define([
                 activity: function (key) {
                     if (!this.isPending()) return;
                     if (Date.now() - _at <= Common.Utils.SmartPicker.HANDOFF_GRACE) {
+                        // Shift for a capital letter, AltGraph for "@": held while
+                        // the character is typed, they say nothing about the caret.
+                        if (MODIFIER_KEYS.indexOf(key) >= 0) return;
                         if (typeof key === 'string' && key.length === 1) {
                             _replace += key;
                             return;
