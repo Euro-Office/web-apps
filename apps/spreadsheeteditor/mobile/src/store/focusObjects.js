@@ -1,4 +1,5 @@
 import {action, observable, computed, makeObservable} from 'mobx';
+import {getLockState} from '../lib/selectionRules.js';
 
 export class storeFocusObjects {
     constructor() {
@@ -100,29 +101,8 @@ export class storeFocusObjects {
     isLockedText = false;
 
     setIsLocked(info) {
-        let isLocked = false, 
-            isLockedShape = false,
-            isLockedText = false;
-
-        switch (info.asc_getSelectionType()) {
-            case Asc.c_oAscSelectionType.RangeChart:
-            case Asc.c_oAscSelectionType.RangeImage:
-            case Asc.c_oAscSelectionType.RangeShape:
-            case Asc.c_oAscSelectionType.RangeChartText:
-            case Asc.c_oAscSelectionType.RangeShapeText:
-                const objects = Common.EditorApi.get().asc_getGraphicObjectProps();
-                for ( let i in objects ) {
-                    if ( objects[i].asc_getObjectType() == Asc.c_oAscTypeSelectElement.Image ) {
-                        isLocked = objects[i].asc_getObjectValue().asc_getLocked();
-                        isLockedShape = objects[i].asc_getObjectValue().asc_getProtectionLocked();
-                        isLockedText = objects[i].asc_getObjectValue().asc_getProtectionLockText();
-                        break;
-                    }
-                }
-                break;
-            default:
-                this.isLocked = info.asc_getLocked();
-        }
+        const {isLocked, isLockedShape, isLockedText} =
+            getLockState(info, () => Common.EditorApi.get().asc_getGraphicObjectProps());
         this.isLocked = isLocked;
         this.isLockedShape = isLockedShape;
         this.isLockedText = isLockedText;
