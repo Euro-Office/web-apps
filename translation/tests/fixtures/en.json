@@ -1,0 +1,6 @@
+{
+  "Common.Controllers.ApplicationController.textOk": "OK",
+  "Common.Controllers.ApplicationController.textWarn": "Warning",
+  "Common.Controllers.ApplicationController.txtUrl": "Open {0}",
+  "Common.textMissing": "Missing"
+}

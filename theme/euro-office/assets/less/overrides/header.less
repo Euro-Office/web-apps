@@ -130,6 +130,16 @@ body[data-editor-type="drawing"] {
   background: var(--eo-app-accent);
 }
 
+// The slideshow fills #viewport, so the strip would stay on screen while
+// presenting. Remove it and its offset while the slideshow is shown.
+:root body[data-editor-type].slideshow-active #viewport {
+  top: 0;
+}
+
+:root body[data-editor-type].slideshow-active #viewport::before {
+  display: none;
+}
+
 :root body[data-editor-type="document"] {
   --eo-app-accent: @eo-app-accent-document;
 }
