@@ -3084,7 +3084,7 @@
   "SSE.Views.DocumentHolder.txtAutoColumnWidth": "자동 맞춤 열 너비",
   "SSE.Views.DocumentHolder.txtAutoRowHeight": "행 높이 자동 맞춤",
   "SSE.Views.DocumentHolder.txtAverage": "평균",
-  "SSE.Views.DocumentHolder.txtCellFormat": "셀 서식",
+  "SSE.Controllers.Toolbar.helpCellFormat": "시트, 행 및 열 작업에 필요한 모든 옵션에 쉽게 액세스하세요.","SSE.Controllers.Toolbar.helpCellFormatHeader": "새 버튼: 서식","SSE.Views.Toolbar.textCellFormat": "서식","SSE.Views.DocumentHolder.txtCellFormat": "셀 서식",
   "SSE.Views.DocumentHolder.txtClear": "지우기",
   "SSE.Views.DocumentHolder.txtClearAll": "모두",
   "SSE.Views.DocumentHolder.txtClearComments": "코멘트",
