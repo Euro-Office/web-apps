@@ -3,6 +3,9 @@
 // black at #ececec). 1 gives the full inversion.
 @dark-filter-contrast: 0.85;
 @dark-filter: invert(1) hue-rotate(180deg) contrast(@dark-filter-contrast);
+// Inverse of @dark-filter (its functions undone in reverse order). sdkjs draws pictures with it
+// before @dark-filter applies to the drawing objects, so they display close to their real colors.
+@dark-filter-pictures: contrast((1 / @dark-filter-contrast)) hue-rotate(180deg) invert(1);
 // The filter fades in and out over this transition.
 @dark-filter-transition: filter 1.25s cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -11,6 +14,8 @@ body {
     height: 100%;
     touch-action: manipulation;
     .user-select(none);
+    // Read by the ViewTab controller and passed to sdkjs
+    --dark-filter-pictures: @dark-filter-pictures;
     color: @text-normal-ie;
     color: @text-normal;
 
@@ -58,7 +63,8 @@ body {
     }
 
     // Drawing objects and the caret for text inside them, filtered like the grid.
-    // Raster images display as negatives. The object overlay (#ws-canvas-graphic-overlay:
+    // Pictures display as negatives unless sdkjs draws them with @dark-filter-pictures
+    // (asc_setPictureDisplayFilter, called by the ViewTab controller). The object overlay (#ws-canvas-graphic-overlay:
     // selection handles, move and resize tracks) is not filtered, so the handles stay bright.
     &.canvas-dark-filter-objects {
         #ws-canvas-graphic,
