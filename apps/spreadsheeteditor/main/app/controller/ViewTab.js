@@ -54,7 +54,8 @@ define([
     ];
 
     // Whether the dark filter also covers drawing objects (charts, shapes, text boxes,
-    // equations, images). Raster images then display as negatives.
+    // equations, images). Pictures then display as negatives, unless sdkjs supports
+    // asc_setPictureDisplayFilter (see applyDarkFilter).
     var darkFilterDrawingObjects = true;
 
     SSE.Controllers.ViewTab = Backbone.Controller.extend(_.extend({
@@ -364,6 +365,10 @@ define([
             this._state.darkFilter = on;
             document.body.classList.toggle('canvas-dark-filter', on);
             document.body.classList.toggle('canvas-dark-filter-objects', on && darkFilterDrawingObjects);
+            // sdkjs draws pictures with the inverse filter, so the objects filter shows them close to their real colors
+            if (typeof this.api.asc_setPictureDisplayFilter === 'function')
+                this.api.asc_setPictureDisplayFilter(on && darkFilterDrawingObjects ?
+                    getComputedStyle(document.body).getPropertyValue('--dark-filter-pictures').trim() : '');
             if (on || this._state.lightCanvasChrome)
                 this.setLightCanvasChrome(on);
             this.showDarkDocumentInfo();
