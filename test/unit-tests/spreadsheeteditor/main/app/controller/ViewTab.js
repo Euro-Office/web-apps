@@ -107,6 +107,7 @@ define([
             Common.UI.Themes = savedThemes;
             Common.enumLock = savedEnumLock;
             document.body.classList.remove('canvas-dark-filter', 'canvas-dark-filter-objects');
+            document.documentElement.style.removeProperty('--canvas-cell-title-background');
         });
 
         // The embedded editors (chart data, OLE, mail merge) launch this controller but never
@@ -120,13 +121,19 @@ define([
             assert.deepEqual(filterClasses(), []);
         });
 
-        // Counterpart of the test above: the same setting with an api applies the filter
-        it('with an api, applies the filter', function () {
+        // Counterpart of the test above: the same setting with an api applies the filter and
+        // sends the light theme's header colors, read from :root. The page loads no theme CSS,
+        // so only the token set here has a value; the others are missing.
+        it('with an api, applies the filter and sends the light canvas chrome', function () {
+            document.documentElement.style.setProperty('--canvas-cell-title-background', '#f7f7f7');
             var api = fakeApi();
             createController().setApi(api);
 
             assert.deepEqual(filterClasses(), ['canvas-dark-filter', 'canvas-dark-filter-objects']);
-            assert.lengthOf(api.skins, 1, 'light canvas chrome sent');
+            assert.lengthOf(api.skins, 1);
+            assert.equal(api.skins[0]['canvas-cell-title-background'], '#f7f7f7', 'light token sent');
+            assert.notProperty(api.skins[0], 'canvas-cell-title-text', 'missing token keeps the current color');
+            assert.equal(api.skins[0]['ColorFiltering'], '#008636', 'light filtered row number color');
         });
 
         // In view mode the toolbar does not lock its controls on a disconnect, so the button
