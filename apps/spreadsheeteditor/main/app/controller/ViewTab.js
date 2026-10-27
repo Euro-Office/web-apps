@@ -360,7 +360,9 @@ define([
         applyDarkFilter: function (themeChanged) {
             if (!this.api) return;
             var on = Common.UI.Themes.isDarkTheme() && Common.UI.Themes.isContentThemeDark();
-            // The theme sends its own canvas chrome colors, so a theme change re-applies even when the state is unchanged
+            // On a theme change, Themes.js apply_theme sends the theme's own skin after contenttheme:dark,
+            // which overwrites the light canvas chrome; uitheme:changed comes next and sends it again,
+            // even when the filter state is unchanged
             if (on === this._state.darkFilter && !themeChanged) return;
             this._state.darkFilter = on;
             document.body.classList.toggle('canvas-dark-filter', on);
