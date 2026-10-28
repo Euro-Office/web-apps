@@ -683,9 +683,9 @@ class MainController extends Component {
         const { t } = this.props;
         const _t = t('Controller.Main', {returnObjects:true});
 
-        const warnNoLicense  = _t.warnNoLicense.replace(/%1/g, __COMPANY_NAME__);
-        const warnNoLicenseUsers = _t.warnNoLicenseUsers.replace(/%1/g, __COMPANY_NAME__);
-        const textNoLicenseTitle = _t.textNoLicenseTitle.replace(/%1/g, __COMPANY_NAME__);
+        const warnNoLicense  = (_t.warnNoLicense || "warnNoLicense").replace(/%1/g, __COMPANY_NAME__);
+        const warnNoLicenseUsers = (_t.warnNoLicenseUsers || "warnNoLicenseUsers").replace(/%1/g, __COMPANY_NAME__);
+        const textNoLicenseTitle = (_t.textNoLicenseTitle || "textNoLicenseTitle").replace(/%1/g, __COMPANY_NAME__);
 
         const appOptions = this.props.storeAppOptions;
         if (appOptions.config.mode !== 'view' && !EditorUIController.isSupportEditFeature()) {
