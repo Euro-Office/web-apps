@@ -175,6 +175,7 @@ define([
                     ClickOf:        1
                 };
                 this.startIndexParam = 2;
+                this._textSequence = null; // null - no text sequence items in the parameters menu
                 this.allEffects = [{group:'none', value: AscFormat.ANIM_PRESET_NONE, iconCls: 'animation-none', displayValue: this.textNone}].concat(Common.define.effectData.getEffectFullData());
                 Common.UI.BaseView.prototype.initialize.call(this, options);
                 this.toolbar = options.toolbar;
@@ -597,6 +598,7 @@ define([
             setMenuParameters: function (effectId, effectGroup, option) // option = undefined - for add new effect or when selected 2 equal effects with different option (subtype)
             {
                 var arrEffectOptions,selectedElement;
+                this.removeMenuTextSequence(); // the text sequence items always stay at the end of the menu
                 var effect = _.findWhere(this.allEffects, {group: effectGroup, value: effectId}),
                     updateFamilyEffect = true;
                 if (effect) {
@@ -662,7 +664,46 @@ define([
                 this._effectId = effectId;
                 this._groupName = effectGroup;
                 this._familyEffect = effect ? effect.familyEffect : undefined;
+                this.addMenuTextSequence();
                 return selectedElement ? selectedElement.value : undefined;
+            },
+
+            setMenuTextSequence: function (value) // value: AscFormat.TEXT_SEQUENCE_*, undefined - mixed selection, null - no text to animate
+            {
+                this._textSequence = value;
+                this.removeMenuTextSequence();
+                this.addMenuTextSequence();
+            },
+
+            hasMenuTextSequence: function () {
+                return this._textSequence !== null;
+            },
+
+            removeMenuTextSequence: function () {
+                var menu = this.btnParameters && this.btnParameters.menu;
+                if (!menu || !menu.items) return;
+                for (var i = menu.items.length - 1; i >= 0; i--) {
+                    menu.items[i].options.textSequence && menu.removeItem(menu.items[i]);
+                }
+            },
+
+            addMenuTextSequence: function () {
+                var menu = this.btnParameters && this.btnParameters.menu;
+                if (!menu || !menu.items || this._textSequence === null || !window.AscFormat || AscFormat.TEXT_SEQUENCE_BY_PARAGRAPH === undefined) return;
+                (menu.items.length > this.startIndexParam) && menu.addItem({caption: '--', textSequence: true});
+                [
+                    {caption: this.textAsOneObject, value: AscFormat.TEXT_SEQUENCE_AS_ONE_OBJECT},
+                    {caption: this.textByParagraph, value: AscFormat.TEXT_SEQUENCE_BY_PARAGRAPH}
+                ].forEach(function (opt) {
+                    menu.addItem({
+                        caption: opt.caption,
+                        value: opt.value,
+                        checkable: true,
+                        toggleGroup: 'textsequence',
+                        checked: opt.value === this._textSequence,
+                        textSequence: true
+                    });
+                }, this);
             },
 
             setColor: function (color){
@@ -706,7 +747,9 @@ define([
             str2: '2 s (Medium)',
             str1: '1 s (Fast)',
             str0_5: '0.5 s (Very Fast)',
-            textAutoPreview: 'AutoPreview'
+            textAutoPreview: 'AutoPreview',
+            textAsOneObject: 'As One Object',
+            textByParagraph: 'By Paragraph'
         }
     }()), PE.Views.Animation || {}));
 
