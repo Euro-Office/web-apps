@@ -36,6 +36,28 @@ define([
 ], function () {
     'use strict';
 
+    // Theme tokens sdkjs uses to draw the row/column headers, the corner box and the outline area.
+    // Source of truth: colorMap in sdkjs/common/skin.js, read by WorksheetViewSettings in
+    // sdkjs/cell/view/WorkbookView.js. 'border-toolbar' is an interface token that sdkjs also
+    // uses for the outline area separators.
+    var lightCanvasChromeTokens = [
+        'canvas-cell-title-background',
+        'canvas-cell-title-background-hover',
+        'canvas-cell-title-background-selected',
+        'canvas-cell-title-border',
+        'canvas-cell-title-border-hover',
+        'canvas-cell-title-border-selected',
+        'canvas-cell-title-text',
+        'canvas-select-all-icon',
+        'canvas-high-contrast',
+        'border-toolbar'
+    ];
+
+    // Whether the dark filter also covers drawing objects (charts, shapes, text boxes,
+    // equations, images). Pictures then display as negatives, unless sdkjs supports
+    // asc_setPictureDisplayFilter (see applyDarkFilter).
+    var darkFilterDrawingObjects = true;
+
     SSE.Controllers.ViewTab = Backbone.Controller.extend(_.extend({
         models : [],
         collections : [
@@ -51,6 +73,14 @@ define([
             this._state = {};
             Common.NotificationCenter.on('uitheme:changed', this.onThemeChanged.bind(this));
             Common.NotificationCenter.on('tabstyle:changed', this.onTabStyleChange.bind(this));
+            Common.NotificationCenter.on('contenttheme:dark', _.bind(function () {
+                this.applyDarkFilter();
+                this.updateDarkDocumentButton();
+            }, this));
+            Common.NotificationCenter.on('document:ready', _.bind(function () {
+                this._state.documentReady = true;
+                this.showDarkDocumentInfo();
+            }, this));
         },
 
         setApi: function (api) {
@@ -68,6 +98,7 @@ define([
                 this.api.asc_registerCallback('asc_onMacroRecordingResume', _.bind(this.updateMacroState, this, true, false));
                 this.api.asc_registerCallback('asc_onCoAuthoringDisconnect',_.bind(this.onCoAuthoringDisconnect, this));
                 Common.NotificationCenter.on('api:disconnect', _.bind(this.onCoAuthoringDisconnect, this));
+                this.applyDarkFilter();
             }
             return this;
         },
@@ -80,6 +111,7 @@ define([
                 mode: mode,
                 compactToolbar: this.toolbar.toolbar.isCompactView
             });
+            this.updateDarkDocumentButton();
             this.addListeners({
                 'ViewTab': {
                     'zoom:selected': _.bind(this.onSelectedZoomValue, this),
@@ -97,6 +129,7 @@ define([
                     'viewtab:createview': this.onCreateView,
                     'viewtab:manager': this.onOpenManager,
                     'viewtab:viewmode': this.onPreviewMode,
+                    'darkmode:change': _.bind(this.onChangeDarkMode, this),
                     'macros:click':  this.onClickMacros,
                     'macros:record':  _.bind(this.onClickMacrosRec, this),
                     'macros:pause':  _.bind(this.onClickMacrosPause, this)
@@ -140,6 +173,7 @@ define([
         },
 
         onCoAuthoringDisconnect: function() {
+            this.view && Common.Utils.lockControls(Common.enumLock.lostConnect, true, {array: [this.view.btnDarkDocument]});
             this.SetDisabled(true);
         },
 
@@ -289,6 +323,9 @@ define([
         },
 
         onThemeChanged: function () {
+            this.applyDarkFilter(true);
+            this.updateDarkDocumentButton();
+
             if (this.view && Common.UI.Themes.available() && this.view.btnInterfaceTheme.menu && (typeof (this.view.btnInterfaceTheme.menu) === 'object')) {
                 var current_theme = Common.UI.Themes.currentThemeId() || Common.UI.Themes.defaultThemeId(),
                     menu_item = _.findWhere(this.view.btnInterfaceTheme.menu.getItems(true), {value: current_theme});
@@ -297,6 +334,92 @@ define([
                     menu_item.setChecked(true, true);
                 }
             }
+        },
+
+        onChangeDarkMode: function (isdarkmode) {
+            // Clicks closer than 500 ms apart are ignored and the button shows the current state again
+            if (!this._darkModeTimer) {
+                var me = this;
+                me._darkModeTimer = setTimeout(function () {
+                    me._darkModeTimer = undefined;
+                }, 500);
+                Common.UI.Themes.setContentTheme(isdarkmode ? 'dark' : 'light');
+            } else
+                this.updateDarkDocumentButton();
+        },
+
+        // The button is pressed when the shared setting is on, and locked in light interface themes
+        updateDarkDocumentButton: function () {
+            if (!this.view) return;
+            this.view.btnDarkDocument.toggle(Common.UI.Themes.isContentThemeDark(), true);
+            Common.Utils.lockControls(Common.enumLock.inLightTheme, !Common.UI.Themes.isDarkTheme(), {array: [this.view.btnDarkDocument]});
+        },
+
+        // The dark filter follows the shared "dark document" setting and applies in dark
+        // interface themes only.
+        applyDarkFilter: function (themeChanged) {
+            if (!this.api) return;
+            var on = Common.UI.Themes.isDarkTheme() && Common.UI.Themes.isContentThemeDark();
+            // On a theme change, Themes.js apply_theme sends the theme's own skin after contenttheme:dark,
+            // which overwrites the light canvas chrome; uitheme:changed comes next and sends it again,
+            // even when the filter state is unchanged
+            if (on === this._state.darkFilter && !themeChanged) return;
+            this._state.darkFilter = on;
+            document.body.classList.toggle('canvas-dark-filter', on);
+            document.body.classList.toggle('canvas-dark-filter-objects', on && darkFilterDrawingObjects);
+            // sdkjs draws pictures with the inverse filter, so the objects filter shows them close to their real colors
+            if (typeof this.api.asc_setPictureDisplayFilter === 'function')
+                this.api.asc_setPictureDisplayFilter(on && darkFilterDrawingObjects ?
+                    getComputedStyle(document.body).getPropertyValue('--dark-filter-pictures').trim() : '');
+            if (on || this._state.lightCanvasChrome)
+                this.setLightCanvasChrome(on);
+            this.showDarkDocumentInfo();
+        },
+
+        // Explains the dark filter the first time it is applied in this editor, whether by
+        // the button or at load (the setting is shared with the document editor). It counts
+        // as seen once the user closes it, so a box hidden behind another one comes back.
+        showDarkDocumentInfo: function () {
+            if (!this._state.darkFilter || !this._state.documentReady || !this.view || this._state.darkDocumentInfoOpen ||
+                    Common.localStorage.getBool('sse-hide-dark-document-info'))
+                return;
+
+            var me = this;
+            me._state.darkDocumentInfoOpen = true;
+            Common.UI.info({
+                width: 500,
+                msg: me.view.textDarkDocumentInfo,
+                callback: function () {
+                    me._state.darkDocumentInfoOpen = false;
+                    Common.localStorage.setBool('sse-hide-dark-document-info', true);
+                }
+            });
+        },
+
+        // Draws the canvas chrome (row/column headers, corner box, outline area) in the
+        // light theme's colors, whatever the interface theme. Used by the dark filter,
+        // which inverts the canvas and so turns that light chrome dark. Only the tokens of
+        // lightCanvasChromeTokens are overridden, so scrollbars keep the current theme.
+        // sdkjs also sends the skin to running plugins, which receive these light values too.
+        setLightCanvasChrome: function (on) {
+            this._state.lightCanvasChrome = on;
+
+            var colors = Common.UI.Themes.getThemeColors();
+            if (on) {
+                // Theme classes are set on body, so :root holds the light theme's values
+                var root_style = getComputedStyle(document.documentElement);
+                lightCanvasChromeTokens.forEach(function (token) {
+                    var value = root_style.getPropertyValue('--' + token).trim();
+                    // A missing token keeps the current theme's color instead of sending an empty one
+                    if (value)
+                        colors[token] = value;
+                });
+            }
+            // Filtered row numbers have no theme token: the values mirror ColorFiltering in the
+            // light and dark skins of sdkjs/common/skin.js. sdkjs keeps the last value sent, so
+            // it is sent in both states.
+            colors['ColorFiltering'] = (on || colors.type !== 'dark') ? '#008636' : '#6BEC9F';
+            this.api.asc_setSkin(colors);
         },
 
         onTabStyleChange: function () {
