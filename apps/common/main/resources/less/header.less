@@ -31,6 +31,11 @@
         svg.icon {
             fill: @icon-toolbar-header-ie;
             fill: @icon-toolbar-header;
+            // The symbols stroke their paths with --icon-gray-primary, which
+            // the light themes leave unset (dark fallback). A fill on the
+            // <svg> never reaches paths inside a <use> shadow tree, but
+            // custom properties inherit through it.
+            --icon-gray-primary: @icon-toolbar-header;
         }
 
         .btn-slot {
@@ -612,6 +617,8 @@
     svg.icon {
         fill: @icon-toolbar-header-ie;
         fill: @icon-toolbar-header;
+        // See .toolbar .extra svg.icon above
+        --icon-gray-primary: @icon-toolbar-header;
 
         &.icon-save {
             &.btn-save-coauth, &.btn-synch {
