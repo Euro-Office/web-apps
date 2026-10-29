@@ -30,8 +30,9 @@
  */
 
 var SCALE_MIN = 40;
-var MENU_SCALE_PART = 260;
+var MENU_SCALE_PART = 260; // reassigned at runtime to MENU_BASE_WIDTH + the measured right-panel padding
 var MENU_BASE_WIDTH = 220;
+var MENU_MAX_WIDTH = 596; // resizer max in Viewport.js (600) minus the 4px resizer (layout.less)
 
 define([
     'text!documenteditor/main/app/template/RightMenu.template',
@@ -317,9 +318,14 @@ define([
                 const viewport = DE.getController('Viewport').getView('Viewport');
                 viewport.hlayout.hideItemResizer('right', !isPlugin);
 
-                const widthFromStorage = Common.localStorage.getItem('de-rightmenu-width');
+                const widthFromStorage = Common.localStorage.getItem('de-rightmenu-width'),
+                    customization = this.mode && this.mode.customization,
+                    pluginsPanelWidth = customization && parseInt(customization.pluginsPanelWidth),
+                    maxPanelWidth = Math.min(Math.floor(Common.Utils.innerWidth() / 2), MENU_MAX_WIDTH);
                 if(isPlugin && widthFromStorage) {
                     this.$el.width(parseInt(widthFromStorage));
+                } else if(isPlugin && pluginsPanelWidth > 0 && maxPanelWidth >= MENU_SCALE_PART) {
+                    this.$el.width(Math.min(Math.max(MENU_SCALE_PART, pluginsPanelWidth), maxPanelWidth));
                 } else {
                     this.setInnerWidth(MENU_BASE_WIDTH);
                 }
