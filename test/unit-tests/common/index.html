@@ -68,9 +68,11 @@
         // urlArgs: /debug\=1/.test(window.location.search) ? '' : 'bust=' +  (new Date()).getTime(), // debug
     });
 
-    // You can do this in the grunt config for each mocha task, see the `options` config
+    // In a browser the results show as a page; build/scripts/unit-tests.js
+    // (npm test) reads them from the console instead
     mocha.setup({
-        ui: 'bdd'
+        ui: 'bdd',
+        reporter: window.__unitTestRunner ? 'spec' : 'html'
     });
 
     // Protect from barfs
@@ -81,7 +83,9 @@
 
     // Mocha run helper, used for browser
     var runMocha = function() {
-        mocha.run();
+        mocha.run(function (failures) {
+            window.__mochaFailures = failures;
+        });
     };
 
     // The app modules under test read $, _ and Backbone as globals rather than

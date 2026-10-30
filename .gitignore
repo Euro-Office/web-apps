@@ -51,3 +51,4 @@ apps/common/main/resources/less/_theme-main.less
 # Claude — local only, not for the repo
 .claude/
 CLAUDE.md
+/coverage

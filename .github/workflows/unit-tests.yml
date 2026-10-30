@@ -29,10 +29,21 @@ jobs:
 
       - name: Install dependencies
         working-directory: build
+        env:
+          # The tests use the runner's Chrome
+          PUPPETEER_SKIP_DOWNLOAD: 'true'
         run: npm ci
 
+      # On pull requests with coverage, see build/README.md#tests
       - name: Run unit tests
         working-directory: build
         env:
           PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
-        run: npm test
+        run: npm run ${{ github.event_name == 'pull_request' && 'coverage' || 'test' }}
+
+      - name: Coverage of the changed lines
+        if: github.event_name == 'pull_request'
+        uses: Euro-Office/.github/actions/diff-coverage@c6be61e1c3cc63761a8a70c71fad268bf9ee434e # main
+        with:
+          reports: coverage/browser/lcov.info coverage/build/lcov.info
+          fail-under: 80
