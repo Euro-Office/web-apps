@@ -10,6 +10,7 @@
   "Common.Controllers.Plugins.textPluginSuccessfullyInstalled": "<b>{0}</b> is successfully installed. You can access all background plugins here.",
   "Common.Controllers.Plugins.textRunInstalledPlugins": "Run installed plugins",
   "Common.Controllers.Plugins.textRunPlugin": "Run plugin",
+  "Common.Translation.textExitZenMode": "Exit Zen Mode",
   "Common.Translation.textMoreButton": "More",
   "Common.Translation.tipFileLocked": "Document is locked for editing. You can make changes and save it as local copy later.",
   "Common.Translation.tipFileReadOnly": "The file is read-only. To keep your changes, save the file with a new name or in a different location.",
@@ -476,8 +477,10 @@
   "VE.Views.ViewTab.textRightMenu": "Right Panel",
   "VE.Views.ViewTab.textStatusBar": "Status Bar",
   "VE.Views.ViewTab.textTabStyle": "Tab style",
+  "VE.Views.ViewTab.textZenMode": "Zen Mode",
   "VE.Views.ViewTab.textZoom": "Zoom",
   "VE.Views.ViewTab.tipFitPage": "Fit to page",
   "VE.Views.ViewTab.tipFitWidth": "Fit to width",
-  "VE.Views.ViewTab.tipInterfaceTheme": "Interface theme"
+  "VE.Views.ViewTab.tipInterfaceTheme": "Interface theme",
+  "VE.Views.ViewTab.tipZenMode": "Zen Mode"
 }

@@ -156,6 +156,7 @@ require([
             ,'Common.Controllers.ReviewChanges'
             ,'Common.Controllers.Protection'
             ,'Common.Controllers.Shortcuts'
+            ,'Common.Controllers.ZenMode'
         ]
     });
 
@@ -201,6 +202,7 @@ require([
                 ,'common/main/lib/controller/Protection'
                 ,'common/main/lib/controller/Shortcuts'
                 ,'common/main/lib/controller/Draw'
+                ,'common/main/lib/controller/ZenMode'
             ], function() {
                 const code_path = 'documenteditor/main/code';
                 app.postLaunchScripts = [

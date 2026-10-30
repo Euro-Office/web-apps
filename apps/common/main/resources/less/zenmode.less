@@ -1,0 +1,79 @@
+//
+// Zen Mode Styles
+// --------------------------------------------------
+//
+// Elements with the 'zen-mode-hideable' class will be hidden when Zen mode is active.
+// Add this class to any toolbar, menu, or UI element that should be hidden in Zen mode.
+//
+// Example: <div id="toolbar" class="zen-mode-hideable">...
+//
+
+@import "variables.less";
+
+// Zen mode overlay
+.zen-mode-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 500; // Above everything
+  // Hidden until the controller calls show() on the component (inline display),
+  // while still letting pointer events reach the document.
+  display: none;
+  pointer-events: none; // Allow interaction with document
+
+  .zen-mode-overlay-inner {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    pointer-events: auto; // Enable interaction with overlay controls
+  }
+
+  .zen-mode-overlay-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    background: @background-contrast-popover;
+    border: @scaled-one-px-value solid @border-contrast-popover;
+    color: @text-normal;
+    padding: 8px 12px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px @shadow-contrast-popover;
+  }
+
+  .zen-mode-exit-btn {
+    // The .btn-toolbar box is only icon-sized; give the button a fixed 28px box with the
+    // 24px icon centered so the hover highlight has room around the icon.
+    // padding must stay 0: box-sizing is border-box, so padding would eat into the content box.
+    padding: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: @icon-normal;
+
+    &:hover {
+      background: @highlight-button-hover;
+      border-radius: 4px;
+    }
+  }
+}
+
+
+// overflow: hidden on body propagates to the viewport as long as html has no overflow set.
+body.zen-mode {
+  overflow: hidden !important;
+}
+
+// Common class for hideable elements - all elements with this class will be hidden in Zen mode
+// This is the preferred method for marking elements as hideable. Add class="zen-mode-hideable"
+// to any element that should be hidden when Zen mode is active.
+// The rulers (#id_panel_top / #id_panel_left) are not listed here: the ZenMode
+// controller hides and restores them through asc_SetViewRulers, which also
+// makes the viewer reclaim their space.
+.zen-mode .zen-mode-hideable {
+  display: none !important;
+}
