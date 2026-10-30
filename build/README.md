@@ -174,6 +174,28 @@ Shared helpers used by all scripts above. Key exports:
 
 ---
 
+## Tests
+
+```sh
+npm test            # browser unit tests, then the build scripts' tests
+npm run coverage    # the same, writing ../coverage/{browser,build}/lcov.info
+```
+
+- **Browser unit tests** (`test/unit-tests/`): `scripts/unit-tests.js` opens
+  `test/unit-tests/common/index.html` in headless Chrome (puppeteer, or
+  `PUPPETEER_EXECUTABLE_PATH`) and prints mocha's results. Coverage covers
+  what unit tests can reach: `apps/common/main/lib/{component,core,util,model,collection}`
+  and each editor's `app/{model,collection}`, not views, controllers or the
+  mobile apps.
+- **Build scripts' tests** (`build/test/*.test.js`): `node --test`, coverage of
+  all of `build/` by c8.
+
+Files no test loads count as uncovered. On pull requests,
+`.github/workflows/unit-tests.yml` fails when less than 80% of the changed
+lines are covered.
+
+---
+
 ## Webpack configs
 
 | Config | Editor | Notes |
