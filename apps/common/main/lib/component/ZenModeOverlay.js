@@ -19,13 +19,15 @@ define([
             Common.UI.BaseView.prototype.initialize.call(this, options);
             this.options = this.options || {};
 
+            var exitCaption = this.options.exitButtonCaption ||
+                Common.Locale.get('textExitZenMode', {name: 'Common.Translation', default: 'Exit Zen Mode'});
+
             this.exitButton = new Common.UI.Button({
                 id: 'zen-mode-exit-btn',
                 cls: 'btn-toolbar zen-mode-exit-btn',
                 iconCls: 'btn-preview-exit-fullscreen',
-                onlyIcon: true,
-                hint: this.options.exitButtonHint ||
-                    (Common.Locale.get('textExitZenMode', {name: 'Common.Translation', default: 'Exit Zen Mode'}) + ' (Esc)'),
+                caption: exitCaption,
+                hint: exitCaption + ' (Esc)',
                 hintAnchor: 'top',
                 dataHint: '0',
                 dataHintDirection: 'top'
