@@ -44,16 +44,14 @@
   }
 
   .zen-mode-exit-btn {
-    // The .btn-toolbar box is only icon-sized; give the button a fixed 28px box with the
-    // 24px icon centered so the hover highlight has room around the icon.
-    // padding must stay 0: box-sizing is border-box, so padding would eat into the content box.
-    padding: 0;
-    width: 28px;
+    // padding must stay 0 vertically: box-sizing is border-box, so padding would eat into
+    // the fixed 28px height; horizontal padding gives the caption breathing room.
+    // Color, font-size and the icon-to-caption spacing come from the base
+    // .btn/.btn-toolbar styles (.btn-toolbar:not(.icon-top) .caption gets padding: 0 4px).
+    padding: 0 10px;
     height: 28px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    color: @icon-normal;
 
     &:hover {
       background: @highlight-button-hover;
