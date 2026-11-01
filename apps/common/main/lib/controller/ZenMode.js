@@ -24,7 +24,8 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'common/main/lib/component/ZenModeOverlay'
+    'common/main/lib/component/ZenModeOverlay',
+    'common/main/lib/util/ScreenReaderHelper'
 ], function (core, $, _, Backbone) {
     'use strict';
 
@@ -107,6 +108,9 @@ define([
             // Trigger window resize event to ensure all UI components update their layout
             $(window).trigger('resize');
 
+            // Announce the state change to screen readers (WCAG 2.1, 4.1.3)
+            this._announceScreenReader(true);
+
             // Notify that Zen mode has been entered
             Common.NotificationCenter.trigger('zenmode:changed', true);
         },
@@ -139,8 +143,22 @@ define([
             // Trigger window resize event to ensure all UI components update their layout
             $(window).trigger('resize');
 
+            // Announce the state change to screen readers (WCAG 2.1, 4.1.3)
+            this._announceScreenReader(false);
+
             // Notify that Zen mode has been exited
             Common.NotificationCenter.trigger('zenmode:changed', false);
+        },
+
+        /**
+         * Send the Zen mode state change to the screen reader.
+         * @param {boolean} active - true when entering, false when leaving
+         */
+        _announceScreenReader: function(active) {
+            var text = active
+                ? Common.Locale.get('textZenModeEntered', {name: 'Common.Translation', default: 'Zen Mode entered. Exit via Esc.'})
+                : Common.Locale.get('textZenModeExited', {name: 'Common.Translation', default: 'Zen Mode exited'});
+            Common.Utils.ScreenReaderHelper && Common.Utils.ScreenReaderHelper.speech(text);
         },
 
         /**
