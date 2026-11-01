@@ -636,6 +636,8 @@
   "Common.define.smartArt.textVerticalProcess": "Vertical process",
   "Common.Translation.textExitZenMode": "Exit Zen Mode",
   "Common.Translation.textMoreButton": "More",
+  "Common.Translation.textZenModeEntered": "Zen Mode entered. Exit via Esc.",
+  "Common.Translation.textZenModeExited": "Zen Mode exited",
   "Common.Translation.tipFileLocked": "Document is locked for editing. You can make changes and save it as local copy later.",
   "Common.Translation.tipFileReadOnly": "The file is read-only. To keep your changes, save the file with a new name or in a different location.",
   "Common.Translation.warnFileLocked": "The file is being edited in another app. You can continue editing and save it as a copy.",
