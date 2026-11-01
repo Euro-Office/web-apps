@@ -101,5 +101,34 @@
     #btn-submit-form {
         background-color: @brand-form;
     }
+
+    .password-field {
+        &__wrap {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        &__icon {
+            min-width: 24px;
+            min-height: 24px;
+        }
+
+        &__toggle {
+            background: none;
+            border: none;
+            padding: 0;
+            margin: 0;
+            cursor: pointer;
+            -webkit-appearance: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            min-width: 44px;
+            min-height: 44px;
+            width: auto;
+        }
+    }
 }
 
