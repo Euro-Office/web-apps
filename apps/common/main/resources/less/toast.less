@@ -1,0 +1,95 @@
+//
+// Toast Styles
+// --------------------------------------------------
+//
+// Transient messages shown by Common.UI.Toast (component/Toast.js). Colors come
+// from the theme css variables, so toasts follow the currently selected theme.
+//
+
+@import "variables.less";
+
+// One fixed container per position; created lazily by Common.UI.Toast.show().
+// pointer-events pass through the container, only the toast itself is clickable.
+.toast-container {
+  position: fixed;
+  z-index: @zindex-toast;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 360px;
+  pointer-events: none;
+
+  &.top-left       { top: 20px; left: 20px; align-items: flex-start; }
+  &.top-center     { top: 20px; left: 50%; transform: translateX(-50%); align-items: center; }
+  &.top-right      { top: 20px; right: 20px; align-items: flex-end; }
+  &.bottom-left    { bottom: 20px; left: 20px; align-items: flex-start; }
+  &.bottom-center  { bottom: 20px; left: 50%; transform: translateX(-50%); align-items: center; }
+  &.bottom-right   { bottom: 20px; right: 20px; align-items: flex-end; }
+}
+
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: @background-contrast-popover;
+  border: @scaled-one-px-value solid @border-contrast-popover;
+  color: @text-normal;
+  padding: 8px 12px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px @shadow-contrast-popover;
+  animation: toast-in-top .3s ease;
+  transition: opacity .3s ease, transform .3s ease;
+
+  .toast-text {
+    flex: 1 1 auto;
+  }
+
+  .toast-close {
+    flex: 0 0 auto;
+    border: none;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    padding: 0 0 0 8px;
+    font-size: 14px;
+    line-height: 1;
+    opacity: .6;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+// slide in from / fade out towards the edge the container is attached to
+.toast-container[class*="bottom"] .toast {
+  animation-name: toast-in-bottom;
+}
+
+.toast.toast-hide {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+.toast-container[class*="bottom"] .toast.toast-hide {
+  transform: translateY(6px);
+}
+
+@keyframes toast-in-top {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toast-in-bottom {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// no fade/slide for users who prefer reduced motion: the toast just appears/disappears
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
+    transition: none;
+  }
+}

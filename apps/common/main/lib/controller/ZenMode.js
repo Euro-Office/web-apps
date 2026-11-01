@@ -25,6 +25,7 @@ define([
     'underscore',
     'backbone',
     'common/main/lib/component/ZenModeOverlay',
+    'common/main/lib/component/Toast',
     'common/main/lib/util/ScreenReaderHelper'
 ], function (core, $, _, Backbone) {
     'use strict';
@@ -37,6 +38,7 @@ define([
         initialize: function() {
             this.isZenMode = false;
             this.overlay = null;
+            this._toast = null;
             this.api = null;
             this._rulers = undefined;
 
@@ -105,6 +107,16 @@ define([
                 this.overlay.show();
             }
 
+            // Transient hint how to get out again; fades out after a few seconds
+            // (immediately when Zen mode is left before that)
+            this._toast = Common.UI.Toast.show(
+                Common.Locale.get('textZenModeEntered', {name: 'Common.Translation', default: 'Zen Mode entered. Exit via Esc.'}),
+                {
+                  position: 'top-center',
+                  announce: false,
+                }
+            );
+
             // Trigger window resize event to ensure all UI components update their layout
             $(window).trigger('resize');
 
@@ -129,6 +141,12 @@ define([
             // Hide the Zen mode overlay first
             if (this.overlay) {
                 this.overlay.hide();
+            }
+
+            // Dismiss the enter-hint toast if it is still visible
+            if (this._toast) {
+                this._toast.hide();
+                this._toast = null;
             }
 
             // Remove Zen mode class from body
