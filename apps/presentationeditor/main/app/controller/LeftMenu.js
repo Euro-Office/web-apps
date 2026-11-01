@@ -403,6 +403,9 @@ define([
                     value = Common.localStorage.getBool("pe-spellcheck-ignore-numbers-words", true);
                     Common.Utils.InternalSettings.set("pe-spellcheck-ignore-numbers-words", value);
                     spprops.put_IgnoreWordsWithNumbers(value);
+                    value = Common.localStorage.getBool("pe-spellcheck-wavy-line", true);
+                    Common.Utils.InternalSettings.set("pe-spellcheck-wavy-line", value);
+                    spprops.put_WavyLine(value);
                     this.api.asc_setSpellCheckSettings(spprops);
                 }
 
