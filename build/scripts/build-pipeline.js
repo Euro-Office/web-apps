@@ -18,8 +18,10 @@
 //   THEME            default: euro-office
 //
 // Phase layout (wall-clock optimised):
+//   Sprites — before Phase 1:
+//     deploy-sprites    (writes sprites into apps/, which deploy-common copies)
 //   Phase 1 — all parallel:
-//     sprites.sh, deploy-common, deploy-html, deploy-reporter,
+//     deploy-common, deploy-html, deploy-reporter,
 //     deploy-embed, webpack ×6, mobile ×4
 //   Phase 2 — sequential after Phase 1:
 //     deploy-mobile     (copies mobile output from source tree to BUILD_ROOT)
@@ -237,10 +239,15 @@ async function main() {
         task('verify-replacements', node, ['scripts/verify-replacements.mjs']),
     ]);
 
+    // deploy-sprites writes formats@2.5x.svg and icons.svg into apps/, which
+    // deploy-common copies to BUILD_ROOT. In parallel, the copy raced the write.
+    const pSprites = await phase('Sprites', [
+        task('sprites', node, ['scripts/deploy-sprites.js']),
+    ]);
+
     // ---- phase 1: all independent work in parallel --------------------------
 
     const phase1Tasks = [
-        task('sprites',           node,   ['scripts/deploy-sprites.js']),
         task('deploy-common',     node,   ['scripts/deploy-common.js']),
         task('deploy-html',       node,   ['scripts/deploy-html.js']),
         task('deploy-reporter',   node,   ['scripts/deploy-reporter.js']),
@@ -305,7 +312,7 @@ async function main() {
 
     // ---- summary -------------------------------------------------------------
 
-    const all = [...p0, install, ...p1, ...pMobile, ...p2, ...p3, ...p4];
+    const all = [...p0, ...pSprites, install, ...p1, ...pMobile, ...p2, ...p3, ...p4];
     const wallMs = Date.now() - wallStart;
 
     const longestLabel = Math.max(...all.map(r => r.label.length));
