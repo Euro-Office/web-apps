@@ -472,6 +472,9 @@ define([
                         isBackground = true;
                     }
                 });
+                if (me.backgroundPlugins.length > 0 && !isBackground) {
+                    _group = me.addBackgroundPluginsButton(_group);
+                }
                 _group.appendTo(me.$toolbarPanelPlugins);
                 if (me.backgroundPlugins.length > 0) {
                     me.viewPlugins.backgroundBtn.show();
