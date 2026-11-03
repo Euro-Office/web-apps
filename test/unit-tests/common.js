@@ -44,6 +44,7 @@ define([
     // for the text direction. Pulling in the real modules would drag 'core' and
     // the whole application bootstrap into a unit test, so stub the two calls.
     window.Common = window.Common || {};
+    Common.Controllers = Common.Controllers || {};
     Common.UI = Common.UI || {};
     Common.UI.Scaling = Common.UI.Scaling || {};
     if (!Common.UI.Scaling.currentRatio) {

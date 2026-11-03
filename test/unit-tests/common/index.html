@@ -26,6 +26,7 @@
         paths: {
             // Testing libs
             'common'            : 'common',
+            'core'              : 'common/main/lib/core/application',
             'jquery'            : '../vendor/jquery/jquery.min',
             'underscore'        : '../vendor/underscore/underscore',
             'backbone'          : '../vendor/backbone/backbone',
@@ -102,7 +103,8 @@
             require([
                 './main/lib/util/utils.js',
                 './main/lib/component/Button.js',
-                './main/lib/component/MenuItem.js'
+                './main/lib/component/MenuItem.js',
+                './main/lib/controller/Plugins.js'
             ], runMocha);
         });
     });
