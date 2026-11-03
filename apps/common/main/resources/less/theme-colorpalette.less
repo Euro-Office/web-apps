@@ -1,3 +1,32 @@
+// Notice at the top of color palettes. Hidden unless an editor
+// shows it (the spreadsheet editor does while its dark filter is on).
+.dark-document-notice {
+    display: none;
+    margin: 7px 12px 4px;
+    padding: 6px 8px;
+    border-radius: @border-radius-small;
+    background-color: @highlight-button-hover-ie;
+    background-color: @highlight-button-hover;
+    white-space: normal;
+    .text-align-left();
+    .font-size-normal();
+    color: @text-normal-ie;
+    color: @text-normal;
+
+    // Warning icon of the editor's dialogs, inline at the start of the text so the
+    // following lines wrap under it. Not named .icon: toolbar button groups size every
+    // .icon inside them, and the pen menus open inside one.
+    .notice-icon {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        margin-right: 4px;
+        vertical-align: text-bottom;
+        background: ~"url('@{common-image-const-path}/controls/warnings_s.svg#attention')" no-repeat center;
+        background-size: 16px 16px;
+    }
+}
+
 .theme-colorpalette {
     margin: 0 !important;
     //color: black;

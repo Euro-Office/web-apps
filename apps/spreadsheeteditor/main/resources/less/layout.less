@@ -1,8 +1,21 @@
+// Dark filter of the sheet: a full inversion keeping hues, with its contrast lowered so the
+// background is a dark grey rather than pure black (contrast 0.85 puts white at #131313 and
+// black at #ececec). 1 gives the full inversion.
+@dark-filter-contrast: 0.85;
+@dark-filter: invert(1) hue-rotate(180deg) contrast(@dark-filter-contrast);
+// Inverse of @dark-filter (its functions undone in reverse order). sdkjs draws pictures with it
+// before @dark-filter applies to the drawing objects, so they display close to their real colors.
+@dark-filter-pictures: contrast((1 / @dark-filter-contrast)) hue-rotate(180deg) invert(1);
+// The filter fades in and out over this transition.
+@dark-filter-transition: filter 1.25s cubic-bezier(0.22, 1, 0.36, 1);
+
 body {
     width: 100%;
     height: 100%;
     touch-action: manipulation;
     .user-select(none);
+    // Read by the ViewTab controller and passed to sdkjs
+    --dark-filter-pictures: @dark-filter-pictures;
     color: @text-normal-ie;
     color: @text-normal;
 
@@ -19,6 +32,55 @@ body {
                 width: 0;
                 height: 0;
             }
+        }
+    }
+
+    // The transition sits on the canvases themselves, so it runs in both directions.
+    #ws-canvas,
+    #ws-canvas-overlay,
+    #ws-canvas-graphic,
+    #id_target_cursor {
+        transition: @dark-filter-transition;
+    }
+
+    // Dark filter: displays the grid and its overlay inverted, keeping hues.
+    // Drawing objects are filtered only with canvas-dark-filter-objects.
+    &.canvas-dark-filter {
+        #ws-canvas,
+        #ws-canvas-overlay {
+            filter: @dark-filter;
+        }
+
+        // Palettes show the real colors, which the filtered sheet displays differently
+        .dark-document-notice {
+            display: block;
+        }
+
+        // Sheet tabs and header/footer text are not drawn on the filtered canvases,
+        // so their colors look as chosen
+        .no-dark-document-notice .dark-document-notice {
+            display: none;
+        }
+    }
+
+    // Drawing objects and the caret for text inside them, filtered like the grid.
+    // Pictures display as negatives unless sdkjs draws them with @dark-filter-pictures
+    // (asc_setPictureDisplayFilter, called by the ViewTab controller). The object overlay (#ws-canvas-graphic-overlay:
+    // selection handles, move and resize tracks) is not filtered, so the handles stay bright.
+    &.canvas-dark-filter-objects {
+        #ws-canvas-graphic,
+        #id_target_cursor {
+            filter: @dark-filter;
+        }
+    }
+
+    // Users who ask their system for less motion get an instant switch.
+    @media (prefers-reduced-motion: reduce) {
+        #ws-canvas,
+        #ws-canvas-overlay,
+        #ws-canvas-graphic,
+        #id_target_cursor {
+            transition: none;
         }
     }
 }
