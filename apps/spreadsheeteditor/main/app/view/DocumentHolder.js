@@ -168,7 +168,8 @@ define([
         tipNumNumbersPoint: '1. 2. 3.',
         tipNumNumbersParentheses: '1) 2) 3)',
         tipNumRoman: 'I. II. III.',
-        tipNumRomanSmall: 'i. ii. iii.'
+        tipNumRomanSmall: 'i. ii. iii.',
+        textCustomErrorBars: 'Custom...'
 
     }, SSE.Views.DocumentHolder || {}));
 });
