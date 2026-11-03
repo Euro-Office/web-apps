@@ -1041,6 +1041,7 @@ define([
 
                 me.api.asc_registerCallback('asc_onStartAction',        _.bind(me.onLongActionBegin, me));
                 me.api.asc_registerCallback('asc_onConfirmAction',      _.bind(me.onConfirmAction, me));
+                me.api.asc_registerCallback('asc_onConfirmLargePaste',  _.bind(me.onConfirmLargePaste, me));
                 me.api.asc_registerCallback('asc_onActiveSheetChanged', _.bind(me.onActiveSheetChanged, me));
                 me.api.asc_registerCallback('asc_onPrint',              _.bind(me.onPrint, me));
 
@@ -1998,6 +1999,10 @@ define([
                         config.msg = this.errorPasteMaxRange;
                         break;
 
+                    case Asc.c_oAscError.ID.PasteSizeLimitError:
+                        config.msg = this.errorPasteSizeLimit;
+                        break;
+
                     case Asc.c_oAscError.ID.LockedAllError:
                         config.msg = this.errorLockedAll;
                         break;
@@ -2780,6 +2785,46 @@ define([
                             }, this)
                         });
                         break;
+                }
+            },
+
+            onConfirmLargePaste: function(cellCount, minSeconds, apiCallback) {
+                var me = this,
+                    lang = (this.appOptions.lang || 'en').replace('_', '-').toLowerCase(),
+                    cells;
+                try {
+                    cells = cellCount.toLocaleString(lang);
+                } catch (e) {
+                    cells = cellCount.toLocaleString('en');
+                }
+                try {
+                    // Enter presses the first button, so the safe choice goes first
+                    Common.UI.warning({
+                        title: this.notcriticalErrorTitle,
+                        msg: this.confirmLargePaste.replace('%1', cells).replace('%2', minSeconds),
+                        buttons: ['cancel', {value: 'ok', caption: SSE.Controllers.Toolbar.prototype.txtPaste}],
+                        primary: 'cancel',
+                        maxwidth: 600,
+                        callback: function(btn) {
+                            // Answer before anything else here can throw
+                            if (btn !== 'ok') {
+                                apiCallback(false);
+                            } else {
+                                // The paste blocks the tab. The dialog is removed after this callback returns, so wait until
+                                // a frame without it has been drawn: the second animation frame comes after that one.
+                                requestAnimationFrame(function() {
+                                    requestAnimationFrame(function() {
+                                        apiCallback(true);
+                                    });
+                                });
+                            }
+                            me.onEditComplete(me.application.getController('DocumentHolder').getView('DocumentHolder'));
+                        }
+                    });
+                } catch (e) {
+                    // Thrown out of here, the error would skip the end of the paste event and leave the editor ignoring
+                    // every later paste until reload
+                    apiCallback(false);
                 }
             },
 
@@ -3869,7 +3914,10 @@ define([
                 data && this.api.asc_openDocumentFromBytes(new Uint8Array(data));
             },
 
-            errorLang: 'The interface language is not loaded.<br>Please contact your Document Server administrator.'
+            errorLang: 'The interface language is not loaded.<br>Please contact your Document Server administrator.',
+            // English until a locale file provides them; a build that skips merging en into the locales leaves them out
+            confirmLargePaste: 'You are pasting about %1 cells. This will take at least %2 seconds, and the editor won\'t respond until it\'s done. On slower machines the connection to the server may be lost. For data this large, open the source file itself instead of pasting its contents.<br>Paste anyway?',
+            errorPasteSizeLimit: 'This paste is too large. Open the source file itself instead, or paste the data in smaller parts.'
         }
     })(), SSE.Controllers.Main || {}))
 });
