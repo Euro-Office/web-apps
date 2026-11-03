@@ -50,6 +50,7 @@ define([
         onLaunch: function () {
             this._state = {};
             Common.NotificationCenter.on('uitheme:changed', this.onThemeChanged.bind(this));
+            Common.NotificationCenter.on('contenttheme:dark', this.onContentThemeChangedToDark.bind(this));
             Common.NotificationCenter.on('tabstyle:changed', this.onTabStyleChange.bind(this));
         },
 
@@ -99,7 +100,8 @@ define([
                     'viewtab:viewmode': this.onPreviewMode,
                     'macros:click':  this.onClickMacros,
                     'macros:record':  _.bind(this.onClickMacrosRec, this),
-                    'macros:pause':  _.bind(this.onClickMacrosPause, this)
+                    'macros:pause':  _.bind(this.onClickMacrosPause, this),
+                    'darkmode:change': _.bind(this.onChangeDarkMode, this)
                 },
                 'Statusbar': {
                     'sheet:changed': this.onApiSheetChanged.bind(this),
@@ -296,7 +298,25 @@ define([
                     this.view.btnInterfaceTheme.menu.clearAll(true);
                     menu_item.setChecked(true, true);
                 }
+                Common.Utils.lockControls(Common.enumLock.inLightTheme, !Common.UI.Themes.isDarkTheme(), {array: [this.view.btnDarkDocument]});
             }
+        },
+
+        onChangeDarkMode: function (isdarkmode) {
+            // same 500ms debounce as documenteditor's ViewTab.js already had
+            // TODO: look if is not a better solution
+            if (!this._darkModeTimer) {
+                var me = this;
+                me._darkModeTimer = setTimeout(function() {
+                    me._darkModeTimer = undefined;
+                }, 500);
+                Common.UI.Themes.setContentTheme(isdarkmode ? 'dark' : 'light');
+            } else
+                this.onContentThemeChangedToDark(Common.UI.Themes.isContentThemeDark());
+        },
+
+        onContentThemeChangedToDark: function (isdark) {
+            this.view && this.view.btnDarkDocument.toggle(isdark, true);
         },
 
         onTabStyleChange: function () {

@@ -108,6 +108,7 @@ define([
         userProtected: 'cell-user-protected',
         pageBreakLock: 'page-break-lock',
         externalChartProtected: 'external-chart-protected',
+        inLightTheme:   'light-theme',
         fileMenuOpened: 'file-menu-opened',
         cantMergeShape: 'merge-shape-lock',
         cantSave: 'cant-save',
