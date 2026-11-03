@@ -3672,6 +3672,9 @@ define([], function () {
                     break;
                 case 'standardDeviation':
                     chartProps.setDisplayErrorBars(true, 3);
+                    break;
+                case 'customError':
+                    this.onCustomErrorBars(chartProps);
                     break;       
                case 'bShowHorMajor':
                     if (hBarChart) {
@@ -3741,6 +3744,30 @@ define([], function () {
                     break;
             }
             this.chartProps = this.getCurrentChartProps();
+        };
+
+        dh.onCustomErrorBars = function(chartProps) {
+            var me = this;
+            if (!chartProps) {
+                chartProps = me.getCurrentChartProps();
+            }
+            if (!chartProps) {
+                return;
+            }
+            var win = new SSE.Views.ChartErrorBarsCustomDialog({
+                handler: function(dlg, result) {
+                    if (result == 'ok') {
+                        me.chartProps = me.getCurrentChartProps();
+                    }
+                }
+            }).on('close', function() {
+                Common.Gateway.focus();
+            });
+            win.show();
+            win.setSettings({
+                api: me.api,
+                chartSettings: chartProps
+            });
         };
 
         dh.updateChartElementMenu = function(menu, chartProps) {
@@ -3830,6 +3857,16 @@ define([], function () {
             // highlightSubmenuItem(tableMenu.items[0], false, 'table');
             // highlightSubmenuItem(tableMenu.items[1], false, 'table');
             // highlightSubmenuItem(tableMenu.items[2], false,'table');
+
+            const errorBarsMenu = menu.items[4].menu;
+            if (errorBarsMenu && errorBarsMenu.items && errorBarsMenu.items.length >= 5) {
+                const errValType = chartProps.getErrorBarsValueType ? chartProps.getErrorBarsValueType() : null;
+                errorBarsMenu.items[0].setChecked(errValType === null);
+                errorBarsMenu.items[1].setChecked(errValType === 4);
+                errorBarsMenu.items[2].setChecked(errValType === 2);
+                errorBarsMenu.items[3].setChecked(errValType === 3);
+                errorBarsMenu.items[4].setChecked(errValType === 0);
+            }
 
             const gridMenu = menu.items[5].menu;
             gridMenu.items[0].setVisible(true);
