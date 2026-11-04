@@ -231,9 +231,9 @@ define([], function () { 'use strict';
         }
         this._converter = null;
         this._converterPromise = null;
-        var handlers = this.handlers;
+        // sdkjs closes its own side (CLocalTransportSocket.close) before calling transport.close(),
+        // so nothing is reported back to the handlers here
         this.handlers = null;
-        handlers && handlers.onClose && handlers.onClose(true);
     };
 
     Session.prototype._revoke = function (url) {
