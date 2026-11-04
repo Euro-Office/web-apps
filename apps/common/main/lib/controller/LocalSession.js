@@ -40,68 +40,31 @@ define([
     'common/main/lib/util/LocalSession'
 ], function () { 'use strict';
 
-    var FONT_STYLE_SUFFIX = {indexR: '', indexB: '_Bold', indexI: '_Italic', indexBI: '_Bold_Italic'};
-    var FONT_FILES_PATH = '../../../../fonts/';
-
-    function loadConverterModule(baseUrl) {
-        var url = baseUrl.replace(/\/?$/, '/') + 'converter.js';
-        // The converter ships with the Document Server next to web-apps and is
-        // not part of this bundle, hence the native import.
-        return import(/* webpackIgnore: true */ url);
-    }
-
-    function productVersion() {
-        var version = '{{PRODUCT_VERSION}}';
-        if (Common.Views && Common.Views.About && Common.Views.About.prototype.txtVersionNum)
-            version = Common.Views.About.prototype.txtVersionNum;
-        var cropped = /^(\d+\.\d+\.\d+)(?:\.(\d+))?/.exec(version);
-        return {
-            buildVersion: cropped ? cropped[1] : version,
-            buildNumber: cropped && cropped[2] ? parseInt(cropped[2]) : 0
-        };
-    }
-
-    // Font files sdkjs has already resolved for this document, keyed the way x2t expects them
-    function loadedFonts() {
-        var fonts = {};
-        var AscFonts = window.AscFonts;
-        if (!AscFonts || !AscFonts.g_font_infos || !AscFonts.g_font_files)
-            return fonts;
-        AscFonts.g_font_infos.forEach(function (info) {
-            if (!info || !info.NeedStyles) return;
-            Object.keys(FONT_STYLE_SUFFIX).forEach(function (key) {
-                var index = info[key];
-                if (typeof index !== 'number' || index < 0) return;
-                var file = AscFonts.g_font_files[index];
-                if (!file || !file.Id) return;
-                fonts[info.Name + FONT_STYLE_SUFFIX[key] + '.ttf'] = FONT_FILES_PATH + file.Id;
-            });
-        });
-        return fonts;
-    }
-
     Common.Controllers.LocalSession = Backbone.Controller.extend(_.extend({
         models: [],
         collections: [],
         views: [],
 
         initialize: function () {
-            this.session = null;
-            this.source = null;
-            this.api = null;
+            this.host = null;
         },
 
         onLaunch: function () {
-            Common.Gateway.on('opendocumentsource', _.bind(this.onOpenDocumentSource, this));
-        },
-
-        onOpenDocumentSource: function (data) {
-            this.source = data;
-            this.session && this.session.setSource(data);
-        },
-
-        isSupported: function () {
-            return !!(window.AscCommon && typeof AscCommon.setLocalSessionTransport === 'function');
+            var me = this;
+            this.host = new Common.LocalSession.Host({
+                gateway: Common.Gateway,
+                messages: {
+                    notSupported: this.errorNotSupported,
+                    converterLoad: this.errorConverterLoad,
+                    convert: this.errorConvert,
+                    unsupportedFormat: this.errorUnsupportedFormat,
+                    outOfMemory: this.errorOutOfMemory
+                },
+                onError: function (code, text) {
+                    text === me.errorNotSupported && Common.UI.warning({msg: text, buttons: []});
+                }
+            });
+            this.host.listen();
         },
 
         /**
@@ -112,62 +75,23 @@ define([
          * @returns {boolean} false when this SDK build has no local session support
          */
         start: function (api, options) {
-            var me = this;
-            options = options || {};
-            this.api = api;
-
-            if (!this.isSupported()) {
-                Common.Gateway.reportError(Common.LocalSession.ERRORS.Load, this.errorNotSupported);
-                Common.UI.warning({msg: this.errorNotSupported, buttons: []});
-                return false;
-            }
-
-            this.session && this.session.destroy();
-            this.session = new Common.LocalSession.Session({
-                loadConverter: loadConverterModule,
-                x2tUrl: options.x2tUrl,
-                getFonts: loadedFonts,
-                getVersion: productVersion,
-                user: options.user ? {id: options.user.id, name: options.user.fullname} : {},
-                documentType: options.documentType,
-                onProgress: function (phase, percent) {
-                    Common.Gateway.localSessionProgress(phase, percent);
-                },
-                onError: function (code, message) {
-                    me.onSessionError(code, message);
-                }
-            });
-            this.source && this.session.setSource(this.source);
-            AscCommon.setLocalSessionTransport(this.session.getTransport());
-            return true;
-        },
-
-        onSessionError: function (code, message) {
-            var ERRORS = Common.LocalSession.ERRORS;
-            var text = code === ERRORS.Load ? this.errorConverterLoad :
-                       code === ERRORS.Unsupported ? this.errorUnsupportedFormat :
-                       code === ERRORS.Memory ? this.errorOutOfMemory : this.errorConvert;
-            console.error('Local session error ' + code + ': ' + message);
-            Common.Gateway.reportError(code, text);
+            return this.host.start(options);
         },
 
         getBlob: function (url) {
-            return this.session ? this.session.getBlob(url) : null;
+            return this.host ? this.host.getBlob(url) : null;
         },
 
         getFileType: function (url) {
-            return this.session ? this.session.getFileType(url) : null;
+            return this.host ? this.host.getFileType(url) : null;
         },
 
         isActive: function () {
-            return !!this.session && !this.session.isClosed();
+            return !!this.host && this.host.isActive();
         },
 
         stop: function () {
-            if (!this.session) return;
-            this.session.destroy();
-            this.session = null;
-            this.isSupported() && AscCommon.setLocalSessionTransport(null);
+            this.host && this.host.stop();
         },
 
         errorNotSupported: 'This editor build cannot open documents without a Document Server.',

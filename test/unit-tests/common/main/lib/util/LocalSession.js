@@ -344,4 +344,106 @@ define([
             });
         });
     });
+
+    describe('Common.LocalSession.Host', function () {
+        var Host = Common.LocalSession.Host;
+        var savedAscCommon;
+
+        beforeEach(function () {
+            savedAscCommon = window.AscCommon;
+        });
+
+        afterEach(function () {
+            window.AscCommon = savedAscCommon;
+        });
+
+        function fakeGateway() {
+            var handlers = {};
+            return {
+                handlers: handlers,
+                reported: [],
+                progress: [],
+                on: function (event, fn) { handlers[event] = fn; },
+                reportError: function (code, text) { this.reported.push({code: code, text: text}); },
+                localSessionProgress: function (phase, percent) { this.progress.push(phase + ':' + percent); }
+            };
+        }
+
+        function fakeSdk() {
+            var sdk = {transport: undefined};
+            window.AscCommon = {setLocalSessionTransport: function (t) { sdk.transport = t; }};
+            return sdk;
+        }
+
+        function createHost(gateway, converter, extra) {
+            return new Host(Object.assign({
+                gateway: gateway,
+                loadConverter: function () { return Promise.resolve(converter); },
+                getFonts: function () { return {}; },
+                getVersion: function () { return {buildVersion: '9.3.8', buildNumber: 42}; },
+                messages: {convert: 'Konvertierung fehlgeschlagen'}
+            }, extra || {}));
+        }
+
+        it('reports a missing sdkjs hook instead of starting', function () {
+            window.AscCommon = {};
+            var gateway = fakeGateway(), shown = [];
+            var host = createHost(gateway, stubConverter(), {onError: function (code, text) { shown.push(text); }});
+
+            assert.isFalse(host.start({documentType: 'word'}));
+            assert.deepEqual(gateway.reported, [{code: ERRORS.Load, text: 'This editor build cannot open documents without a Document Server.'}]);
+            assert.deepEqual(shown, ['This editor build cannot open documents without a Document Server.']);
+        });
+
+        it('keeps a source that arrives before start and opens it through the registered transport', function () {
+            var gateway = fakeGateway(), sdk = fakeSdk();
+            var host = createHost(gateway, stubConverter());
+            host.listen();
+            gateway.handlers.opendocumentsource({buffer: bytes('PK docx').buffer, name: 'a.docx', fileType: 'docx'});
+
+            assert.isTrue(host.start({documentType: 'word', user: {id: 'u1', fullname: 'Alice'}, x2tUrl: 'x2t/'}));
+            assert.isObject(sdk.transport);
+            assert.isTrue(host.isActive());
+
+            return runAuthExchange(sdk.transport).then(function (received) {
+                var open = received[received.length - 1];
+                assert.equal(open.data.status, 'ok');
+                assert.include(gateway.progress.join(' '), 'convert:');
+            });
+        });
+
+        it('maps session errors to the localized messages', function () {
+            var gateway = fakeGateway(), sdk = fakeSdk();
+            var host = createHost(gateway, stubConverter({fail: {code: 'convert', message: 'broken'}}));
+            host.listen();
+            host.start({documentType: 'word'});
+            gateway.handlers.opendocumentsource({buffer: bytes('x').buffer, name: 'a.docx', fileType: 'docx'});
+
+            return new Promise(function (resolve) {
+                sdk.transport.connect({
+                    onOpen: function () {},
+                    onMessage: function (msg) {
+                        if (msg.type === 'license')
+                            sdk.transport.send({type: 'auth', openCmd: {}});
+                    },
+                    onClose: function () {},
+                    onDisconnect: function () { resolve(); }
+                });
+                setTimeout(resolve, 200);
+            }).then(function () {
+                assert.deepEqual(gateway.reported, [{code: ERRORS.Convert, text: 'Konvertierung fehlgeschlagen'}]);
+            });
+        });
+
+        it('unregisters the transport on stop', function () {
+            var gateway = fakeGateway(), sdk = fakeSdk();
+            var host = createHost(gateway, stubConverter());
+            assert.isNull(host.getBlob('blob:any'));
+            host.start({documentType: 'cell'});
+            host.stop();
+
+            assert.isNull(sdk.transport);
+            assert.isFalse(host.isActive());
+        });
+    });
 });

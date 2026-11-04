@@ -539,7 +539,156 @@ define([], function () { 'use strict';
         });
     };
 
+    // ---------------------------------------------------------------------
+    // Host: wires a Session into an editor app (desktop or mobile). Kept free
+    // of Backbone and React so every app shell can use it.
+
+    var FONT_STYLE_SUFFIX = {indexR: '', indexB: '_Bold', indexI: '_Italic', indexBI: '_Bold_Italic'};
+    var FONT_FILES_PATH = '../../../../fonts/';
+
+    var DEFAULT_MESSAGES = {
+        notSupported: 'This editor build cannot open documents without a Document Server.',
+        converterLoad: 'The document converter could not be loaded.',
+        convert: 'The document could not be converted in the browser.',
+        unsupportedFormat: 'This file format cannot be opened without a Document Server.',
+        outOfMemory: 'The document is too large to be opened in the browser.'
+    };
+
+    function loadConverterModule(baseUrl) {
+        var url = baseUrl.replace(/\/?$/, '/') + 'converter.js';
+        // The converter ships with the Document Server next to web-apps and is
+        // not part of the bundle, hence the native import.
+        return import(/* webpackIgnore: true */ url);
+    }
+
+    function productVersion() {
+        var version = '{{PRODUCT_VERSION}}';
+        if (Common.Views && Common.Views.About && Common.Views.About.prototype.txtVersionNum)
+            version = Common.Views.About.prototype.txtVersionNum;
+        var cropped = /^(\d+\.\d+\.\d+)(?:\.(\d+))?/.exec(version);
+        return {
+            buildVersion: cropped ? cropped[1] : version,
+            buildNumber: cropped && cropped[2] ? parseInt(cropped[2]) : 0
+        };
+    }
+
+    // Font files sdkjs has already resolved for this document, keyed the way x2t expects them
+    function loadedFonts() {
+        var fonts = {};
+        var AscFonts = window.AscFonts;
+        if (!AscFonts || !AscFonts.g_font_infos || !AscFonts.g_font_files)
+            return fonts;
+        AscFonts.g_font_infos.forEach(function (info) {
+            if (!info || !info.NeedStyles) return;
+            Object.keys(FONT_STYLE_SUFFIX).forEach(function (key) {
+                var index = info[key];
+                if (typeof index !== 'number' || index < 0) return;
+                var file = AscFonts.g_font_files[index];
+                if (!file || !file.Id) return;
+                fonts[info.Name + FONT_STYLE_SUFFIX[key] + '.ttf'] = FONT_FILES_PATH + file.Id;
+            });
+        });
+        return fonts;
+    }
+
+    /**
+     * @param {Object} options
+     *   gateway   Common.Gateway (on, reportError, localSessionProgress)
+     *   messages  localized texts, see DEFAULT_MESSAGES
+     *   onError   function (code, text), e.g. to show a dialog
+     *   loadConverter, getFonts, getVersion  overrides for tests
+     */
+    function Host(options) {
+        options = options || {};
+        this.gateway = options.gateway;
+        this.messages = Object.assign({}, DEFAULT_MESSAGES, options.messages || {});
+        this.onError = options.onError || function () {};
+        this.loadConverter = options.loadConverter || loadConverterModule;
+        this.getFonts = options.getFonts || loadedFonts;
+        this.getVersion = options.getVersion || productVersion;
+        this.session = null;
+        this.source = null;
+    }
+
+    Host.isSupported = function () {
+        var AscCommon = window.AscCommon;
+        return !!(AscCommon && typeof AscCommon.setLocalSessionTransport === 'function');
+    };
+
+    // Call at startup: api.js posts the bytes before the document is opened.
+    Host.prototype.listen = function () {
+        var me = this;
+        this.gateway.on('opendocumentsource', function (data) {
+            me.source = data;
+            me.session && me.session.setSource(data);
+        });
+    };
+
+    /**
+     * Registers the local transport with sdkjs. Must run before api.asc_setDocInfo.
+     * @param {Object} options {documentType, user: {id, fullname}, x2tUrl}
+     * @returns {boolean} false when this SDK build has no local session support
+     */
+    Host.prototype.start = function (options) {
+        var me = this;
+        options = options || {};
+        if (!Host.isSupported()) {
+            this._report(ERRORS.Load, this.messages.notSupported);
+            return false;
+        }
+        this.session && this.session.destroy();
+        this.session = new Session({
+            loadConverter: this.loadConverter,
+            x2tUrl: options.x2tUrl,
+            getFonts: this.getFonts,
+            getVersion: this.getVersion,
+            user: options.user ? {id: options.user.id, name: options.user.fullname} : {},
+            documentType: options.documentType,
+            onProgress: function (phase, percent) {
+                me.gateway.localSessionProgress(phase, percent);
+            },
+            onError: function (code, message) {
+                console.error('Local session error ' + code + ': ' + message);
+                me._report(code, me._messageFor(code));
+            }
+        });
+        this.source && this.session.setSource(this.source);
+        window.AscCommon.setLocalSessionTransport(this.session.getTransport());
+        return true;
+    };
+
+    Host.prototype._messageFor = function (code) {
+        return code === ERRORS.Load ? this.messages.converterLoad :
+               code === ERRORS.Unsupported ? this.messages.unsupportedFormat :
+               code === ERRORS.Memory ? this.messages.outOfMemory : this.messages.convert;
+    };
+
+    Host.prototype._report = function (code, text) {
+        this.gateway.reportError(code, text);
+        this.onError(code, text);
+    };
+
+    Host.prototype.getBlob = function (url) {
+        return this.session ? this.session.getBlob(url) : null;
+    };
+
+    Host.prototype.getFileType = function (url) {
+        return this.session ? this.session.getFileType(url) : null;
+    };
+
+    Host.prototype.isActive = function () {
+        return !!this.session && !this.session.isClosed();
+    };
+
+    Host.prototype.stop = function () {
+        if (!this.session) return;
+        this.session.destroy();
+        this.session = null;
+        Host.isSupported() && window.AscCommon.setLocalSessionTransport(null);
+    };
+
     Common.LocalSession.Session = Session;
+    Common.LocalSession.Host = Host;
     Common.LocalSession.ERRORS = ERRORS;
     Common.LocalSession.fileExtension = fileExtension;
 
