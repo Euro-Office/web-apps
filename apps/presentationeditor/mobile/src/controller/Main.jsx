@@ -13,6 +13,7 @@ import ErrorController from "./Error";
 import LongActionsController from "./LongActions";
 import {LocalStorage} from "../../../../common/mobile/utils/LocalStorage.mjs";
 import About from '../../../../common/mobile/lib/view/About';
+import { isLocalSessionConfig, restrictLocalSessionPermissions, createLocalSessionHost } from '../../../../common/mobile/utils/localSession.js';
 import PluginsController from '../../../../common/mobile/lib/controller/Plugins.jsx';
 import { Device } from '../../../../common/mobile/utils/device';
 import { Themes } from '../../../../common/mobile/lib/controller/Themes.jsx';
@@ -147,6 +148,14 @@ class MainController extends Component {
 
                 if (data.doc) {
                     this.permissions = Object.assign(this.permissions, data.doc.permissions);
+                    if (isLocalSessionConfig(this.editorConfig)) {
+                        data.doc.permissions = restrictLocalSessionPermissions(this.permissions);
+                        this.localSession.start({
+                            documentType: 'slide',
+                            user: this.props.storeAppOptions.user,
+                            x2tUrl: this.editorConfig.session.x2tUrl
+                        });
+                    }
 
                     const _options = Object.assign({}, data.doc.options, this.editorConfig.actionLink || {});
                     const _user = new Asc.asc_CUserInfo();
@@ -271,6 +280,8 @@ class MainController extends Component {
                     this.api.SetDrawingFreeze(true);
                     this.api.SetThemesPath("../../../../sdkjs/slide/themes/");
                     Common.Utils.Metric.setCurrentMetric(1); //pt
+
+                    this.localSession = createLocalSessionHost(this.props.t('Controller.Main', {returnObjects: true}));
 
                     Common.Gateway.on('init',           loadConfig);
                     Common.Gateway.on('showmessage',    this.onExternalMessage.bind(this));
@@ -680,6 +691,7 @@ class MainController extends Component {
     }
 
     applyLicense () {
+        if (isLocalSessionConfig(this.editorConfig)) return; // no Document Server, no license to apply
         const { t } = this.props;
         const _t = t('Controller.Main', {returnObjects:true});
 
@@ -806,6 +818,7 @@ class MainController extends Component {
     }
 
     onServerVersion (buildVersion) {
+        if (isLocalSessionConfig(this.editorConfig)) return false; // no server to compare with
         if (this.changeServerVersion) return true;
         const { t } = this.props;
         const _t = t('Controller.Main', {returnObjects:true});
@@ -1088,7 +1101,8 @@ class MainController extends Component {
 
     onDownloadUrl(url, fileType) {
         if (this._state.isFromGatewayDownloadAs) {
-            Common.Gateway.downloadAs(url, fileType);
+            const blob = this.localSession.getBlob(url);
+            blob ? Common.Gateway.downloadAsBlob(blob, fileType) : Common.Gateway.downloadAs(url, fileType);
         }
 
         this._state.isFromGatewayDownloadAs = false;
