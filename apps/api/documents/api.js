@@ -18,7 +18,11 @@
             token: <string> encrypted signature
             document: {
                 title: 'document title',
-                url: 'document url'
+                url: 'document url', // required unless "source" is set
+                source: { // local session (editorConfig.session.type = 'local'): the file itself instead of a url
+                    data: <ArrayBuffer | Blob | Uint8Array>,
+                    media: { 'image1.png': <Blob> } // optional, pre-extracted media
+                },
                 fileType: 'document file type',
                 options: <advanced options>,
                 key: 'key',
@@ -70,6 +74,10 @@
                     }
                 },
                 mode: 'view or edit',
+                session: {
+                    type: 'server' | 'local', // 'local' opens document.source in the browser without a Document Server (view only); default 'server'
+                    x2tUrl: 'url of the x2t directory' // optional, defaults to the one shipped next to web-apps
+                },
                 lang: <language code>,
                 location: <location>,
                 canCoAuthoring: <can coauthoring documents>,
@@ -308,7 +316,8 @@
                 'onWarning': <warning callback>,
                 'onInfo': <document open callback>,// send view or edit mode
                 'onOutdatedVersion': <outdated version callback>,// send when  previous version is opened, deprecated: use onRequestRefreshFile/refreshFile instead
-                'onDownloadAs': <download as callback>,// send url of downloaded file as a response for downloadAs method
+                'onDownloadAs': <download as callback>,// send url of downloaded file as a response for downloadAs method. in a local session data.blob is set as well and data.url is an object url
+                'onLocalSessionProgress': <local session progress callback>,// data: {phase: 'load'|'convert'|'open', percent}
                 'onRequestSaveAs': <try to save copy of the document>,
                 'onCollaborativeChanges': <co-editing changes callback>,// send when other user co-edit document
                 'onRequestRename': <try to rename document>,
@@ -411,6 +420,22 @@
         _config.frameEditorId = placeholderId;
         _config.parentOrigin = window.location.origin;
 
+        var _isLocalSession = !!(_config.editorConfig.session && _config.editorConfig.session.type === 'local');
+        if (_isLocalSession) {
+            // A local session has no DocService: nothing can be saved or co-edited.
+            _config.editorConfig.canCoAuthoring = false;
+            if (_config.editorConfig.mode !== 'view') {
+                console.warn("A local session is view only, editorConfig.mode is set to 'view'.");
+                _config.editorConfig.mode = 'view';
+            }
+            if (_config.document) {
+                if (_config.document.url || _config.document.key || _config.editorConfig.callbackUrl)
+                    console.warn("document.url, document.key and editorConfig.callbackUrl are ignored in a local session.");
+                _config.document.permissions = _config.document.permissions || {};
+                _config.document.permissions.edit = false;
+            }
+        }
+
         var onMouseUp = function (evt) {
             _processMouse(evt);
         };
@@ -439,7 +464,10 @@
             }
 
             if (_config.document) {
-                _openDocument(_config.document);
+                if (_isLocalSession)
+                    _openLocalDocument(_config.document);
+                else
+                    _openDocument(_config.document);
             }
         };
 
@@ -471,6 +499,11 @@
                             _onAppReady();
                         }
 
+                        if (msg.event === 'onDownloadAs' && msg.data && msg.data.blob && !msg.data.url && window.URL && window.URL.createObjectURL) {
+                            // local session: the file was produced in the editor frame, give the integrator a url of this origin
+                            msg.data.url = window.URL.createObjectURL(msg.data.blob);
+                        }
+
                         if (handler && typeof handler == "function") {
                             res = handler.call(_self, {target: _self, data: msg.data});
                         }
@@ -481,11 +514,14 @@
 
         var _checkConfigParams = function() {
             if (_config.document) {
-                if (!_config.document.url || ((typeof _config.document.fileType !== 'string' || _config.document.fileType=='') &&
+                var hasSource = _isLocalSession && _config.document.source && _config.document.source.data;
+                if ((!_config.document.url && !hasSource) || ((typeof _config.document.fileType !== 'string' || _config.document.fileType=='') &&
                                               (typeof _config.documentType !== 'string' || _config.documentType==''))) {
                     window.alert("One or more required parameter for the config object is not set");
                     return false;
                 }
+                if (_config.document.source && !_isLocalSession)
+                    console.warn("document.source is only used when editorConfig.session.type is 'local'.");
 
                 var appMap = {
                         'text': 'docx',
@@ -648,6 +684,47 @@
                 command: 'openDocumentFromBinary',
                 data: doc.buffer
             }, doc.buffer);
+        };
+
+        var _toArrayBuffer = function(data) {
+            if (data instanceof ArrayBuffer)
+                return Promise.resolve(data);
+            if (ArrayBuffer.isView(data))
+                return Promise.resolve(data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength));
+            if (window.Blob && data instanceof Blob) {
+                if (typeof data.arrayBuffer === 'function')
+                    return data.arrayBuffer();
+                return new Promise(function(resolve, reject) {
+                    var reader = new FileReader();
+                    reader.onload = function() { resolve(reader.result); };
+                    reader.onerror = function() { reject(reader.error); };
+                    reader.readAsArrayBuffer(data);
+                });
+            }
+            return Promise.reject(new Error("document.source.data must be an ArrayBuffer, a typed array or a Blob"));
+        };
+
+        var _openLocalDocument = function(doc) {
+            var docWithoutSource = {};
+            for (var prop in doc) {
+                if (doc.hasOwnProperty(prop) && prop !== 'source')
+                    docWithoutSource[prop] = doc[prop];
+            }
+            _toArrayBuffer(doc.source.data).then(function(buffer) {
+                _sendCommand({
+                    command: 'openDocumentSource',
+                    data: {
+                        buffer: buffer,
+                        name: doc.title,
+                        fileType: doc.fileType,
+                        media: doc.source.media || null
+                    }
+                }, buffer);
+                _openDocument(docWithoutSource);
+            }, function(error) {
+                var handler = _config.events && _config.events.onError;
+                handler && handler.call(_self, {target: _self, data: {errorCode: -101, errorDescription: String(error && error.message || error)}});
+            });
         };
 
         var _showMessage = function(title, msg) {
@@ -970,6 +1047,11 @@
         return '{{PRODUCT_VERSION}}';
     };
 
+    // Feature detection for integrators: a local session opens document.source in the browser without a Document Server
+    DocsAPI.DocEditor.capabilities = {
+        localSession: true
+    };
+
     DocsAPI.DocEditor.warmUp = function(id) {
         var target = document.getElementById(id);
         if ( target ) {
@@ -1014,7 +1096,8 @@
         var _onMessage = function(msg) {
             // TODO: check message origin
             if (msg && window.JSON && _scope.frameOrigin==msg.origin ) {
-                if (msg.data && msg.data.event === 'onSaveDocument') {
+                if (msg.data && typeof msg.data === 'object' && typeof msg.data.event === 'string') {
+                    // raw objects carry transferable or non-serialisable payloads (onSaveDocument buffer, onDownloadAs blob)
                     if (_fn) {
                         _fn.call(_scope, msg.data);
                     }
