@@ -311,7 +311,7 @@ define([
             });
         });
 
-        it('revokes urls, terminates the converter and closes the sdk side on close', function () {
+        it('revokes urls and terminates the converter on close without calling back into sdkjs', function () {
             var converter = stubConverter();
             var t = createSession(converter);
             t.session.setSource({buffer: bytes('docx').buffer, name: 'a.docx'});
@@ -333,7 +333,7 @@ define([
             }).then(function () {
                 t.session.getTransport().close();
                 assert.isTrue(t.session.isClosed());
-                assert.deepEqual(closed, [true]);
+                assert.deepEqual(closed, [], 'the sdkjs adapter closes its own side first');
                 assert.sameMembers(t.revoked, ['blob:test/0', 'blob:test/1']);
                 assert.isTrue(converter.terminated);
                 // messages after close are dropped
