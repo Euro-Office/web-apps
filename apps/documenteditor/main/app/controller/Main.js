@@ -38,6 +38,7 @@ define([
     'common/main/lib/component/LoadMask',
     'common/main/lib/component/Tooltip',
     'common/main/lib/controller/Fonts',
+    'common/main/lib/controller/LocalSession',
     'common/main/lib/collection/TextArt',
     'common/main/lib/util/LocalStorage',
     'documenteditor/main/app/collection/ShapeGroups',
@@ -522,6 +523,8 @@ define([
                     this.api.asc_registerCallback('asc_onRequestRefreshFile',       _.bind(this.onRequestRefreshFile, this));
                 }
 
+                this.appOptions.isLocalSession = !!(this.editorConfig.session && this.editorConfig.session.type === 'local');
+
                 Common.Controllers.Desktop.init(this.appOptions);
                 Common.UI.HintManager.setMode(this.appOptions);
             },
@@ -534,6 +537,16 @@ define([
 
                 if (data.doc) {
                     this.permissions = $.extend(this.permissions, data.doc.permissions);
+                    if (this.appOptions.isLocalSession) {
+                        // no DocService: nothing can be saved, so the local session is view only
+                        this.permissions.edit = this.permissions.review = this.permissions.comment = this.permissions.fillForms = this.permissions.protect = this.permissions.chat = false;
+                        data.doc.permissions = this.permissions;
+                        this.getApplication().getController('Common.Controllers.LocalSession').start(this.api, {
+                            documentType: 'word',
+                            user: this.appOptions.user,
+                            x2tUrl: this.editorConfig.session.x2tUrl
+                        });
+                    }
 
                     var _options = $.extend({}, data.doc.options, this.editorConfig.actionLink || {});
 
@@ -1579,6 +1592,7 @@ define([
             },
 
             applyLicense: function() {
+                if (this.appOptions.isLocalSession) return; // no DocService, no license to apply
                 if (this.editorConfig.mode === 'view') {
                     if (this.appOptions.canLiveView && (this._state.licenseType===Asc.c_oLicenseResult.ConnectionsLive || this._state.licenseType===Asc.c_oLicenseResult.ConnectionsLiveOS ||
                                                         this._state.licenseType===Asc.c_oLicenseResult.UsersViewCount || this._state.licenseType===Asc.c_oLicenseResult.UsersViewCountOS ||
@@ -1692,7 +1706,7 @@ define([
                 this.appOptions.canLicense     = (licType === Asc.c_oLicenseResult.Success || licType === Asc.c_oLicenseResult.SuccessLimit);
                 this.appOptions.isLightVersion = params.asc_getIsLight();
                 /** coauthoring begin **/
-                this.appOptions.canCoAuthoring = !this.appOptions.isLightVersion;
+                this.appOptions.canCoAuthoring = !this.appOptions.isLightVersion && !this.appOptions.isLocalSession;
                 /** coauthoring end **/
                 this.appOptions.isOffline      = this.api.asc_isOffline();
                 this.appOptions.canCreateNew   = this.appOptions.canCreateNew && !(this.appOptions.isOffline && isPDFViewer);
@@ -2646,7 +2660,8 @@ define([
 
             onDownloadUrl: function(url, fileType) {
                 if (this._state.isFromGatewayDownloadAs) {
-                    Common.Gateway.downloadAs(url, fileType);
+                    var blob = this.appOptions.isLocalSession ? this.getApplication().getController('Common.Controllers.LocalSession').getBlob(url) : null;
+                    blob ? Common.Gateway.downloadAsBlob(blob, fileType) : Common.Gateway.downloadAs(url, fileType);
                 }
                 this._state.isFromGatewayDownloadAs = false;
             },
@@ -2671,6 +2686,7 @@ define([
             },
 
             onServerVersion: function(buildVersion) {
+                if (this.appOptions.isLocalSession) return false; // no server to compare with
                 if (this.changeServerVersion) return true;
 
                 const cur_version = this.getApplication().getController('LeftMenu').leftMenu.getMenu('about').txtVersionNum;
