@@ -97,6 +97,10 @@ if (window.Common === undefined) {
                 $me.trigger('opendocumentfrombinary', data);
             },
 
+            'openDocumentSource': function(data) {
+                $me.trigger('opendocumentsource', data);
+            },
+
             'showMessage': function(data) {
                 $me.trigger('showmessage', data);
             },
@@ -242,11 +246,16 @@ if (window.Common === undefined) {
             }
         };
 
-        var _postMessage = function(msg, buffer) {
+        var _postMessage = function(msg, buffer, raw) {
             // TODO: specify explicit origin
             if (window.parent && window.JSON) {
                 msg.frameEditorId = window.frameEditorId;
-                buffer ? window.parent.postMessage(msg, "*", [buffer]) : window.parent.postMessage(window.JSON.stringify(msg), "*");
+                if (buffer)
+                    window.parent.postMessage(msg, "*", [buffer]);
+                else if (raw)
+                    window.parent.postMessage(msg, "*");
+                else
+                    window.parent.postMessage(window.JSON.stringify(msg), "*");
             }
         };
 
@@ -255,7 +264,7 @@ if (window.Common === undefined) {
             if (msg.origin !== window.parentOrigin && msg.origin !== window.location.origin && !(msg.origin==="null" && (window.parentOrigin==="file://" || window.location.origin==="file://"))) return;
 
             var data = msg.data;
-            if (data && data.command === 'openDocumentFromBinary') {
+            if (data && (data.command === 'openDocumentFromBinary' || data.command === 'openDocumentSource')) {
                 handler = commandMap[data.command];
                 if (handler) {
                     handler.call(this, data.data);
@@ -397,6 +406,27 @@ if (window.Common === undefined) {
                     data: {
                         url: url,
                         fileType: fileType
+                    }
+                });
+            },
+
+            downloadAsBlob: function(blob, fileType) {
+                // local session: the file only exists in this frame, hand the Blob itself over
+                _postMessage({
+                    event: 'onDownloadAs',
+                    data: {
+                        blob: blob,
+                        fileType: fileType
+                    }
+                }, null, true);
+            },
+
+            localSessionProgress: function(phase, percent) {
+                _postMessage({
+                    event: 'onLocalSessionProgress',
+                    data: {
+                        phase: phase,
+                        percent: percent
                     }
                 });
             },
