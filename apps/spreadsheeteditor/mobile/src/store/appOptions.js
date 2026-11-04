@@ -58,6 +58,7 @@ export class storeAppOptions {
 
     setConfigOptions (config, _t) {
         this.config = config;
+        this.isLocalSession = !!(config.session && config.session.type === 'local');
         this.customization = config.customization;
         this.canRenameAnonymous = !((typeof (this.customization) == 'object') && (typeof (this.customization.anonymous) == 'object') && (this.customization.anonymous.request===false));
         this.guestName = (typeof (this.customization) == 'object') && (typeof (this.customization.anonymous) == 'object') &&
@@ -128,7 +129,7 @@ export class storeAppOptions {
         this.canLicense = (licType === Asc.c_oLicenseResult.Success || licType === Asc.c_oLicenseResult.SuccessLimit);
         this.isLightVersion = params.asc_getIsLight();
         this.buildVersion = params.asc_getBuildVersion();
-        this.canCoAuthoring = !this.isLightVersion;
+        this.canCoAuthoring = !this.isLightVersion && !this.isLocalSession;
         this.isOffline = Common.EditorApi.get().asc_isOffline();
         this.canRequestEditRights = this.config.canRequestEditRights;
         this.canEdit = permissions.edit !== false  && // can edit or review
