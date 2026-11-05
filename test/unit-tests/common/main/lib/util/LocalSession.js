@@ -31,7 +31,8 @@
  */
 
 define([
-    'common/main/lib/util/LocalSession'
+    'common/main/lib/util/LocalSession',
+    'common/main/lib/util/localsession/desktop'
 ], function () {
     var Session = Common.LocalSession.Session;
     var ERRORS = Common.LocalSession.ERRORS;
@@ -491,6 +492,30 @@ define([
             host.start({documentType: 'word', api: api, mode: 'view'});
             assert.equal(api.asc_Save, original);
             assert.isFalse(host.session.isEditing());
+        });
+
+        it('creates the desktop host with the localized texts and warns when unsupported', function () {
+            var saved = {Gateway: Common.Gateway, Controllers: Common.Controllers, UI: Common.UI};
+            var gateway = fakeGateway(), warnings = [];
+            window.AscCommon = {};
+            Common.Gateway = gateway;
+            Common.Controllers = {LocalSession: {errorNotSupported: 'Nicht unterstuetzt', errorConvert: 'Konvertierung fehlgeschlagen'}};
+            Common.UI = {warning: function (options) { warnings.push(options.msg); }};
+            try {
+                var host = Common.LocalSession.createDesktopHost();
+                assert.isFunction(gateway.handlers.opendocumentsource, 'listens before the document is opened');
+                assert.equal(host.messages.convert, 'Konvertierung fehlgeschlagen');
+                assert.equal(host.messages.converterLoad, 'The document converter could not be loaded.');
+                assert.isFalse(host.start({documentType: 'word'}));
+                assert.deepEqual(gateway.reported, [{code: ERRORS.Load, text: 'Nicht unterstuetzt'}]);
+                assert.deepEqual(warnings, ['Nicht unterstuetzt']);
+                host._report(ERRORS.Convert, host.messages.convert);
+                assert.deepEqual(warnings, ['Nicht unterstuetzt'], 'only the unsupported build is a warning');
+            } finally {
+                Common.Gateway = saved.Gateway;
+                Common.Controllers = saved.Controllers;
+                Common.UI = saved.UI;
+            }
         });
 
         it('unregisters the transport on stop', function () {

@@ -39,7 +39,7 @@ define([
     'common/main/lib/component/RadioBox',
     'common/main/lib/component/Tooltip',
     'common/main/lib/controller/Fonts',
-    'common/main/lib/controller/LocalSession',
+    'common/main/lib/util/localsession/desktop',
     'common/main/lib/util/LocalStorage',
     'common/main/lib/controller/FocusManager',
     'common/main/lib/controller/LaunchController',
@@ -207,6 +207,7 @@ define([
                     // Initialize api gateway
                     this.editorConfig = {};
                     this.appOptions = {};
+                    this.localSession = Common.LocalSession.createDesktopHost();
                     Common.Gateway.on('init',           _.bind(this.loadConfig, this));
                     Common.Gateway.on('showmessage',    _.bind(this.onExternalMessage, this));
                     Common.Gateway.on('opendocument',   _.bind(this.loadDocument, this));
@@ -465,7 +466,7 @@ define([
                     this.permissions = $.extend(this.permissions, data.doc.permissions);
                     // no DocService: chat and history are off, a viewer gets no editing rights
                     if (this.appOptions.isLocalSession)
-                        this.getApplication().getController('Common.Controllers.LocalSession').openDocument({api: this.api, documentType: 'pdf',
+                        this.localSession.openDocument({api: this.api, documentType: 'pdf',
                             user: this.appOptions.user, editorConfig: this.editorConfig, doc: data.doc, permissions: this.permissions});
 
                     var _options = $.extend({}, data.doc.options, this.editorConfig.actionLink || {});
@@ -2274,7 +2275,7 @@ define([
 
             onDownloadUrl: function(url, fileType) {
                 if (this._state.isFromGatewayDownloadAs) {
-                    this.appOptions.isLocalSession ? this.getApplication().getController('Common.Controllers.LocalSession').downloadAs(url, fileType) : Common.Gateway.downloadAs(url, fileType);
+                    this.appOptions.isLocalSession ? this.localSession.downloadAs(url, fileType) : Common.Gateway.downloadAs(url, fileType);
                 }
                 this._state.isFromGatewayDownloadAs = false;
             },
