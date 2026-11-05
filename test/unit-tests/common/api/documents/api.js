@@ -146,8 +146,10 @@ define([
             removePlaceholder(id);
         });
 
-        it('advertises the capability', function () {
+        it('advertises the capabilities', function () {
             assert.isTrue(DocsAPI.DocEditor.capabilities.localSession);
+            assert.isTrue(DocsAPI.DocEditor.capabilities.localSessionEditing);
+            assert.isTrue(DocsAPI.DocEditor.capabilities.localSessionHostTransport);
         });
 
         it('accepts document.source without document.url and still rejects a document without either', function () {
@@ -166,22 +168,148 @@ define([
             removePlaceholder(other);
         });
 
-        it('forces view mode and drops editing and co-authoring in the init config', function () {
-            var config = localConfig({editorConfig: {mode: 'edit', session: {type: 'local'}, canCoAuthoring: true, callbackUrl: 'http://x/'}});
+        function initAndOpen(config) {
             editor = new DocsAPI.DocEditor(id, config);
-
             return recorder.waitFor(function (r) { return r.ready; }).then(function () {
                 fromFrame(id, {event: 'onAppReady'});
                 return recorder.waitFor(function (r) { return r.find('openDocument'); });
             }).then(function (r) {
-                var init = r.find('init').data.config;
-                assert.equal(init.mode, 'view');
-                assert.isFalse(init.canCoAuthoring);
-                var doc = r.find('openDocument').data.doc;
-                assert.isFalse(doc.permissions.edit);
-                assert.isUndefined(doc.source, 'the bytes are not serialised into openDocument');
-                assert.equal(doc.title, 'report.docx');
+                return {config: r.find('init').data.config, doc: r.find('openDocument').data.doc, recorder: r};
             });
+        }
+
+        it('keeps edit mode with the self transport and turns off co-authoring, chat and history', function () {
+            var config = localConfig({editorConfig: {mode: 'edit', session: {type: 'local'}, canCoAuthoring: true, callbackUrl: 'http://x/'}});
+            return initAndOpen(config).then(function (res) {
+                assert.equal(res.config.mode, 'edit');
+                assert.equal(res.config.session.transport, 'self');
+                assert.isFalse(res.config.canCoAuthoring);
+                assert.isFalse(res.config.canUseHistory);
+                assert.notStrictEqual(res.doc.permissions.edit, false);
+                assert.isFalse(res.doc.permissions.chat);
+                assert.isUndefined(res.doc.source, 'the bytes are not serialised into openDocument');
+                assert.equal(res.doc.title, 'report.docx');
+            });
+        });
+
+        it('keeps co-authoring with the host transport', function () {
+            var config = localConfig({editorConfig: {mode: 'edit', session: {type: 'local', transport: 'host'}, coEditing: {mode: 'strict'}}});
+            return initAndOpen(config).then(function (res) {
+                assert.equal(res.config.mode, 'edit');
+                assert.equal(res.config.session.transport, 'host');
+                assert.isTrue(res.config.canCoAuthoring);
+                assert.deepEqual(res.config.coEditing, {mode: 'strict'});
+            });
+        });
+
+        it('falls back to the self transport for an unknown transport', function () {
+            var config = localConfig({editorConfig: {mode: 'edit', session: {type: 'local', transport: 'carrier-pigeon'}}});
+            return initAndOpen(config).then(function (res) {
+                assert.equal(res.config.session.transport, 'self');
+                assert.isFalse(res.config.canCoAuthoring);
+            });
+        });
+
+        it('opens a viewer when mode is not set', function () {
+            var config = localConfig({editorConfig: {session: {type: 'local'}}});
+            return initAndOpen(config).then(function (res) {
+                assert.equal(res.config.mode, 'view');
+                assert.isFalse(res.doc.permissions.edit);
+            });
+        });
+
+        it('opens a viewer when editing is not permitted', function () {
+            var config = localConfig();
+            config.document.permissions = {edit: false, review: true};
+            return initAndOpen(config).then(function (res) {
+                assert.equal(res.config.mode, 'view');
+                assert.isFalse(res.doc.permissions.edit);
+            });
+        });
+
+        it('keeps pdf, djvu and xps view only', function () {
+            var config = localConfig();
+            config.document.title = 'scan.xps';
+            config.document.fileType = 'xps';
+            return initAndOpen(config).then(function (res) {
+                assert.equal(res.config.mode, 'view');
+                assert.isFalse(res.doc.permissions.edit);
+            });
+        });
+
+        it('passes indexUser and participants and drops invalid ones', function () {
+            var participants = [{id: 'bob0', idOriginal: 'bob', username: 'Bob', indexUser: 0, view: false}];
+            var config = localConfig({editorConfig: {mode: 'edit', session: {type: 'local', transport: 'host', indexUser: 2, participants: participants}}});
+            return initAndOpen(config).then(function (res) {
+                assert.equal(res.config.session.indexUser, 2);
+                assert.deepEqual(res.config.session.participants, participants);
+                editor.destroyEditor();
+                editor = null;
+                recorder.dispose();
+                removePlaceholder(id);
+                id = placeholder();
+                recorder = new FrameRecorder();
+                return initAndOpen(localConfig({editorConfig: {mode: 'edit', session: {type: 'local', indexUser: -1, participants: 'x'}}}));
+            }).then(function (res) {
+                assert.isUndefined(res.config.session.indexUser);
+                assert.isUndefined(res.config.session.participants);
+            });
+        });
+
+        it('posts format and changes of a bin source', function () {
+            var config = localConfig();
+            config.document.source = {data: new Uint8Array([68, 79]).buffer, format: 'bin', changes: ['["c1","c2"]']};
+            return initAndOpen(config).then(function (res) {
+                var source = res.recorder.find('openDocumentSource');
+                assert.equal(source.format, 'bin');
+                assert.deepEqual(source.changes, ['["c1","c2"]']);
+            });
+        });
+
+        it('buffers session messages and media until the document was handed over', function () {
+            var config = localConfig({editorConfig: {mode: 'edit', session: {type: 'local', transport: 'host'}}});
+            editor = new DocsAPI.DocEditor(id, config);
+            var bytes = new Uint8Array([1, 2]);
+            editor.sendSessionMessage({type: 'connectState', participants: [], binary: bytes});
+            editor.addSessionMedia({'image7.png': new Blob(['png'])});
+
+            return recorder.waitFor(function (r) { return r.ready; }).then(function () {
+                assert.isUndefined(recorder.find('sessionMessage'), 'nothing is posted before the frame is ready');
+                fromFrame(id, {event: 'onAppReady'});
+                return recorder.waitFor(function (r) { return r.find('sessionMessage') && r.find('addSessionMedia'); });
+            }).then(function (r) {
+                var names = r.names();
+                assert.isBelow(names.indexOf('openDocument'), names.indexOf('sessionMessage'));
+                var message = r.find('sessionMessage');
+                assert.isTrue(message.raw, 'posted as an object');
+                assert.equal(message.message.type, 'connectState');
+                assert.instanceOf(message.message.binary, Uint8Array);
+                editor.sendSessionMessage({type: 'getLock', locks: {}});
+                return r.waitFor(function (rr) { return rr.commands.filter(function (c) { return c.command === 'sessionMessage'; }).length === 2; });
+            }).then(function (r) {
+                var media = r.find('addSessionMedia');
+                assert.deepEqual(media.mediaNames, ['image7.png']);
+                assert.isTrue(media.mediaAreBlobs);
+            });
+        });
+
+        it('raises onLocalSessionSave, onLocalSessionMedia and onSessionMessage', function () {
+            var saved, media, messages = [];
+            editor = new DocsAPI.DocEditor(id, localConfig({events: {
+                onLocalSessionSave: function (e) { saved = e.data; },
+                onLocalSessionMedia: function (e) { media = e.data; },
+                onSessionMessage: function (e) { messages.push(e.data); }
+            }}));
+            var blob = new Blob(['docx']), image = new Blob(['png'], {type: 'image/png'});
+
+            fromFrame(id, {event: 'onLocalSessionSave', data: {blob: blob, fileType: 'docx'}}, true);
+            fromFrame(id, {event: 'onLocalSessionMedia', data: {name: 'image_1.png', blob: image}}, true);
+            fromFrame(id, {event: 'onSessionMessage', data: {type: 'saveChanges', changes: '["x"]'}}, true);
+
+            assert.equal(saved.blob, blob);
+            assert.equal(saved.fileType, 'docx');
+            assert.deepEqual(media, {name: 'image_1.png', blob: image});
+            assert.deepEqual(messages, [{type: 'saveChanges', changes: '["x"]'}]);
         });
 
         function expectSourceTransfer(data, expectedBytes, media) {
@@ -312,6 +440,39 @@ define([
             return wait.then(function (msg) {
                 assert.deepEqual(JSON.parse(msg), {event: 'onLocalSessionProgress', data: {phase: 'load', percent: 100}});
             });
+        });
+
+        it('posts saves, media and session messages as raw objects', function () {
+            var blob = new Blob(['x']);
+            var wait = nextMessage(function (d) { return d && typeof d === 'object' && d.event === 'onLocalSessionSave'; });
+            Common.Gateway.localSessionSave(blob, 'xlsx');
+            return wait.then(function (msg) {
+                assert.equal(msg.data.fileType, 'xlsx');
+                assert.instanceOf(msg.data.blob, Blob);
+                wait = nextMessage(function (d) { return d && typeof d === 'object' && d.event === 'onLocalSessionMedia'; });
+                Common.Gateway.localSessionMedia('image_1.png', blob);
+                return wait;
+            }).then(function (msg) {
+                assert.equal(msg.data.name, 'image_1.png');
+                assert.instanceOf(msg.data.blob, Blob);
+                wait = nextMessage(function (d) { return d && typeof d === 'object' && d.event === 'onSessionMessage'; });
+                Common.Gateway.sessionMessage({type: 'getLock', block: ['b1']});
+                return wait;
+            }).then(function (msg) {
+                assert.deepEqual(msg.data, {type: 'getLock', block: ['b1']});
+            });
+        });
+
+        it('dispatches raw sessionMessage and addSessionMedia commands unchanged', function () {
+            var messages = [], media = [];
+            Common.Gateway.on('sessionmessage', function (data) { messages.push(data); });
+            Common.Gateway.on('addsessionmedia', function (data) { media.push(data); });
+            var message = {type: 'connectState', participants: [{id: 'b0'}]};
+            var images = {'image7.png': new Blob(['png'])};
+            window.dispatchEvent(new MessageEvent('message', {data: {command: 'sessionMessage', data: message}, origin: window.location.origin}));
+            window.dispatchEvent(new MessageEvent('message', {data: {command: 'addSessionMedia', data: images}, origin: window.location.origin}));
+            assert.deepEqual(messages, [message]);
+            assert.deepEqual(media, [images]);
         });
 
         it('dispatches the raw openDocumentSource command', function () {
