@@ -34,8 +34,10 @@
  *  See DocumentServer/docs/client-only-editor-plan.md for the contract.
  */
 
-if (Common === undefined)
-    var Common = {};
+// window.Common, not `var Common`: the mobile apps bundle this file as a
+// module, where a var would stay local and Common.LocalSession never global.
+if (window.Common === undefined)
+    window.Common = {};
 
 Common.LocalSession = Common.LocalSession || {};
 
