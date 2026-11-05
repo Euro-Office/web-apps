@@ -153,7 +153,8 @@ Preflight + Phase 5. Fail the build loudly rather than ship a silent defect:
 - `verify-replacements.mjs` — preflight: source-side string-replace idiom audit.
 - `verify-bundles.mjs` — scans built bundles for surviving `{{TOKEN}}` literals.
 - `verify-deploy.mjs` — asserts every required artifact exists (vendor/embed/main/forms;
-  mobile `index.html`/`dist`/`css`/`locale`).
+  mobile `index.html`/`dist`/`css`/`locale`) and that embed/main/forms bundles were
+  written by this run (mtime >= `BUILD_STARTED_AT_MS`, set by the pipeline).
 - `verify-browser-target.mjs` — fails if any webpack/babel/postcss config hardcodes a
   browser target instead of importing from `build/browser-floor.mjs`.
 
