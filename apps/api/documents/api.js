@@ -434,42 +434,7 @@
         _config.frameEditorId = placeholderId;
         _config.parentOrigin = window.location.origin;
 
-        var _isLocalSession = !!(_config.editorConfig.session && _config.editorConfig.session.type === 'local');
-        if (_isLocalSession) {
-            // A local session has no DocService: the editor saves through onLocalSessionSave and
-            // co-edits only through the host page ('host' transport).
-            var _session = _config.editorConfig.session;
-            if (_session.transport !== undefined && _session.transport !== 'self' && _session.transport !== 'host')
-                console.warn("editorConfig.session.transport must be 'self' or 'host', 'self' is used.");
-            _session.transport = _session.transport === 'host' ? 'host' : 'self';
-            if (_session.indexUser !== undefined && !(typeof _session.indexUser === 'number' && _session.indexUser >= 0 && _session.indexUser % 1 === 0)) {
-                console.warn("editorConfig.session.indexUser must be a non-negative integer, 0 is used.");
-                delete _session.indexUser;
-            }
-            if (_session.participants !== undefined && !Array.isArray(_session.participants)) {
-                console.warn("editorConfig.session.participants must be an array.");
-                delete _session.participants;
-            }
-            if (_session.transport === 'self')
-                _config.editorConfig.canCoAuthoring = false;
-            _config.editorConfig.canUseHistory = false;
-
-            var _permissions = _config.document ? (_config.document.permissions = _config.document.permissions || {}) : {};
-            var _isViewerType = /^(pdf|djvu|xps|oxps)$/.test(_config.document && typeof _config.document.fileType === 'string' ? _config.document.fileType.toLowerCase() : '') ||
-                                _config.documentType === 'pdf';
-            if (_config.editorConfig.mode === 'edit' && _permissions.edit !== false && !_isViewerType) {
-                _permissions.chat = false;
-            } else {
-                if (_config.editorConfig.mode !== undefined && _config.editorConfig.mode !== 'view')
-                    console.warn(_isViewerType ? "This file type is view only in a local session, editorConfig.mode is set to 'view'." :
-                                                 "editorConfig.mode 'edit' needs document.permissions.edit, editorConfig.mode is set to 'view'.");
-                _config.editorConfig.mode = 'view';
-                _permissions.edit = false;
-                _permissions.chat = false;
-            }
-            if (_config.document && (_config.document.url || _config.document.key || _config.editorConfig.callbackUrl))
-                console.warn("document.url, document.key and editorConfig.callbackUrl are ignored in a local session.");
-        }
+        var _isLocalSession = applyLocalSessionConfig(_config);
 
         var onMouseUp = function (evt) {
             _processMouse(evt);
@@ -1433,6 +1398,47 @@
         }
 
         return params;
+    }
+
+    // A local session (editorConfig.session.type 'local') has no DocService: the editor saves through
+    // onLocalSessionSave and co-edits only through the host page ('host' transport). Normalises
+    // editorConfig.session, mode and the permissions that need a server; returns whether the
+    // session is local.
+    function applyLocalSessionConfig(config) {
+        if (!(config.editorConfig.session && config.editorConfig.session.type === 'local'))
+            return false;
+        var session = config.editorConfig.session;
+        if (session.transport !== undefined && session.transport !== 'self' && session.transport !== 'host')
+            console.warn("editorConfig.session.transport must be 'self' or 'host', 'self' is used.");
+        session.transport = session.transport === 'host' ? 'host' : 'self';
+        if (session.indexUser !== undefined && !(typeof session.indexUser === 'number' && session.indexUser >= 0 && session.indexUser % 1 === 0)) {
+            console.warn("editorConfig.session.indexUser must be a non-negative integer, 0 is used.");
+            delete session.indexUser;
+        }
+        if (session.participants !== undefined && !Array.isArray(session.participants)) {
+            console.warn("editorConfig.session.participants must be an array.");
+            delete session.participants;
+        }
+        if (session.transport === 'self')
+            config.editorConfig.canCoAuthoring = false;
+        config.editorConfig.canUseHistory = false;
+
+        var permissions = config.document ? (config.document.permissions = config.document.permissions || {}) : {};
+        var isViewerType = /^(pdf|djvu|xps|oxps)$/.test(config.document && typeof config.document.fileType === 'string' ? config.document.fileType.toLowerCase() : '') ||
+                           config.documentType === 'pdf';
+        if (config.editorConfig.mode === 'edit' && permissions.edit !== false && !isViewerType) {
+            permissions.chat = false;
+        } else {
+            if (config.editorConfig.mode !== undefined && config.editorConfig.mode !== 'view')
+                console.warn(isViewerType ? "This file type is view only in a local session, editorConfig.mode is set to 'view'." :
+                                            "editorConfig.mode 'edit' needs document.permissions.edit, editorConfig.mode is set to 'view'.");
+            config.editorConfig.mode = 'view';
+            permissions.edit = false;
+            permissions.chat = false;
+        }
+        if (config.document && (config.document.url || config.document.key || config.editorConfig.callbackUrl))
+            console.warn("document.url, document.key and editorConfig.callbackUrl are ignored in a local session.");
+        return true;
     }
 
     function createIframe(config) {
