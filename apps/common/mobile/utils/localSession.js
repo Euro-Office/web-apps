@@ -12,8 +12,8 @@ import '../../main/lib/util/LocalSession.js';
 
 export const isLocalSessionConfig = config => Common.LocalSession.isLocalSessionConfig(config);
 
-// Chat needs a Document Server; a viewer (editorConfig.mode 'view') gets no editing rights.
-export const restrictLocalSessionPermissions = (permissions, config) => Common.LocalSession.restrictPermissions(permissions, config);
+// A local session co-edits only through the 'host' transport.
+export const canCoAuthorLocalSession = config => Common.LocalSession.canCoAuthoring(config);
 
 const appVersion = () => {
     const cropped = /^(\d+\.\d+\.\d+)(?:\.(\d+))?/.exec(__PRODUCT_VERSION__);

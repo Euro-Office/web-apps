@@ -69,14 +69,18 @@ define([
         },
 
         /**
-         * Registers the local transport with sdkjs. Must run before api.asc_setDocInfo.
+         * Starts the session for the document being opened, see Common.LocalSession.Host.openDocument.
+         * Must run before api.asc_setDocInfo.
          *
-         * @param {Object} api
-         * @param {Object} options {documentType, user, x2tUrl, mode, transport, fileType}
+         * @param {Object} options {api, documentType, user, editorConfig, doc, permissions}
          * @returns {boolean} false when this SDK build has no local session support
          */
-        start: function (api, options) {
-            return this.host.start(_.extend({api: api}, options));
+        openDocument: function (options) {
+            return this.host.openDocument(options);
+        },
+
+        downloadAs: function (url, fileType) {
+            this.host.downloadAs(url, fileType);
         },
 
         getBlob: function (url) {

@@ -449,7 +449,7 @@ define([
                     this.api.asc_registerCallback('asc_onRequestRefreshFile',       _.bind(this.onRequestRefreshFile, this));
                 }
 
-                this.appOptions.isLocalSession = !!(this.editorConfig.session && this.editorConfig.session.type === 'local');
+                this.appOptions.isLocalSession = Common.LocalSession.isLocalSessionConfig(this.editorConfig);
 
                 Common.Controllers.Desktop.init(this.appOptions);
                 Common.UI.HintManager.setMode(this.appOptions);
@@ -463,18 +463,10 @@ define([
 
                 if (data.doc) {
                     this.permissions = $.extend(this.permissions, data.doc.permissions);
-                    if (this.appOptions.isLocalSession) {
-                        // no DocService: chat and history are off, a viewer gets no editing rights
-                        data.doc.permissions = this.permissions = Common.LocalSession.restrictPermissions(this.permissions, this.editorConfig);
-                        this.getApplication().getController('Common.Controllers.LocalSession').start(this.api, {
-                            documentType: 'pdf',
-                            user: this.appOptions.user,
-                            x2tUrl: this.editorConfig.session.x2tUrl,
-                            mode: this.editorConfig.mode,
-                            session: this.editorConfig.session,
-                            fileType: data.doc.fileType
-                        });
-                    }
+                    // no DocService: chat and history are off, a viewer gets no editing rights
+                    if (this.appOptions.isLocalSession)
+                        this.getApplication().getController('Common.Controllers.LocalSession').openDocument({api: this.api, documentType: 'pdf',
+                            user: this.appOptions.user, editorConfig: this.editorConfig, doc: data.doc, permissions: this.permissions});
 
                     var _options = $.extend({}, data.doc.options, this.editorConfig.actionLink || {});
 
@@ -1338,7 +1330,7 @@ define([
                 this.appOptions.canAnalytics   = params.asc_getIsAnalyticsEnable();
                 this.appOptions.canLicense     = (licType === Asc.c_oLicenseResult.Success || licType === Asc.c_oLicenseResult.SuccessLimit);
                 this.appOptions.isLightVersion = params.asc_getIsLight();
-                this.appOptions.canCoAuthoring = !this.appOptions.isLightVersion && (!this.appOptions.isLocalSession || Common.LocalSession.sessionTransport(this.editorConfig) === 'host');
+                this.appOptions.canCoAuthoring = !this.appOptions.isLightVersion && Common.LocalSession.canCoAuthoring(this.editorConfig);
                 this.appOptions.isOffline      = this.api.asc_isOffline();
                 this.appOptions.canCreateNew   = this.appOptions.canCreateNew && !this.appOptions.isOffline && !this.isForm;
                 this.appOptions.isCrypted      = this.api.asc_isCrypto();
@@ -2282,8 +2274,7 @@ define([
 
             onDownloadUrl: function(url, fileType) {
                 if (this._state.isFromGatewayDownloadAs) {
-                    var blob = this.appOptions.isLocalSession ? this.getApplication().getController('Common.Controllers.LocalSession').getBlob(url) : null;
-                    blob ? Common.Gateway.downloadAsBlob(blob, fileType) : Common.Gateway.downloadAs(url, fileType);
+                    this.appOptions.isLocalSession ? this.getApplication().getController('Common.Controllers.LocalSession').downloadAs(url, fileType) : Common.Gateway.downloadAs(url, fileType);
                 }
                 this._state.isFromGatewayDownloadAs = false;
             },
