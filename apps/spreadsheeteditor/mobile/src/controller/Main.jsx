@@ -248,11 +248,15 @@ class MainController extends Component {
                 if ( data.doc ) {
                     this.permissions = Object.assign(this.permissions, data.doc.permissions);
                     if (isLocalSessionConfig(this.editorConfig)) {
-                        data.doc.permissions = restrictLocalSessionPermissions(this.permissions);
+                        data.doc.permissions = restrictLocalSessionPermissions(this.permissions, this.editorConfig);
                         this.localSession.start({
                             documentType: 'cell',
                             user: this.props.storeAppOptions.user,
-                            x2tUrl: this.editorConfig.session.x2tUrl
+                            x2tUrl: this.editorConfig.session.x2tUrl,
+                            api: this.api,
+                            mode: this.editorConfig.mode,
+                            session: this.editorConfig.session,
+                            fileType: data.doc.fileType
                         });
                     }
 

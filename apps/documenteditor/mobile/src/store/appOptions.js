@@ -187,7 +187,7 @@ export class storeAppOptions {
         this.canLicense = (licType === Asc.c_oLicenseResult.Success || licType === Asc.c_oLicenseResult.SuccessLimit);
         this.isLightVersion = params.asc_getIsLight();
         this.buildVersion = params.asc_getBuildVersion();
-        this.canCoAuthoring = !this.isLightVersion && !this.isLocalSession;
+        this.canCoAuthoring = !this.isLightVersion && (!this.isLocalSession || this.config.session.transport === 'host');
         this.isOffline = Common.EditorApi.get().asc_isOffline();
         this.isReviewOnly = (permissions.review === true) && (permissions.edit === false);
         this.canRequestEditRights = this.config.canRequestEditRights;
