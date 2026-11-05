@@ -26,8 +26,9 @@
  *  LocalSession.js
  *
  *  Wires Common.LocalSession.Session into the editor: receives the document
- *  bytes from api.js, registers the transport with sdkjs and reports progress
- *  and errors to the integrator through the Gateway.
+ *  bytes and the host's session messages from api.js, registers the transport
+ *  with sdkjs and reports progress, saves, inserted images and errors to the
+ *  integrator through the Gateway.
  */
 
 if (Common === undefined)
@@ -71,11 +72,11 @@ define([
          * Registers the local transport with sdkjs. Must run before api.asc_setDocInfo.
          *
          * @param {Object} api
-         * @param {Object} options {documentType, user, x2tUrl}
+         * @param {Object} options {documentType, user, x2tUrl, mode, transport, fileType}
          * @returns {boolean} false when this SDK build has no local session support
          */
         start: function (api, options) {
-            return this.host.start(options);
+            return this.host.start(_.extend({api: api}, options));
         },
 
         getBlob: function (url) {

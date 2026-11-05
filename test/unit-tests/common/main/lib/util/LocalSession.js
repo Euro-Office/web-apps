@@ -225,7 +225,7 @@ define([
             });
         });
 
-        it('answers isSaveLock and ignores co-editing messages', function () {
+        it('answers isSaveLock and ignores messages nobody waits for', function () {
             var t = createSession(stubConverter());
             var transport = t.session.getTransport();
             var messages = [];
@@ -234,9 +234,11 @@ define([
             return new Promise(function (resolve) { setTimeout(resolve, 5); }).then(function () {
                 messages.length = 0;
                 transport.send({type: 'isSaveLock'});
-                transport.send({type: 'saveChanges', changes: []});
-                transport.send({type: 'getLock', block: []});
                 transport.send({type: 'cursor', cursor: ''});
+                transport.send({type: 'message', message: 'hi'});
+                transport.send({type: 'getMessages'});
+                transport.send({type: 'extendSession', idletime: 5});
+                transport.send({type: 'authChangesAck'});
                 assert.deepEqual(messages, [{type: 'saveLock', saveLock: false}]);
             });
         });
@@ -435,6 +437,62 @@ define([
             });
         });
 
+        it('exports on every user save but not on autosave, and relays through the gateway', function () {
+            var gateway = fakeGateway(), sdk = fakeSdk();
+            gateway.saved = []; gateway.toHost = []; gateway.media = [];
+            gateway.localSessionSave = function (blob, fileType) { this.saved.push(fileType); };
+            gateway.sessionMessage = function (m) { this.toHost.push(m); };
+            gateway.localSessionMedia = function (name) { this.media.push(name); };
+            var savedAsc = window.Asc;
+            var downloads = [], saves = [];
+            function DownloadOptions(type) { this.type = type; }
+            DownloadOptions.prototype.asc_setIsDownloadEvent = function (v) { this.isDownloadEvent = v; };
+            window.Asc = {c_oAscFileType: {DOCX: 0x0041, XLSX: 0x0101}, asc_CDownloadOptions: DownloadOptions};
+            var api = {
+                asc_Save: function (isAutoSave) { saves.push(!!isAutoSave); return true; },
+                asc_DownloadAs: function (options) {
+                    downloads.push(options);
+                    sdk.transport.convert({data: 'DOCY', format: 'xlsx', fileType: options.type}, function () {});
+                }
+            };
+            var host = createHost(gateway, stubConverter());
+            host.listen();
+            gateway.handlers.sessionmessage({type: 'connectState', participants: []});
+            gateway.handlers.opendocumentsource({buffer: bytes('x').buffer, name: 'a.xls', fileType: 'xls'});
+            host.start({documentType: 'cell', api: api, mode: 'edit', fileType: 'xls', user: {id: 'u'},
+                session: {type: 'local', transport: 'host', indexUser: 3}});
+
+            return runAuthExchange(sdk.transport).then(function () {
+                assert.deepEqual(gateway.toHost.map(function (m) { return m.type; }), ['sessionAuth']);
+                assert.equal(gateway.toHost[0].connectionId, 'u3');
+                api.asc_Save(true);
+                assert.equal(downloads.length, 0, 'autosave exports nothing');
+                api.asc_Save();
+                assert.deepEqual(saves, [true, false]);
+                assert.equal(downloads.length, 1);
+                assert.equal(downloads[0].type, 0x0101);
+                assert.isTrue(downloads[0].isDownloadEvent);
+                return new Promise(function (resolve) { setTimeout(resolve, 20); });
+            }).then(function () {
+                assert.deepEqual(gateway.saved, ['xlsx']);
+                host.stop();
+                api.asc_Save();
+                assert.equal(downloads.length, 1, 'no export after stop');
+            }).finally(function () {
+                window.Asc = savedAsc;
+            });
+        });
+
+        it('does not watch saves in a viewer', function () {
+            var gateway = fakeGateway(), sdk = fakeSdk();
+            var api = {asc_Save: function () { return true; }};
+            var original = api.asc_Save;
+            var host = createHost(gateway, stubConverter());
+            host.start({documentType: 'word', api: api, mode: 'view'});
+            assert.equal(api.asc_Save, original);
+            assert.isFalse(host.session.isEditing());
+        });
+
         it('unregisters the transport on stop', function () {
             var gateway = fakeGateway(), sdk = fakeSdk();
             var host = createHost(gateway, stubConverter());
@@ -444,6 +502,292 @@ define([
 
             assert.isNull(sdk.transport);
             assert.isFalse(host.isActive());
+        });
+    });
+    describe('Common.LocalSession.Session editing', function () {
+        // Opens a session the way sdkjs does and collects what it sends afterwards
+        function openSession(extra, source) {
+            var t = createSession(stubConverter(), Object.assign({editing: true, now: function () { return 1000; }}, extra || {}));
+            var transport = t.session.getTransport();
+            t.session.setSource(Object.assign({buffer: bytes('docx').buffer, name: 'a.docx', fileType: 'docx'}, source || {}));
+            return runAuthExchange(transport).then(function (received) {
+                var messages = [];
+                t.session.handlers.onMessage = function (m) { messages.push(m); };
+                return {t: t, transport: transport, received: received, messages: messages};
+            });
+        }
+
+        function types(messages) {
+            return messages.map(function (m) { return m.type; });
+        }
+
+        it('grants word locks keyed by block id to the own user and releases them with the last chunk', function () {
+            return openSession().then(function (s) {
+                s.transport.send({type: 'getLock', block: ['p1', 'p2']});
+                assert.deepEqual(s.messages[0], {type: 'getLock', locks: {
+                    p1: {time: 1000, user: 'uid-10', block: 'p1'},
+                    p2: {time: 1000, user: 'uid-10', block: 'p2'}
+                }});
+
+                s.transport.send({type: 'saveChanges', changes: JSON.stringify(['c1', 'c2']), startSaveChanges: true, endSaveChanges: false, deleteIndex: null, releaseLocks: true});
+                s.transport.send({type: 'saveChanges', changes: JSON.stringify(['c3']), startSaveChanges: false, endSaveChanges: true, deleteIndex: null, releaseLocks: true});
+                var part = s.messages[1], end = s.messages[2];
+                assert.deepEqual(part, {type: 'savePartChanges', changesIndex: 0, syncChangesIndex: 2});
+                assert.equal(end.type, 'unSaveLock');
+                assert.equal(end.index, -1, 'not the first chunk');
+                assert.equal(end.syncChangesIndex, 3);
+                assert.isAbove(end.time, 1000);
+                assert.deepEqual(s.t.session.locks, {});
+
+                var records = s.t.session.getChanges();
+                assert.deepEqual(records.map(function (r) { return r.change; }), ['"c1"', '"c2"', '"c3"']);
+                assert.equal(records[0].user, 'uid-10');
+                assert.equal(records[0].useridoriginal, 'uid-1');
+
+                s.transport.send({type: 'saveChanges', changes: JSON.stringify(['c4']), startSaveChanges: true, endSaveChanges: true, deleteIndex: null});
+                assert.equal(s.messages[3].index, 3, 'first chunk of a save: index of its first change');
+                assert.equal(s.messages[3].syncChangesIndex, 4);
+                assert.isAbove(s.messages[3].time, end.time);
+            });
+        });
+
+        it('keys cell, slide and pdf locks by block guid', function () {
+            return openSession({documentType: 'cell'}).then(function (s) {
+                var block = {sheetId: '1', type: 1, rangeOrObjectId: [0, 0, 0, 0], guid: 'g1'};
+                s.transport.send({type: 'getLock', block: [block]});
+                assert.deepEqual(s.messages[0].locks, {g1: {time: 1000, user: 'uid-10', block: block}});
+            });
+        });
+
+        it('drops changes from deleteIndex on', function () {
+            return openSession().then(function (s) {
+                s.transport.send({type: 'saveChanges', changes: JSON.stringify(['a', 'b', 'c']), startSaveChanges: true, endSaveChanges: true, deleteIndex: null});
+                s.transport.send({type: 'saveChanges', changes: JSON.stringify(['d']), startSaveChanges: true, endSaveChanges: true, deleteIndex: 1});
+                assert.equal(s.messages[1].index, -1);
+                assert.equal(s.messages[1].syncChangesIndex, 2);
+                assert.deepEqual(s.t.session.getChanges().map(function (r) { return r.change; }), ['"a"', '"d"']);
+            });
+        });
+
+        it('answers unLockDocument with releaseLock and unSaveLock, and unSaveLock with -1', function () {
+            return openSession().then(function (s) {
+                s.transport.send({type: 'getLock', block: ['p1']});
+                s.transport.send({type: 'unLockDocument', isSave: true, unlock: false, deleteIndex: null, releaseLocks: true});
+                assert.deepEqual(types(s.messages), ['getLock', 'releaseLock', 'unSaveLock']);
+                assert.deepEqual(s.messages[1].locks, [{block: 'p1', user: 'uid-10', time: 1000, changes: null}]);
+                assert.deepEqual(s.messages[2], {type: 'unSaveLock', index: -1, time: -1, syncChangesIndex: -1});
+
+                s.transport.send({type: 'unLockDocument', isSave: false, releaseLocks: true});
+                assert.equal(s.messages.length, 3, 'no locks left, nothing to release');
+
+                s.transport.send({type: 'unSaveLock'});
+                assert.deepEqual(s.messages[3], {type: 'unSaveLock', index: -1, time: -1, syncChangesIndex: -1});
+            });
+        });
+
+        it('opens a bin source without conversion and replays its changes', function () {
+            var converter = stubConverter();
+            var t = createSession(converter, {editing: true, indexUser: 2});
+            t.session.setSource({
+                buffer: bytes('DOCY;bin').buffer, name: 'a.docx', fileType: 'docx', format: 'bin',
+                media: {'image1.png': bytes('png')},
+                changes: [
+                    {docid: 'd', change: '"r1"', time: 5, user: 'bob0', useridoriginal: 'bob'},
+                    'c2',
+                    '["c3","c4"]'
+                ]
+            });
+            return runAuthExchange(t.session.getTransport()).then(function (received) {
+                assert.equal(converter.calls.length, 0);
+                var authChanges = received[2], auth = received[3], open = received[4];
+                assert.equal(authChanges.type, 'authChanges');
+                assert.deepEqual(authChanges.changes.map(function (r) { return r.change; }), ['"r1"', '"c2"', '"c3"', '"c4"']);
+                assert.equal(authChanges.changes[0].user, 'bob0');
+                assert.equal(authChanges.changes[1].user, 'uid-12', 'plain change strings belong to this user');
+                assert.deepEqual(auth.changes, authChanges.changes);
+                assert.equal(auth.indexUser, 2);
+                assert.equal(auth.participants[0].id, 'uid-12');
+                assert.isFalse(auth.participants[0].view);
+                assert.equal(open.data.data['Editor.bin'], 'blob:test/1');
+                assert.equal(open.data.data['media/image1.png'], 'blob:test/0');
+                assert.equal(t.session.getUserId(), 'uid-12');
+            });
+        });
+
+        it('relays co-editing messages with the host transport', function () {
+            var toHost = [];
+            var t = createSession(stubConverter(), {transport: 'host', editing: true, indexUser: 1,
+                participants: [{id: 'bob0', idOriginal: 'bob', username: 'Bob', indexUser: 0, view: false}],
+                onHostMessage: function (m) { toHost.push(m); }});
+            var transport = t.session.getTransport();
+            t.session.setSource({buffer: bytes('docx').buffer, name: 'a.docx'});
+            t.session.receiveHostMessage({type: 'connectState', participantsTimestamp: 1, participants: [], waitAuth: false});
+
+            return runAuthExchange(transport).then(function (received) {
+                var auth = received[3];
+                assert.deepEqual(auth.participants.map(function (p) { return p.id; }), ['bob0', 'uid-11']);
+                assert.deepEqual(toHost, [{type: 'sessionAuth', user: 'uid-1', indexUser: 1, connectionId: 'uid-11', sessionId: t.session.sessionId}]);
+                return new Promise(function (resolve) { setTimeout(resolve, 0); }).then(function () { return received; });
+            }).then(function (received) {
+                assert.equal(received[received.length - 1].type, 'connectState', 'held back until the document was opened');
+
+                var messages = [];
+                t.session.handlers.onMessage = function (m) { messages.push(m); };
+                toHost.length = 0;
+                ['getLock', 'releaseLock', 'isSaveLock', 'saveChanges', 'unSaveLock', 'unLockDocument', 'cursor', 'message', 'authChangesAck'].forEach(function (type) {
+                    transport.send({type: type});
+                });
+                assert.deepEqual(types(toHost), ['getLock', 'releaseLock', 'isSaveLock', 'saveChanges', 'unSaveLock', 'unLockDocument', 'cursor', 'message', 'authChangesAck']);
+                assert.equal(messages.length, 0, 'nothing is answered locally');
+
+                transport.send({type: 'rpc', responseKey: 3, data: {c: 'imgurls', data: ['image1.png']}});
+                transport.send({type: 'rpc', responseKey: 4, data: {type: 'pathurls', data: ['media/image1.png']}});
+                transport.send({type: 'rpc', responseKey: 5, data: {type: 'wopi_RefreshFile'}});
+                assert.deepEqual(messages.map(function (m) { return m.responseKey; }), [3, 4, 5]);
+                assert.deepEqual(messages[1].data, {status: 'ok', data: [t.session.urls['media/image1.png']]});
+                assert.isUndefined(messages[2].data, 'calls that need a server are answered at once');
+                assert.equal(toHost.length, 9, 'rpc stays local');
+                messages.length = 0;
+
+                var fromHost = {type: 'saveChanges', changes: [{change: '"x"', user: 'bob0'}], changesIndex: 1, endSaveChanges: true, locks: []};
+                t.session.receiveHostMessage(fromHost);
+                assert.equal(messages[0], fromHost, 'delivered unchanged');
+
+                transport.send({type: 'close'});
+                assert.equal(toHost[toHost.length - 1].type, 'close');
+                assert.isTrue(t.session.isClosed());
+            });
+        });
+
+        it('exports a user save to the save format and reports it like a forcesave', function () {
+            var requested = [], saved = [];
+            return openSession({
+                saveFormat: 'docx',
+                onSaveRequest: function (format) { requested.push(format); return true; },
+                onSave: function (blob, fileType) { saved.push({blob: blob, fileType: fileType}); }
+            }).then(function (s) {
+                assert.isTrue(s.t.session.startUserSave());
+                assert.deepEqual(requested, ['docx']);
+                var start = s.messages[0];
+                assert.equal(start.type, 'forceSaveStart');
+                assert.equal(start.messages.code, 0);
+
+                return new Promise(function (resolve) {
+                    s.transport.convert({data: 'DOCY;bin', fileType: 0x0041, format: 'docx', options: {nobase64: true}}, resolve);
+                }).then(function (result) {
+                    assert.equal(result.status, 'ok');
+                    assert.equal(saved.length, 1);
+                    assert.equal(saved[0].fileType, 'docx');
+                    assert.equal(saved[0].blob, s.t.session.getBlob(result.data));
+                    assert.deepEqual(s.messages[1], {type: 'forceSave', messages: {type: 1, time: start.messages.time, success: true}});
+
+                    // a later download is no save
+                    return new Promise(function (resolve) {
+                        s.transport.convert({data: 'DOCY;bin', fileType: 0x0041, format: 'docx'}, resolve);
+                    });
+                }).then(function () {
+                    assert.equal(saved.length, 1);
+                    // sdkjs' own forceSaveStart starts a save as well
+                    s.transport.send({type: 'forceSaveStart'});
+                    assert.deepEqual(requested, ['docx', 'docx']);
+                });
+            });
+        });
+
+        it('reports a save that cannot start or fails', function () {
+            var t;
+            return openSession({saveFormat: 'odt', onSaveRequest: function () { return false; }}).then(function (s) {
+                assert.isFalse(s.t.session.startUserSave());
+                assert.deepEqual(types(s.messages), ['forceSaveStart', 'forceSave']);
+                assert.isFalse(s.messages[1].messages.success);
+                return openSession({onSaveRequest: function () { return true; }});
+            }).then(function (s) {
+                s.t.session.startUserSave();
+                assert.equal(s.messages[0].messages.code, 3, 'no save format');
+                var failing = createSession(stubConverter({fail: {code: 'convert', message: 'x'}}), {saveFormat: 'docx', onSaveRequest: function () { return true; }});
+                var messages = [];
+                failing.session.handlers = {onMessage: function (m) { messages.push(m); }};
+                failing.session.startUserSave();
+                return new Promise(function (resolve) {
+                    failing.session.getTransport().convert({data: 'x', format: 'docx'}, resolve);
+                }).then(function (result) {
+                    assert.equal(result.status, 'err');
+                    assert.deepEqual(types(messages), ['forceSaveStart', 'forceSave']);
+                    assert.isFalse(messages[1].messages.success);
+                });
+            });
+        });
+
+        it('stores inserted images as session media and exports them', function () {
+            var registered = [], media = [];
+            var converter = stubConverter();
+            var t = createSession(converter, {
+                registerImageUrl: function (name, url) { registered.push([name, url]); },
+                onMedia: function (name, blob) { media.push({name: name, blob: blob}); }
+            });
+            t.session.setSource({buffer: bytes('docx').buffer, name: 'a.docx'});
+            var transport = t.session.getTransport();
+            return runAuthExchange(transport).then(function () {
+                return new Promise(function (resolve) {
+                    transport.uploadImages([new File([bytes('img')], 'photo.JPG', {type: 'image/jpeg'})], function (error, urls) { resolve({error: error, urls: urls}); });
+                });
+            }).then(function (res) {
+                assert.equal(res.error, 0);
+                var name = registered[0][0];
+                assert.match(name, /^image_\w+_1\.jpg$/);
+                assert.deepEqual(Object.keys(res.urls), ['media/' + name], 'the DocService upload reply shape');
+                var url = res.urls['media/' + name];
+                assert.equal(registered[0][1], url);
+                assert.equal(media[0].name, name, 'bare name for the host');
+                assert.equal(media[0].blob.type, 'image/jpeg');
+                assert.equal(t.session._imageUrl(name), url);
+                return new Promise(function (resolve) {
+                    transport.convert({data: 'DOCY', format: 'docx'}, resolve);
+                }).then(function () {
+                    var request = converter.calls[converter.calls.length - 1];
+                    assert.deepEqual(Array.from(request.media[name]), Array.from(bytes('img')));
+                    assert.isTrue(Object.prototype.hasOwnProperty.call(request.media, 'image1.png'));
+                });
+            }).then(function () {
+                return new Promise(function (resolve) { transport.uploadImages([], function (error) { resolve(error); }); });
+            }).then(function (error) {
+                assert.equal(error, -11);
+            });
+        });
+
+        it('adds media from elsewhere under their bare names', function () {
+            var registered = [];
+            var t = createSession(stubConverter(), {registerImageUrl: function (name, url) { registered.push(name); }});
+            return t.session.addMedia({'media/image7.png': new Blob(['png']), 'image8.svg': bytes('<svg/>')}).then(function () {
+                assert.sameMembers(registered, ['image7.png', 'image8.svg']);
+                assert.equal(t.session._imageUrl('image7.png'), t.session.urls['media/image7.png']);
+                var svg = t.created.filter(function (c) { return c.url === t.session.urls['image8.svg']; })[0];
+                assert.equal(svg.blob.type, 'image/svg+xml');
+                assert.isOk(t.session.mediaBytes['image8.svg']);
+            });
+        });
+
+        it('picks a format the converter can write', function () {
+            var saveFormat = Common.LocalSession.saveFormat;
+            assert.equal(saveFormat('docx', 'word'), 'docx');
+            assert.equal(saveFormat('odt', 'word'), 'odt');
+            assert.equal(saveFormat('doc', 'word'), 'docx');
+            assert.equal(saveFormat('epub', 'word'), 'docx');
+            assert.equal(saveFormat('xls', 'cell'), 'xlsx');
+            assert.equal(saveFormat('csv', 'cell'), 'xlsx');
+            assert.equal(saveFormat('ppt', 'slide'), 'pptx');
+            assert.equal(saveFormat('odp', 'slide'), 'odp');
+            assert.isNull(saveFormat('pdf', 'pdf'));
+        });
+
+        it('restricts permissions by mode', function () {
+            var restrict = Common.LocalSession.restrictPermissions;
+            assert.deepEqual(restrict({edit: true, review: true}, {mode: 'edit'}), {edit: true, review: true, chat: false});
+            var viewer = restrict({edit: true, comment: true}, {mode: 'view'});
+            assert.isFalse(viewer.edit);
+            assert.isFalse(viewer.comment);
+            assert.equal(Common.LocalSession.sessionTransport({session: {type: 'local', transport: 'host'}}), 'host');
+            assert.equal(Common.LocalSession.sessionTransport({session: {type: 'local'}}), 'self');
         });
     });
 });

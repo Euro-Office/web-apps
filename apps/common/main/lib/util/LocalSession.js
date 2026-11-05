@@ -25,9 +25,12 @@
 /**
  *  LocalSession.js
  *
- *  A local session replaces the DocService for a single viewer: the document
- *  bytes come from the host page, x2t runs in the browser (WebAssembly) and the
- *  sdkjs co-editing socket is served by the transport object built here.
+ *  A local session replaces the DocService: the document bytes come from the
+ *  host page, x2t runs in the browser (WebAssembly) and the sdkjs co-editing
+ *  socket is served by the transport object built here. With the 'self'
+ *  transport the session answers like a DocService with a single editor; with
+ *  the 'host' transport the co-editing messages are relayed to the host page,
+ *  which arbitrates locks and changes between its users.
  *
  *  This file has no dependencies on the application bootstrap so it can be
  *  unit tested; the Backbone controller lives in controller/LocalSession.js.
@@ -54,7 +57,28 @@ define([], function () { 'use strict';
     var RIGHTS_EDIT = 1;            // Asc.c_oRights.Edit
     var LICENSE_MODE_NONE = 0;      // Asc.c_oLicenseMode.None
 
+    var SERVER_NO_ERROR = 0;        // AscCommon.c_oAscServerCommandErrors.NoError
+    var SERVER_UNKNOWN_ERROR = 3;   // AscCommon.c_oAscServerCommandErrors.UnknownError
+    var FORCE_SAVE_BUTTON = 1;      // AscCommon.c_oAscForceSaveTypes.Button
+    var UPLOAD_NO_ERROR = 0;        // Asc.c_oAscError.ID.No
+    var UPLOAD_FILE_COUNT = -11;    // Asc.c_oAscError.ID.UplImageFileCount
+    var UPLOAD_URL = -13;           // Asc.c_oAscError.ID.UplImageUrl
+
     var VIEWER_FORMATS = /^(pdf|djvu|xps|oxps)$/i;
+
+    // Formats the converter can write back; anything else is saved in the editor's default format
+    var SAVE_FORMATS = {
+        word: /^(docx|docm|dotx|dotm|odt|ott|rtf)$/,
+        cell: /^(xlsx|xlsm|xltx|xltm|ods|ots)$/,
+        slide: /^(pptx|pptm|ppsx|ppsm|potx|potm|odp|otp)$/
+    };
+    var DEFAULT_SAVE_FORMATS = {word: 'docx', cell: 'xlsx', slide: 'pptx'};
+
+    var IMAGE_TYPES = {
+        png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', gif: 'image/gif', bmp: 'image/bmp',
+        svg: 'image/svg+xml', webp: 'image/webp', tif: 'image/tiff', tiff: 'image/tiff',
+        emf: 'image/emf', wmf: 'image/wmf'
+    };
 
     // Asc.c_oAscFileType values the download path may hand over instead of an extension
     var FILE_TYPE_EXTENSIONS = {
@@ -135,6 +159,92 @@ define([], function () { 'use strict';
         return error.message || String(error);
     }
 
+    function mimeType(name) {
+        return IMAGE_TYPES[fileExtension(name)] || '';
+    }
+
+    function mediaExtension(file) {
+        var ext = fileExtension(file && file.name);
+        if (IMAGE_TYPES[ext]) return ext;
+        var type = (file && file.type || '').toLowerCase();
+        for (var key in IMAGE_TYPES) {
+            if (IMAGE_TYPES[key] === type) return key;
+        }
+        return 'png';
+    }
+
+    function stripMediaPrefix(name) {
+        return String(name || '').replace(/^media\//, '');
+    }
+
+    /**
+     * The format a save writes: the document's own format when the converter can write it,
+     * otherwise the editor's default (a .doc is saved as .docx).
+     */
+    function saveFormat(fileType, documentType) {
+        var pattern = SAVE_FORMATS[documentType];
+        if (!pattern) return null;
+        fileType = (fileType || '').toLowerCase();
+        return pattern.test(fileType) ? fileType : DEFAULT_SAVE_FORMATS[documentType];
+    }
+
+    // The changes sdkjs sends in one saveChanges message: a JSON array of strings, or an array
+    // (binary changes)
+    function changeList(changes) {
+        if (typeof changes === 'string') {
+            try {
+                var parsed = JSON.parse(changes);
+                return Array.isArray(parsed) ? parsed : [changes];
+            } catch (e) {
+                return [changes];
+            }
+        }
+        return Array.isArray(changes) ? changes : [];
+    }
+
+    /**
+     * Normalises document.source.changes to the records DocsCoServer stores and sends in
+     * authChanges: {docid, change, time, user, useridoriginal}, `change` being the JSON of one
+     * change. Accepted items: such records (kept as they are), saveChanges messages
+     * ({changes}), the `changes` value of a saveChanges message, or single change strings;
+     * everything but records is attributed to `user`.
+     */
+    function changeRecords(source, docId, time, user, userOriginal) {
+        var records = [];
+        var push = function (change, isBinary) {
+            records.push({docid: docId, change: isBinary ? change : JSON.stringify(change), time: time, user: user || '', useridoriginal: userOriginal || ''});
+        };
+        var add = function (item) {
+            if (item === null || item === undefined) return;
+            if (typeof item === 'string') {
+                changeList(item).forEach(function (change) { push(change, false); });
+            } else if (Array.isArray(item)) {
+                item.forEach(add);
+            } else if (ArrayBuffer.isView(item)) {
+                push(item, true);
+            } else if (typeof item === 'object' && item.change !== undefined) {
+                records.push({
+                    docid: item.docid || docId,
+                    change: item.change,
+                    time: item.time || time,
+                    user: item.user !== undefined ? item.user : (user || ''),
+                    useridoriginal: item.useridoriginal !== undefined ? item.useridoriginal : (userOriginal || '')
+                });
+            } else if (typeof item === 'object' && item.changes !== undefined) {
+                var isBinary = typeof item.changes !== 'string';
+                changeList(item.changes).forEach(function (change) { push(change, isBinary); });
+            }
+        };
+        add(source || []);
+        return records;
+    }
+
+    function registerDocumentImageUrl(name, url) {
+        var AscCommon = window.AscCommon;
+        var documentUrls = AscCommon && AscCommon.g_oDocumentUrls;
+        documentUrls && typeof documentUrls.addImageUrl === 'function' && documentUrls.addImageUrl(name, url);
+    }
+
     /**
      * @param {Object} options
      * @param {function(string): Promise} options.loadConverter   loads the converter module, resolves to {createConverter}
@@ -148,6 +258,19 @@ define([], function () { 'use strict';
      * @param {function(number, string)} [options.onError]          receives the integrator error codes (-100..-103)
      * @param {function(Blob): string} [options.createObjectURL]
      * @param {function(string)} [options.revokeObjectURL]
+     * @param {string} [options.transport]                          'self' (default): answer like a single-user DocService;
+     *                                                              'host': relay co-editing messages to options.onHostMessage
+     * @param {boolean} [options.editing]                           the user edits (participant is not a viewer)
+     * @param {number} [options.indexUser]                          connection index, sdkjs's user id is user.id + indexUser
+     * @param {Array} [options.participants]                        initial participants (DocService shape) for the auth reply
+     * @param {string} [options.saveFormat]                         format a user save exports to (docx, xlsx...)
+     * @param {function(Object)} [options.onHostMessage]            'host' transport: a message sdkjs sent
+     * @param {function(string): boolean} [options.onSaveRequest]   a user save: start the export (asc_DownloadAs) to the
+     *                                                              given format, return false when it cannot start
+     * @param {function(Blob, string)} [options.onSave]             the export of a user save is ready
+     * @param {function(string, Blob)} [options.onMedia]            an image the user inserted was stored as session media
+     * @param {function(string, string)} [options.registerImageUrl] makes a media url known to sdkjs (g_oDocumentUrls)
+     * @param {function(): number} [options.now]
      */
     function Session(options) {
         options = options || {};
@@ -162,6 +285,17 @@ define([], function () { 'use strict';
         this.onError = options.onError || noop;
         this.createObjectURL = options.createObjectURL || function (blob) { return URL.createObjectURL(blob); };
         this.revokeObjectURL = options.revokeObjectURL || function (url) { URL.revokeObjectURL(url); };
+        this.transportType = options.transport === 'host' ? 'host' : 'self';
+        this.editing = !!options.editing;
+        this.indexUser = (typeof options.indexUser === 'number' && options.indexUser >= 0 && options.indexUser % 1 === 0) ? options.indexUser : 0;
+        this.initialParticipants = Array.isArray(options.participants) ? options.participants : null;
+        this.saveFormat = options.saveFormat || null;
+        this.onHostMessage = options.onHostMessage || noop;
+        this.onSaveRequest = options.onSaveRequest || null;
+        this.onSave = options.onSave || noop;
+        this.onMedia = options.onMedia || noop;
+        this.registerImageUrl = options.registerImageUrl || registerDocumentImageUrl;
+        this.now = options.now || function () { return Date.now(); };
 
         this.sessionId = 'local-' + Math.random().toString(16).slice(2);
         this.source = null;
@@ -172,6 +306,13 @@ define([], function () { 'use strict';
         this.urls = {};         // name -> object url ("Editor.bin", "media/image1.png", ...)
         this.mediaBytes = {};   // media name -> Uint8Array, needed again for exports
         this.blobs = {};        // object url -> {blob, fileType}
+        this.changes = [];      // change records since the source was created, as DocsCoServer keeps them
+        this.locks = {};        // 'self' transport: lock id -> {time, user, block}
+        this._lastTime = 0;
+        this._mediaCount = 0;
+        this._documentOpened = false;
+        this._hostQueue = [];   // 'host' transport: messages for sdkjs that arrived before the document was opened
+        this._pendingSave = null;
         this.handlers = null;
         this.closed = false;
         this.transport = this._createTransport();
@@ -184,7 +325,8 @@ define([], function () { 'use strict';
     };
 
     /**
-     * @param {Object} source {buffer: ArrayBuffer, name: string, fileType?: string, media?: {name: Blob|ArrayBuffer}}
+     * @param {Object} source {buffer: ArrayBuffer, name: string, fileType?: string, format?: 'bin',
+     *                         media?: {name: Blob|ArrayBuffer}, changes?: Array}
      */
     Session.prototype.setSource = function (source) {
         if (!source || !source.buffer) return;
@@ -192,11 +334,21 @@ define([], function () { 'use strict';
             bytes: toUint8Array(source.buffer),
             name: source.name || ('document.' + (source.fileType || '')),
             fileType: (source.fileType || fileExtension(source.name) || '').toLowerCase(),
+            format: source.format === 'bin' ? 'bin' : '',
             media: source.media || null
         };
+        this.changes = changeRecords(source.changes, this.sessionId, this._nextTime(), this.getUserId(), this._userIdOriginal());
         var waiters = this._sourceWaiters;
         this._sourceWaiters = [];
         waiters.forEach(function (resolve) { resolve(); });
+    };
+
+    Session.prototype.getChanges = function () {
+        return this.changes.slice();
+    };
+
+    Session.prototype.isEditing = function () {
+        return this.editing;
     };
 
     Session.prototype.getBlob = function (url) {
@@ -228,6 +380,10 @@ define([], function () { 'use strict';
         this.urls = {};
         this.blobs = {};
         this.mediaBytes = {};
+        this.changes = [];
+        this.locks = {};
+        this._hostQueue = [];
+        this._pendingSave = null;
         if (this._converter && typeof this._converter.terminate === 'function') {
             try { this._converter.terminate(); } catch (e) {}
         }
@@ -258,6 +414,13 @@ define([], function () { 'use strict';
         this.onError(code, message);
     };
 
+    // Strictly increasing, so a user save is always newer than the changes before it (the
+    // DocService rounds to seconds; sdkjs only compares these times)
+    Session.prototype._nextTime = function () {
+        this._lastTime = Math.max(this.now(), this._lastTime + 1);
+        return this._lastTime;
+    };
+
     Session.prototype._licenseMessage = function () {
         var version = this.getVersion() || {};
         return {
@@ -278,17 +441,29 @@ define([], function () { 'use strict';
         };
     };
 
+    Session.prototype._userIdOriginal = function () {
+        return this.user.id !== undefined && this.user.id !== null ? String(this.user.id) : 'local-user';
+    };
+
+    // The id sdkjs uses for this user: user id + indexUser (DocsCoApi._userId)
+    Session.prototype.getUserId = function () {
+        return this._userIdOriginal() + this.indexUser;
+    };
+
     Session.prototype._participants = function () {
-        var id = this.user.id !== undefined && this.user.id !== null ? String(this.user.id) : 'local-user';
-        return [{
-            id: id + '0',
-            idOriginal: id,
+        var own = {
+            id: this.getUserId(),
+            idOriginal: this._userIdOriginal(),
             username: this.user.name || '',
-            indexUser: 0,
+            indexUser: this.indexUser,
             connectionId: this.sessionId,
             isCloseCoAuthoring: false,
-            view: true
-        }];
+            view: !this.editing
+        };
+        if (!this.initialParticipants) return [own];
+        var participants = this.initialParticipants.filter(function (p) { return p && p.id !== own.id; });
+        participants.push(own);
+        return participants;
     };
 
     Session.prototype._createTransport = function () {
@@ -310,33 +485,202 @@ define([], function () { 'use strict';
             },
             convert: function (request, callback) {
                 me._convertForDownload(request, callback);
+            },
+            uploadImages: function (files, callback) {
+                me._uploadImages(files, callback);
+            },
+            uploadImageUrls: function (urls, callback) {
+                me._uploadImageUrls(urls, callback);
             }
         };
     };
 
     Session.prototype._onSdkMessage = function (message) {
         if (!message || this.closed) return;
+        // answered here with both transports
         switch (message.type) {
             case 'auth':
                 this._onAuth(message);
-                break;
-            case 'rpc':
-                this._onRpc(message);
-                break;
+                return;
             case 'openDocument':
                 this._onOpenDocumentRequest(message);
-                break;
+                return;
+            case 'forceSaveStart':
+                // saving exports in this frame, see startUserSave
+                this.startUserSave();
+                return;
+            case 'rpc':
+                // imgurls from the session media; there is no server for the other calls
+                this._onRpc(message);
+                return;
+            case 'close':
+                this.transportType === 'host' && this.onHostMessage(message);
+                this.destroy();
+                return;
+        }
+        if (this.transportType === 'host') {
+            this.onHostMessage(message);
+            return;
+        }
+        switch (message.type) {
             case 'isSaveLock':
                 this._emit({type: 'saveLock', saveLock: false});
                 break;
-            case 'close':
-                this.destroy();
+            case 'getLock':
+                this._onGetLock(message);
+                break;
+            case 'saveChanges':
+                this._onSaveChanges(message);
+                break;
+            case 'unSaveLock':
+                // emergency withdrawal without saving
+                this._emit({type: 'unSaveLock', index: -1, time: -1, syncChangesIndex: -1});
+                break;
+            case 'unLockDocument':
+                this._onUnLockDocument(message);
                 break;
             default:
-                // getLock, releaseLock, saveChanges, cursor, extendSession, clientLog, getMessages...
-                // have no meaning without a DocService; a local session is view-only.
+                // authChangesAck, cursor, message, getMessages, extendSession, clientLog...: there
+                // is nobody to tell and sdkjs waits for no answer
                 break;
         }
+    };
+
+    /**
+     * 'host' transport: delivers a message to sdkjs as if the DocService had sent it. Messages
+     * that arrive before the document was opened are held back until then.
+     */
+    Session.prototype.receiveHostMessage = function (message) {
+        if (this.closed || !message || typeof message !== 'object') return;
+        if (!this._documentOpened || !this.handlers) {
+            this._hostQueue.push(message);
+            return;
+        }
+        this._emit(message);
+    };
+
+    Session.prototype._flushHostQueue = function () {
+        var queue = this._hostQueue;
+        this._hostQueue = [];
+        var me = this;
+        queue.forEach(function (message) { me._emit(message); });
+    };
+
+    // DocsCoServer getLock: every block is granted to the only user, the reply carries all
+    // locks of the document; keyed by block id (word) or block.guid (cell, slide, pdf)
+    Session.prototype._onGetLock = function (message) {
+        var me = this;
+        var user = this.getUserId();
+        var time = this.now();
+        (message.block || []).forEach(function (block) {
+            var key = (block && block.guid) || block;
+            me.locks[key] = {time: time, user: user, block: block};
+        });
+        this._emit({type: 'getLock', locks: Object.assign({}, this.locks)});
+    };
+
+    Session.prototype._removeOwnLocks = function () {
+        var user = this.getUserId();
+        var removed = [];
+        for (var key in this.locks) {
+            if (this.locks.hasOwnProperty(key) && this.locks[key].user === user) {
+                removed.push(this.locks[key]);
+                delete this.locks[key];
+            }
+        }
+        return removed;
+    };
+
+    Session.prototype._deleteChangesFrom = function (deleteIndex) {
+        if (deleteIndex !== null && deleteIndex !== undefined && deleteIndex !== -1 && deleteIndex < this.changes.length)
+            this.changes.length = Math.max(0, deleteIndex);
+    };
+
+    // DocsCoServer saveChanges: store the changes, answer savePartChanges for a chunk and
+    // unSaveLock (index, time, syncChangesIndex) for the last one
+    Session.prototype._onSaveChanges = function (message) {
+        var me = this;
+        var isBinary = typeof message.changes !== 'string';
+        var newChanges = changeList(message.changes);
+        var deleteIndex = -1;
+        if (message.startSaveChanges && message.deleteIndex !== null && message.deleteIndex !== undefined) {
+            deleteIndex = message.deleteIndex;
+            this._deleteChangesFrom(deleteIndex);
+        }
+        var startIndex = this.changes.length;
+        var time = this._nextTime();
+        var user = this.getUserId();
+        var userOriginal = this._userIdOriginal();
+        newChanges.forEach(function (change) {
+            me.changes.push({
+                docid: me.sessionId,
+                change: isBinary ? change : JSON.stringify(change),
+                time: time,
+                user: user,
+                useridoriginal: userOriginal
+            });
+        });
+        var changesIndex = (-1 === deleteIndex && message.startSaveChanges) ? startIndex : -1;
+        if (message.endSaveChanges) {
+            message.releaseLocks && this._removeOwnLocks();
+            this._emit({type: 'unSaveLock', index: changesIndex, time: time, syncChangesIndex: this.changes.length});
+        } else {
+            this._emit({type: 'savePartChanges', changesIndex: changesIndex, syncChangesIndex: this.changes.length});
+        }
+    };
+
+    // DocsCoServer unLockDocument (checkEndAuthLock): drop changes, release the user's locks
+    // with a releaseLock message, and end a save with unSaveLock(-1, -1, -1)
+    Session.prototype._onUnLockDocument = function (message) {
+        this._deleteChangesFrom(message.deleteIndex);
+        if (message.releaseLocks) {
+            var time = this.now();
+            var released = this._removeOwnLocks();
+            released.length > 0 && this._emit({
+                type: 'releaseLock',
+                locks: released.map(function (lock) {
+                    return {block: lock.block, user: lock.user, time: time, changes: null};
+                })
+            });
+        }
+        message.isSave && this._emit({type: 'unSaveLock', index: -1, time: -1, syncChangesIndex: -1});
+    };
+
+    /**
+     * A user save (save button, Ctrl+S, File > Save; see Host): export the document to
+     * saveFormat and hand the file to the host, even when nothing changed. sdkjs is told like
+     * after a DocService forcesave (forceSaveStart, then forceSave), so the editor shows the
+     * save in progress. Also the answer when sdkjs itself sends forceSaveStart.
+     */
+    Session.prototype.startUserSave = function () {
+        if (this.closed) return false;
+        if (this._pendingSave) {
+            this._emit({type: 'forceSaveStart', messages: {code: SERVER_NO_ERROR, time: this._pendingSave.time, inProgress: true}});
+            return true;
+        }
+        var time = this._nextTime();
+        if (!this.saveFormat || typeof this.onSaveRequest !== 'function') {
+            this._emit({type: 'forceSaveStart', messages: {code: SERVER_UNKNOWN_ERROR, time: null, inProgress: false}});
+            return false;
+        }
+        var save = this._pendingSave = {time: time, format: this.saveFormat};
+        this._emit({type: 'forceSaveStart', messages: {code: SERVER_NO_ERROR, time: time, inProgress: false}});
+        var started = false;
+        try {
+            started = this.onSaveRequest(this.saveFormat) !== false;
+        } catch (e) {
+            console.error(e);
+        }
+        !started && this._endSave(save, false);
+        return started;
+    };
+
+    Session.prototype._endSave = function (save, success) {
+        if (save.ended) return;
+        save.ended = true;
+        if (this._pendingSave === save)
+            this._pendingSave = null;
+        this._emit({type: 'forceSave', messages: {type: FORCE_SAVE_BUTTON, time: save.time, success: success}});
     };
 
     Session.prototype._onAuth = function (message) {
@@ -345,7 +689,8 @@ define([], function () { 'use strict';
         var now = Date.now();
         this._getDocumentUrls(message.openCmd).then(function (urls) {
             if (me.closed) return;
-            me._emit({type: 'authChanges', changes: []});
+            var changes = me.changes.slice();
+            me._emit({type: 'authChanges', changes: changes});
             me._emit({
                 type: 'auth',
                 result: 1,
@@ -353,16 +698,26 @@ define([], function () { 'use strict';
                 sessionTimeConnect: now,
                 participants: me._participants(),
                 locks: [],
-                changes: [],
-                changesIndex: 0,
-                indexUser: 0,
+                changes: changes,
+                changesIndex: changes.length,
+                indexUser: me.indexUser,
                 buildVersion: version.buildVersion || '',
                 buildNumber: version.buildNumber || 0,
                 licenseType: LICENSE_SUCCESS,
                 openedAt: now
             });
             me._emit({type: 'documentOpen', data: {type: 'open', status: 'ok', openedAt: now, data: urls}});
+            me._documentOpened = true;
             me.onProgress('open', 100);
+            // not a DocService message: tells the host which connection this editor is
+            me.transportType === 'host' && me.onHostMessage({
+                type: 'sessionAuth',
+                user: me._userIdOriginal(),
+                indexUser: me.indexUser,
+                connectionId: me.getUserId(),
+                sessionId: me.sessionId
+            });
+            me._flushHostQueue();
         }, function (error) {
             if (me.closed) return;
             me._fail(errorCode(error), errorMessage(error));
@@ -387,11 +742,15 @@ define([], function () { 'use strict';
         });
     };
 
+    // imgurls and pathurls resolve media names to the session's urls; any other call (wopi,
+    // saveRelativeFromChanges...) needs a server and gets an empty answer right away, which
+    // sdkjs treats as a failure instead of waiting for its timeout
     Session.prototype._onRpc = function (message) {
+        var me = this;
         var request = message.data || {};
-        var response = {status: 'err', data: -1};
-        if (request.c === 'imgurls') {
-            var me = this;
+        var command = request.type || request.c;
+        var response;
+        if (command === 'imgurls' || command === 'pathurls') {
             response = {
                 status: 'ok',
                 data: (request.data || []).map(function (name) { return me._imageUrl(name); })
@@ -401,7 +760,7 @@ define([], function () { 'use strict';
     };
 
     Session.prototype._imageUrl = function (name) {
-        return this.urls['media/' + name] || this.urls[name] || name;
+        return this.urls['media/' + name] || this.urls[name] || this.urls['media/' + stripMediaPrefix(name)] || name;
     };
 
     Session.prototype._imageUrls = function (names) {
@@ -451,17 +810,108 @@ define([], function () { 'use strict';
             var value = media[name];
             var read = (typeof Blob !== 'undefined' && value instanceof Blob) ? blobToArrayBuffer(value) : Promise.resolve(value);
             return read.then(function (buffer) {
-                me._addMedia(name, toUint8Array(buffer));
+                return {name: stripMediaPrefix(name), url: me._addMedia(stripMediaPrefix(name), toUint8Array(buffer))};
             });
         }));
     };
 
-    Session.prototype._addMedia = function (name, bytes) {
-        var blob = new Blob([bytes]);
+    Session.prototype._addMedia = function (name, bytes, type) {
+        var blob = new Blob([bytes], {type: type || mimeType(name)});
         var url = this.createObjectURL(blob);
         this.mediaBytes[name] = bytes;
         this.urls['media/' + name] = url;
         this.urls[name] = url;
+        return url;
+    };
+
+    /**
+     * Media from elsewhere (other users of a 'host' session): makes the names resolvable for
+     * sdkjs (imgurls, g_oDocumentUrls) and includes the bytes in later exports.
+     * @param {Object} media {name: Blob|ArrayBuffer|Uint8Array}, names with or without 'media/'
+     * @returns {Promise}
+     */
+    Session.prototype.addMedia = function (media) {
+        var me = this;
+        if (this.closed || !media || typeof media !== 'object') return Promise.resolve([]);
+        return this._readMedia(media).then(function (added) {
+            if (me.closed) return [];
+            added.forEach(function (item) { me.registerImageUrl(item.name, item.url); });
+            return added;
+        });
+    };
+
+    Session.prototype._newMediaName = function (file) {
+        return 'image_' + this.sessionId.replace(/^local-/, '').slice(0, 8) + '_' + (++this._mediaCount) + '.' + mediaExtension(file);
+    };
+
+    // transport.uploadImageUrls (image from url): fetched into the session media when CORS
+    // allows; answers [{path: 'media/<name>', url}] like the DocService upload
+    Session.prototype._uploadImageUrls = function (urls, callback) {
+        var me = this;
+        var list = Array.prototype.slice.call(urls || []);
+        if (list.length === 0 || typeof fetch !== 'function') {
+            callback(list.length === 0 ? UPLOAD_FILE_COUNT : UPLOAD_URL);
+            return;
+        }
+        Promise.all(list.map(function (url) {
+            return fetch(url).then(function (response) {
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.blob();
+            }).then(function (blob) {
+                if (blob.type && !/^image\//.test(blob.type)) throw new Error('not an image: ' + blob.type);
+                return blobToArrayBuffer(blob).then(function (buffer) {
+                    var name = String(url).split(/[?#]/)[0];
+                    return {file: {name: name, type: blob.type}, bytes: toUint8Array(buffer)};
+                });
+            });
+        })).then(function (items) {
+            if (me.closed) return;
+            callback(UPLOAD_NO_ERROR, items.map(function (item) {
+                var stored = me._storeUpload(item.file, item.bytes);
+                return {path: 'media/' + stored.name, url: stored.url};
+            }));
+        }, function (error) {
+            if (me.closed) return;
+            console.error('Local session image download failed: ' + errorMessage(error));
+            callback(UPLOAD_URL);
+        });
+    };
+
+    Session.prototype._storeUpload = function (file, bytes) {
+        var name = this._newMediaName(file);
+        var type = file.type || mimeType(name);
+        var url = this._addMedia(name, bytes, type);
+        this.registerImageUrl(name, url);
+        this.onMedia(name, new Blob([bytes], {type: type}));
+        return {name: name, url: url};
+    };
+
+    // transport.uploadImages: the inserted files become session media; sdkjs gets
+    // {'media/<name>': url} like from the DocService upload, so it saves the media path
+    Session.prototype._uploadImages = function (files, callback) {
+        var me = this;
+        var list = Array.prototype.slice.call(files || []);
+        if (list.length === 0) {
+            callback(UPLOAD_FILE_COUNT);
+            return;
+        }
+        Promise.all(list.map(function (file) {
+            return blobToArrayBuffer(file).then(function (buffer) {
+                return {file: file, bytes: toUint8Array(buffer)};
+            });
+        })).then(function (items) {
+            if (me.closed) return;
+            var urls = {};
+            items.forEach(function (item) {
+                var stored = me._storeUpload(item.file, item.bytes);
+                urls['media/' + stored.name] = stored.url;
+            });
+            callback(UPLOAD_NO_ERROR, urls);
+        }, function (error) {
+            if (me.closed) return;
+            console.error('Local session image upload failed: ' + errorMessage(error));
+            callback(UPLOAD_URL);
+        });
     };
 
     Session.prototype._getDocumentUrls = function (openCmd) {
@@ -470,6 +920,11 @@ define([], function () { 'use strict';
         this._documentUrlsPromise = this._waitSource().then(function (source) {
             return me._readMedia(source.media).then(function () { return source; });
         }).then(function (source) {
+            if (source.format === 'bin') {
+                // the host kept the editor binary itself (e.g. a checkpoint), nothing to convert
+                me.urls['Editor.bin'] = me.createObjectURL(new Blob([source.bytes]));
+                return me.urls;
+            }
             var fileType = source.fileType || (openCmd && openCmd.format) || '';
             if (VIEWER_FORMATS.test(fileType)) {
                 // sdkjs renders these natively, no conversion needed
@@ -516,6 +971,9 @@ define([], function () { 'use strict';
             return;
         }
         format = String(format).toLowerCase();
+        var save = this._pendingSave && !request.isPrint && this._pendingSave.format === format ? this._pendingSave : null;
+        if (save)
+            this._pendingSave = null;
         var noBase64 = !!(request.options && request.options.nobase64);
         this._getConverter().then(function (converter) {
             return converter.convert({
@@ -533,10 +991,16 @@ define([], function () { 'use strict';
             if (!result || !result.data)
                 throw {code: 'convert', message: 'Conversion produced no data'};
             var blob = new Blob([result.data], {type: MIME_TYPES[format] || 'application/octet-stream'});
-            callback({status: 'ok', data: me._registerBlob(blob, format), filetype: format});
+            var url = me._registerBlob(blob, format);
+            if (save) {
+                me.onSave(blob, format);
+                me._endSave(save, true);
+            }
+            callback({status: 'ok', data: url, filetype: format});
         }).catch(function (error) {
             if (me.closed) return;
             me._fail(errorCode(error), errorMessage(error));
+            save && me._endSave(save, false);
             callback({status: 'err', error: errorCode(error)});
         });
     };
@@ -595,7 +1059,8 @@ define([], function () { 'use strict';
 
     /**
      * @param {Object} options
-     *   gateway   Common.Gateway (on, reportError, localSessionProgress)
+     *   gateway   Common.Gateway (on, reportError, localSessionProgress, sessionMessage,
+     *             localSessionSave, localSessionMedia)
      *   messages  localized texts, see DEFAULT_MESSAGES
      *   onError   function (code, text), e.g. to show a dialog
      *   loadConverter, getFonts, getVersion  overrides for tests
@@ -610,6 +1075,8 @@ define([], function () { 'use strict';
         this.getVersion = options.getVersion || productVersion;
         this.session = null;
         this.source = null;
+        this.api = null;
+        this._early = [];   // host messages and media that arrived before start
     }
 
     Host.isSupported = function () {
@@ -624,11 +1091,18 @@ define([], function () { 'use strict';
             me.source = data;
             me.session && me.session.setSource(data);
         });
+        this.gateway.on('sessionmessage', function (message) {
+            me.session ? me.session.receiveHostMessage(message) : me._early.push({message: message});
+        });
+        this.gateway.on('addsessionmedia', function (media) {
+            me.session ? me.session.addMedia(media) : me._early.push({media: media});
+        });
     };
 
     /**
      * Registers the local transport with sdkjs. Must run before api.asc_setDocInfo.
-     * @param {Object} options {documentType, user: {id, fullname}, x2tUrl}
+     * @param {Object} options {documentType, user: {id, fullname}, x2tUrl, api, mode: 'view'|'edit', fileType,
+     *                          session: editorConfig.session ({transport, indexUser, participants})}
      * @returns {boolean} false when this SDK build has no local session support
      */
     Host.prototype.start = function (options) {
@@ -638,7 +1112,10 @@ define([], function () { 'use strict';
             this._report(ERRORS.Load, this.messages.notSupported);
             return false;
         }
-        this.session && this.session.destroy();
+        var editing = options.mode === 'edit';
+        var config = options.session || {};
+        this.stop();
+        this.api = options.api || null;
         this.session = new Session({
             loadConverter: this.loadConverter,
             x2tUrl: options.x2tUrl,
@@ -646,16 +1123,72 @@ define([], function () { 'use strict';
             getVersion: this.getVersion,
             user: options.user ? {id: options.user.id, name: options.user.fullname} : {},
             documentType: options.documentType,
+            transport: config.transport,
+            indexUser: config.indexUser,
+            participants: config.participants,
+            editing: editing,
+            saveFormat: editing ? saveFormat(options.fileType, options.documentType) : null,
             onProgress: function (phase, percent) {
                 me.gateway.localSessionProgress(phase, percent);
             },
             onError: function (code, message) {
                 console.error('Local session error ' + code + ': ' + message);
                 me._report(code, me._messageFor(code));
+            },
+            onHostMessage: function (message) {
+                me.gateway.sessionMessage(message);
+            },
+            onSaveRequest: function (format) {
+                return me._exportForSave(format);
+            },
+            onSave: function (blob, fileType) {
+                me.gateway.localSessionSave(blob, fileType);
+            },
+            onMedia: function (name, blob) {
+                me.gateway.localSessionMedia(name, blob);
             }
         });
         this.source && this.session.setSource(this.source);
+        editing && this._watchUserSaves();
         window.AscCommon.setLocalSessionTransport(this.session.getTransport());
+        var early = this._early;
+        this._early = [];
+        early.forEach(function (item) {
+            item.message ? me.session.receiveHostMessage(item.message) : me.session.addMedia(item.media);
+        });
+        return true;
+    };
+
+    // Every user save goes through api.asc_Save without the isAutoSave flag: the save button,
+    // File > Save, Ctrl+S in the document (sdkjs calls this.Api.asc_Save(false)). The original
+    // still sends the changes; the export follows even when nothing changed. Autosave passes
+    // true and exports nothing.
+    Host.prototype._watchUserSaves = function () {
+        var me = this, api = this.api;
+        if (!api || typeof api.asc_Save !== 'function') return;
+        var hadOwn = Object.prototype.hasOwnProperty.call(api, 'asc_Save');
+        var original = api.asc_Save;
+        api.asc_Save = function (isAutoSave) {
+            var result = original.apply(this, arguments);
+            !isAutoSave && me.session && me.session.startUserSave();
+            return result;
+        };
+        this._restoreSave = function () {
+            if (hadOwn) api.asc_Save = original;
+            else delete api.asc_Save;
+        };
+    };
+
+    // Exports the open document through sdkjs (transport.convert); the result is picked up by
+    // the session as the file of the pending save.
+    Host.prototype._exportForSave = function (format) {
+        var Asc = window.Asc;
+        var fileType = Asc && Asc.c_oAscFileType && Asc.c_oAscFileType[String(format).toUpperCase()];
+        if (!this.api || fileType === undefined || typeof Asc.asc_CDownloadOptions !== 'function')
+            return false;
+        var options = new Asc.asc_CDownloadOptions(fileType);
+        options.asc_setIsDownloadEvent(true);
+        this.api.asc_DownloadAs(options);
         return true;
     };
 
@@ -683,16 +1216,42 @@ define([], function () { 'use strict';
     };
 
     Host.prototype.stop = function () {
+        this._restoreSave && this._restoreSave();
+        this._restoreSave = null;
         if (!this.session) return;
         this.session.destroy();
         this.session = null;
+        this.api = null;
         Host.isSupported() && window.AscCommon.setLocalSessionTransport(null);
     };
+
+    // editorConfig helpers shared by the desktop and mobile editors; api.js has already
+    // normalised mode and session.transport
+    function isLocalSessionConfig(config) {
+        return !!(config && config.session && config.session.type === 'local');
+    }
+
+    function sessionTransport(config) {
+        return isLocalSessionConfig(config) && config.session.transport === 'host' ? 'host' : 'self';
+    }
+
+    // Chat needs a server in every case; a viewer gets no editing rights at all.
+    function restrictPermissions(permissions, config) {
+        permissions.chat = false;
+        if (!config || config.mode !== 'edit')
+            permissions.edit = permissions.review = permissions.comment = permissions.fillForms = permissions.protect = false;
+        return permissions;
+    }
 
     Common.LocalSession.Session = Session;
     Common.LocalSession.Host = Host;
     Common.LocalSession.ERRORS = ERRORS;
     Common.LocalSession.fileExtension = fileExtension;
+    Common.LocalSession.saveFormat = saveFormat;
+    Common.LocalSession.changeRecords = changeRecords;
+    Common.LocalSession.isLocalSessionConfig = isLocalSessionConfig;
+    Common.LocalSession.sessionTransport = sessionTransport;
+    Common.LocalSession.restrictPermissions = restrictPermissions;
 
     return Common.LocalSession;
 });
