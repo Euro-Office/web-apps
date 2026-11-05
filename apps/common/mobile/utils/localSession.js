@@ -8,12 +8,15 @@
 // apps/common/main/lib/util/LocalSession.js for the session itself.
 
 import { f7 } from 'framework7-react';
-import '../../main/lib/util/LocalSession.js';
+// Use the module's value, not window.Common.LocalSession: a bare side-effect
+// import can be dropped by the production build, and the global can be replaced
+// by other scripts the editor loads later.
+import LocalSession from '../../main/lib/util/LocalSession.js';
 
-export const isLocalSessionConfig = config => Common.LocalSession.isLocalSessionConfig(config);
+export const isLocalSessionConfig = config => LocalSession.isLocalSessionConfig(config);
 
 // A local session co-edits only through the 'host' transport.
-export const canCoAuthorLocalSession = config => Common.LocalSession.canCoAuthoring(config);
+export const canCoAuthorLocalSession = config => LocalSession.canCoAuthoring(config);
 
 const appVersion = () => {
     const cropped = /^(\d+\.\d+\.\d+)(?:\.(\d+))?/.exec(__PRODUCT_VERSION__);
@@ -30,7 +33,7 @@ const appVersion = () => {
  * @param {Object} _t the editor's 'Main' translations
  */
 export const createLocalSessionHost = _t => {
-    const host = new Common.LocalSession.Host({
+    const host = new LocalSession.Host({
         gateway: Common.Gateway,
         getVersion: appVersion,
         messages: {
