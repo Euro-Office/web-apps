@@ -789,5 +789,62 @@ define([
             assert.equal(Common.LocalSession.sessionTransport({session: {type: 'local', transport: 'host'}}), 'host');
             assert.equal(Common.LocalSession.sessionTransport({session: {type: 'local'}}), 'self');
         });
+
+        it('sets the editor flags of a local session', function () {
+            var canCoAuthoring = Common.LocalSession.canCoAuthoring;
+            assert.isTrue(canCoAuthoring({}));
+            assert.isTrue(canCoAuthoring({session: {type: 'local', transport: 'host'}}));
+            assert.isFalse(canCoAuthoring({session: {type: 'local', transport: 'self'}}));
+
+            var server = {isEdit: true, canForcesave: true, forcesave: true, canUseMailMerge: true};
+            Common.LocalSession.applyAppOptions(server);
+            assert.deepEqual(server, {isEdit: true, canForcesave: true, forcesave: true, canUseMailMerge: true});
+
+            var local = {isLocalSession: true, isEdit: true, canForcesave: true, forcesave: false, canUseMailMerge: true};
+            Common.LocalSession.applyAppOptions(local);
+            assert.deepEqual(local, {isLocalSession: true, isEdit: true, canForcesave: false, forcesave: true, canUseMailMerge: false});
+
+            var viewer = {isLocalSession: true, isEdit: false, canForcesave: false, forcesave: false};
+            Common.LocalSession.applyAppOptions(viewer);
+            assert.deepEqual(viewer, {isLocalSession: true, isEdit: false, canForcesave: false, forcesave: false});
+        });
+
+        it('opens a document with restricted permissions and downloads session exports as blobs', function () {
+            var savedAscCommon = window.AscCommon;
+            var registered;
+            window.AscCommon = {setLocalSessionTransport: function (t) { registered = t; }};
+            var downloads = [];
+            var gateway = {
+                on: function () {},
+                reportError: function () {},
+                downloadAs: function (url, fileType) { downloads.push(['url', url, fileType]); },
+                downloadAsBlob: function (blob, fileType) { downloads.push(['blob', blob, fileType]); }
+            };
+            try {
+                var host = new Common.LocalSession.Host({gateway: gateway});
+                var permissions = {edit: true, comment: true};
+                var doc = {fileType: 'odt', permissions: {}};
+                assert.isTrue(host.openDocument({api: {}, documentType: 'word', user: {id: 'u', fullname: 'U'}, doc: doc, permissions: permissions,
+                    editorConfig: {mode: 'edit', session: {type: 'local', transport: 'host', x2tUrl: 'x/', indexUser: 2}}}));
+                assert.strictEqual(doc.permissions, permissions);
+                assert.isFalse(permissions.chat);
+                assert.isTrue(permissions.edit);
+                assert.strictEqual(registered, host.session.getTransport());
+                assert.equal(host.session.transportType, 'host');
+                assert.equal(host.session.indexUser, 2);
+                assert.equal(host.session.x2tUrl, 'x/');
+                assert.equal(host.session.saveFormat, 'odt');
+                assert.equal(host.session.getUserId(), 'u2');
+
+                var blob = new Blob(['x']);
+                var url = host.session._registerBlob(blob, 'odt');
+                host.downloadAs(url, 'odt');
+                host.downloadAs('https://example.com/file.odt', 'odt');
+                assert.deepEqual(downloads, [['blob', blob, 'odt'], ['url', 'https://example.com/file.odt', 'odt']]);
+                host.stop();
+            } finally {
+                window.AscCommon = savedAscCommon;
+            }
+        });
     });
 });

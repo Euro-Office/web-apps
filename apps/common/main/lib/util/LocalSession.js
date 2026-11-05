@@ -59,6 +59,8 @@ define([
     Common.LocalSession.isLocalSessionConfig = helpers.isLocalSessionConfig;
     Common.LocalSession.sessionTransport = helpers.sessionTransport;
     Common.LocalSession.restrictPermissions = helpers.restrictPermissions;
+    Common.LocalSession.canCoAuthoring = helpers.canCoAuthoring;
+    Common.LocalSession.applyAppOptions = helpers.applyAppOptions;
 
     return Common.LocalSession;
 });

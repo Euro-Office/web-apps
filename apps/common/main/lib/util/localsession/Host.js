@@ -13,7 +13,8 @@ define([
 ], function (helpers, Conversion, Session) { 'use strict';
 
     var ERRORS = helpers.ERRORS,
-        saveFormat = helpers.saveFormat;
+        saveFormat = helpers.saveFormat,
+        restrictPermissions = helpers.restrictPermissions;
 
     var DEFAULT_MESSAGES = {
         notSupported: 'This editor build cannot open documents without a Document Server.',
@@ -137,6 +138,27 @@ define([
         return true;
     };
 
+    /**
+     * Starts the session for the document an editor is about to open: restricts the merged
+     * permissions (and makes them doc.permissions), then registers the transport (see start).
+     * @param {Object} options {api, documentType, user, editorConfig, doc, permissions}
+     * @returns {boolean} see start
+     */
+    Host.prototype.openDocument = function (options) {
+        var config = options.editorConfig || {};
+        var doc = options.doc;
+        doc.permissions = restrictPermissions(options.permissions, config);
+        return this.start({
+            api: options.api,
+            documentType: options.documentType,
+            user: options.user,
+            x2tUrl: config.session && config.session.x2tUrl,
+            mode: config.mode,
+            session: config.session,
+            fileType: doc.fileType
+        });
+    };
+
     // Every user save goes through api.asc_Save without the isAutoSave flag: the save button,
     // File > Save, Ctrl+S in the document (sdkjs calls this.Api.asc_Save(false)). The original
     // still sends the changes; the export follows even when nothing changed. Autosave passes
@@ -187,6 +209,12 @@ define([
 
     Host.prototype.getFileType = function (url) {
         return this.session ? this.session.getFileType(url) : null;
+    };
+
+    // Hands a download to the integrator, as the file itself when the url is a session export
+    Host.prototype.downloadAs = function (url, fileType) {
+        var blob = this.getBlob(url);
+        blob ? this.gateway.downloadAsBlob(blob, fileType) : this.gateway.downloadAs(url, fileType);
     };
 
     Host.prototype.isActive = function () {

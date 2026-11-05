@@ -153,6 +153,22 @@ define([], function () { 'use strict';
         return permissions;
     }
 
+    // appOptions.canCoAuthoring: a local session co-edits only through the 'host' transport
+    function canCoAuthoring(config) {
+        return !isLocalSessionConfig(config) || sessionTransport(config) === 'host';
+    }
+
+    // The save and mail merge flags of a desktop editor in a local session, applied after the
+    // editor has set its own
+    function applyAppOptions(appOptions) {
+        if (!appOptions.isLocalSession) return;
+        // keeps the save button on: every user save exports the document (Host), there is no setting for it
+        appOptions.canForcesave = false;
+        appOptions.forcesave = appOptions.isEdit;
+        // mail merge needs a server
+        appOptions.canUseMailMerge && (appOptions.canUseMailMerge = false);
+    }
+
     return {
         ERRORS: ERRORS,
         noop: noop,
@@ -167,6 +183,8 @@ define([], function () { 'use strict';
         changeRecords: changeRecords,
         isLocalSessionConfig: isLocalSessionConfig,
         sessionTransport: sessionTransport,
-        restrictPermissions: restrictPermissions
+        restrictPermissions: restrictPermissions,
+        canCoAuthoring: canCoAuthoring,
+        applyAppOptions: applyAppOptions
     };
 });

@@ -17,7 +17,7 @@ import LongActionsController from "./LongActions";
 import ErrorController from "./Error";
 import app from "../page/app";
 import About from "../../../../common/mobile/lib/view/About";
-import { isLocalSessionConfig, restrictLocalSessionPermissions, createLocalSessionHost } from '../../../../common/mobile/utils/localSession.js';
+import { isLocalSessionConfig, createLocalSessionHost } from '../../../../common/mobile/utils/localSession.js';
 import PluginsController from '../../../../common/mobile/lib/controller/Plugins.jsx';
 import EncodingController from "./Encoding";
 import DropdownListController from "./DropdownList";
@@ -247,18 +247,9 @@ class MainController extends Component {
 
                 if ( data.doc ) {
                     this.permissions = Object.assign(this.permissions, data.doc.permissions);
-                    if (isLocalSessionConfig(this.editorConfig)) {
-                        data.doc.permissions = restrictLocalSessionPermissions(this.permissions, this.editorConfig);
-                        this.localSession.start({
-                            documentType: 'cell',
-                            user: this.props.storeAppOptions.user,
-                            x2tUrl: this.editorConfig.session.x2tUrl,
-                            api: this.api,
-                            mode: this.editorConfig.mode,
-                            session: this.editorConfig.session,
-                            fileType: data.doc.fileType
-                        });
-                    }
+                    if (isLocalSessionConfig(this.editorConfig))
+                        this.localSession.openDocument({api: this.api, documentType: 'cell',
+                            user: this.props.storeAppOptions.user, editorConfig: this.editorConfig, doc: data.doc, permissions: this.permissions});
 
                     const _options = Object.assign({}, data.doc.options, this.editorConfig.actionLink || {});
                     let _user = new Asc.asc_CUserInfo();
@@ -1107,8 +1098,7 @@ class MainController extends Component {
 
     onDownloadUrl (url, fileType) {
         if (this._state.isFromGatewayDownloadAs) {
-            const blob = this.localSession.getBlob(url);
-            blob ? Common.Gateway.downloadAsBlob(blob, fileType) : Common.Gateway.downloadAs(url, fileType);
+            this.localSession.downloadAs(url, fileType);
         }
 
         this._state.isFromGatewayDownloadAs = false;

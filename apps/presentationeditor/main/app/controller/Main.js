@@ -482,7 +482,7 @@ define([
                     this.api.asc_registerCallback('asc_onRequestRefreshFile',       _.bind(this.onRequestRefreshFile, this));
                 }
 
-                this.appOptions.isLocalSession = !!(this.editorConfig.session && this.editorConfig.session.type === 'local');
+                this.appOptions.isLocalSession = Common.LocalSession.isLocalSessionConfig(this.editorConfig);
 
                 Common.Controllers.Desktop.init(this.appOptions);
                 Common.UI.HintManager.setMode(this.appOptions);
@@ -496,18 +496,10 @@ define([
 
                 if (data.doc) {
                     this.permissions = $.extend(this.permissions, data.doc.permissions);
-                    if (this.appOptions.isLocalSession) {
-                        // no DocService: chat and history are off, a viewer gets no editing rights
-                        data.doc.permissions = this.permissions = Common.LocalSession.restrictPermissions(this.permissions, this.editorConfig);
-                        this.getApplication().getController('Common.Controllers.LocalSession').start(this.api, {
-                            documentType: 'slide',
-                            user: this.appOptions.user,
-                            x2tUrl: this.editorConfig.session.x2tUrl,
-                            mode: this.editorConfig.mode,
-                            session: this.editorConfig.session,
-                            fileType: data.doc.fileType
-                        });
-                    }
+                    // no DocService: chat and history are off, a viewer gets no editing rights
+                    if (this.appOptions.isLocalSession)
+                        this.getApplication().getController('Common.Controllers.LocalSession').openDocument({api: this.api, documentType: 'slide',
+                            user: this.appOptions.user, editorConfig: this.editorConfig, doc: data.doc, permissions: this.permissions});
 
                     var _options = $.extend({}, data.doc.options, this.editorConfig.actionLink || {});
 
@@ -1355,7 +1347,7 @@ define([
                 this.appOptions.canLicense     = (licType === Asc.c_oLicenseResult.Success || licType === Asc.c_oLicenseResult.SuccessLimit);
                 this.appOptions.isLightVersion = params.asc_getIsLight();
                 /** coauthoring begin **/
-                this.appOptions.canCoAuthoring = !this.appOptions.isLightVersion && (!this.appOptions.isLocalSession || Common.LocalSession.sessionTransport(this.editorConfig) === 'host');
+                this.appOptions.canCoAuthoring = !this.appOptions.isLightVersion && Common.LocalSession.canCoAuthoring(this.editorConfig);
                 /** coauthoring end **/
                 this.appOptions.canRequestEditRights = this.editorConfig.canRequestEditRights;
                 this.appOptions.canEdit        = this.permissions.edit !== false && // can edit
@@ -1377,11 +1369,7 @@ define([
                 this.appOptions.canRename      = this.editorConfig.canRename;
                 this.appOptions.canForcesave   = this.appOptions.isEdit && !this.appOptions.isOffline && (typeof (this.editorConfig.customization) == 'object' && !!this.editorConfig.customization.forcesave);
                 this.appOptions.forcesave      = this.appOptions.canForcesave;
-                if (this.appOptions.isLocalSession) {
-                    // keeps the save button on: every user save exports the document (Common.LocalSession.Host), there is no setting for it
-                    this.appOptions.canForcesave = false;
-                    this.appOptions.forcesave = this.appOptions.isEdit;
-                }
+                Common.LocalSession.applyAppOptions(this.appOptions);
                 this.appOptions.canEditComments= this.appOptions.isOffline || !this.permissions.editCommentAuthorOnly;
                 this.appOptions.canDeleteComments= this.appOptions.isOffline || !this.permissions.deleteCommentAuthorOnly;
                 if ((typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.commentAuthorOnly===true) {
@@ -2112,8 +2100,7 @@ define([
 
             onDownloadUrl: function(url, fileType) {
                 if (this._state.isFromGatewayDownloadAs) {
-                    var blob = this.appOptions.isLocalSession ? this.getApplication().getController('Common.Controllers.LocalSession').getBlob(url) : null;
-                    blob ? Common.Gateway.downloadAsBlob(blob, fileType) : Common.Gateway.downloadAs(url, fileType);
+                    this.appOptions.isLocalSession ? this.getApplication().getController('Common.Controllers.LocalSession').downloadAs(url, fileType) : Common.Gateway.downloadAs(url, fileType);
                 }
                 this._state.isFromGatewayDownloadAs = false;
             },

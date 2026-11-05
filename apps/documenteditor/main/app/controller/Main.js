@@ -523,7 +523,7 @@ define([
                     this.api.asc_registerCallback('asc_onRequestRefreshFile',       _.bind(this.onRequestRefreshFile, this));
                 }
 
-                this.appOptions.isLocalSession = !!(this.editorConfig.session && this.editorConfig.session.type === 'local');
+                this.appOptions.isLocalSession = Common.LocalSession.isLocalSessionConfig(this.editorConfig);
 
                 Common.Controllers.Desktop.init(this.appOptions);
                 Common.UI.HintManager.setMode(this.appOptions);
@@ -537,18 +537,10 @@ define([
 
                 if (data.doc) {
                     this.permissions = $.extend(this.permissions, data.doc.permissions);
-                    if (this.appOptions.isLocalSession) {
-                        // no DocService: chat and history are off, a viewer gets no editing rights
-                        data.doc.permissions = this.permissions = Common.LocalSession.restrictPermissions(this.permissions, this.editorConfig);
-                        this.getApplication().getController('Common.Controllers.LocalSession').start(this.api, {
-                            documentType: 'word',
-                            user: this.appOptions.user,
-                            x2tUrl: this.editorConfig.session.x2tUrl,
-                            mode: this.editorConfig.mode,
-                            session: this.editorConfig.session,
-                            fileType: data.doc.fileType
-                        });
-                    }
+                    // no DocService: chat and history are off, a viewer gets no editing rights
+                    if (this.appOptions.isLocalSession)
+                        this.getApplication().getController('Common.Controllers.LocalSession').openDocument({api: this.api, documentType: 'word',
+                            user: this.appOptions.user, editorConfig: this.editorConfig, doc: data.doc, permissions: this.permissions});
 
                     var _options = $.extend({}, data.doc.options, this.editorConfig.actionLink || {});
 
@@ -1708,7 +1700,7 @@ define([
                 this.appOptions.canLicense     = (licType === Asc.c_oLicenseResult.Success || licType === Asc.c_oLicenseResult.SuccessLimit);
                 this.appOptions.isLightVersion = params.asc_getIsLight();
                 /** coauthoring begin **/
-                this.appOptions.canCoAuthoring = !this.appOptions.isLightVersion && (!this.appOptions.isLocalSession || Common.LocalSession.sessionTransport(this.editorConfig) === 'host');
+                this.appOptions.canCoAuthoring = !this.appOptions.isLightVersion && Common.LocalSession.canCoAuthoring(this.editorConfig);
                 /** coauthoring end **/
                 this.appOptions.isOffline      = this.api.asc_isOffline();
                 this.appOptions.canCreateNew   = this.appOptions.canCreateNew && !(this.appOptions.isOffline && isPDFViewer);
@@ -1724,7 +1716,7 @@ define([
                 this.appOptions.canUseHistory  = this.appOptions.canLicense && this.editorConfig.canUseHistory && this.appOptions.canCoAuthoring && !this.appOptions.isOffline;
                 this.appOptions.canHistoryClose  = this.editorConfig.canHistoryClose;
                 this.appOptions.canHistoryRestore= this.editorConfig.canHistoryRestore;
-                this.appOptions.canUseMailMerge= this.appOptions.canLicense && this.appOptions.canEdit && !this.appOptions.isOffline && !this.appOptions.isLocalSession;
+                this.appOptions.canUseMailMerge= this.appOptions.canLicense && this.appOptions.canEdit && !this.appOptions.isOffline;
                 this.appOptions.canSendEmailAddresses  = this.appOptions.canLicense && this.editorConfig.canSendEmailAddresses && this.appOptions.canEdit && this.appOptions.canCoAuthoring;
                 this.appOptions.canComments    = this.appOptions.canLicense && (this.permissions.comment===undefined ? this.appOptions.isEdit : this.permissions.comment) && (this.editorConfig.mode !== 'view');
                 this.appOptions.canComments    = !isPDFViewer && this.appOptions.canComments && !((typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.comments===false);
@@ -1742,11 +1734,7 @@ define([
                 this.appOptions.buildVersion   = params.asc_getBuildVersion();
                 this.appOptions.canForcesave   = this.appOptions.isEdit && !this.appOptions.isOffline && (typeof (this.editorConfig.customization) == 'object' && !!this.editorConfig.customization.forcesave);
                 this.appOptions.forcesave      = this.appOptions.canForcesave;
-                if (this.appOptions.isLocalSession) {
-                    // keeps the save button on: every user save exports the document (Common.LocalSession.Host), there is no setting for it
-                    this.appOptions.canForcesave = false;
-                    this.appOptions.forcesave = this.appOptions.isEdit;
-                }
+                Common.LocalSession.applyAppOptions(this.appOptions);
                 this.appOptions.canEditComments= this.appOptions.isOffline || !this.permissions.editCommentAuthorOnly;
                 this.appOptions.canDeleteComments= this.appOptions.isOffline || !this.permissions.deleteCommentAuthorOnly;
                 if ((typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.commentAuthorOnly===true) {
@@ -2667,8 +2655,7 @@ define([
 
             onDownloadUrl: function(url, fileType) {
                 if (this._state.isFromGatewayDownloadAs) {
-                    var blob = this.appOptions.isLocalSession ? this.getApplication().getController('Common.Controllers.LocalSession').getBlob(url) : null;
-                    blob ? Common.Gateway.downloadAsBlob(blob, fileType) : Common.Gateway.downloadAs(url, fileType);
+                    this.appOptions.isLocalSession ? this.getApplication().getController('Common.Controllers.LocalSession').downloadAs(url, fileType) : Common.Gateway.downloadAs(url, fileType);
                 }
                 this._state.isFromGatewayDownloadAs = false;
             },
