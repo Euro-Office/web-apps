@@ -464,13 +464,15 @@ define([
                 if (data.doc) {
                     this.permissions = $.extend(this.permissions, data.doc.permissions);
                     if (this.appOptions.isLocalSession) {
-                        // no DocService: nothing can be saved, so the local session is view only
-                        this.permissions.edit = this.permissions.review = this.permissions.comment = this.permissions.fillForms = this.permissions.protect = this.permissions.chat = false;
-                        data.doc.permissions = this.permissions;
+                        // no DocService: chat and history are off, a viewer gets no editing rights
+                        data.doc.permissions = this.permissions = Common.LocalSession.restrictPermissions(this.permissions, this.editorConfig);
                         this.getApplication().getController('Common.Controllers.LocalSession').start(this.api, {
                             documentType: 'pdf',
                             user: this.appOptions.user,
-                            x2tUrl: this.editorConfig.session.x2tUrl
+                            x2tUrl: this.editorConfig.session.x2tUrl,
+                            mode: this.editorConfig.mode,
+                            session: this.editorConfig.session,
+                            fileType: data.doc.fileType
                         });
                     }
 
@@ -1336,7 +1338,7 @@ define([
                 this.appOptions.canAnalytics   = params.asc_getIsAnalyticsEnable();
                 this.appOptions.canLicense     = (licType === Asc.c_oLicenseResult.Success || licType === Asc.c_oLicenseResult.SuccessLimit);
                 this.appOptions.isLightVersion = params.asc_getIsLight();
-                this.appOptions.canCoAuthoring = !this.appOptions.isLightVersion && !this.appOptions.isLocalSession;
+                this.appOptions.canCoAuthoring = !this.appOptions.isLightVersion && (!this.appOptions.isLocalSession || Common.LocalSession.sessionTransport(this.editorConfig) === 'host');
                 this.appOptions.isOffline      = this.api.asc_isOffline();
                 this.appOptions.canCreateNew   = this.appOptions.canCreateNew && !this.appOptions.isOffline && !this.isForm;
                 this.appOptions.isCrypted      = this.api.asc_isCrypto();

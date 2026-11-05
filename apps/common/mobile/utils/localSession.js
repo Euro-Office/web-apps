@@ -10,13 +10,10 @@
 import { f7 } from 'framework7-react';
 import '../../main/lib/util/LocalSession.js';
 
-export const isLocalSessionConfig = config => !!(config && config.session && config.session.type === 'local');
+export const isLocalSessionConfig = config => Common.LocalSession.isLocalSessionConfig(config);
 
-// Nothing can be saved without a Document Server, so a local session is view only.
-export const restrictLocalSessionPermissions = permissions => {
-    permissions.edit = permissions.review = permissions.comment = permissions.fillForms = permissions.protect = permissions.chat = false;
-    return permissions;
-};
+// Chat needs a Document Server; a viewer (editorConfig.mode 'view') gets no editing rights.
+export const restrictLocalSessionPermissions = (permissions, config) => Common.LocalSession.restrictPermissions(permissions, config);
 
 const appVersion = () => {
     const cropped = /^(\d+\.\d+\.\d+)(?:\.(\d+))?/.exec(__PRODUCT_VERSION__);
