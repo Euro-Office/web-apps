@@ -48,6 +48,14 @@ if (window.Common === undefined) {
                 $me.trigger('opendocumentsource', data);
             },
 
+            'sessionMessage': function(data) {
+                $me.trigger('sessionmessage', [data]);
+            },
+
+            'addSessionMedia': function(data) {
+                $me.trigger('addsessionmedia', [data]);
+            },
+
             'showMessage': function(data) {
                 $me.trigger('showmessage', data);
             },
@@ -177,6 +185,14 @@ if (window.Common === undefined) {
             }
         };
 
+        // commands posted as objects: they carry transferables, Blobs or binary co-editing changes
+        var RAW_COMMANDS = {
+            'openDocumentFromBinary': true,
+            'openDocumentSource': true,
+            'sessionMessage': true,
+            'addSessionMedia': true
+        };
+
         var _postMessage = function(msg, buffer, raw) {
             // TODO: specify explicit origin
             if (window.parent && window.JSON) {
@@ -195,7 +211,7 @@ if (window.Common === undefined) {
             if (msg.origin !== window.parentOrigin && msg.origin !== window.location.origin && !(msg.origin==="null" && (window.parentOrigin==="file://" || window.location.origin==="file://"))) return;
 
             var data = msg.data;
-            if (data && (data.command === 'openDocumentFromBinary' || data.command === 'openDocumentSource')) {
+            if (data && typeof data === 'object' && RAW_COMMANDS[data.command]) {
                 handler = commandMap[data.command];
                 if (handler) {
                     handler.call(this, data.data);
@@ -341,6 +357,34 @@ if (window.Common === undefined) {
                         blob: blob,
                         fileType: fileType
                     }
+                }, null, true);
+            },
+
+            localSessionSave: function(blob, fileType) {
+                _postMessage({
+                    event: 'onLocalSessionSave',
+                    data: {
+                        blob: blob,
+                        fileType: fileType
+                    }
+                }, null, true);
+            },
+
+            localSessionMedia: function(name, blob) {
+                _postMessage({
+                    event: 'onLocalSessionMedia',
+                    data: {
+                        name: name,
+                        blob: blob
+                    }
+                }, null, true);
+            },
+
+            sessionMessage: function(message) {
+                // posted as an object, binary changes survive the structured clone
+                _postMessage({
+                    event: 'onSessionMessage',
+                    data: message
                 }, null, true);
             },
 

@@ -21,7 +21,9 @@
                 url: 'document url', // required unless "source" is set
                 source: { // local session (editorConfig.session.type = 'local'): the file itself instead of a url
                     data: <ArrayBuffer | Blob | Uint8Array>,
-                    media: { 'image1.png': <Blob> } // optional, pre-extracted media
+                    format: 'bin', // optional: data is already the editor binary (Editor.bin), no conversion on open
+                    media: { 'image1.png': <Blob> }, // optional, pre-extracted media (also with format 'bin')
+                    changes: [ <changes> ] // optional, replayed on open: DocService records {docid, change, time, user, useridoriginal}, change strings (attributed to this user), the "changes" of saveChanges messages sdkjs sent or those messages
                 },
                 fileType: 'document file type',
                 options: <advanced options>,
@@ -75,7 +77,16 @@
                 },
                 mode: 'view or edit',
                 session: {
-                    type: 'server' | 'local', // 'local' opens document.source in the browser without a Document Server (view only); default 'server'
+                    type: 'server' | 'local', // 'local' opens document.source in the browser without a Document Server; default 'server'.
+                                              // mode 'edit' needs permissions.edit !== false, otherwise and by default a local session is a viewer.
+                                              // chat and version history are off, pdf/djvu/xps are view only
+                    transport: 'self' | 'host', // local session only. 'self' (default): single user, the editor answers itself.
+                                                // 'host': co-editing; the messages sdkjs sends reach onSessionMessage and the host answers
+                                                // with sendSessionMessage like a Document Server would (getLock, saveChanges, connectState...).
+                                                // After the document opened, onSessionMessage gets {type: 'sessionAuth', user, indexUser, connectionId}:
+                                                // connectionId (user.id + indexUser) owns this editor's locks and changes
+                    indexUser: <integer>, // optional, default 0: the connection index, so co-editors with the same user id get different connection ids
+                    participants: [ <participant> ], // optional, transport 'host': the other users for the auth reply ({id, idOriginal, username, indexUser, view})
                     x2tUrl: 'url of the x2t directory' // optional, defaults to the one shipped next to web-apps
                 },
                 lang: <language code>,
@@ -318,6 +329,9 @@
                 'onOutdatedVersion': <outdated version callback>,// send when  previous version is opened, deprecated: use onRequestRefreshFile/refreshFile instead
                 'onDownloadAs': <download as callback>,// send url of downloaded file as a response for downloadAs method. in a local session data.blob is set as well and data.url is an object url
                 'onLocalSessionProgress': <local session progress callback>,// data: {phase: 'load'|'convert'|'open', percent}
+                'onLocalSessionSave': <local session save callback>,// the user saved (save button, Ctrl+S; also without changes, never on autosave): data: {blob, fileType}, the document exported to document.fileType (or docx/xlsx/pptx when that cannot be written)
+                'onLocalSessionMedia': <local session image callback>,// the user inserted an image: data: {name, blob}, name like 'image7.png' (sdkjs refers to it as 'media/image7.png'). other users of a 'host' session need it through addSessionMedia
+                'onSessionMessage': <local session message callback>,// transport 'host': data is a message sdkjs sent to the Document Server, the host answers with sendSessionMessage
                 'onRequestSaveAs': <try to save copy of the document>,
                 'onCollaborativeChanges': <co-editing changes callback>,// send when other user co-edit document
                 'onRequestRename': <try to rename document>,
@@ -422,18 +436,39 @@
 
         var _isLocalSession = !!(_config.editorConfig.session && _config.editorConfig.session.type === 'local');
         if (_isLocalSession) {
-            // A local session has no DocService: nothing can be saved or co-edited.
-            _config.editorConfig.canCoAuthoring = false;
-            if (_config.editorConfig.mode !== 'view') {
-                console.warn("A local session is view only, editorConfig.mode is set to 'view'.");
+            // A local session has no DocService: the editor saves through onLocalSessionSave and
+            // co-edits only through the host page ('host' transport).
+            var _session = _config.editorConfig.session;
+            if (_session.transport !== undefined && _session.transport !== 'self' && _session.transport !== 'host')
+                console.warn("editorConfig.session.transport must be 'self' or 'host', 'self' is used.");
+            _session.transport = _session.transport === 'host' ? 'host' : 'self';
+            if (_session.indexUser !== undefined && !(typeof _session.indexUser === 'number' && _session.indexUser >= 0 && _session.indexUser % 1 === 0)) {
+                console.warn("editorConfig.session.indexUser must be a non-negative integer, 0 is used.");
+                delete _session.indexUser;
+            }
+            if (_session.participants !== undefined && !Array.isArray(_session.participants)) {
+                console.warn("editorConfig.session.participants must be an array.");
+                delete _session.participants;
+            }
+            if (_session.transport === 'self')
+                _config.editorConfig.canCoAuthoring = false;
+            _config.editorConfig.canUseHistory = false;
+
+            var _permissions = _config.document ? (_config.document.permissions = _config.document.permissions || {}) : {};
+            var _isViewerType = /^(pdf|djvu|xps|oxps)$/.test(_config.document && typeof _config.document.fileType === 'string' ? _config.document.fileType.toLowerCase() : '') ||
+                                _config.documentType === 'pdf';
+            if (_config.editorConfig.mode === 'edit' && _permissions.edit !== false && !_isViewerType) {
+                _permissions.chat = false;
+            } else {
+                if (_config.editorConfig.mode !== undefined && _config.editorConfig.mode !== 'view')
+                    console.warn(_isViewerType ? "This file type is view only in a local session, editorConfig.mode is set to 'view'." :
+                                                 "editorConfig.mode 'edit' needs document.permissions.edit, editorConfig.mode is set to 'view'.");
                 _config.editorConfig.mode = 'view';
+                _permissions.edit = false;
+                _permissions.chat = false;
             }
-            if (_config.document) {
-                if (_config.document.url || _config.document.key || _config.editorConfig.callbackUrl)
-                    console.warn("document.url, document.key and editorConfig.callbackUrl are ignored in a local session.");
-                _config.document.permissions = _config.document.permissions || {};
-                _config.document.permissions.edit = false;
-            }
+            if (_config.document && (_config.document.url || _config.document.key || _config.editorConfig.callbackUrl))
+                console.warn("document.url, document.key and editorConfig.callbackUrl are ignored in a local session.");
         }
 
         var onMouseUp = function (evt) {
@@ -469,6 +504,40 @@
                 else
                     _openDocument(_config.document);
             }
+        };
+
+        // local session: commands for the editor frame wait until its Gateway listens
+        var _sessionQueue = [],
+            _sessionReady = false;
+
+        var _sendSessionCommand = function(cmd) {
+            if (!_isLocalSession) {
+                console.warn("sendSessionMessage and addSessionMedia need editorConfig.session.type 'local'.");
+                return;
+            }
+            _sessionReady ? _sendCommand(cmd, null, true) : _sessionQueue.push(cmd);
+        };
+
+        var _flushSessionQueue = function() {
+            _sessionReady = true;
+            var queue = _sessionQueue;
+            _sessionQueue = [];
+            for (var i = 0; i < queue.length; i++)
+                _sendCommand(queue[i], null, true);
+        };
+
+        var _sendSessionMessage = function(message) {
+            message && _sendSessionCommand({
+                command: 'sessionMessage',
+                data: message
+            });
+        };
+
+        var _addSessionMedia = function(media) {
+            media && _sendSessionCommand({
+                command: 'addSessionMedia',
+                data: media
+            });
         };
 
         var _onMessage = function(msg) {
@@ -656,9 +725,9 @@
             }
         };
 
-        var _sendCommand = function(cmd, buffer) {
+        var _sendCommand = function(cmd, buffer, raw) {
             if (iframe && iframe.contentWindow)
-                postMessage(iframe.contentWindow, cmd, buffer);
+                postMessage(iframe.contentWindow, cmd, buffer, raw);
         };
 
         var _init = function(editorConfig) {
@@ -717,10 +786,13 @@
                         buffer: buffer,
                         name: doc.title,
                         fileType: doc.fileType,
-                        media: doc.source.media || null
+                        format: doc.source.format === 'bin' ? 'bin' : undefined,
+                        media: doc.source.media || null,
+                        changes: doc.source.changes || null
                     }
                 }, buffer);
                 _openDocument(docWithoutSource);
+                _flushSessionQueue();
             }, function(error) {
                 var handler = _config.events && _config.events.onError;
                 handler && handler.call(_self, {target: _self, data: {errorCode: -101, errorDescription: String(error && error.message || error)}});
@@ -1024,7 +1096,9 @@
             setReferenceSource: _setReferenceSource,
             openDocument: _openDocumentFromBinary,
             startFilling: _startFilling,
-            requestRoles: _requestRoles
+            requestRoles: _requestRoles,
+            sendSessionMessage: _sendSessionMessage, // local session, transport 'host': deliver a message to sdkjs as if the Document Server sent it
+            addSessionMedia: _addSessionMedia // local session: {name: <Blob | ArrayBuffer>}, media inserted elsewhere (onLocalSessionMedia of another user)
         }
     };
 
@@ -1047,9 +1121,12 @@
         return '{{PRODUCT_VERSION}}';
     };
 
-    // Feature detection for integrators: a local session opens document.source in the browser without a Document Server
+    // Feature detection for integrators: a local session opens document.source in the browser without a Document Server,
+    // can edit it (onLocalSessionSave) and co-edit through the host page (session.transport 'host')
     DocsAPI.DocEditor.capabilities = {
-        localSession: true
+        localSession: true,
+        localSessionEditing: true,
+        localSessionHostTransport: true
     };
 
     DocsAPI.DocEditor.warmUp = function(id) {
@@ -1382,10 +1459,10 @@
         return iframe;
     }
 
-    function postMessage(wnd, msg, buffer) {
+    function postMessage(wnd, msg, buffer, raw) {
         if (wnd && wnd.postMessage && window.JSON) {
             // TODO: specify explicit origin
-            buffer ? wnd.postMessage(msg, "*", [buffer]) : wnd.postMessage(window.JSON.stringify(msg), "*");
+            buffer ? wnd.postMessage(msg, "*", [buffer]) : raw ? wnd.postMessage(msg, "*") : wnd.postMessage(window.JSON.stringify(msg), "*");
         }
     }
 

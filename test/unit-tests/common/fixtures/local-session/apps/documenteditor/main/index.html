@@ -23,8 +23,16 @@
                 name: payload.name,
                 fileType: payload.fileType,
                 mediaNames: payload.media ? Object.keys(payload.media) : null,
-                mediaAreBlobs: payload.media ? Object.keys(payload.media).every(function (k) { return payload.media[k] instanceof Blob; }) : null
+                mediaAreBlobs: payload.media ? Object.keys(payload.media).every(function (k) { return payload.media[k] instanceof Blob; }) : null,
+                format: payload.format,
+                changes: payload.changes || null
             };
+            if (data && data.command === 'sessionMessage')
+                summary.message = data.data;
+            if (data && data.command === 'addSessionMedia') {
+                summary.mediaNames = Object.keys(data.data);
+                summary.mediaAreBlobs = summary.mediaNames.every(function (k) { return data.data[k] instanceof Blob; });
+            }
         }
         window.parent.postMessage({apiTestFrame: true, summary: summary}, '*');
     });
