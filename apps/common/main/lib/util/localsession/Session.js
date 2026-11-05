@@ -49,10 +49,24 @@ define([
      * @param {function(string, string)} [options.registerImageUrl] makes a media url known to sdkjs (g_oDocumentUrls)
      * @param {function(): number} [options.now]
      */
+    // import() resolves a relative url against the importing script, which is
+    // two folders deeper in the mobile bundle (mobile/dist/js/app.js) than in
+    // the desktop one, so resolve against the editor page instead. The page is
+    // <ds>/web-apps/apps/<editor>/<main|mobile>/index.html, x2t lives at <ds>/x2t/.
+    function x2tBaseUrl(url) {
+        var base = window.location && window.location.href;
+        url = url || '../../../../x2t/';
+        try {
+            return base ? new URL(url, base).href : url;
+        } catch (e) {
+            return url;
+        }
+    }
+
     function Session(options) {
         options = options || {};
         this.loadConverter = options.loadConverter;
-        this.x2tUrl = options.x2tUrl || '../../../../x2t/';
+        this.x2tUrl = x2tBaseUrl(options.x2tUrl);
         this.getFonts = options.getFonts || function () { return undefined; };
         this.getThemes = options.getThemes || function () { return undefined; };
         this.getVersion = options.getVersion || function () { return {buildVersion: '', buildNumber: 0}; };

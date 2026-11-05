@@ -100,6 +100,13 @@ define([
     }
 
     describe('Common.LocalSession.Session', function () {
+        it('resolves the x2t url against the editor page, not the bundle', function () {
+            var page = window.location.href;
+            assert.equal(new Session({}).x2tUrl, new URL('../../../../x2t/', page).href);
+            assert.equal(new Session({x2tUrl: 'conv/'}).x2tUrl, new URL('conv/', page).href);
+            assert.equal(new Session({x2tUrl: 'https://cdn.example/x2t/'}).x2tUrl, 'https://cdn.example/x2t/');
+        });
+
         it('answers auth with license, authChanges, auth and documentOpen built from the converted source', function () {
             var converter = stubConverter();
             var t = createSession(converter);
@@ -857,7 +864,7 @@ define([
                 assert.strictEqual(registered, host.session.getTransport());
                 assert.equal(host.session.transportType, 'host');
                 assert.equal(host.session.indexUser, 2);
-                assert.equal(host.session.x2tUrl, 'x/');
+                assert.equal(host.session.x2tUrl, new URL('x/', window.location.href).href);
                 assert.equal(host.session.saveFormat, 'odt');
                 assert.equal(host.session.getUserId(), 'u2');
 
