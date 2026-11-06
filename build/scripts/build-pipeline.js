@@ -65,6 +65,11 @@ const THEME = process.env.THEME || 'euro-office';
 // pipeline could silently emit a dev mobile bundle. Overridable: NODE_ENV=development.
 const NODE_ENV = process.env.NODE_ENV || 'production';
 
+// verify-deploy fails on bundles older than this, so a stale bundle left in
+// BUILD_ROOT by a failed build is never shipped. Floored to whole seconds for
+// filesystems with coarse mtime resolution.
+const BUILD_STARTED_AT_MS = String(Math.floor(Date.now() / 1000) * 1000);
+
 // Env passed to every child process
 const CHILD_ENV = {
     ...process.env,
@@ -73,6 +78,7 @@ const CHILD_ENV = {
     BUILD_NUMBER,
     THEME,
     NODE_ENV,
+    BUILD_STARTED_AT_MS,
     // Never inherit watch mode from the parent shell — a watching mobile child
     // (webpack.config.js: watch === WATCH==='1') never exits and hangs the pipeline.
     WATCH: '0',
@@ -104,8 +110,10 @@ function task(label, cmd, args = [], opts = {}) {
 
 // Spawns a task spec. Returns { promise, kill, label }.
 // promise resolves to { label, ms, code } where code=-1 means killed by phase abort.
+// Any other signal (e.g. the OOM killer's SIGKILL) is a failure.
 function runTask({ label, cmd, args, opts = {} }) {
     let child = null;
+    let killedByPhase = false;
     const promise = new Promise(resolve => {
         const start = Date.now();
         const paddedLabel = label.padEnd(PAD);
@@ -134,7 +142,7 @@ function runTask({ label, cmd, args, opts = {} }) {
 
         child.on('exit', (code, signal) => {
             const ms = Date.now() - start;
-            if (signal) {
+            if (signal && killedByPhase) {
                 process.stdout.write(`  ${DIM('○')} ${paddedLabel} ${DIM('killed ' + elapsed(ms))}\n`);
                 if (stderrBuf.length) process.stderr.write(stderrBuf.join(''));
                 resolve({ label, ms, code: -1 });
@@ -142,13 +150,18 @@ function runTask({ label, cmd, args, opts = {} }) {
                 process.stdout.write(`  ${GREEN('✓')} ${paddedLabel} ${DIM(elapsed(ms))}\n`);
                 resolve({ label, ms, code: 0 });
             } else {
-                process.stdout.write(`  ${RED('✗')} ${paddedLabel} ${RED('FAILED')} ${DIM(elapsed(ms))}\n`);
+                const reason = signal ? `FAILED (${signal})` : 'FAILED';
+                process.stdout.write(`  ${RED('✗')} ${paddedLabel} ${RED(reason)} ${DIM(elapsed(ms))}\n`);
                 if (stderrBuf.length) process.stderr.write(stderrBuf.join(''));
-                resolve({ label, ms, code });
+                resolve({ label, ms, code: code || 1 });
             }
         });
     });
-    return { promise, kill: () => child && child.kill('SIGTERM'), label };
+    const kill = () => {
+        killedByPhase = true;
+        if (child) child.kill('SIGTERM');
+    };
+    return { promise, kill, label };
 }
 
 // Word-wrap a list of labels into indented lines separated by ' · '.
@@ -324,7 +337,11 @@ async function main() {
     ].join('\n'));
 }
 
-main().catch(err => {
-    process.stderr.write(RED(`\nFatal: ${err.message || err}\n`));
-    process.exit(1);
-});
+if (require.main === module) {
+    main().catch(err => {
+        process.stderr.write(RED(`\nFatal: ${err.message || err}\n`));
+        process.exit(1);
+    });
+}
+
+module.exports = { task, phase };

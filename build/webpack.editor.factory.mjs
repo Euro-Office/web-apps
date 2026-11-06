@@ -97,6 +97,9 @@ export function editorConfig(editorName, opts = {}) {
             clean: false,
             // asyncChunks:false keeps all AMD require() calls bundled synchronously.
             asyncChunks: false,
+            // Always rewrite outputs, even when unchanged, so verify-deploy can tell a
+            // rebuilt bundle from one left over by a previous build (mtime check).
+            compareBeforeEmit: false,
         },
 
         resolve: {

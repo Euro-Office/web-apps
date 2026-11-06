@@ -36,3 +36,7 @@ jobs:
         env:
           PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
         run: npm test
+
+      - name: Run build script tests
+        working-directory: build
+        run: npm run test:scripts

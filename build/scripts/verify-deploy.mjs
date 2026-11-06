@@ -35,21 +35,31 @@ const BUILD_ROOT = process.env.BUILD_ROOT
 
 const BUILD_OUT = path.join(BUILD_ROOT, 'web-apps');
 
+// Set by build-pipeline.js. Bundles checked with { fresh: true } must have been
+// written by this run: a killed webpack leaves the previous build's bundle in place.
+const BUILD_STARTED_AT_MS = Number(process.env.BUILD_STARTED_AT_MS) || 0;
+
 const EDITORS        = ['documenteditor', 'spreadsheeteditor', 'presentationeditor', 'visioeditor', 'pdfeditor'];
 const EMBED_EDITORS  = ['documenteditor', 'spreadsheeteditor', 'presentationeditor', 'visioeditor'];
 const MOBILE_EDITORS = ['documenteditor', 'spreadsheeteditor', 'presentationeditor', 'visioeditor'];
 
 let failed = false;
 
-function checkFile(rel) {
+function checkFile(rel, { fresh = false } = {}) {
     const abs = path.join(BUILD_OUT, rel);
     if (!fs.existsSync(abs)) {
         console.error(`verify-deploy: MISSING      ${rel}`);
         failed = true;
         return;
     }
-    if (fs.statSync(abs).size === 0) {
+    const stat = fs.statSync(abs);
+    if (stat.size === 0) {
         console.error(`verify-deploy: EMPTY        ${rel}`);
+        failed = true;
+        return;
+    }
+    if (fresh && stat.mtimeMs < BUILD_STARTED_AT_MS) {
+        console.error(`verify-deploy: STALE        ${rel} (not rebuilt by this run)`);
         failed = true;
         return;
     }
@@ -79,18 +89,18 @@ for (const v of VENDORS) {
 
 // ---- embed bundles (4 editors; pdfeditor has no embed) ----------------------
 for (const ed of EMBED_EDITORS) {
-    checkFile(`apps/${ed}/embed/app-all.js`);
+    checkFile(`apps/${ed}/embed/app-all.js`, { fresh: true });
 }
 
-// ---- main bundles (6 editors) -----------------------------------------------
+// ---- main bundles (5 editors) -----------------------------------------------
 for (const ed of EDITORS) {
-    checkFile(`apps/${ed}/main/app.js`);
-    checkFile(`apps/${ed}/main/code.js`);
+    checkFile(`apps/${ed}/main/app.js`, { fresh: true });
+    checkFile(`apps/${ed}/main/code.js`, { fresh: true });
 }
 
 // ---- forms ------------------------------------------------------------------
-checkFile('apps/documenteditor/forms/app.js');
-checkFile('apps/documenteditor/forms/code.js');
+checkFile('apps/documenteditor/forms/app.js', { fresh: true });
+checkFile('apps/documenteditor/forms/code.js', { fresh: true });
 
 // ---- mobile -------------------------------------------------------------
 for (const ed of MOBILE_EDITORS) {
