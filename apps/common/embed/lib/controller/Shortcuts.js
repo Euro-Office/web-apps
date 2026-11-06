@@ -323,7 +323,9 @@
 
             if (wFirst !== wSecond) return wFirst - wSecond;
 
-            return first.ascShortcut.asc_GetKeyCode() - second.ascShortcut.asc_GetKeyCode();
+            // Same weight: keep the order the editor defines, so the primary
+            // shortcut (Ctrl+C rather than Ctrl+Insert) comes first.
+            return 0;
         };
 
         // Utils
