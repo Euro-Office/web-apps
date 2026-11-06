@@ -98,6 +98,9 @@ for (const ed of EDITORS) {
     checkFile(`apps/${ed}/main/code.js`, { fresh: true });
 }
 
+// ---- sprites generated into apps/ by deploy-sprites --------------------------
+checkFile('apps/common/main/resources/img/doc-formats/formats@2.5x.svg');
+
 // ---- forms ------------------------------------------------------------------
 checkFile('apps/documenteditor/forms/app.js', { fresh: true });
 checkFile('apps/documenteditor/forms/code.js', { fresh: true });
