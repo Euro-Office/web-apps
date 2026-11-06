@@ -70,6 +70,7 @@ define([
                 '</div>' +
                 '<div class="elset">' +
                     '<span class="btn-slot text" id="slot-btn-multiple-pages" style="text-align: center;"></span>' +
+                    '<span class="btn-slot text" id="slot-btn-pageless" style="text-align: center;"></span>' +
                 '</div>' +
             '</div>' +
             '<div class="separator long"></div>' +
@@ -153,6 +154,9 @@ define([
                 }, me));
                 me.btnMultiplePages.on('click', _.bind(function (e) {
                     me.fireEvent('pages:multiple', [e.pressed]);
+                }, me));
+                me.btnPageless.on('click', _.bind(function (e) {
+                    me.fireEvent('pages:pageless', [e.pressed]);
                 }, me));
                 me.btnZoom100.on('click', _.bind(function (e) {
                     me.fireEvent('zoom:100');
@@ -313,6 +317,19 @@ define([
                 });
                 this.lockedControls.push(this.btnMultiplePages);
 
+                this.btnPageless = new Common.UI.Button({
+                    cls: 'btn-toolbar',
+                    iconCls: 'toolbar__icon btn-multiple-pages',
+                    lock: [_set.lostConnect, _set.disableOnStart],
+                    caption: this.textPageless,
+                    pressed: Common.localStorage.getBool("de-pageless-mode", false),
+                    enableToggle: true,
+                    dataHint: '1',
+                    dataHintDirection: 'bottom',
+                    dataHintOffset: 'small',
+                });
+                this.lockedControls.push(this.btnPageless);
+
                 this.btnZoom100 = new Common.UI.Button({
                     cls: 'btn-toolbar',
                     iconCls: 'toolbar__icon btn-zoom-100',
@@ -440,6 +457,7 @@ define([
                 this.btnInterfaceTheme.render($host.find('#slot-btn-interface-theme'));
                 this.btnDarkDocument.render($host.find('#slot-btn-dark-document'));
                 this.btnMultiplePages.render($host.find('#slot-btn-multiple-pages'));
+                this.btnPageless.render($host.find('#slot-btn-pageless'));
                 this.btnZoom100.render($host.find('#slot-btn-zoom-100'));
                 this.chStatusbar.render($host.find('#slot-chk-statusbar'));
                 this.chToolbar.render($host.find('#slot-chk-toolbar'));
@@ -545,6 +563,7 @@ define([
             textAlwaysShowToolbar: 'Always show toolbar',
             textRulers: 'Rulers',
             textDarkDocument: 'Dark document',
+            textPageless: 'Pageless',
             tipHeadings: 'Headings',
             tipFitToPage: 'Fit to page',
             tipFitToWidth: 'Fit to width',
