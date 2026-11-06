@@ -334,6 +334,7 @@
                 'onRequestFillingStatus': <request filling status for current role> // used in pdf-form fill forms mode
                 'onRequestSmartPicker': <request to open the Nextcloud Smart Picker>
                 'onStartFilling': <send when can start filling (form is completed and users are disconnected)> // send after startFilling method, used in pdf-form editing
+                'onUserActivity': <user is working in the editor> // send on keyboard, pointer or wheel input, at most every 10 seconds; for hosts with an idle logout
             }
         }
 
@@ -408,6 +409,7 @@
         _config.editorConfig.canRequestRefreshFile = _config.events && !!_config.events.onRequestRefreshFile;
         _config.editorConfig.canUpdateVersion = _config.events && !!_config.events.onOutdatedVersion;
         _config.editorConfig.canRequestFillingStatus = _config.events && !!_config.events.onRequestFillingStatus;
+        _config.editorConfig.canReportUserActivity = _config.events && !!_config.events.onUserActivity;
         _config.frameEditorId = placeholderId;
         _config.parentOrigin = window.location.origin;
 
