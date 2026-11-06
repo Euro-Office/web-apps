@@ -527,6 +527,8 @@
     <path d="M6.5 21.5h11m-9-10h11m-13-5h11m-7 10h11" class="icon-stroke-gray-primary"/>
 </symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-big-more">
     <path stroke-width="1.5" d="M14.75 14a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm-6 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" class="icon-stroke-gray-primary"/>
+</symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-big-nc-add">
+    <path d="M 5.5,14 22.5,14 M 14,5.5 14,22.5" class="icon-stroke-gray-primary"/>
 </symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-big-sheet-view">
     <path d="M14 20.5c-6.5 0-9.5-6.5-9.5-6.5s3-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3 6.5-9.5 6.5Z" class="icon-stroke-gray-primary"/>
     <path d="M16.5 14c0 .74-.322 1.406-.833 1.863A2.5 2.5 0 1 1 16.5 14Z" class="icon-stroke-gray-primary"/>
