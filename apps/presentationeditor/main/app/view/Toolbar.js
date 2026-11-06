@@ -2125,8 +2125,16 @@ define([
                     this.lockToolbar(Common.enumLock.cantPrint, !mode.canPrint, {array: [this.btnPrint]});
                     !mode.canPrint && this.btnPrint.hide();
                 }
+                // presenter view opens a second editor page that needs the DocService
+                mode.isLocalSession && this.hidePresenterView();
 
                 this.mode = mode;
+            },
+
+            hidePresenterView: function () {
+                var menu = this.btnPreview && this.btnPreview.menu;
+                var item = menu && _.find(menu.items, function (item) { return (item.value === 2) || (item.options && item.options.value === 2); });
+                item && item.setVisible(false);
             },
 
             onSendThemeColorSchemes: function (schemas) {
