@@ -25,8 +25,8 @@ define([
                     handlers[type] = handler;
                 }
             };
-            activity = Common.UserActivity(target, function() { sent++; }, function() { return clock; }, 10000);
-            activity.start();
+            activity = Common.UserActivity(function() { sent++; }, function() { return clock; }, 10000);
+            activity.listen(target);
         });
 
         it('listens for the same inputs as Nextcloud core', function() {
@@ -70,12 +70,12 @@ define([
             assert.equal(sent, 1);
         });
 
-        it('registers its listeners once when started twice', function() {
-            var count = 0;
-            var other = Common.UserActivity({addEventListener: function() { count++; }}, function() {}, function() { return 0; }, 10000);
-            other.start();
-            other.start();
-            assert.equal(count, 5);
+        it('counts input in a second window, such as the presenter view, through the same throttle', function() {
+            var popup = {};
+            activity.listen({addEventListener: function(type, handler) { popup[type] = handler; }});
+            popup.keydown({type: 'keydown', isTrusted: true});
+            fire('keydown');
+            assert.equal(sent, 1);
         });
     });
 });

@@ -33,18 +33,16 @@ if (window.Common === undefined) {
      * fires while the user is working in the editor. Sends on the first input, then at most once
      * per interval while input continues.
      *
-     * @param {EventTarget} target where to listen, normally window
      * @param {function()} send
      * @param {function(): number} now clock in milliseconds
      * @param {number} interval minimum milliseconds between two sends
      */
-    Common.UserActivity = function(target, send, now, interval) {
+    Common.UserActivity = function(send, now, interval) {
         // Same inputs as Nextcloud core's idle tracking; pointerdown also covers touch and pen
         var events = ['pointerdown', 'keydown', 'beforeinput', 'wheel', 'mousemove'],
             lastSent = null,
             lastX = null,
-            lastY = null,
-            started = false;
+            lastY = null;
 
         var mark = function() {
             var t = now();
@@ -69,9 +67,8 @@ if (window.Common === undefined) {
         return {
             mark: mark,
 
-            start: function() {
-                if (started) return;
-                started = true;
+            // Call once per window: the editor's own, and any window it opens such as the presenter view
+            listen: function(target) {
                 for (var i = 0; i < events.length; i++) {
                     target.addEventListener(events[i], onInput, {capture: true, passive: true});
                 }
@@ -287,12 +284,11 @@ if (window.Common === undefined) {
         };
 
         var _startUserActivity = function() {
-            if (!userActivity) {
-                userActivity = Common.UserActivity(window, function() {
-                    _postMessage({ event: 'onUserActivity' });
-                }, Date.now, 10000);
-            }
-            userActivity.start();
+            if (userActivity) return;
+            userActivity = Common.UserActivity(function() {
+                _postMessage({ event: 'onUserActivity' });
+            }, Date.now, 10000);
+            userActivity.listen(window);
         };
 
         var fn = function(e) { _onMessage(e); };
@@ -548,6 +544,11 @@ if (window.Common === undefined) {
             // input reaches the host through this frame's throttle; undefined when the host did not ask
             getUserActivityHandler: function() {
                 return userActivity ? userActivity.mark : undefined;
+            },
+
+            // Counts input in a same-origin window this editor opened (the presenter view) as activity
+            trackUserActivityIn: function(win) {
+                userActivity && userActivity.listen(win);
             },
 
             on: function(event, handler){
