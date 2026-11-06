@@ -31,7 +31,27 @@
             'backbone'          : '../vendor/backbone/backbone',
             'bootstrap'         : '../vendor/bootstrap/dist/js/bootstrap',
             'perfectscrollbar'  : '../vendor/perfect-scrollbar/src/perfect-scrollbar',
-            'jmousewheel'       : '../vendor/perfect-scrollbar/src/jquery.mousewheel'
+            'jmousewheel'       : '../vendor/perfect-scrollbar/src/jquery.mousewheel',
+            'text'              : '../vendor/requirejs-text/text'
+        },
+        // The editor views pull in their settings panels and controls; the
+        // tests only drive the view's own logic, so stand those in with a stub.
+        map: {
+            'documenteditor/main/app/view/RightMenu': {
+                'common/main/lib/component/MetricSpinner'      : '../test/unit-tests/stub',
+                'common/main/lib/component/CheckBox'           : '../test/unit-tests/stub',
+                'common/main/lib/component/Scroller'           : '../test/unit-tests/stub',
+                'common/main/lib/component/ListView'           : '../test/unit-tests/stub',
+                'documenteditor/main/app/view/ParagraphSettings': '../test/unit-tests/stub',
+                'documenteditor/main/app/view/ImageSettings'    : '../test/unit-tests/stub',
+                'documenteditor/main/app/view/ChartSettings'    : '../test/unit-tests/stub',
+                'documenteditor/main/app/view/TableSettings'    : '../test/unit-tests/stub',
+                'documenteditor/main/app/view/ShapeSettings'    : '../test/unit-tests/stub',
+                'documenteditor/main/app/view/MailMergeSettings': '../test/unit-tests/stub',
+                'documenteditor/main/app/view/TextArtSettings'  : '../test/unit-tests/stub',
+                'documenteditor/main/app/view/SignatureSettings': '../test/unit-tests/stub',
+                'documenteditor/main/app/view/FormSettings'     : '../test/unit-tests/stub'
+            }
         },
         shim: {
             backbone: {
@@ -102,7 +122,8 @@
             require([
                 './main/lib/util/utils.js',
                 './main/lib/component/Button.js',
-                './main/lib/component/MenuItem.js'
+                './main/lib/component/MenuItem.js',
+                '../documenteditor/main/app/view/RightMenu.js'
             ], runMocha);
         });
     });
