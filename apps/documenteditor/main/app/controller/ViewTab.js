@@ -85,6 +85,7 @@ define([
                     'zoom:100': _.bind(this.onZoomTo100, this),
                     'rulers:change': _.bind(this.onChangeRulers, this),
                     'darkmode:change': _.bind(this.onChangeDarkMode, this),
+                    'zenmode:request': _.bind(this.onChangeZenMode, this),
                     'macros:click':  _.bind(this.onClickMacros, this),
                     'macros:record':  _.bind(this.onClickMacrosRec, this),
                     'macros:pause':  _.bind(this.onClickMacrosPause, this),
@@ -420,6 +421,12 @@ define([
                 Common.UI.Themes.setContentTheme(isdarkmode?'dark':'light');
             } else
                 this.onContentThemeChangedToDark(Common.UI.Themes.isContentThemeDark());
+        },
+
+        onChangeZenMode: function () {
+            Common.NotificationCenter.trigger('zenmode:request', true);
+            // return the focus to the document: the Zen Mode button keeps it and is then hidden
+            Common.NotificationCenter.trigger('edit:complete', this.view);
         },
 
         onContentThemeChangedToDark: function (isdark) {
