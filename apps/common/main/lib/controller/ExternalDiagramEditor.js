@@ -76,7 +76,8 @@ define([
                     'onDocumentStateChange' : function() {},
                     'onError'               : function() {},
                     'onRequestOpen'         : canRequestOpen ? this.onRequestOpen : undefined,
-                    'onInternalMessage'     : _.bind(this.onInternalMessage, this)
+                    'onInternalMessage'     : _.bind(this.onInternalMessage, this),
+                    'onUserActivity'        : Common.Gateway.getUserActivityHandler()
                 }
             });
             Common.Gateway.on('processmouse', _.bind(this.onProcessMouse, this));
