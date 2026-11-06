@@ -72,7 +72,8 @@ define([
                     'onAppReady'            : function() {},
                     'onDocumentStateChange' : function() {},
                     'onError'               : function() {},
-                    'onInternalMessage'     : _.bind(this.onInternalMessage, this)
+                    'onInternalMessage'     : _.bind(this.onInternalMessage, this),
+                    'onUserActivity'        : Common.Gateway.getUserActivityHandler()
                 }
             });
             Common.Gateway.on('processmouse', _.bind(this.onProcessMouse, this));
