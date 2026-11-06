@@ -61,6 +61,15 @@ require([
 ], function (_) {
     window._ = _
 
+    // The editor that opened this window reports input here as user activity to its host page.
+    // Optional: an opener this page cannot reach must not stop the presenter view from starting.
+    try {
+        var openerGateway = window.opener && window.opener.Common && window.opener.Common.Gateway;
+        openerGateway && openerGateway.trackUserActivityIn && openerGateway.trackUserActivityIn(window);
+    } catch (e) {
+        console.warn('Presenter view input is not reported as user activity', e);
+    }
+
     var _msg_func = function(msg) {
         var data = msg.data, cmd;
 
