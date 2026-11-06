@@ -32,6 +32,8 @@
 var SCALE_MIN = 40;
 var MENU_SCALE_PART = 260;
 var MENU_BASE_WIDTH = 220;
+var MENU_MIN_WIDTH = 260;
+var MENU_MAX_WIDTH = 600;
 
 define([
     'text!presentationeditor/main/app/template/RightMenu.template',
@@ -281,7 +283,7 @@ define([
                 if(isPlugin && widthFromStorage) {
                     this.$el.width(parseInt(widthFromStorage));
                 } else {
-                    this.setInnerWidth(MENU_BASE_WIDTH);
+                    this.setInnerWidth(isPlugin && btn.options.pluginWidth || MENU_BASE_WIDTH);
                 }
                 Common.NotificationCenter.trigger('layout:changed', 'rightmenu');
 
@@ -362,7 +364,7 @@ define([
         setInnerWidth: function(value) {
             const pane = $(this.el).find('.right-panel');
             const paddings = parseInt(pane.css('padding-left')) + parseInt(pane.css('padding-right'));
-            MENU_SCALE_PART = value + paddings;
+            MENU_SCALE_PART = Math.min(Math.max(value + paddings, MENU_MIN_WIDTH), MENU_MAX_WIDTH);
             this.$el.css('width', (!Common.Utils.InternalSettings.get("pe-hide-right-settings") ? MENU_SCALE_PART : SCALE_MIN) + 'px');
         },
 
