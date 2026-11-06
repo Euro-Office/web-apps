@@ -27,12 +27,68 @@ if (window.Common === undefined) {
     window.Common = {};
 }
 
+    /**
+     * Reports user input in this frame through send(). The host page cannot see input inside a
+     * cross-origin frame, so without this an idle logout on the host (e.g. Nextcloud's auto_logout)
+     * fires while the user is working in the editor. Sends on the first input, then at most once
+     * per interval while input continues.
+     *
+     * @param {EventTarget} target where to listen, normally window
+     * @param {function()} send
+     * @param {function(): number} now clock in milliseconds
+     * @param {number} interval minimum milliseconds between two sends
+     */
+    Common.UserActivity = function(target, send, now, interval) {
+        // Same inputs as Nextcloud core's idle tracking; pointerdown also covers touch and pen
+        var events = ['pointerdown', 'keydown', 'beforeinput', 'wheel', 'mousemove'],
+            lastSent = null,
+            lastX = null,
+            lastY = null,
+            started = false;
+
+        var mark = function() {
+            var t = now();
+            if (lastSent !== null && t - lastSent < interval) return;
+            lastSent = t;
+            send();
+        };
+
+        var onInput = function(e) {
+            // Script-generated events are not the user
+            if (e.isTrusted === false) return;
+            // Browsers fire mousemove under a still pointer when content moves beneath it,
+            // e.g. while a co-author edits; that is not the user either
+            if (e.type === 'mousemove') {
+                if (e.screenX === lastX && e.screenY === lastY) return;
+                lastX = e.screenX;
+                lastY = e.screenY;
+            }
+            mark();
+        };
+
+        return {
+            mark: mark,
+
+            start: function() {
+                if (started) return;
+                started = true;
+                for (var i = 0; i < events.length; i++) {
+                    target.addEventListener(events[i], onInput, {capture: true, passive: true});
+                }
+            }
+        };
+    };
+
     Common.Gateway = new(function() {
         var me = this,
-            $me = $(me);
+            $me = $(me),
+            userActivity = null;
 
         var commandMap = {
             'init': function(data) {
+                if (data && data.config && data.config.canReportUserActivity) {
+                    _startUserActivity();
+                }
                 $me.trigger('init', data);
             },
 
@@ -228,6 +284,15 @@ if (window.Common === undefined) {
                     handler.call(this, cmd.data);
                 }
             }
+        };
+
+        var _startUserActivity = function() {
+            if (!userActivity) {
+                userActivity = Common.UserActivity(window, function() {
+                    _postMessage({ event: 'onUserActivity' });
+                }, Date.now, 10000);
+            }
+            userActivity.start();
         };
 
         var fn = function(e) { _onMessage(e); };
@@ -477,6 +542,12 @@ if (window.Common === undefined) {
                     source: source || 'smartpicker',
                     providerId: providerId || ''
                 }});
+            },
+
+            // onUserActivity handler for editors nested in this frame (chart, OLE, merge), so their
+            // input reaches the host through this frame's throttle; undefined when the host did not ask
+            getUserActivityHandler: function() {
+                return userActivity ? userActivity.mark : undefined;
             },
 
             on: function(event, handler){
