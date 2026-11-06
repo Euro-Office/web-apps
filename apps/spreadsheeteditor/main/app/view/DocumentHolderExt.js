@@ -646,6 +646,11 @@ define([], function () {
                 caption     : '--'
             });
 
+            me.pmiRemoveCheckbox = new Common.UI.MenuItem({
+                iconCls     : 'menu__icon btn-checkbox',
+                caption     : me.txtRemoveCheckbox
+            });
+
             me.pmiCellSeparator =  new Common.UI.MenuItem({
                 caption     : '--'
             });
@@ -818,6 +823,7 @@ define([], function () {
                     me.pmiDeleteCells,
                     me.pmiDeleteTable,
                     me.pmiClear,
+                    me.pmiRemoveCheckbox,
                     me.pmiCellSeparator,
                     me.pmiSparklines,
                     me.pmiSortCells,
