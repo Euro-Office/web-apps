@@ -78,4 +78,31 @@ define([
             assert.equal(sent, 1);
         });
     });
+
+    describe('Common.Gateway user activity', function() {
+        // Gateway handles the message first: it registered its listener before this one
+        var sendInit = function(config, then) {
+            var check = function() {
+                window.removeEventListener('message', check);
+                then();
+            };
+            window.addEventListener('message', check);
+            window.postMessage(JSON.stringify({command: 'init', data: {config: config}}), '*');
+        };
+
+        it('tracks activity only once init asks for it', function(done) {
+            assert.isUndefined(Common.Gateway.getUserActivityHandler());
+            sendInit({}, function() {
+                assert.isUndefined(Common.Gateway.getUserActivityHandler());
+                sendInit({canReportUserActivity: true}, function() {
+                    var handler = Common.Gateway.getUserActivityHandler();
+                    assert.isFunction(handler);
+                    sendInit({canReportUserActivity: true}, function() {
+                        assert.strictEqual(Common.Gateway.getUserActivityHandler(), handler);
+                        done();
+                    });
+                });
+            });
+        });
+    });
 });
