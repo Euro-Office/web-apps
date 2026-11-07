@@ -57,8 +57,12 @@ define([
 
         template    :
             _.template(
-                '<div class="palette-inner">' +
                 '<% var me = this; var idx = 0; %>' +
+                '<div class="dark-document-notice">' +
+                    '<span class="notice-icon"></span>' +
+                    '<b><%=me.textDarkDocumentOn%></b> <%=me.textDarkDocumentNotice%>' +
+                '</div>' +
+                '<div class="palette-inner">' +
                 '<% $(colors).each(function(num, item) { %>' +
                     '<% if (me.isBlankSeparator(item)) { %> <div class="palette-color-spacer"></div>' +
                     '<% } else if (me.isSeparator(item)) { %> </div><div class="divider"></div><div style="padding: 12px;">' +
@@ -733,6 +737,8 @@ define([
         textThemeColors         : 'Theme Colors',
         textStandartColors      : 'Standard Colors',
         textRecentColors        : 'Recent Colors',
-        textTransparent         : 'Transparent'
+        textTransparent         : 'Transparent',
+        textDarkDocumentOn      : 'View > Dark Document is on:',
+        textDarkDocumentNotice  : 'sheet colors will differ on screen.'
     }, Common.UI.ThemeColorPalette || {}));
 });
