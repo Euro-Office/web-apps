@@ -17,6 +17,7 @@ import LongActionsController from "./LongActions";
 import ErrorController from "./Error";
 import app from "../page/app";
 import About from "../../../../common/mobile/lib/view/About";
+import { isLocalSessionConfig, createLocalSessionHost } from '../../../../common/mobile/utils/localSession.js';
 import PluginsController from '../../../../common/mobile/lib/controller/Plugins.jsx';
 import EncodingController from "./Encoding";
 import DropdownListController from "./DropdownList";
@@ -246,6 +247,9 @@ class MainController extends Component {
 
                 if ( data.doc ) {
                     this.permissions = Object.assign(this.permissions, data.doc.permissions);
+                    if (isLocalSessionConfig(this.editorConfig))
+                        this.localSession.openDocument({api: this.api, documentType: 'cell',
+                            user: this.props.storeAppOptions.user, editorConfig: this.editorConfig, doc: data.doc, permissions: this.permissions});
 
                     const _options = Object.assign({}, data.doc.options, this.editorConfig.actionLink || {});
                     let _user = new Asc.asc_CUserInfo();
@@ -373,6 +377,8 @@ class MainController extends Component {
                     this.api.asc_setFontRenderingMode(parseInt(value));
 
                     Common.Utils.Metric.setCurrentMetric(Common.Utils.Metric.c_MetricUnits.pt); // TODO: beautify c_MetricUnits
+
+                    this.localSession = createLocalSessionHost(this.props.t('Controller.Main', {returnObjects: true}));
 
                     Common.Gateway.on('init', loadConfig);
                     Common.Gateway.on('showmessage', this.onExternalMessage.bind(this));
@@ -861,6 +867,7 @@ class MainController extends Component {
     }
 
     applyLicense () {
+        if (isLocalSessionConfig(this.editorConfig)) return; // no Document Server, no license to apply
         const { t } = this.props;
         const _t = t('Controller.Main', {returnObjects:true});
 
@@ -1091,7 +1098,7 @@ class MainController extends Component {
 
     onDownloadUrl (url, fileType) {
         if (this._state.isFromGatewayDownloadAs) {
-            Common.Gateway.downloadAs(url, fileType);
+            this.localSession.downloadAs(url, fileType);
         }
 
         this._state.isFromGatewayDownloadAs = false;
@@ -1142,6 +1149,7 @@ class MainController extends Component {
     }
 
     onServerVersion (buildVersion) {
+        if (isLocalSessionConfig(this.editorConfig)) return false; // no server to compare with
         if (this.changeServerVersion) return true;
         const { t } = this.props;
         const _t = t('Controller.Main', {returnObjects:true});
