@@ -82,7 +82,10 @@
     if ( local_storage_available && stored_theme_id && legacy_theme_ids[stored_theme_id] && !window.isIEBrowser )
         localstorage.setItem("ui-theme-id", legacy_theme_ids[stored_theme_id]);
     !window.uitheme.id && window.uitheme.set_id(stored_theme_id);
-    window.uitheme.iscontentdark = localstorage.getItem("content-theme") == 'dark';
+    // Dark document is on by default for text and slides when the UI is dark;
+    // the spreadsheet grid waits for a proper dark mode (web-apps#360)
+    const stored_content_theme = localstorage.getItem("content-theme");
+    window.uitheme.iscontentdark = stored_content_theme ? stored_content_theme == 'dark' : !/spreadsheeteditor/.test(window.location.pathname);
 
     function inject_style_tag(content, id) {
         if ( id && !!document.getElementById(id) )
