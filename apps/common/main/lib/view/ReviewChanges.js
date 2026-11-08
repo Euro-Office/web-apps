@@ -748,7 +748,8 @@ define([
                         me.btnCommentResolve.updateHint([me.tipCommentResolveCurrent, me.tipCommentResolve]);
                     }
 
-                    var separator_sharing = !(me.btnSharing || me.btnCoAuthMode) ? me.$el.find('.separator.sharing') : '.separator.sharing',
+                    var coAuthLast = me.isCoAuthModeLast(),
+                        separator_sharing = !(me.btnSharing || me.btnCoAuthMode && !coAuthLast) ? me.$el.find('.separator.sharing') : '.separator.sharing',
                         separator_comments = !(me.btnCommentRemove || me.btnCommentResolve) ? me.$el.find('.separator.comments') : '.separator.comments',
                         separator_review = !(config.canReview || config.canViewReview) ? me.$el.find('.separator.review') : '.separator.review',
                         separator_compare = !(config.canReview && config.canFeatureComparison) ? me.$el.find('.separator.compare') : '.separator.compare',
@@ -786,7 +787,7 @@ define([
                     else
                         separator_last = separator_history;
 
-                    if ((!me.btnMailRecepients || !Common.UI.LayoutManager.isElementVisible('toolbar-collaboration-mailmerge')) && separator_last)
+                    if ((coAuthLast ? !me.btnCoAuthMode : !me.btnMailRecepients || !Common.UI.LayoutManager.isElementVisible('toolbar-collaboration-mailmerge')) && separator_last)
                         me.$el.find(separator_last).hide();
 
 //!                 NOTE: conflicted code from branch feature/pdf-history. remove if is not relevant and merge is successful
@@ -817,14 +818,24 @@ define([
                 this.btnReviewView && this.btnReviewView.render(this.$el.find('#btn-review-view'));
 
                 this.btnSharing && this.btnSharing.render(this.$el.find('#slot-btn-sharing'));
-                this.btnCoAuthMode && this.btnCoAuthMode.render(this.$el.find('#slot-btn-coauthmode'));
+                if (this.isCoAuthModeLast()) {
+                    // Euro-Office: co-editing mode takes the last slot, the documenteditor
+                    // toolbar renders mail merge on the References tab
+                    this.btnCoAuthMode && this.btnCoAuthMode.render(this.$el.find('#slot-btn-mailrecepients').removeAttr('data-layout-name'));
+                } else {
+                    this.btnCoAuthMode && this.btnCoAuthMode.render(this.$el.find('#slot-btn-coauthmode'));
+                    this.btnMailRecepients && this.btnMailRecepients.render(this.$el.find('#slot-btn-mailrecepients'));
+                }
                 this.btnHistory && this.btnHistory.render(this.$el.find('#slot-btn-history'));
                 this.btnChat && this.btnChat.render(this.$el.find('#slot-btn-chat'));
                 this.btnCommentRemove && this.btnCommentRemove.render(this.$el.find('#slot-comment-remove'));
                 this.btnCommentResolve && this.btnCommentResolve.render(this.$el.find('#slot-comment-resolve'));
-                this.btnMailRecepients && this.btnMailRecepients.render(this.$el.find('#slot-btn-mailrecepients'));
 
                 return this.$el;
+            },
+
+            isCoAuthModeLast: function () {
+                return this.appPrefix === 'de-';
             },
 
             show: function () {

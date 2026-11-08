@@ -195,6 +195,66 @@ define([
             return this.view ? this.view.getPanel(groups) : null;
         },
 
+        // Euro-Office: one "Draw" button with a tool menu at the end of a toolbar
+        // panel replaces the Draw tab. The tab's buttons are still rendered, hidden,
+        // so pen settings, locks and the existing draw:* flow stay as they are;
+        // the menu just clicks them.
+        createMenuButton: function ($panel, caption) {
+            var view = this.view,
+                me = this;
+            if (!view || !$panel || !$panel.length) return null;
+
+            $('<div style="display: none;"></div>').append(view.getPanel(true)).appendTo(document.body);
+            if (!Common.UI.LayoutManager.isElementVisible('toolbar-draw')) return null;
+
+            var penCaption = function (pen) {
+                var opts = pen.options.penOptions;
+                return opts.hint + ' (' + Common.Utils.ThemeColor.getTranslation(Common.Utils.ThemeColor.getRgbColor(opts.color).asc_getName()) + ')';
+            };
+            var tools = [view.btnSelect].concat(view.btnsPen, [view.btnEraser]);
+            var menu = new Common.UI.Menu({
+                items: tools.map(function (tool) {
+                    return {
+                        caption: tool === view.btnSelect ? view.txtSelect : tool === view.btnEraser ? view.txtEraser : penCaption(tool),
+                        value: tool,
+                        checkable: tool !== view.btnSelect,
+                        toggleGroup: 'eo-draw-tools'
+                    };
+                })
+            });
+            menu.on('item:click', function (menu, item) {
+                var tool = item.value;
+                if (tool === view.btnSelect) {
+                    me.stopDraw();
+                } else {
+                    tool.toggle(true, true);
+                    tool.trigger('click', tool);
+                }
+            });
+
+            var button = new Common.UI.Button({
+                cls: 'btn-toolbar x-huge icon-top',
+                iconCls: 'toolbar__icon btn-pen-tool',
+                caption: caption,
+                menu: menu,
+                lock: view.btnEraser.options.lock,
+                dataHint: '1',
+                dataHintDirection: 'bottom',
+                dataHintOffset: 'small'
+            });
+            var $slot = $('<span class="btn-slot text x-huge"></span>');
+            $panel.append('<div class="separator long"></div>', $('<div class="group"></div>').append($slot));
+            button.render($slot);
+            view.lockedControls.push(button);
+
+            Common.NotificationCenter.on('draw:start', function () { button.toggle(true, true); });
+            Common.NotificationCenter.on('draw:stop', function () {
+                button.toggle(false, true);
+                menu.clearAll();
+            });
+            return button;
+        },
+
         getView: function(name) {
             return !name && this.view ?
                 this.view : Backbone.Controller.prototype.getView.call(this, name);

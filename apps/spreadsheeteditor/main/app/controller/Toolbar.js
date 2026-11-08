@@ -5000,11 +5000,7 @@ define([
                 if ( !config.isEditDiagram && !config.isEditMailMerge && !config.isEditOle ) {
                     var drawtab = me.getApplication().getController('Common.Controllers.Draw');
                     drawtab.setApi(me.api).setMode(config);
-                    $panel = drawtab.createToolbarPanel();
-                    if ($panel) {
-                        tab = {action: 'draw', caption: me.toolbar.textTabDraw, extcls: 'canedit', layoutname: 'toolbar-draw', dataHintTitle: 'C'};
-                        me.toolbar.addTab(tab, $panel, 2);
-                        me.toolbar.setVisible('draw', Common.UI.LayoutManager.isElementVisible('toolbar-draw'));
+                    if (drawtab.createMenuButton(me.toolbar.$el.find('.panel[data-tab=ins]'), me.toolbar.textTabDraw)) {
                         Array.prototype.push.apply(me.toolbar.lockControls, drawtab.getView().getButtons());
                     }
 

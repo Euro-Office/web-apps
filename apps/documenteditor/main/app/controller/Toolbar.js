@@ -3957,11 +3957,7 @@ define([
                 // }
                 var drawtab = application.getController('Common.Controllers.Draw');
                 drawtab.setApi(me.api).setMode(config);
-                $panel = drawtab.createToolbarPanel();
-                if ($panel) {
-                    tab = {action: 'draw', caption: me.toolbar.textTabDraw, extcls: 'canedit', layoutname: 'toolbar-draw', dataHintTitle: 'C'};
-                    me.toolbar.addTab(tab, $panel, 2);
-                    me.toolbar.setVisible('draw', Common.UI.LayoutManager.isElementVisible('toolbar-draw'));
+                if (drawtab.createMenuButton(me.toolbar.$el.find('.panel[data-tab=ins]'), me.toolbar.textTabDraw)) {
                     Array.prototype.push.apply(me.toolbar.lockControls, drawtab.getView().getButtons());
                     Array.prototype.push.apply(me.toolbar.paragraphControls, drawtab.getView().getButtons());
                 }
@@ -3987,10 +3983,27 @@ define([
                             $panel.append($('<div class="separator long"></div>'));
                         }
                         $panel.append(doctabController.createToolbarPanel());
-                        me.toolbar.addTab(tab, $panel, 7);
-                        me.toolbar.setVisible('protect', Common.UI.LayoutManager.isElementVisible('toolbar-protect'));
+                        // Euro-Office: no Protection tab, its buttons go to the end of Collaboration
+                        var $review = me.toolbar.$el.find('.panel[data-tab=review]');
+                        $panel.find('.separator.protect-form').remove();
+                        $panel.children('.group:not(:has(.btn-slot > *))').remove();
+                        if ($review.length) {
+                            Common.UI.LayoutManager.isElementVisible('toolbar-protect') && $panel.children('.group').length &&
+                                $review.append('<div class="separator long"></div>', $panel.children());
+                        } else {
+                            me.toolbar.addTab(tab, $panel, 7);
+                            me.toolbar.setVisible('protect', Common.UI.LayoutManager.isElementVisible('toolbar-protect'));
+                        }
                         Array.prototype.push.apply(me.toolbar.lockControls, doctabButtons);
                     }
+                }
+
+                // Euro-Office: mail merge lives at the end of References (see Common.Views.ReviewChanges.isCoAuthModeLast)
+                var btnMailMerge = application.getController('Common.Controllers.ReviewChanges').getView().btnMailRecepients;
+                if (btnMailMerge && Common.UI.LayoutManager.isElementVisible('toolbar-collaboration-mailmerge')) {
+                    var $mmslot = $('<span class="btn-slot text x-huge"></span>');
+                    me.toolbar.$el.find('.panel[data-tab=links]').append('<div class="separator long"></div>', $('<div class="group"></div>').append($mmslot));
+                    btnMailMerge.render($mmslot);
                 }
 
                 var links = application.getController('Links');

@@ -1408,6 +1408,18 @@ section .field-styles {
     display: none;
 }
 
+// Compact header: save, print and undo/redo live in the static panel. Off
+// Home only undo and redo stay, side by side and vertically centered.
+.toolbar.eo-static-home-only:not([data-eo-tab="home"]) .panel.static {
+    .eo-home-only {
+        display: none;
+    }
+
+    .elset.eo-home-only + .elset {
+        margin-top: 0;
+    }
+}
+
 // Single-row toolbar (View > Single-row toolbar, Mixtbar.setOneRow).
 // The controls area shrinks to one row of small buttons: each group lays its
 // rows side by side and large buttons drop their captions. What no longer

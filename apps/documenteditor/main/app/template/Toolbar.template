@@ -6,7 +6,7 @@
     </div>
     <section class="box-controls" role="tabpanel">
         <section class="panel static">
-            <div class="group no-mask small">
+            <div class="group no-mask small eo-home-only">
                 <div class="elset">
                     <span class="btn-slot" id="slot-btn-save" data-layout-name="toolbar-save"></span>
                 </div>
@@ -14,9 +14,9 @@
                     <span class="btn-slot" id="slot-btn-print"></span>
                 </div>
             </div>
-            <div class="separator long"></div>
+            <div class="separator long eo-home-only"></div>
             <div class="group small eo-clipboard">
-                <div class="elset">
+                <div class="elset eo-home-only">
                     <span class="btn-slot split" id="slot-btn-copy"></span>
                     <span class="btn-slot" id="slot-btn-paste"></span>
                 </div>
@@ -25,7 +25,7 @@
                     <span class="btn-slot" id="slot-btn-redo"></span>
                 </div>
             </div>
-            <div class="group small eo-clipboard">
+            <div class="group small eo-clipboard eo-home-only">
                 <div class="elset">
                     <span class="btn-slot" id="slot-btn-cut"></span>
                 </div>
