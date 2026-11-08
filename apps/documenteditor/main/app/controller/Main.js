@@ -506,7 +506,7 @@ define([
 
                 value = Common.localStorage.getItem("de-macros-mode");
                 if (value === null) {
-                    value = this.editorConfig.customization ? this.editorConfig.customization.macrosMode : 'warn';
+                    value = (this.editorConfig.customization && this.editorConfig.customization.macrosMode) || 'disable';
                     value = (value == 'enable') ? 1 : (value == 'disable' ? 2 : 0);
                 } else
                     value = parseInt(value);
@@ -1714,8 +1714,9 @@ define([
                 this.appOptions.canComments    = this.appOptions.canLicense && (this.permissions.comment===undefined ? this.appOptions.isEdit : this.permissions.comment) && (this.editorConfig.mode !== 'view');
                 this.appOptions.canComments    = !isPDFViewer && this.appOptions.canComments && !((typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.comments===false);
                 this.appOptions.canViewComments = this.appOptions.canComments || !isPDFViewer && !((typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.comments===false);
-                this.appOptions.canChat        = this.appOptions.canLicense && !this.appOptions.isOffline && !(this.permissions.chat===false || (this.permissions.chat===undefined) &&
-                                                                                                               (typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.chat===false);
+                this.appOptions.canChat        = this.appOptions.canLicense && !this.appOptions.isOffline && // opt-in: integrations such as Nextcloud have their own chat
+                                                                                                               (this.permissions.chat===true || (this.permissions.chat===undefined) &&
+                                                                                                               (typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.chat===true);
                 if ((typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.chat!==undefined) {
                     console.log("Obsolete: The 'chat' parameter of the 'customization' section is deprecated. Please use 'chat' parameter in the permissions instead.");
                 }
@@ -1907,6 +1908,7 @@ define([
 
             loadDefaultMetricSettings: function() {
                 var region = '';
+                var regionFromBrowser = false;
                 if (this.appOptions.location) {
                     console.log("Obsolete: The 'location' parameter of the 'editorConfig' section is deprecated. Please use 'region' parameter in the 'editorConfig' section instead.");
                     region = this.appOptions.location;
@@ -1923,10 +1925,13 @@ define([
                     if (!region) {
                         arr = (navigator.language || '').split(/[\-_]/);
                         (arr.length>1) && (region = arr[arr.length-1]);
+                        regionFromBrowser = !!region;
                     }
                 }
 
-                if (/^(ca|us)$/i.test(region))
+                // a US browser locale alone should not switch a European install to inches
+
+                if (!regionFromBrowser && /^(ca|us)$/i.test(region))
                     Common.Utils.Metric.setDefaultMetric(Common.Utils.Metric.c_MetricUnits.inch);
                 Common.Utils.InternalSettings.set("de-config-region", region);
             },
@@ -2608,6 +2613,9 @@ define([
                         else if (!this.appOptions.canBrandingExt)
                             this.appOptions.customization.about = true;
                     }
+                    // only offer Feedback & Support when the integration configures where it goes
+                    var feedback = this.appOptions.customization && this.appOptions.customization.feedback;
+                    !(feedback && feedback.url) && $(mapCustomizationElements.feedback).hide();
                     Common.Utils.applyCustomization(this.appOptions.customization, mapCustomizationElements);
                     if (this.appOptions.canBrandingExt) {
                         Common.Utils.applyCustomization(this.appOptions.customization, mapCustomizationExtElements);

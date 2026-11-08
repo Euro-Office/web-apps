@@ -965,8 +965,8 @@ define([], function () {
             if ( !Common.UI.Themes.available() ) {
                 $('tr.themes, tr.themes + tr.divider', this.el).hide();
             }
-            $('tr.tab-background', this.el)[!Common.Utils.isIE && Common.UI.FeaturesManager.canChange('tabBackground', true) ? 'show' : 'hide']();
-            $('tr.tab-style', this.el)[!Common.Utils.isIE && !Common.Controllers.Desktop.isWinXp() && Common.UI.FeaturesManager.canChange('tabStyle', true) ? 'show' : 'hide']();
+            // pill tabs replace the tab style and tab background options
+            $('tr.tab-background, tr.tab-style', this.el).hide();
             $('tr.appearance', this.el)[!Common.Utils.isIE ? 'show' : 'hide']();
             if (mode.compactHeader) {
                 $('tr.quick-access', this.el).hide();
@@ -1158,6 +1158,8 @@ define([], function () {
         },
 
         fillShowChanges: function(fastmode) {
+            // fast co-editing always saves automatically, the autosave option only matters in strict mode
+            $('tr.autosave', this.el).toggleClass('eo-hidden', !!fastmode);
             if(fastmode)
                 this.rbShowChangesLast.$el.parent().hide();
             else

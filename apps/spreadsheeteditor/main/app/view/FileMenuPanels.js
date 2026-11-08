@@ -537,6 +537,8 @@ define([], function () {
                 ariaLabel: this.strFast + ' ' + this.txtFastTip
             }).on('change', function (field, newValue, eOpts) {
                 newValue && me.chAutosave.setValue(1);
+                // fast co-editing always saves automatically, the autosave option only matters in strict mode
+                $('tr.autosave', me.el).toggleClass('eo-hidden', !!newValue);
             });
             this.rbCoAuthModeFast.$el.parent().on('click', function (){me.rbCoAuthModeFast.setValue(true);});
 
@@ -547,6 +549,9 @@ define([], function () {
                 dataHintDirection: 'left',
                 dataHintOffset: 'small',
                 ariaLabel: this.strStrict + ' ' + this.txtStrictTip
+            });
+            this.rbCoAuthModeStrict.on('change', function (field, newValue) {
+                newValue && $('tr.autosave', me.el).removeClass('eo-hidden');
             });
             this.rbCoAuthModeStrict.$el.parent().on('click', function (){me.rbCoAuthModeStrict.setValue(true);});
             /** coauthoring end **/
@@ -1062,8 +1067,8 @@ define([], function () {
             $('tr.live-viewer', this.el)[mode.canLiveView && !mode.isOffline && mode.canChangeCoAuthoring ? 'show' : 'hide']();
             $('tr.macros', this.el)[(mode.customization && mode.customization.macros===false) ? 'hide' : 'show']();
             $('tr.quick-print', this.el)[mode.canQuickPrint && !(mode.compactHeader && mode.isEdit) ? 'show' : 'hide']();
-            $('tr.tab-background', this.el)[!Common.Utils.isIE && Common.UI.FeaturesManager.canChange('tabBackground', true) ? 'show' : 'hide']();
-            $('tr.tab-style', this.el)[!Common.Utils.isIE && !Common.Controllers.Desktop.isWinXp() && Common.UI.FeaturesManager.canChange('tabStyle', true) ? 'show' : 'hide']();
+            // pill tabs replace the tab style and tab background options
+            $('tr.tab-background, tr.tab-style', this.el).hide();
             if ( !Common.UI.Themes.available() ) {
                 $('tr.themes, tr.themes + tr.divider', this.el).hide();
             }
@@ -1094,6 +1099,7 @@ define([], function () {
 
             var fast_coauth = Common.Utils.InternalSettings.get("sse-settings-coauthmode");
             this.rbCoAuthModeFast.setValue(fast_coauth);
+            $('tr.autosave', this.el).toggleClass('eo-hidden', !!fast_coauth);
             this.rbCoAuthModeStrict.setValue(!fast_coauth);
             /** coauthoring end **/
             this.chLiveViewer.setValue(Common.Utils.InternalSettings.get("sse-settings-coauthmode"));
