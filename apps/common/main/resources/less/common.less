@@ -717,6 +717,39 @@ body {
     border-radius: @border-radius-form-control;
 }
 
+// Keyboard focus ring (mouse clicks don't match :focus-visible on these)
+button,
+.btn,
+.ribtab > a,
+.dropdown-menu li > a,
+.dataview .item,
+.listview .item,
+.checkbox-indeterminate,
+.radiobox {
+    &:focus-visible {
+        outline: 2px solid var(--eo-focus-ring-color);
+        outline-offset: 1px;
+        border-radius: var(--eo-radius-sm);
+    }
+}
+
+.ribtab > a,
+.dropdown-menu li > a,
+.dataview .item,
+.listview .item {
+    &:focus-visible {
+        outline-offset: -2px;
+    }
+}
+
+.dataview,
+.listview {
+    &:focus-visible {
+        outline: 2px solid var(--eo-focus-ring-color);
+        outline-offset: -2px;
+    }
+}
+
 // only for test screen reader focus manager
 .focus-mode {
     :focus {
