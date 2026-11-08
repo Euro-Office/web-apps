@@ -1,0 +1,63 @@
+// SPDX-FileCopyrightText: 2026 Euro-Office contributors
+// SPDX-License-Identifier: AGPL-3.0-only
+//
+// Euro-Office side bars: left and right icon bars and the right settings panel.
+
+.tool-menu .tool-menu-btns {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--eo-space-2) var(--eo-space-1);
+
+    .eo-sidebar-spacer {
+        flex: 1 1 auto;
+    }
+
+    .btn-category {
+        flex: none;
+        width: 32px;
+        min-width: 32px;
+        height: 32px;
+        line-height: 30px;
+        margin: 0 0 var(--eo-space-1);
+        border-radius: var(--eo-radius-md);
+
+        &:hover:not(.disabled) {
+            background-color: var(--eo-hover);
+        }
+
+        &:active:not(.disabled),
+        &.active:not(.disabled) {
+            background-color: var(--eo-accent-soft);
+
+            svg.icon {
+                color: var(--eo-accent);
+            }
+        }
+    }
+
+    #slot-left-menu-more, #slot-right-menu-more {
+        width: 32px;
+    }
+}
+
+.right-panel .content-box .settings-panel {
+    padding: var(--eo-space-3) var(--eo-space-3) 0;
+
+    .rtl & {
+        padding: var(--eo-space-3) var(--eo-space-3) 0;
+    }
+
+    label.header {
+        display: inline-block;
+        margin-bottom: var(--eo-space-1);
+        font-size: var(--eo-font-size-md);
+        font-weight: 600;
+        color: var(--eo-text-secondary);
+    }
+
+    .separator.horizontal {
+        margin: var(--eo-space-2) 0;
+        border-top-color: var(--eo-border-subtle);
+    }
+}
