@@ -50,6 +50,7 @@ define([
             this.addListeners({
                 'Statusbar': {
                     'langchanged': this.onLangMenu,
+                    'langdoc': this.onDocLangMenu,
                     'zoom:value': function(value) {
                         this.api.zoom(value);
                         Common.NotificationCenter.trigger('edit:complete', this.statusbar);
@@ -86,7 +87,7 @@ define([
                 me.statusbar.$el.css('z-index', 1);
 
                 var lblzoom = $('.statusbar #label-zoom');
-                lblzoom.css('min-width', 80);
+                lblzoom.css('min-width', 40);
                 lblzoom.text(Common.Utils.String.format(me.zoomText, 100));
 
                 if ( cfg.isEdit ) {
@@ -103,6 +104,15 @@ define([
                     me.btnSpelling.render( me.statusbar.$layout.find('#btn-doc-spell') );
                     me.btnDocLang = review.getButton('doclang', 'statusbar');
                     me.btnDocLang.render( me.statusbar.$layout.find('#btn-doc-lang') );
+                    if (Common.UI.LayoutManager.isElementVisible('statusBar-textLang')) {
+                        // the document language action lives in the text language menu
+                        me.statusbar.$el.find('#btn-doc-lang').hide();
+                        me.statusbar.langMenu.on('show:before', function (menu) {
+                            var item = _.findWhere(menu.items, {value: 'eo-doc-lang'});
+                            item && (item.disabled = me.btnDocLang.isDisabled());
+                            item && menu.cmpEl.find('#' + item.id).closest('li').toggleClass('disabled', item.disabled);
+                        });
+                    }
 
                     var isVisible = (Common.UI.LayoutManager.isElementVisible('statusBar-textLang') || Common.UI.LayoutManager.isElementVisible('statusBar-docLang'))
                                     && Common.UI.FeaturesManager.canChange('spellcheck');
@@ -294,6 +304,11 @@ define([
             this.statusbar.$el.css('z-index', '');
         },
 
+        onDocLangMenu: function() {
+            this.btnDocLang && !this.btnDocLang.isDisabled() &&
+                this.getApplication().getController('Common.Controllers.ReviewChanges').onDocLanguage();
+        },
+
         onLangMenu: function(obj, langid, title) {
             this.api.put_TextPrLang(langid);
         },
@@ -376,7 +391,7 @@ define([
             }
         },
 
-        zoomText        : 'Zoom {0}%',
+        zoomText        : '{0}%',
         textHasChanges  : 'New changes have been tracked',
         textTrackChanges: 'The document is opened with the Track Changes mode enabled',
         tipReview       : 'Review',

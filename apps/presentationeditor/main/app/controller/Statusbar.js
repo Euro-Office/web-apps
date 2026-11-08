@@ -49,7 +49,8 @@ define([
             var me = this;
             this.addListeners({
                 'Statusbar': {
-                    'langchanged': this.onLangMenu
+                    'langchanged': this.onLangMenu,
+                    'langdoc': this.onDocLangMenu
                 },
                 'ViewTab': {
                     'statusbar:hide': _.bind(me.onChangeCompactView, me),
@@ -78,7 +79,7 @@ define([
             this.bindViewEvents(this.statusbar, this.events);
 
             var lblzoom = $('#status-label-zoom');
-            lblzoom.css('min-width', 80);
+            lblzoom.css('min-width', 40);
             lblzoom.text(Common.Utils.String.format(this.zoomText, 100));
 
             this.statusbar.btnZoomToPage.on('click', _.bind(this.onBtnZoomTo, this, 'topage'));
@@ -95,6 +96,15 @@ define([
                     me.btnSpelling.render( me.statusbar.$el.find('#btn-doc-spell') );
                     me.btnDocLang = review.getButton('doclang', 'statusbar');
                     me.btnDocLang.render( me.statusbar.$el.find('#btn-doc-lang') );
+                    if (Common.UI.LayoutManager.isElementVisible('statusBar-textLang')) {
+                        // the document language action lives in the text language menu
+                        me.statusbar.$el.find('#btn-doc-lang').hide();
+                        me.statusbar.langMenu.on('show:before', function (menu) {
+                            var item = _.findWhere(menu.items, {value: 'eo-doc-lang'});
+                            item && (item.disabled = me.btnDocLang.isDisabled());
+                            item && menu.cmpEl.find('#' + item.id).closest('li').toggleClass('disabled', item.disabled);
+                        });
+                    }
 
                     var isVisible = (Common.UI.LayoutManager.isElementVisible('statusBar-textLang') || Common.UI.LayoutManager.isElementVisible('statusBar-docLang'))
                                     && Common.UI.FeaturesManager.canChange('spellcheck');
@@ -218,6 +228,11 @@ define([
             this.statusbar.$el.css('z-index', '');
         },
 
+        onDocLangMenu: function() {
+            this.btnDocLang && !this.btnDocLang.isDisabled() &&
+                this.getApplication().getController('Common.Controllers.ReviewChanges').onDocLanguage();
+        },
+
         onLangMenu: function(obj, langid, title) {
             this.api.put_TextPrLang(langid);
         },
@@ -275,7 +290,7 @@ define([
              }
         },
 
-        zoomText        : 'Zoom {0}%',
+        zoomText        : '{0}%',
         textDisconnect: '<b>Connection is lost</b><br>Trying to connect. Please check connection settings.'
 
     }, PE.Controllers.Statusbar || {}));

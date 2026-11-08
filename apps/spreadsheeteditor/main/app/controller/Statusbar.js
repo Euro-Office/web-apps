@@ -92,7 +92,7 @@ define([
         onLaunch: function() {
             this.statusbar = this.createView('Statusbar', { controller: this }).render();
             this.statusbar.$el.css('z-index', 10);
-            this.statusbar.labelZoom.css('min-width', 80);
+            this.statusbar.labelZoom.css('min-width', 40);
             this.statusbar.labelZoom.text(Common.Utils.String.format(this.zoomText, 100));
             this.statusbar.zoomMenu.on('item:click', _.bind(this.menuZoomClick, this));
             this.$measureSpan = $('<span>').css({
@@ -1148,7 +1148,7 @@ define([
             }
         },
 
-        zoomText        : 'Zoom {0}%',
+        zoomText        : '{0}%',
         errorLastSheet  : 'Workbook must have at least one visible worksheet.',
         errorRemoveSheet: 'Can\'t delete the worksheet.',
         warnDeleteSheet : 'The worksheet maybe has data. Proceed operation?',

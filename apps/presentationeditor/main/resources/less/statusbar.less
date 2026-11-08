@@ -13,7 +13,7 @@
     }
 
     #btn-zoom-topage, #btn-zoom-towidth {
-        .margin-right-8();
+        .margin-right(var(--eo-space-1));
     }
 
     .status-group {
@@ -34,12 +34,12 @@
         }
 
         #btn-zoom-up {
-            .margin-right-10();
+            .margin-right(var(--eo-space-2));
         }
     }
 
     .separator {
-        margin: 0 6px;
+        margin: 0 var(--eo-space-2);
 
         &.short {
             height: @statusbar-height-ie;
@@ -47,7 +47,7 @@
         }
 
         &.space {
-            margin: 0px 2px;
+            margin: 0 var(--eo-space-1);
             border: none;
         }
     }
@@ -85,5 +85,12 @@
             width: 50px;
             display: inline-block;
         }
+    }
+
+    // no text selected: only "Set language for whole document…" is usable
+    .lang-menu.text-lang-disabled > li > a:not([langval="eo-doc-lang"]) {
+        opacity: .4;
+        cursor: default;
+        pointer-events: none;
     }
 }

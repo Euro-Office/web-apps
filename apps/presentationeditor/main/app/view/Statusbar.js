@@ -66,7 +66,13 @@ define([
                 Common.Utils.String.format(this.pageIndexText, model.get('current') + start, start===1 ? count : start + ' .. ' + (count + start - 1)) );
         }
 
+        var DOC_LANG_VALUE = 'eo-doc-lang';
+
         function _clickLanguage(menu, item) {
+            if (item.value === DOC_LANG_VALUE) {
+                this.fireEvent('langdoc', [this]);
+                return;
+            }
             this.btnLanguage.setCaption(item.caption);
             this.langMenu.prevTip = item.value;
 
@@ -281,6 +287,10 @@ define([
                     searchFields: ['caption', 'captionEn'],
                     focusToCheckedItem: true
                 });
+                var addLangToRecent = this.langMenu.addItemToRecent;
+                this.langMenu.addItemToRecent = function (item) {
+                    (item && item.value === DOC_LANG_VALUE) || addLangToRecent.apply(this, arguments);
+                };
 
                 this.btnLanguage = new Common.UI.Button({
                     parentEl: $('#btn-cnt-lang', this.el),
@@ -366,6 +376,9 @@ define([
                         spellcheck  : item['spellcheck']
                     });
                 });
+                if (arr.length && Common.UI.LayoutManager.isElementVisible('statusBar-docLang') && Common.UI.LayoutManager.isElementVisible('statusBar-textLang')) {
+                    arr.push({caption: this.textSetDocLang, captionEn: '', value: DOC_LANG_VALUE, spellcheck: false});
+                }
                 this.langMenu.setRecent({
                     count: Common.Utils.InternalSettings.get("app-settings-recent-langs-count") || 5,
                     offset: Common.Utils.InternalSettings.get("app-settings-recent-langs-offset") || 0,
@@ -376,7 +389,7 @@ define([
                 if (this.langMenu.items.length>0) {
                     var index = _.findIndex(this.langMenu.items, {caption: saved});
                     (index>-1) && this.langMenu.setChecked(index, true);
-                    this.btnLanguage.setDisabled(false || this._state.no_paragraph);
+                    this.updateLangState();
                 }
             },
 
@@ -395,7 +408,22 @@ define([
             },
 
             SetDisabled: function(disable) {
-                this.btnLanguage.setDisabled(disable || this.langMenu.items.length<1 || this._state.no_paragraph);
+                this._isDisabled = disable;
+                this.updateLangState();
+            },
+
+            // Without a text selection only the document language item stays usable
+            updateLangState: function() {
+                var menu = this.langMenu,
+                    noText = !!this._state.no_paragraph,
+                    hasDocLang = !!_.findWhere(menu.items, {value: DOC_LANG_VALUE});
+                if (hasDocLang) {
+                    _.each(menu.items, function(item) {
+                        (item.value !== DOC_LANG_VALUE) && (item.disabled = noText);
+                    });
+                    menu.cmpEl && menu.cmpEl.toggleClass('text-lang-disabled', noText);
+                }
+                this.btnLanguage.setDisabled(!!this._isDisabled || menu.items.length<1 || noText && !hasDocLang);
             },
 
             onApiFocusObject: function(selectedObjects) {
@@ -411,8 +439,10 @@ define([
                     }
                 }
                 this._state.no_paragraph = this._state.no_paragraph || this.langMenu.items.length<1;
-                if (this._state.no_paragraph !== this.btnLanguage.isDisabled())
-                    this.btnLanguage.setDisabled(this._state.no_paragraph);
+                if (this._state.no_paragraph !== this._state.prev_no_paragraph) {
+                    this._state.prev_no_paragraph = this._state.no_paragraph;
+                    this.updateLangState();
+                }
             },
 
             onApiCoAuthoringDisconnect: function() {
@@ -426,10 +456,11 @@ define([
             tipFitWidth     : 'Fit to Width',
             tipZoomIn       : 'Zoom In',
             tipZoomOut      : 'Zoom Out',
-            tipZoomFactor   : 'Magnification',
+            tipZoomFactor   : 'Zoom',
             txtPageNumInvalid: 'Slide number invalid',
             tipPreview      : 'Start Slideshow',
             tipAccessRights : 'Manage document access rights',
+            textSetDocLang: 'Set language for whole document…',
             tipSetLang      : 'Set Text Language',
             textShowBegin: 'Show from Beginning',
             textShowCurrent: 'Show from Current slide',
