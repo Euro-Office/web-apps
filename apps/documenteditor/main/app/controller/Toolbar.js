@@ -460,6 +460,8 @@ define([
 
             if (this.mode.isEdit) {
                 this.toolbar.setApi(api);
+                // Render style previews wider than the 104x40 tile and scale them down, so names like "Heading 1" fit
+                this.api.asc_setParagraphStylesSizes && this.api.asc_setParagraphStylesSizes(140, 46);
 
                 this.api.asc_registerCallback('asc_onFontSize', _.bind(this.onApiFontSize, this));
                 this.api.asc_registerCallback('asc_onBold', _.bind(this.onApiBold, this));
@@ -3675,7 +3677,10 @@ define([
 
             var arr = [];
             var mainController = this.getApplication().getController('Main');
-            _.each(styles.get_MergedStyles(), function(style){
+            var isFirstStyle = function (style) { return /^(Normal|Heading [1-3])$/.test(style.get_Name()); };
+            var merged = styles.get_MergedStyles();
+            merged = _.filter(merged, isFirstStyle).concat(_.reject(merged, isFirstStyle));
+            _.each(merged, function(style){
                 arr.push({
                     imageUrl: style.asc_getImage(),
                     title   : style.get_Name(),

@@ -1796,7 +1796,7 @@ define([
                         autoWidth:       true,
                         itemTemplate: _.template([
                             '<div class="style" id="<%= id %>">',
-                                '<div style="background-image: url(<%= imageUrl %>); width: ' + itemWidth + 'px; height: ' + itemHeight + 'px;"></div>',
+                                '<div style="background-image: url(<%= imageUrl %>); background-size: contain; background-repeat: no-repeat; background-position: center; width: ' + itemWidth + 'px; height: ' + itemHeight + 'px;"></div>',
                             '</div>'
                         ].join('')),
                         beforeOpenHandler: function (e) {
