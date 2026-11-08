@@ -44,7 +44,7 @@
 
     const legacy_theme_ids = {
         'theme-light': 'theme-white', 'theme-classic-light': 'theme-white', 'theme-gray': 'theme-white',
-        'theme-dark': 'theme-night', 'theme-contrast-dark': 'theme-night',
+        'theme-dark': 'theme-night', 'theme-contrast-dark': 'theme-eo-contrast-dark',
     };
     window.uitheme.normalize_id = function (id) {
         return window.isIEBrowser ? id : legacy_theme_ids[id] || id;
@@ -66,9 +66,16 @@
         this.type = this.is_system_theme_dark() ? 'dark' : 'light';
     }
 
+    window.uitheme.SYSTEM_CONTRAST_QUERY = '(prefers-contrast: more), (forced-colors: active)';
+    window.uitheme.system_theme_id = function (dark) {
+        if ( !window.isIEBrowser && window.matchMedia && window.matchMedia(this.SYSTEM_CONTRAST_QUERY).matches )
+            return dark ? 'theme-eo-contrast-dark' : 'theme-eo-contrast-light';
+        return dark ? this.DEFAULT_DARK_THEME_ID : this.DEFAULT_LIGHT_THEME_ID;
+    }
+
     window.uitheme.relevant_theme_id = function () {
         if ( this.is_theme_system() )
-            return this.is_system_theme_dark() ? window.uitheme.DEFAULT_DARK_THEME_ID : window.uitheme.DEFAULT_LIGHT_THEME_ID;
+            return this.system_theme_id(this.is_system_theme_dark());
         return this.id;
     }
 

@@ -182,6 +182,32 @@ define([
                     cls: 'mod2',
                 }
             },
+            'theme-eo-contrast-light': {
+                text: locale.txtThemeHighContrastLight || 'High contrast light',
+                type: 'light',
+                source: 'static',
+                icons: {
+                    cls: 'mod2',
+                }
+            },
+            'theme-eo-contrast-dark': {
+                text: locale.txtThemeHighContrastDark || 'High contrast dark',
+                type: 'dark',
+                source: 'static',
+                icons: {
+                    cls: 'mod2',
+                },
+                skeleton: {
+                    css: `.theme-eo-contrast-dark .loadmask {--sk-background-toolbar: #000; --sk-background-toolbar-controls: #000;
+                                    --sk-background-toolbar-header-word: #000; --sk-background-toolbar-header-pdf: #000;
+                                    --sk-background-toolbar-header-slide: #000; --sk-background-toolbar-header-cell: #000;
+                                    --sk-background-toolbar-header-visio: #000;
+                                    --sk-background-toolbar-tab: #1a2a40; --sk-background-toolbar-button: #1a2a40;
+                                    --sk-canvas-background: #000; --sk-canvas-page-border: #fff;
+                                    --sk-shadow-toolbar: 0 0 0 1px #fff;
+                                }`
+                },
+            },
         }
 
         var theme_props = {};
@@ -367,8 +393,7 @@ define([
             return window.matchMedia('(prefers-color-scheme: dark)').matches ? THEME_TYPE_DARK : THEME_TYPE_LIGHT;
         }
         const get_system_default_theme = function () {
-            const id = get_system_theme_type() == THEME_TYPE_DARK ?
-                window.uitheme.DEFAULT_DARK_THEME_ID : window.uitheme.DEFAULT_LIGHT_THEME_ID;
+            const id = window.uitheme.system_theme_id(get_system_theme_type() == THEME_TYPE_DARK);
 
             return {id: id, info: themes_map[id]};
         };
@@ -519,7 +544,9 @@ define([
                 }
 
                 if ( !(Common.Utils.isIE10 || Common.Utils.isIE11) && !Common.Controllers.Desktop.isActive() )
-                    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', on_system_theme_dark.bind(this));
+                    ['(prefers-color-scheme: dark)', window.uitheme.SYSTEM_CONTRAST_QUERY].forEach(function (query) {
+                        window.matchMedia(query).addEventListener('change', on_system_theme_dark.bind(this));
+                    }, this);
                 Common.NotificationCenter.on('document:ready', on_document_ready.bind(this));
             },
 

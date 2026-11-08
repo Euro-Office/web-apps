@@ -727,7 +727,7 @@ button,
 .checkbox-indeterminate,
 .radiobox {
     &:focus-visible {
-        outline: 2px solid var(--eo-focus-ring-color);
+        outline: var(--eo-focus-ring-width, 2px) solid var(--eo-focus-ring-color);
         outline-offset: 1px;
         border-radius: var(--eo-radius-sm);
     }
@@ -745,7 +745,7 @@ button,
 .dataview,
 .listview {
     &:focus-visible {
-        outline: 2px solid var(--eo-focus-ring-color);
+        outline: var(--eo-focus-ring-width, 2px) solid var(--eo-focus-ring-color);
         outline-offset: -2px;
     }
 }

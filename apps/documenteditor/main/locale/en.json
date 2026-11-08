@@ -681,6 +681,8 @@
   "Common.UI.Themes.txtThemeContrastDark": "Contrast Dark",
   "Common.UI.Themes.txtThemeDark": "Dark",
   "Common.UI.Themes.txtThemeGray": "Gray",
+  "Common.UI.Themes.txtThemeHighContrastDark": "High contrast dark",
+  "Common.UI.Themes.txtThemeHighContrastLight": "High contrast light",
   "Common.UI.Themes.txtThemeLight": "Light",
   "Common.UI.Themes.txtThemeModernDark": "Modern Dark",
   "Common.UI.Themes.txtThemeModernLight": "Modern Light",
