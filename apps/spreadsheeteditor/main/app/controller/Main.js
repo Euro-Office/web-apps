@@ -493,6 +493,7 @@ define([
                 this.appOptions.canBack = this.appOptions.canBackToFolder = !!_canback;
 
                 this.headerView = this.getApplication().getController('Viewport').getView('Common.Views.Header');
+                this.headerView.setApi(this.api);
                 this.headerView.setCanBack(this.appOptions.canBack, this.appOptions.canBack ? this.editorConfig.customization.goback.text : '');
 
                 var reg = Common.localStorage.getItem("sse-settings-reg-settings"),

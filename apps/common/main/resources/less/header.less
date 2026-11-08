@@ -693,6 +693,22 @@
     }
 }
 
+.eo-save-status {
+    flex-shrink: 0;
+    white-space: nowrap;
+    margin-left: var(--eo-space-1);
+    // header text colour, not --eo-text-secondary: classic themes have a coloured header
+    color: @text-toolbar-header;
+    opacity: .7;
+    font-size: var(--eo-font-size-sm);
+    cursor: default;
+
+    .rtl & {
+        margin-left: 0;
+        margin-right: var(--eo-space-1);
+    }
+}
+
 #box-doc-name, #box-document-title {
     .inner-box-icon.crypted {
         width: 20px;

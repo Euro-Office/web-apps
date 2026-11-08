@@ -495,6 +495,7 @@ define([
                 this.appOptions.canBack = this.appOptions.canBackToFolder = !!_canback;
 
                 appHeader = this.getApplication().getController('Viewport').getView('Common.Views.Header');
+                appHeader.setApi(this.api);
                 appHeader.setCanBack(this.appOptions.canBack, this.appOptions.canBack ? this.appOptions.customization.goback.text : '');
 
                 if (this.editorConfig.lang)
