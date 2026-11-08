@@ -141,7 +141,7 @@ define([
                 me.chOneRow.on('change', function (field, value) {
                     me.toolbar.setOneRow(value === 'checked', 'pe-toolbar-one-row');
                 });
-                me.chOneRow.getValue() && me.toolbar.setOneRow(true);
+                me.chOneRow.getValue() === 'checked' && me.toolbar.setOneRow(true);
                 me.chStatusbar && me.chStatusbar.on('change', _.bind(function (checkbox, state) {
                     me.fireEvent('statusbar:hide', [me.chStatusbar, state !== 'checked']);
                 }, me));

@@ -177,7 +177,7 @@ define([
             me.chOneRow.on('change', function (field, value) {
                 me.toolbar.setOneRow(value === 'checked', 'sse-toolbar-one-row');
             });
-            me.chOneRow.getValue() && me.toolbar.setOneRow(true);
+            me.chOneRow.getValue() === 'checked' && me.toolbar.setOneRow(true);
             me.chRightMenu.on('change', _.bind(function (checkbox, state) {
                 me.fireEvent('rightmenu:hide', [me.chRightMenu, state === 'checked']);
             }, me));

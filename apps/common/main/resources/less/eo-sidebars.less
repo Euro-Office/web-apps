@@ -4,6 +4,9 @@
 // Euro-Office side bars: left and right icon bars and the right settings panel.
 
 .tool-menu .tool-menu-btns {
+    // the bar is absolutely positioned; as a flex box it no longer sits
+    // inline next to the open panel, so pin it to the top
+    top: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
