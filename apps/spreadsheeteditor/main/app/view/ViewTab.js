@@ -105,6 +105,12 @@ define([
                     '<span class="btn-slot text" id="slot-chk-rightmenu"></span>' +
                 '</div>' +
             '</div>' +
+            '<div class="group small">' +
+                '<div class="elset">' +
+                    '<span class="btn-slot text" id="slot-chk-onerow"></span>' +
+                '</div>' +
+                '<div class="elset"></div>' +
+            '</div>' +
             '<div class="separator long macro"></div>' +
             '<div class="group macro">' +
                 '<span class="btn-slot text x-huge" id="slot-btn-macros"></span>' +
@@ -168,6 +174,10 @@ define([
             me.chLeftMenu.on('change', _.bind(function (checkbox, state) {
                 me.fireEvent('leftmenu:hide', [me.chLeftMenu, state === 'checked']);
             }, me));
+            me.chOneRow.on('change', function (field, value) {
+                me.toolbar.setOneRow(value === 'checked', 'sse-toolbar-one-row');
+            });
+            me.chOneRow.getValue() && me.toolbar.setOneRow(true);
             me.chRightMenu.on('change', _.bind(function (checkbox, state) {
                 me.fireEvent('rightmenu:hide', [me.chRightMenu, state === 'checked']);
             }, me));
@@ -414,6 +424,14 @@ define([
                 });
                 this.lockedControls.push(this.chToolbar);
 
+                this.chOneRow = new Common.UI.CheckBox({
+                    labelText: this.textOneRowToolbar,
+                    value: this.toolbar.isOneRowRequested('sse-toolbar-one-row'),
+                    dataHint: '1',
+                    dataHintDirection: 'left',
+                    dataHintOffset: 'small'
+                });
+
                 this.chRightMenu = new Common.UI.CheckBox({
                     lock: [_set.lostConnect],
                     labelText: !Common.UI.isRTL() ? this.textRightMenu : this.textLeftMenu,
@@ -457,6 +475,7 @@ define([
                 this.chFormula.render($host.find('#slot-chk-formula'));
                 this.chStatusbar.render($host.find('#slot-chk-statusbar'));
                 this.chToolbar.render($host.find('#slot-chk-toolbar'));
+                this.chOneRow.render($host.find('#slot-chk-onerow'));
                 this.chHeadings && this.chHeadings.render($host.find('#slot-chk-heading'));
                 this.chGridlines && this.chGridlines.render($host.find('#slot-chk-gridlines'));
                 this.chZeros && this.chZeros.render($host.find('#slot-chk-zeros'));
@@ -733,6 +752,7 @@ define([
             textZeros: 'Show zeros',
             textCombineSheetAndStatusBars: 'Combine sheet and status bars',
             textAlwaysShowToolbar: 'Always show toolbar',
+            textOneRowToolbar: 'Single-row toolbar',
             textInterfaceTheme: 'Interface theme',
             textShowFrozenPanesShadow: 'Show frozen panes shadow',
             tipInterfaceTheme: 'Interface theme',

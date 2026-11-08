@@ -2093,6 +2093,7 @@ define([
                 me.isCompactView = mode.isCompactView;
                 if ( mode.isEdit ) {
                     me.$el.html(me.rendererComponents(me.$layout));
+                    !mode.compactHeader && me.$layout.addClass('eo-clipboard-home-only');
                 } else if (mode.isRestrictedEdit && mode.canFillForms && mode.isPDFForm) {
                     me.$el.html(me.rendererComponentsRestrictedEditForms(me.$layout));
                 } else {

@@ -99,6 +99,12 @@ define([
                         '<span class="btn-slot text" id="slot-chk-rightmenu"></span>' +
                     '</div>' +
                 '</div>' +
+                '<div class="group small">' +
+                    '<div class="elset">' +
+                        '<span class="btn-slot text" id="slot-chk-onerow"></span>' +
+                    '</div>' +
+                    '<div class="elset"></div>' +
+                '</div>' +
                 '<div class="separator long macro"></div>' +
                 '<div class="group macro">' +
                     '<span class="btn-slot text x-huge" id="slot-btn-macros"></span>' +
@@ -132,6 +138,10 @@ define([
                 me.chToolbar && me.chToolbar.on('change', _.bind(function(checkbox, state) {
                     me.fireEvent('toolbar:setcompact', [me.chToolbar, state !== 'checked']);
                 }, me));
+                me.chOneRow.on('change', function (field, value) {
+                    me.toolbar.setOneRow(value === 'checked', 'pe-toolbar-one-row');
+                });
+                me.chOneRow.getValue() && me.toolbar.setOneRow(true);
                 me.chStatusbar && me.chStatusbar.on('change', _.bind(function (checkbox, state) {
                     me.fireEvent('statusbar:hide', [me.chStatusbar, state !== 'checked']);
                 }, me));
@@ -332,6 +342,14 @@ define([
                 });
                 this.lockedControls.push(this.chToolbar);
 
+                this.chOneRow = new Common.UI.CheckBox({
+                    labelText: this.textOneRowToolbar,
+                    value: this.toolbar.isOneRowRequested('pe-toolbar-one-row'),
+                    dataHint: '1',
+                    dataHintDirection: 'left',
+                    dataHintOffset: 'small'
+                });
+
                 this.chRulers = new Common.UI.CheckBox({
                     labelText: this.textRulers,
                     value: !Common.Utils.InternalSettings.get("pe-hidden-rulers"),
@@ -495,6 +513,7 @@ define([
                 this.btnInterfaceTheme.render($host.find('#slot-btn-interface-theme'));
                 this.chStatusbar.render($host.find('#slot-chk-statusbar'));
                 this.chToolbar.render($host.find('#slot-chk-toolbar'));
+                this.chOneRow.render($host.find('#slot-chk-onerow'));
                 this.chRulers.render($host.find('#slot-chk-rulers'));
                 this.chNotes.render($host.find('#slot-chk-notes'));
                 this.btnGuides.render($host.find('#slot-btn-guides'));
@@ -703,6 +722,7 @@ define([
             textInterfaceTheme: 'Interface theme',
             textStatusBar: 'Status Bar',
             textAlwaysShowToolbar: 'Always show toolbar',
+            textOneRowToolbar: 'Single-row toolbar',
             textRulers: 'Rulers',
             textNotes: 'Notes',
             tipFitToSlide: 'Fit to slide',

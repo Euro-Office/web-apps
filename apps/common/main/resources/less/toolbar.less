@@ -1355,3 +1355,118 @@ section .field-styles {
         }
     }
 }
+
+// Euro-Office pill tabs. The #toolbar id outranks the filled, lined and
+// style-off tab variants so one look applies whatever tab style is chosen.
+#toolbar .toolbar .tabs {
+    > ul {
+        display: flex;
+        align-items: center;
+        gap: var(--eo-space-2);
+        padding: 0 var(--eo-space-1);
+    }
+
+    li {
+        flex-shrink: 0;
+        height: auto;
+        align-items: center;
+        border-radius: var(--eo-radius-pill);
+        background-color: transparent;
+        box-shadow: none;
+
+        &:after {
+            display: none;
+        }
+
+        > a {
+            margin-bottom: 0;
+            padding: var(--eo-space-1) var(--eo-space-3);
+            line-height: 16px;
+        }
+
+        &:hover {
+            background-color: var(--eo-hover);
+            box-shadow: none;
+        }
+
+        &.active {
+            background-color: var(--eo-accent-soft);
+            box-shadow: none;
+
+            > a {
+                color: var(--eo-accent);
+            }
+        }
+    }
+}
+
+// Clipboard buttons (copy, paste, cut, format painter) live in the static
+// panel shown next to every tab. Undo/redo sit in the header, so keep the
+// clipboard on Home only. The class is set by the editor toolbars when the
+// header owns undo/redo.
+.toolbar.eo-clipboard-home-only:not([data-eo-tab="home"]) .panel.static .eo-clipboard {
+    display: none;
+}
+
+// Single-row toolbar (View > Single-row toolbar, Mixtbar.setOneRow).
+// The controls area shrinks to one row of small buttons: each group lays its
+// rows side by side and large buttons drop their captions. What no longer
+// fits goes to the existing "More" menu, which keeps the two-row layout
+// because it lives outside .box-controls. Galleries (styles, themes,
+// transitions) need two rows and are hidden in this mode.
+:root body.eo-toolbar-one-row {
+    --toolbar-height-controls: 40px;
+}
+
+.eo-toolbar-one-row .toolbar .box-controls {
+    --toolbar-group-height: var(--x-small-btn-size);
+    --x-huge-btn-height: var(--x-small-btn-size);
+    --x-huge-btn-icon-size: 20px;
+
+    .elset {
+        display: inline-flex;
+        align-items: center;
+        vertical-align: middle;
+
+        &:not(:first-child) {
+            margin-top: 0;
+            margin-inline-start: var(--eo-space-2);
+        }
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    .group.flex,
+    .group.flex + .separator {
+        display: none;
+    }
+
+    .btn.x-huge,
+    .btn-group.x-huge {
+        flex-direction: row;
+        align-items: center;
+        min-width: var(--x-small-btn-size);
+
+        .inner-box-icon,
+        .inner-box-caption {
+            height: 100%;
+            padding: 0;
+        }
+
+        .caption {
+            display: none;
+        }
+
+        .compact-caret {
+            display: block;
+            margin: 0 2px;
+        }
+
+        svg.icon {
+            width: 20px;
+            height: 20px;
+        }
+    }
+}

@@ -334,6 +334,7 @@ define([
 
                     me.$tabs.removeClass('active');
                     me.$panels.removeClass('active');
+                    me.$layout && me.$layout.attr('data-eo-tab', tab);
                     me.hideMoreBtns();
 
                     var panel = this.$panels.filter('[data-tab=' + tab + ']');
@@ -444,6 +445,31 @@ define([
 
             isCompact: function () {
                 return this.isFolded;
+            },
+
+            isOneRowRequested: function (storageKey) {
+                var search = window.location.search;
+                try { search += window.parent.location.search; } catch (e) {}
+                return Common.localStorage.getBool(storageKey) || /[?&]eo-onerow=1(&|$)/.test(search);
+            },
+
+            // Single-row toolbar: CSS (body.eo-toolbar-one-row) shrinks --toolbar-height-controls,
+            // lays out each group's rows side by side and drops large-button captions.
+            // Overflow keeps using the existing "More" menu.
+            setOneRow: function (state, storageKey) {
+                storageKey && Common.localStorage.setBool(storageKey, state);
+                $(document.body).toggleClass('eo-toolbar-one-row', !!state);
+
+                var _intvars = Common.Utils.InternalSettings;
+                _intvars.set('toolbar-height-controls', parseInt(window.getComputedStyle(document.body).getPropertyValue('--toolbar-height-controls')) || 84);
+                _intvars.set('toolbar-height-normal', _intvars.get('toolbar-height-tabs') + _intvars.get('toolbar-height-controls'));
+                this.fireEvent('view:compact', [this, this.isCompact()]);
+                Common.NotificationCenter.trigger('layout:changed', 'toolbar');
+
+                var me = this;
+                this.$panels.each(function () { me.clearActiveData($(this).attr('data-tab')); });
+                this.repaintMoreBtns();
+                this.processPanelVisible(null, true, true);
             },
 
             isExpanded: function () {

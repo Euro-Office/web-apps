@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="separator long"></div>
-            <div class="group small">
+            <div class="group small eo-clipboard">
                 <div class="elset">
                     <span class="btn-slot split" id="slot-btn-copy"></span>
                     <span class="btn-slot" id="slot-btn-paste"></span>
@@ -25,7 +25,7 @@
                     <span class="btn-slot" id="slot-btn-redo"></span>
                 </div>
             </div>
-            <div class="group small">
+            <div class="group small eo-clipboard">
                 <div class="elset">
                     <span class="btn-slot" id="slot-btn-cut"></span>
                 </div>
@@ -33,7 +33,7 @@
                     <span class="btn-slot" id="slot-btn-copystyle"></span>
                 </div>
             </div>
-            <div class="separator long"></div>
+            <div class="separator long eo-clipboard"></div>
         </section>
         <section class="box-panels">
             <section class="panel" data-tab="home" role="tabpanel" aria-labelledby="home">

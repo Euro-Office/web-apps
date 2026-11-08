@@ -94,6 +94,12 @@ define([
                     '<span class="btn-slot text" id="slot-chk-rightmenu"></span>' +
                 '</div>' +
             '</div>' +
+            '<div class="group small">' +
+                '<div class="elset">' +
+                    '<span class="btn-slot text" id="slot-chk-onerow"></span>' +
+                '</div>' +
+                '<div class="elset"></div>' +
+            '</div>' +
             '<div class="separator long separator-rulers"></div>' +
             '<div class="group small">' +
                 '<div class="elset">' +
@@ -136,6 +142,10 @@ define([
                 me.chToolbar.on('change', _.bind(function(checkbox, state) {
                     me.fireEvent('toolbar:setcompact', [me.chToolbar, state !== 'checked']);
                 }, me));
+                me.chOneRow.on('change', function (field, value) {
+                    me.toolbar.setOneRow(value === 'checked', 'de-toolbar-one-row');
+                });
+                me.chOneRow.getValue() && me.toolbar.setOneRow(true);
                 me.chStatusbar.on('change', _.bind(function (checkbox, state) {
                     me.fireEvent('statusbar:hide', [me.chStatusbar, state !== 'checked']);
                 }, me));
@@ -271,6 +281,14 @@ define([
                     dataHintOffset: 'small'
                 });
                 this.lockedControls.push(this.chToolbar);
+
+                this.chOneRow = new Common.UI.CheckBox({
+                    labelText: this.textOneRowToolbar,
+                    value: this.toolbar.isOneRowRequested('de-toolbar-one-row'),
+                    dataHint: '1',
+                    dataHintDirection: 'left',
+                    dataHintOffset: 'small'
+                });
 
                 this.chRightMenu = new Common.UI.CheckBox({
                     lock: [_set.lostConnect, _set.disableOnStart],
@@ -443,6 +461,7 @@ define([
                 this.btnZoom100.render($host.find('#slot-btn-zoom-100'));
                 this.chStatusbar.render($host.find('#slot-chk-statusbar'));
                 this.chToolbar.render($host.find('#slot-chk-toolbar'));
+                this.chOneRow.render($host.find('#slot-chk-onerow'));
                 this.chRulers.render($host.find('#slot-chk-rulers'));
                 this.btnMacros && this.btnMacros.render($host.find('#slot-btn-macros'));
                 this.chLeftMenu.render($host.find('#slot-chk-leftmenu'));
@@ -543,6 +562,7 @@ define([
             textInterfaceTheme: 'Interface theme',
             textStatusBar: 'Status Bar',
             textAlwaysShowToolbar: 'Always show toolbar',
+            textOneRowToolbar: 'Single-row toolbar',
             textRulers: 'Rulers',
             textDarkDocument: 'Dark document',
             tipHeadings: 'Headings',
