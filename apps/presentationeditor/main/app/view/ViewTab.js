@@ -85,25 +85,26 @@ define([
                 '<div class="separator long separator-rulers"></div>' +
                 '<div class="group small">' +
                     '<div class="elset">' +
-                        '<span class="btn-slot text" id="slot-chk-toolbar"></span>' +
-                    '</div>' +
-                    '<div class="elset">' +
                         '<span class="btn-slot text" id="slot-chk-statusbar"></span>' +
                     '</div>' +
-                '</div>' +
-                '<div class="group small">' +
                     '<div class="elset">' +
                         '<span class="btn-slot text" id="slot-chk-leftmenu"></span>' +
                     '</div>' +
-                    '<div class="elset">' +
-                        '<span class="btn-slot text" id="slot-chk-rightmenu"></span>' +
-                    '</div>' +
                 '</div>' +
                 '<div class="group small">' +
                     '<div class="elset">' +
-                        '<span class="btn-slot text" id="slot-chk-onerow"></span>' +
+                        '<span class="btn-slot text" id="slot-chk-rightmenu"></span>' +
                     '</div>' +
                     '<div class="elset"></div>' +
+                '</div>' +
+                '<div class="separator long"></div>' +
+                '<div class="group small">' +
+                    '<div class="elset">' +
+                        '<span class="btn-slot text" id="slot-chk-toolbar"></span>' +
+                    '</div>' +
+                    '<div class="elset">' +
+                        '<span class="btn-slot text" id="slot-chk-onerow"></span>' +
+                    '</div>' +
                 '</div>' +
                 '<div class="separator long macro"></div>' +
                 '<div class="group macro">' +

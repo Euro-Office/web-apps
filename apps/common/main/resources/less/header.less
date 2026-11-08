@@ -728,3 +728,16 @@
 }
 
 
+#slot-btn-start-fill .btn.yellow {
+    color: #fff;
+    background-color: var(--eo-accent);
+    border-radius: var(--eo-radius-md);
+
+    &:hover:not(.disabled),
+    &.over:not(.disabled),
+    &:active:not(.disabled),
+    &.active:not(.disabled) {
+        background-color: var(--eo-accent) !important;
+        background-image: linear-gradient(rgba(0, 0, 0, .12), rgba(0, 0, 0, .12));
+    }
+}

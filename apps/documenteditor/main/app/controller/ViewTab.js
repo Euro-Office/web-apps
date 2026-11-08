@@ -177,9 +177,7 @@ define([
                     }
 
                     if (!config.isEdit) {
-                        me.view.chRulers.$el.closest('.group').remove();
-                        me.view.chRulers.$el.remove();
-                        me.view.$el.find('.separator-rulers').remove();
+                        me.view.chRulers.$el.closest('.elset').remove();
                     }
 
                     if (
