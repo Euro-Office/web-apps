@@ -50,6 +50,7 @@ define([
                 text: locale.txtThemeLight || 'Light',
                 type: 'light',
                 source: 'static',
+                hidden: true,
                 skeleton: {
                     css: `.loadmask {--sk-height-toolbar-controls: 66px; --sk-layout-padding-toolbar: 0;
                                     --sk-shadow-toolbar: inset 0 -1px #cbcbcb; --sk-border-radius-toolbar: 0;
@@ -71,6 +72,7 @@ define([
                 text: locale.txtThemeClassicLight || 'Classic Light',
                 type: 'light',
                 source: 'static',
+                hidden: true,
                 skeleton: {
                     css: `.loadmask {--sk-height-toolbar-controls: 66px; --sk-layout-padding-toolbar: 0;
                                     --sk-shadow-toolbar: inset 0 -1px #cbcbcb; --sk-border-radius-toolbar: 0;
@@ -92,6 +94,7 @@ define([
                 text: locale.txtThemeDark || 'Dark',
                 type: 'dark',
                 source: 'static',
+                hidden: true,
                 skeleton: {
                     css: `.theme-dark .loadmask, .theme-type-dark .loadmask {
                                 --sk-height-toolbar-controls: 66px; --sk-layout-padding-toolbar: 0;
@@ -118,6 +121,7 @@ define([
                 text: locale.txtThemeContrastDark || 'Dark Contrast',
                 type: 'dark',
                 source: 'static',
+                hidden: true,
                 skeleton: {
                     css: `.theme-dark .loadmask, .theme-type-dark .loadmask {
                                 --sk-height-toolbar-controls: 66px; --sk-layout-padding-toolbar: 0;
@@ -144,6 +148,7 @@ define([
                 text: locale.txtThemeGray || 'Gray',
                 type: 'light',
                 source: 'static',
+                hidden: true,
                 skeleton: {
                     css: `.loadmask {--sk-height-toolbar-controls: 66px;--sk-layout-padding-toolbar: 0;
                                     --sk-shadow-toolbar: inset 0 -1px #cbcbcb; --sk-border-radius-toolbar: 0;
@@ -162,7 +167,7 @@ define([
                 },
             },
             'theme-white': {
-                text: locale.txtThemeModernLight || 'White',
+                text: locale.txtThemeLight || 'Light',
                 type: 'light',
                 source: 'static',
                 icons: {
@@ -170,7 +175,7 @@ define([
                 }
             },
             'theme-night': {
-                text: locale.txtThemeModernDark || 'Night',
+                text: locale.txtThemeDark || 'Dark',
                 type: 'dark',
                 source: 'static',
                 icons: {
@@ -343,9 +348,9 @@ define([
             }
 
             if ( objtheme && typeof(objtheme) == 'object' )
-                return objtheme.id;
+                return window.uitheme.normalize_id(objtheme.id);
 
-            return objtheme;
+            return window.uitheme.normalize_id(objtheme);
         }
 
         var on_document_open = function (data) {
@@ -527,13 +532,13 @@ define([
             },
 
             map: function () {
-                if ( Common.Controllers.Desktop.isActive() && !Common.Controllers.Desktop.systemThemeSupported() ) {
-                    const new_map = Object.assign({}, themes_map);
-                    delete new_map['theme-system'];
-
-                    return new_map;
+                const new_map = {};
+                const hide_system = Common.Controllers.Desktop.isActive() && !Common.Controllers.Desktop.systemThemeSupported();
+                for (const id in themes_map) {
+                    if ( !themes_map[id].hidden && !(hide_system && id == 'theme-system') )
+                        new_map[id] = themes_map[id];
                 }
-                return themes_map
+                return new_map;
             },
 
             get: function (id) {
@@ -549,7 +554,7 @@ define([
             },
 
             defaultThemeId: function (type) {
-                return type == 'dark' ? window.uitheme.DEFAULT_LIGHT_THEME_ID : window.uitheme.DEFAULT_LIGHT_THEME_ID;
+                return type == 'dark' ? window.uitheme.DEFAULT_DARK_THEME_ID : window.uitheme.DEFAULT_LIGHT_THEME_ID;
             },
 
             defaultTheme: function (type) {

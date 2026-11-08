@@ -90,7 +90,7 @@ if ( !window.uitheme.id && !!params.uitheme ) {
     if ( params.uitheme == 'theme-system' ) {
         window.uitheme.adapt_to_system_theme();
     } else {
-        window.uitheme.id = params.uitheme;
+        window.uitheme.id = window.uitheme.normalize_id(params.uitheme);
         window.uitheme.type = params.uithemetype;
     }
 }

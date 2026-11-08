@@ -42,7 +42,16 @@
     window.uitheme.DEFAULT_LIGHT_THEME_ID = !window.isIEBrowser ? 'theme-white' : 'theme-classic-light';
     window.uitheme.DEFAULT_DARK_THEME_ID = !window.isIEBrowser ? 'theme-night' : 'theme-dark';
 
+    const legacy_theme_ids = {
+        'theme-light': 'theme-white', 'theme-classic-light': 'theme-white', 'theme-gray': 'theme-white',
+        'theme-dark': 'theme-night', 'theme-contrast-dark': 'theme-night',
+    };
+    window.uitheme.normalize_id = function (id) {
+        return window.isIEBrowser ? id : legacy_theme_ids[id] || id;
+    }
+
     window.uitheme.set_id = function (id) {
+        id = this.normalize_id(id);
         if ( id == 'theme-system' )
             this.adapt_to_system_theme();
         else this.id = id;
@@ -69,7 +78,10 @@
         }
 
     // localstorage.setItem('ui-theme-id', 'theme-white');
-    !window.uitheme.id && window.uitheme.set_id(localstorage.getItem("ui-theme-id"));
+    const stored_theme_id = localstorage.getItem("ui-theme-id");
+    if ( local_storage_available && stored_theme_id && legacy_theme_ids[stored_theme_id] && !window.isIEBrowser )
+        localstorage.setItem("ui-theme-id", legacy_theme_ids[stored_theme_id]);
+    !window.uitheme.id && window.uitheme.set_id(stored_theme_id);
     window.uitheme.iscontentdark = localstorage.getItem("content-theme") == 'dark';
 
     function inject_style_tag(content, id) {
