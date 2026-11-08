@@ -112,6 +112,7 @@ define([
         },
 
         onRightMenuClick: function(menu, type, minimized, event) {
+            minimized && event && (this._autoOpenDone = true);
             if (!minimized && this.editMode) {
                 if (event) { // user click event
                     if (type == Common.Utils.documentSettingsType.Pivot)
@@ -135,6 +136,25 @@ define([
             }
             Common.NotificationCenter.trigger('layout:changed', 'rightmenu');
             Common.NotificationCenter.trigger('edit:complete', this.rightmenu);
+        },
+
+        // Highest settings type of a selected object (not plain text/cell/slide), -1 if none
+        getSelectedObjectType: function(types) {
+            var found = -1;
+            for (var i=0; i<types.length; i++) {
+                var pnl = this._settings[types[i]];
+                if (pnl && pnl.btn && !pnl.hidden && types[i]>found) found = types[i];
+            }
+            return found;
+        },
+
+        // Open the panel the first time an object is selected, unless the user closed it in this session
+        followSelectedObject: function(objType) {
+            var changed = objType !== this._lastObjectType;
+            this._lastObjectType = objType;
+            var autoOpen = objType>=0 && this.rightmenu.minimizedMode && !this._autoOpenDone && this.rightmenu.$el.is(':visible');
+            autoOpen && (this._autoOpenDone = true);
+            return {changed: changed && objType>=0, open: autoOpen};
         },
 
         onSelectionChanged: function(info) {
@@ -257,6 +277,7 @@ define([
                 var pnl = this._settings[i];
                 if (pnl===undefined || pnl.btn===undefined || pnl.panel===undefined) continue;
 
+                pnl.btn.setVisible(!pnl.hidden);
                 if ( pnl.hidden ) {
                     if (!pnl.btn.isDisabled()) {
                         pnl.btn.setDisabled(true);
@@ -279,8 +300,13 @@ define([
                 }
             }
 
+            var follow = this.followSelectedObject(this.getSelectedObjectType([Common.Utils.documentSettingsType.TextArt, Common.Utils.documentSettingsType.Shape, Common.Utils.documentSettingsType.Image, Common.Utils.documentSettingsType.Chart, Common.Utils.documentSettingsType.Pivot, Common.Utils.documentSettingsType.Slicer]));
+            follow.open && (this._openRightMenu = true);
+
             if (!this.rightmenu.minimizedMode || this._openRightMenu) {
                 var active;
+
+                if (priorityactive<0 && follow.changed) priorityactive = this._lastObjectType;
 
                 if (priorityactive<0 && this._lastVisibleSettings!==undefined) {
                     var pnl = this._settings[this._lastVisibleSettings];
@@ -420,6 +446,7 @@ define([
             var disabled = (!valid || valid.length<1) && (!requested || requested.length<1),
                 type = Common.Utils.documentSettingsType.Signature;
             this._settings[type].hidden = disabled ? 1 : 0;
+            this._settings[type].btn.setVisible(!disabled);
             this._settings[type].btn.setDisabled(disabled);
             this.rightmenu.setDisabledMoreMenuItem(this._settings[type].btn, disabled);
             this._settings[type].panel.setLocked(this._settings[type].locked);

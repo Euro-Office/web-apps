@@ -108,6 +108,7 @@ define([
         },
 
         onRightMenuClick: function(menu, type, minimized, event) {
+            minimized && event && (this._autoOpenDone = true);
             if (!minimized && this.editMode) {
                 if (event) { // user click event
                     if (!this._settings[Common.Utils.documentSettingsType.Form].hidden) {
@@ -141,6 +142,25 @@ define([
             }
             Common.NotificationCenter.trigger('layout:changed', 'rightmenu');
             this.rightmenu.fireEvent('editcomplete', this.rightmenu);
+        },
+
+        // Highest settings type of a selected object (not plain text/cell/slide), -1 if none
+        getSelectedObjectType: function(types) {
+            var found = -1;
+            for (var i=0; i<types.length; i++) {
+                var pnl = this._settings[types[i]];
+                if (pnl && pnl.btn && !pnl.hidden && types[i]>found) found = types[i];
+            }
+            return found;
+        },
+
+        // Open the panel the first time an object is selected, unless the user closed it in this session
+        followSelectedObject: function(objType) {
+            var changed = objType !== this._lastObjectType;
+            this._lastObjectType = objType;
+            var autoOpen = objType>=0 && this.rightmenu.minimizedMode && !this._autoOpenDone && this.rightmenu.$el.is(':visible');
+            autoOpen && (this._autoOpenDone = true);
+            return {changed: changed && objType>=0, open: autoOpen};
         },
 
         onApiFocusObject: function(SelectedObjects) {
@@ -270,6 +290,7 @@ define([
                 var pnl = this._settings[i];
                 if (pnl===undefined || pnl.btn===undefined || pnl.panel===undefined) continue;
 
+                pnl.btn.setVisible(!pnl.hidden);
                 if ( pnl.hidden ) {
                     if (!pnl.btn.isDisabled()) {
                         pnl.btn.setDisabled(true);
@@ -297,6 +318,9 @@ define([
             if (!this._settings[Common.Utils.documentSettingsType.Signature].hidden)
                 this._settings[Common.Utils.documentSettingsType.Signature].panel.setProtected(isProtected);
 
+            var follow = this.followSelectedObject(this.getSelectedObjectType([Common.Utils.documentSettingsType.Table, Common.Utils.documentSettingsType.TextArt, Common.Utils.documentSettingsType.Shape, Common.Utils.documentSettingsType.Image, Common.Utils.documentSettingsType.Chart]));
+            follow.open && (open = true);
+
             if (!this.rightmenu.minimizedMode || open) {
                 var active;
 
@@ -319,6 +343,8 @@ define([
                             priorityactive = Common.Utils.documentSettingsType.Image;
                     }
                 }
+
+                if (priorityactive<0 && follow.changed) priorityactive = this._lastObjectType;
 
                 if (priorityactive>-1) active = priorityactive;
                 else if (lastactive>=0 && currentactive<0) active = lastactive;
@@ -451,6 +477,7 @@ define([
         onStartMailMerge: function() {
             var type = Common.Utils.documentSettingsType.MailMerge;
             this._settings[type].hidden = 0;
+            this._settings[type].btn.setVisible(true);
             this._settings[type].btn.setDisabled(false);
             this.rightmenu.setDisabledMoreMenuItem(this._settings[type].btn, false);
             this.rightmenu.SetActivePane(type, true);
@@ -462,6 +489,7 @@ define([
         onError: function(id, level, errData) {
             if (id==Asc.c_oAscError.ID.MailMergeLoadFile) {
                 this._settings[Common.Utils.documentSettingsType.MailMerge].hidden = 1;
+                this._settings[Common.Utils.documentSettingsType.MailMerge].btn.setVisible(false);
                 this._settings[Common.Utils.documentSettingsType.MailMerge].btn.setDisabled(true);
                 this.rightmenu.setDisabledMoreMenuItem(this._settings[Common.Utils.documentSettingsType.MailMerge].btn, true);
                 var selectedElements = this.api.getSelectedElements();
@@ -476,6 +504,7 @@ define([
             var disabled = (!valid || valid.length<1) && (!requested || requested.length<1),
                 type = Common.Utils.documentSettingsType.Signature;
             this._settings[type].hidden = disabled ? 1 : 0;
+            this._settings[type].btn.setVisible(!disabled);
             this._settings[type].btn.setDisabled(disabled);
             this.rightmenu.setDisabledMoreMenuItem(this._settings[type].btn, disabled);
             this._settings[type].panel.setLocked(this._settings[type].locked);
