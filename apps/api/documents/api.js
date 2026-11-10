@@ -1013,7 +1013,8 @@
 
         var _onMessage = function(msg) {
             // TODO: check message origin
-            if (msg && window.JSON && _scope.frameOrigin==msg.origin ) {
+            // file:// frames have an opaque origin, which Chromium reports as "null"
+            if (msg && window.JSON && (_scope.frameOrigin==msg.origin || (msg.origin==="null" && _scope.frameOrigin==="file://"))) {
                 if (msg.data && msg.data.event === 'onSaveDocument') {
                     if (_fn) {
                         _fn.call(_scope, msg.data);
