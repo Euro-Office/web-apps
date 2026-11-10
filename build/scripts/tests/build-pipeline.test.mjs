@@ -50,6 +50,7 @@ function fakeDeploy() {
             write(`apps/${ed}/mobile/${f}`);
         }
     }
+    write('apps/common/main/resources/img/doc-formats/formats@2.5x.svg');
     write('apps/documenteditor/forms/app.js');
     write('apps/documenteditor/forms/code.js');
     return root;
