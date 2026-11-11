@@ -319,7 +319,7 @@ define([
 
                 this.btnPageless = new Common.UI.Button({
                     cls: 'btn-toolbar',
-                    iconCls: 'toolbar__icon btn-multiple-pages',
+                    iconCls: 'toolbar__icon btn-pageless',
                     lock: [_set.lostConnect, _set.disableOnStart],
                     caption: this.textPageless,
                     pressed: Common.localStorage.getBool("de-pageless-mode", false),
@@ -494,6 +494,7 @@ define([
                 this.btnInterfaceTheme.updateHint(this.tipInterfaceTheme);
                 this.btnDarkDocument.updateHint(this.tipDarkDocument);
                 this.btnMultiplePages.updateHint(this.tipMultiplePages);
+                this.btnPageless.updateHint(this.tipPageless);
                 this.btnZoom100.updateHint(this.tipZoom100);
                 this.btnsFitToPage.forEach(function (btn) {
                     btn.updateHint(me.tipFitToPage);
@@ -568,6 +569,7 @@ define([
             tipFitToPage: 'Fit to page',
             tipFitToWidth: 'Fit to width',
             tipInterfaceTheme: 'Interface theme',
+            tipPageless: 'Show the document as one continuous sheet',
             tipDarkDocument: 'Dark document',
             textLeftMenu: 'Left panel',
             textRightMenu: 'Right panel',
