@@ -156,7 +156,7 @@ define([
                 role: 'dialog'
         };
 
-        var template = '<div class="asc-window<%= modal?" modal":"" %><%= cls?" "+cls:"" %>" id="<%= id %>" style="width:<%= width %>px;" role="<%= role %>" aria-modal="<%= modal %>">' +
+        var template = '<div class="asc-window<%= modal?" modal":"" %><%= cls?" "+cls:"" %>" id="<%= id %>" style="width:<%= width %>px;" role="<%= role %>" aria-modal="<%= modal %>"<% if (header==true) { %> aria-labelledby="<%= id %>-title"<% } %>>' +
                             '<% if (header==true) { %>' +
                                 '<div class="header">' +
                                     '<div class="tools">' +
@@ -167,7 +167,7 @@ define([
                                         '<div class="tool help">?</div>' +
                                     '<% %>' +
                                     '</div>' +
-                                    '<div class="title"><%= title %></div> ' +
+                                    '<div class="title" id="<%= id %>-title"><%= title %></div> ' +
                                 '</div>' +
                             '<% } %>' +
                             '<div class="body"><%= tpl %>' +
