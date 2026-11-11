@@ -3133,6 +3133,7 @@
   "SSE.Views.DocumentHolder.txtCellFormat": "Format cells",
   "SSE.Views.DocumentHolder.txtClear": "Clear",
   "SSE.Views.DocumentHolder.txtClearAll": "All",
+  "SSE.Views.DocumentHolder.txtRemoveCheckbox": "Remove Checkbox",
   "SSE.Views.DocumentHolder.txtClearComments": "Comments",
   "SSE.Views.DocumentHolder.txtClearFormat": "Format",
   "SSE.Views.DocumentHolder.txtClearHyper": "Links",
