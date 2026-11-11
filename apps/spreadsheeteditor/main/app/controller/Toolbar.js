@@ -484,6 +484,7 @@ define([
                 toolbar.btnInsertText.on('click',                           _.bind(this.onBtnInsertTextClick, this));
                 toolbar.btnInsertText.menu.on('item:click',                 _.bind(this.onMenuInsertTextClick, this));
                 toolbar.btnInsertCheckBox.on('click',                       _.bind(this.onInsertCheckBoxClick, this));
+                toolbar.btnInsertCheckBox.menu.on('item:click',             _.bind(this.onInsertCheckBoxClick, this));
                 toolbar.btnInsertShape.menu.on('hide:after',                _.bind(this.onInsertShapeHide, this));
                 toolbar.btnInsertEquation.on('click',                       _.bind(this.onInsertEquationClick, this));
                 toolbar.btnInsertSymbol.menu.items[2].on('click',           _.bind(this.onInsertSymbolClick, this));
@@ -4734,9 +4735,12 @@ define([
             !specCharacter && this.toolbar.saveSymbol(symbol, font);
         },
 
-        onInsertCheckBoxClick: function() {
+        onInsertCheckBoxClick: function(menu, item) {
             if (this.api) {
-                this.api.asc_addCheckBoxOnSheet();
+                if (item && item.value === 'form')
+                    this.api.asc_addCheckBoxOnSheet();
+                else
+                    this.api.asc_insertCheckbox();
             }
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
         },
