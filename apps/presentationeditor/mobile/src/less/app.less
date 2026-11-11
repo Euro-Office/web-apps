@@ -44,6 +44,11 @@
     --f7-popover-width: 360px;
 }
 
+// The toolbar is not shifted by the safe area, so the content below it must not be either
+.page.editor > .page-content {
+    --f7-page-navbar-offset: var(--f7-navbar-height);
+}
+
 // Skeleton of document
 
 .doc-placeholder {
