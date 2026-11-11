@@ -2735,7 +2735,7 @@ define([], function () {
                 documentHolder.pmiDeleteTable.setDisabled(isCellLocked || isTableLocked || this._state.wsLock || isUserProtected);
                 documentHolder.pmiClear.setDisabled(isCellLocked || inPivot || isUserProtected);
                 var hasCheckbox = !!(xfs && xfs.asc_getCheckbox());
-                documentHolder.pmiRemoveCheckbox.setVisible(!!(iscellmenu || isrowmenu || iscolmenu || isallmenu) && hasCheckbox);
+                documentHolder.pmiRemoveCheckbox.setVisible(!!(iscellmenu || isrowmenu || iscolmenu || isallmenu) && !iscelledit && hasCheckbox);
                 documentHolder.pmiRemoveCheckbox.setDisabled(isCellLocked || isUserProtected);
                 documentHolder.pmiFilterCells.setDisabled(isCellLocked || isTableLocked|| (filterInfo==null) || inPivot || !filterInfo && !this.permissions.canModifyFilter || this._state.wsLock || isUserProtected);
                 documentHolder.pmiSortCells.setDisabled(isCellLocked || isTableLocked|| (filterInfo==null) || inPivot || !this.permissions.canModifyFilter || this._state.wsProps['Sort'] || isUserProtected);
