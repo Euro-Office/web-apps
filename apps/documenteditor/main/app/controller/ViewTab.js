@@ -103,15 +103,11 @@ define([
                         this.view.chStatusbar.setValue(!state, true);
                     }, this),
                     'pages:multiplechanged': _.bind(function (isMultiple) {
+                        isMultiple && this.setPagelessMode(false);
                         this.api.zoomCustomMode();
                         this.api.SetMultipageViewMode(isMultiple);
                         Common.localStorage.setBool("de-zoom-multipage", isMultiple);
                         this.view.btnMultiplePages.toggle(isMultiple);
-                    }, this),
-                    'pages:pagelesschanged': _.bind(function (isPageless) {
-                        this.api.SetPagelessMode(isPageless);
-                        Common.localStorage.setBool("de-pageless-mode", isPageless);
-                        this.view.btnPageless.toggle(isPageless);
                     }, this)
                 },
                 'LeftMenu': {
@@ -290,6 +286,7 @@ define([
 
         onMultiplePages: function (pressed) {
             if (this.api) {
+                pressed && this.setPagelessMode(false);
                 this.api.zoomCustomMode();
                 this.api.SetMultipageViewMode(pressed);
                 Common.localStorage.setBool("de-zoom-multipage", pressed);
@@ -298,10 +295,18 @@ define([
         },
 
         onPagelessMode: function (pressed) {
-            if (this.api) {
-                this.api.SetPagelessMode(pressed);
-                Common.localStorage.setBool("de-pageless-mode", pressed);
+            if (!this.api) return;
+            if (pressed && this.view.btnMultiplePages.pressed) {
+                this.view.btnMultiplePages.toggle(false, true);
+                this.onMultiplePages(false);
             }
+            this.setPagelessMode(pressed);
+        },
+
+        setPagelessMode: function (pressed) {
+            this.api.SetPagelessMode(pressed);
+            Common.localStorage.setBool("de-pageless-mode", pressed);
+            this.view.btnPageless.toggle(pressed, true);
         },
 
         onZoomChange: function (percent, type) {
