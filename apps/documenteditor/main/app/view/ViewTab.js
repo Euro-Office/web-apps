@@ -322,7 +322,7 @@ define([
                     iconCls: 'toolbar__icon btn-pageless',
                     lock: [_set.lostConnect, _set.disableOnStart],
                     caption: this.textPageless,
-                    pressed: Common.localStorage.getBool("de-pageless-mode", false),
+                    pressed: Common.localStorage.getBool("de-pageless-mode", false) && !Common.localStorage.getBool("de-zoom-multipage", false),
                     enableToggle: true,
                     dataHint: '1',
                     dataHintDirection: 'bottom',
