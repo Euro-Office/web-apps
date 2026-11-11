@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M6.5 3.5v17m11-17v17" class="icon-stroke-gray-primary"/>
+    <path d="M9.5 6.5h5m-5 3h5m-5 3h5m-5 3h5" class="icon-stroke-blue-primary"/>
+</svg>

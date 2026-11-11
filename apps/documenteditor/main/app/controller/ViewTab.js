@@ -90,7 +90,8 @@ define([
                     'macros:pause':  _.bind(this.onClickMacrosPause, this),
                     'pointer:select': _.bind(this.onPointerType, this, 'select'),
                     'pointer:hand': _.bind(this.onPointerType, this, 'hand'),
-                    'pages:multiple': _.bind(this.onMultiplePages, this)
+                    'pages:multiple': _.bind(this.onMultiplePages, this),
+                    'pages:pageless': _.bind(this.onPagelessMode, this)
                 },
                 'Toolbar': {
                     'view:compact': _.bind(function (toolbar, state) {
@@ -102,6 +103,7 @@ define([
                         this.view.chStatusbar.setValue(!state, true);
                     }, this),
                     'pages:multiplechanged': _.bind(function (isMultiple) {
+                        isMultiple && this.setPagelessMode(false);
                         this.api.zoomCustomMode();
                         this.api.SetMultipageViewMode(isMultiple);
                         Common.localStorage.setBool("de-zoom-multipage", isMultiple);
@@ -284,11 +286,27 @@ define([
 
         onMultiplePages: function (pressed) {
             if (this.api) {
+                pressed && this.setPagelessMode(false);
                 this.api.zoomCustomMode();
                 this.api.SetMultipageViewMode(pressed);
                 Common.localStorage.setBool("de-zoom-multipage", pressed);
                 this.view.fireEvent('pages:multiplechanged', [pressed]);
             }
+        },
+
+        onPagelessMode: function (pressed) {
+            if (!this.api) return;
+            if (pressed && this.view.btnMultiplePages.pressed) {
+                this.view.btnMultiplePages.toggle(false, true);
+                this.onMultiplePages(false);
+            }
+            this.setPagelessMode(pressed);
+        },
+
+        setPagelessMode: function (pressed) {
+            this.api.SetPagelessMode(pressed);
+            Common.localStorage.setBool("de-pageless-mode", pressed);
+            this.view.btnPageless.toggle(pressed, true);
         },
 
         onZoomChange: function (percent, type) {
