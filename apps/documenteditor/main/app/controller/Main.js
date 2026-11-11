@@ -1342,7 +1342,7 @@ define([
                         this.api.zoom(zf > 0 ? zf : 100);
                 }
 
-                if (Common.localStorage.getBool("de-pageless-mode", false)) {
+                if (Common.localStorage.getBool("de-pageless-mode", false) && !Common.localStorage.getBool("de-zoom-multipage", false)) {
                     this.api.SetPagelessMode(true);
                 }
 
