@@ -131,15 +131,6 @@
         }
     </style>
 
-    <!--[if lt IE 9]>
-      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
-    <![endif]-->
-      <script>
-          if(/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) {
-              document.write('<script src="../../common/main/lib/util/fix-ie-compat.js"><\/script>');
-              document.write('<script src="../../../../sdkjs/vendor/string.js"><\/script>');
-          }
-      </script>
   </head>
 
   <body class="embed-body">
@@ -169,21 +160,6 @@
       <!-- debug end -->
 
       <script>
-          var  userAgent = navigator.userAgent.toLowerCase(),
-               check = function(regex){ return regex.test(userAgent); };
-          if (!check(/opera/) && (check(/msie/) || check(/trident/))) {
-               var m = /msie (\d+\.\d+)/.exec(userAgent);
-               if (m && parseFloat(m[1]) < 10.0) {
-                   document.write(
-                       '<div id="id-error-mask" class="errormask">',
-                           '<div class="error-body" align="center">',
-                               '<div id="id-error-mask-title" class="title">Your browser is not supported.</div>',
-                               '<div id="id-error-mask-text">Sorry, ONLYOFFICE Document is currently only supported in the latest versions of the Chrome, Firefox, Safari or Internet Explorer web browsers.</div>',
-                           '</div>',
-                       '</div>'
-                   );
-               }
-          }
 
           function getUrlParams() {
               var e,
@@ -284,8 +260,7 @@
       <script type="text/javascript" src="js/application.js"></script>
       <script type="text/javascript">
           var isBrowserSupported = function() {
-              return  ($.browser.msie     && parseFloat($.browser.version) > 9)     ||
-                      ($.browser.chrome   && parseFloat($.browser.version) > 7)     ||
+              return  ($.browser.chrome   && parseFloat($.browser.version) > 7)     ||
                       ($.browser.safari   && parseFloat($.browser.version) > 4)     ||
                       ($.browser.opera    && parseFloat($.browser.version) > 10.4)  ||
                       ($.browser.webkit   && parseFloat($.browser.version) > 534.53)  ||
