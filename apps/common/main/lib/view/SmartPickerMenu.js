@@ -373,7 +373,7 @@ define([
              * @param {Array} providers [{id, title, icon_url}]
              */
             setProviders: function(providers) {
-                _providers = $.isArray(providers) ? providers : [];
+                _providers = Array.isArray(providers) ? providers : [];
             },
 
             close: function() {

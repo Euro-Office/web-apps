@@ -14,5 +14,22 @@
     "**/tests/**",
     "**/__fixtures__/**",
     "apps/*/main/resources/help/**"
+  ],
+  "packageRules": [
+    {
+      "description": "Libraries shipped to browsers from build/node_modules (vendor.manifest.mjs): review every update, never automerge",
+      "matchFileNames": ["build/package.json"],
+      "matchPackageNames": [
+        "backbone",
+        "jquery",
+        "jquery.browser",
+        "monaco-editor",
+        "requirejs",
+        "requirejs-text",
+        "socket.io-client",
+        "underscore"
+      ],
+      "automerge": false
+    }
   ]
 }

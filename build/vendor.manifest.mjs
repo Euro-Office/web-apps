@@ -12,26 +12,32 @@
  *
  * Fields:
  *   name   — human label used in log output
- *   src    — path relative to web-apps/vendor/ (VENDOR_SRC)
+ *   src    — path relative to web-apps/build/node_modules/ (npm packages, kept current by Renovate),
+ *            or to web-apps/vendor/ when local is true (our own code, or not published to npm)
  *   dest   — path relative to BUILD_ROOT/web-apps/ (BUILD_OUT)
- *   dir    — true: src is a directory; verify-deploy checks dest is a non-empty directory
- *   minify — true: deploy-common handles this entry specially (requirejs minification)
+ *   local  — true: src lives in web-apps/vendor/
+ *   dir    — true: src is a directory, copied with the optional include/exclude globs
+ *   minify — true: src is minified with terser before writing dest
+ *   jquery — true: src is the jquery package, built by scripts/lib/jquery-min.js
  *
- * Entries without dir/minify are plain file copies consumed by the generic vendor loop.
+ * The vendor/<lib> paths that unbuilt pages load (apps/<editor>/main/index.html, app_dev.js,
+ * test/) are symlinks into build/node_modules.
  */
 export const VENDORS = [
     // ---- jquery ---------------------------------------------------------------
-    { name: 'jquery',        src: 'jquery/jquery.min.js',                   dest: 'vendor/jquery/jquery.min.js' },
+    { name: 'jquery',         src: 'jquery',                                    dest: 'vendor/jquery/jquery.min.js', jquery: true },
     { name: 'jquery.browser', src: 'jquery.browser/dist/jquery.browser.min.js', dest: 'vendor/jquery/jquery.browser.min.js' },
 
     // ---- simple file copies ---------------------------------------------------
-    { name: 'socketio',      src: 'socketio/socket.io.min.js',              dest: 'vendor/socketio/socket.io.min.js' },
-    { name: 'xregexp',       src: 'xregexp/xregexp-all-min.js',             dest: 'vendor/xregexp/xregexp-all-min.js' },
-    { name: 'underscore',    src: 'underscore/underscore-min.js',           dest: 'vendor/underscore/underscore-min.js' },
+    { name: 'socketio',       src: 'socket.io-client/dist/socket.io.min.js',    dest: 'vendor/socketio/socket.io.min.js' },
+    { name: 'xregexp',        src: 'xregexp/xregexp-all-min.js',                dest: 'vendor/xregexp/xregexp-all-min.js', local: true },
+    { name: 'underscore',     src: 'underscore/underscore-min.js',              dest: 'vendor/underscore/underscore-min.js' },
 
-    // ---- requirejs (minified before copy — deploy-common handles specially) ---
-    { name: 'requirejs',     src: 'requirejs/require.js',                   dest: 'vendor/requirejs/require.js', minify: true },
+    // ---- requirejs ------------------------------------------------------------
+    { name: 'requirejs',      src: 'requirejs/require.js',                      dest: 'vendor/requirejs/require.js', minify: true },
 
-    // ---- monaco (directory copy) ---------------------------------------------
-    { name: 'monaco',        src: 'monaco',                                 dest: 'vendor/monaco', dir: true },
+    // ---- monaco: our wrappers, then the editor itself into vendor/monaco/monaco
+    { name: 'monaco',         src: 'monaco',        dest: 'vendor/monaco',        dir: true, local: true, exclude: ['monaco'] },
+    { name: 'monaco-editor',  src: 'monaco-editor', dest: 'vendor/monaco/monaco', dir: true, include: ['*'] },
+    { name: 'monaco-editor/min', src: 'monaco-editor/min', dest: 'vendor/monaco/monaco/min', dir: true },
 ];

@@ -97,6 +97,12 @@ Copies SDK assets (sdkjs), api.js (with
 and vendor scripts (jQuery, socket.io, xregexp, underscore, iscroll, fetch,
 es6-promise, requirejs-terser, common-embed, monaco).
 
+Vendor libraries published on npm are pinned in `package.json` and copied from
+`node_modules` (see `vendor.manifest.mjs`), so Renovate tracks them. jQuery 3
+gets `patches/jquery-patch-bug-71422.diff` applied and is re-minified with
+terser; jQuery 4+ ships unpatched. The `vendor/<lib>` paths used by unbuilt
+pages and `test/` are symlinks into `node_modules`, so run `npm ci` first.
+
 **Requires `PRODUCT_VERSION`** — used in api.js which EuroOffice checks at load time.
 
 ### `deploy-html.js`

@@ -52,6 +52,7 @@ export function editorConfig(editorName, opts = {}) {
 
     const APPS_ROOT   = path.resolve(__dirname, '../apps');
     const VENDOR_ROOT = path.resolve(__dirname, '../vendor');
+    const NODE_MODULES = path.resolve(__dirname, 'node_modules');
     const OUT_DIR     = path.join(BUILD_ROOT, `web-apps/apps/${editorName}/${subpath}`);
 
     const lessEntry = opts.lessEntry
@@ -108,8 +109,8 @@ export function editorConfig(editorName, opts = {}) {
             // baseUrl was '../apps/' in the r.js build config, so paths here
             // are relative to APPS_ROOT.
             alias: {
-                underscore:       path.join(VENDOR_ROOT, 'underscore/underscore-min.js'),
-                backbone:         path.join(VENDOR_ROOT, 'backbone/backbone-min.js'),
+                underscore:       path.join(NODE_MODULES, 'underscore/underscore-min.js'),
+                backbone:         path.join(NODE_MODULES, 'backbone/backbone.js'),
                 perfectscrollbar: path.join(APPS_ROOT,   'common/main/lib/mods/perfect-scrollbar.js'),
                 jmousewheel:      path.join(VENDOR_ROOT, 'perfect-scrollbar/src/jquery.mousewheel.js'),
                 core:             path.join(APPS_ROOT,   'common/main/lib/core/application.js'),
@@ -242,7 +243,7 @@ export function editorConfig(editorName, opts = {}) {
                     extractComments: false,
                     terserOptions: {
                         format: {
-                            comments: /AGPL|Copyright|Ascensio|License/i,
+                            comments: /AGPL|Copyright|\(c\)|Ascensio|License/i,
                         },
                         compress: {
                             drop_console: env === 'production',
