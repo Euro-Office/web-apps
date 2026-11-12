@@ -26,7 +26,6 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import { applyThemeLessOverrides, assertBuildEnv, themeDefines, themeFormVars, themeGlobalVars, themeReplacements } from './theme.config.mjs';
-import { LOAD_BEARING } from './replacements.manifest.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -146,20 +145,6 @@ export function editorConfig(editorName, opts = {}) {
                     include: APPS_ROOT,
                     loader: 'string-replace-loader',
                     options: { multiple: themeReplacements(productVersion) },
-                },
-                {
-                    // locale.js contains a dead fetch/Promise polyfill branch that uses
-                    // require([...], cb) inside an IIFE body, which crashes the AMD parser
-                    // (addPresentationalDependency TypeError). Remove it — fetch and Promise
-                    // are always native in modern browsers.
-                    test: /common[/\\]locale\.js$/,
-                    loader: 'string-replace-loader',
-                    options: {
-                        multiple: (() => {
-                            const e = LOAD_BEARING.find(x => x.id === 'locale-fetch');
-                            return [{ search: e.search, replace: '    _requireLang();', flags: e.flags }];
-                        })(),
-                    },
                 },
                 {
                     test: /(?:main|forms)[/\\]app\.js$/,
