@@ -186,7 +186,7 @@ async function deployVendors(vendors) {
             console.log(`deploy-common: jquery ${result.patched ? 'patched and minified' : 'copied unpatched'}`);
         } else if (v.minify) {
             code = (await minify(fs.readFileSync(src, 'utf8'),
-                { compress: true, mangle: true, format: { comments: false } })).code;
+                { compress: true, mangle: true, format: { comments: /@license|@preserve|^!/ } })).code;
         } else {
             copyFile(src, dest);
         }

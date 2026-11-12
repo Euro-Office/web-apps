@@ -59,3 +59,29 @@ test('jQuery 4 ships its own jquery.min.js unpatched', async () => {
     const dir = fakeJquery('4.0.0', { 'jquery.min.js': '/*! jQuery v4.0.0 */' });
     assert.deepEqual(await jqueryMin(dir), { code: '/*! jQuery v4.0.0 */', patched: false });
 });
+
+function buildInto(args) {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'vendor-notice-'));
+    tempDirs.push(dir);
+    execFileSync(process.execPath, args, {
+        cwd: path.join(REPO_ROOT, 'build'),
+        env: { ...process.env, BUILD_ROOT: dir, PRODUCT_VERSION: '9.9.9', BUILD_NUMBER: '1', NODE_ENV: 'production' },
+        stdio: 'ignore',
+    });
+    return dir;
+}
+
+test('deployed vendor scripts keep their licence notice', () => {
+    const dir = buildInto(['scripts/deploy-common.js']);
+    const missing = VENDORS.filter(v => !v.dir && v.dest.endsWith('.js'))
+        .filter(v => !/license|copyright|\(c\)/i.test(fs.readFileSync(path.join(dir, 'web-apps', v.dest), 'utf8').slice(0, 1000)))
+        .map(v => v.dest);
+    assert.deepEqual(missing, []);
+});
+
+test('editor bundle keeps the Backbone and Underscore copyright lines', () => {
+    const dir = buildInto([path.join('node_modules', 'webpack', 'bin', 'webpack.js'), '--config', 'webpack.documenteditor.mjs']);
+    const bundle = fs.readFileSync(path.join(dir, 'web-apps/apps/documenteditor/main/app.js'), 'utf8');
+    assert.match(bundle, /\(c\) 2010-\d{4} Jeremy Ashkenas and DocumentCloud/);
+    assert.match(bundle, /\(c\) 2009-\d{4} Jeremy Ashkenas, Julian Gonggrijp/);
+});

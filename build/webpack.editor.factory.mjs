@@ -110,7 +110,7 @@ export function editorConfig(editorName, opts = {}) {
             // are relative to APPS_ROOT.
             alias: {
                 underscore:       path.join(NODE_MODULES, 'underscore/underscore-min.js'),
-                backbone:         path.join(NODE_MODULES, 'backbone/backbone-min.js'),
+                backbone:         path.join(NODE_MODULES, 'backbone/backbone.js'),
                 perfectscrollbar: path.join(APPS_ROOT,   'common/main/lib/mods/perfect-scrollbar.js'),
                 jmousewheel:      path.join(VENDOR_ROOT, 'perfect-scrollbar/src/jquery.mousewheel.js'),
                 core:             path.join(APPS_ROOT,   'common/main/lib/core/application.js'),
@@ -243,7 +243,7 @@ export function editorConfig(editorName, opts = {}) {
                     extractComments: false,
                     terserOptions: {
                         format: {
-                            comments: /AGPL|Copyright|Ascensio|License/i,
+                            comments: /AGPL|Copyright|\(c\)|Ascensio|License/i,
                         },
                         compress: {
                             drop_console: env === 'production',
