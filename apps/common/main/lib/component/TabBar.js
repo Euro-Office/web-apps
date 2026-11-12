@@ -57,7 +57,7 @@ define([
 
     StateManager.prototype.initialize = function (options) {
         this.bar = options.bar;
-        if (!Common.Utils.isIE && !Common.Utils.isSafari) {
+        if (!Common.Utils.isSafari) {
             if (Common.Utils.isMac) {
                 this.ghostImage = new Image();
                 this.ghostImage.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
@@ -204,12 +204,8 @@ define([
         tab.$el.children().on(
             {dragstart: $.proxy(function (e) {
                 var event = e.originalEvent;
-                if (!Common.Utils.isIE && !Common.Utils.isSafari) {
+                if (!Common.Utils.isSafari) {
                     event.dataTransfer.setDragImage(this.ghostImage, 0, 0);
-                } else if (Common.Utils.isIE) {
-                    this.bar.selectTabs.forEach(function (tab) {
-                        tab.$el.find('span').prop('tabtitle', '');
-                    });
                 }
                 event.dataTransfer.effectAllowed = 'copyMove';
                 this.bar.preventCutTab = false;

@@ -17,8 +17,7 @@ class WrapDevice {
             this.isPhone = false;
         }
         
-        this.isTablet = !this.isPhone && (/iPad/.test(ua) || /Android/.test(ua) || /(RIM Tablet OS)/.test(ua) ||
-            (/MSIE 10/.test(ua) && /; Touch/.test(ua)));
+        this.isTablet = !this.isPhone && (/iPad/.test(ua) || /Android/.test(ua) || /(RIM Tablet OS)/.test(ua));
     }
 
     initDom() {

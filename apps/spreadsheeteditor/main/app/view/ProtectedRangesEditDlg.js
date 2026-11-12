@@ -380,7 +380,6 @@ define([], function () {
 
         onUserChanging: function(combo, newValue) {
             clearTimeout(this.timerUserList);
-            if (Common.Utils.isIE && newValue==='' && this._userSearch.str === newValue) return;
             this._userSearch.str = newValue;
             var me = this;
             this.timerUserList = setTimeout(function () {

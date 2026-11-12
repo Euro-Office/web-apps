@@ -211,14 +211,12 @@ define([
                 Common.Utils.InternalSettings.set("app-settings-screen-reader", value);
                 this.api.setSpeechEnabled(value);
 
-                if ( !Common.Utils.isIE ) {
-                    if ( /^https?:\/\//.test('{{HELP_CENTER_WEB_SSE}}') ) {
-                        const _url_obj = new URL('{{HELP_CENTER_WEB_SSE}}');
-                        if ( !!_url_obj.searchParams )
-                            _url_obj.searchParams.set('lang', Common.Locale.getCurrentLanguage());
+                if ( /^https?:\/\//.test('{{HELP_CENTER_WEB_SSE}}') ) {
+                    const _url_obj = new URL('{{HELP_CENTER_WEB_SSE}}');
+                    if ( !!_url_obj.searchParams )
+                        _url_obj.searchParams.set('lang', Common.Locale.getCurrentLanguage());
 
-                        Common.Utils.InternalSettings.set("url-help-center", _url_obj.toString());
-                    }
+                    Common.Utils.InternalSettings.set("url-help-center", _url_obj.toString());
                 }
 
                 this.api.asc_registerCallback('asc_onOpenDocumentProgress',  _.bind(this.onOpenDocument, this));
@@ -302,8 +300,6 @@ define([
                             && !(e.target.localName == 'textarea' && $(e.target).closest('.asc-window').find('.dropdown-menu').find(e.relatedTarget).length>0) /* Check if focus in comment goes from textarea to it's email menu */
                             && (e.relatedTarget.localName != 'input' || !/form-control/.test(e.relatedTarget.className)) /* Check if focus goes to text input with class "form-control" */
                             && (e.relatedTarget.localName != 'textarea' || /area_id/.test(e.relatedTarget.id))) /* Check if focus goes to textarea, but not to "area_id" */ {
-                            if (Common.Utils.isIE && e.originalEvent && e.originalEvent.target && /area_id/.test(e.originalEvent.target.id) && (e.originalEvent.target === e.originalEvent.srcElement))
-                                return;
                             if (Common.Utils.isLinux && me.appOptions && me.appOptions.isDesktopApp) {
                                 if (e.relatedTarget || !e.originalEvent || e.originalEvent.sourceCapabilities)
                                     me.api.asc_enableKeyEvents(true);
@@ -1184,7 +1180,6 @@ define([
                 function checkWarns() {
                     if (!window['AscDesktopEditor']) {
                         var tips = [];
-                        Common.Utils.isIE9m && tips.push(me.warnBrowserIE9);
 
                         if (tips.length) me.showTips(tips);
                     }

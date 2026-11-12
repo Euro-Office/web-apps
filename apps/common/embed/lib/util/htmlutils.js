@@ -1,5 +1,3 @@
-const isIE = /msie|trident/i.test(navigator.userAgent);
-
 var checkLocalStorage = (function () {
     try {
         var storage = window['localStorage'];
@@ -30,7 +28,7 @@ if ( window.nativeprocvars && window.nativeprocvars.rtl !== undefined ) {
         else ui_rtl = true;
 }
 
-if ( ui_rtl && !isIE ) {
+if ( ui_rtl ) {
     document.body.setAttribute('dir', 'rtl');
     document.body.classList.add('rtl');
 }

@@ -225,9 +225,6 @@ define([
                 this.api.isCEditorFocused = undefined;
             else if (this.api.isCellEdited)
                 this.api.isCEditorFocused = true;
-//            if (Common.Utils.isIE && !$('#menu-formula-selection').hasClass('open')) {// for formula menu
-//                this.getApplication().getController('DocumentHolder').documentHolder.focus();
-//            }
         },
 
         onKeyupCellEditor: function(e) {
