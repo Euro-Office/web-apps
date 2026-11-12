@@ -7,12 +7,34 @@
   "ignorePaths": [
     "**/node_modules/**",
     "**/bower_components/**",
-    "**/vendor/**",
+    "vendor/ace/**",
+    "vendor/backbone/**",
+    "vendor/es6-promise/**",
+    "vendor/fetch/**",
+    "vendor/jquery.browser/**",
+    "vendor/jquery/**",
+    "vendor/less/**",
+    "vendor/monaco/**",
+    "vendor/perfect-scrollbar/**",
+    "vendor/requirejs-text/**",
+    "vendor/requirejs/**",
+    "vendor/socketio/**",
+    "vendor/svg-injector/**",
+    "vendor/underscore/**",
+    "vendor/xregexp/**",
     "**/examples/**",
     "**/__tests__/**",
     "**/test/**",
     "**/tests/**",
     "**/__fixtures__/**",
     "apps/*/main/resources/help/**"
+  ],
+  "packageRules": [
+    {
+      "description": "Mobile editors build from vendor/framework7-react: one PR, no automerge, the shrinkwrap may need a manual regen",
+      "matchFileNames": ["vendor/framework7-react/**"],
+      "groupName": "mobile editors",
+      "automerge": false
+    }
   ]
 }
