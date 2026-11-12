@@ -22,6 +22,7 @@ const {
     cleanDir, ensureDir, copyFile, copyDir, copyDirFiltered,
     replaceTokensIn, replaceTokensInJS, writeSVG, writeRaster, optimizeImages,
 } = require('./lib/build-utils');
+const { jqueryMin } = require('./lib/jquery-min');
 
 const REPO_ROOT  = path.resolve(__dirname, '..', '..');
 const BUILD_ROOT = process.env.BUILD_ROOT;
@@ -40,6 +41,7 @@ let APP_TITLE_TEXT;
 let SUPPORT_URL;
 const APPS_SRC       = path.join(REPO_ROOT, 'apps');
 const VENDOR_SRC     = path.join(REPO_ROOT, 'vendor');
+const NODE_MODULES   = path.join(REPO_ROOT, 'build', 'node_modules');
 const BUILD_OUT      = path.join(BUILD_ROOT, 'web-apps');
 
 // ---- tasks ------------------------------------------------------------------
@@ -168,15 +170,32 @@ async function deployAppsCommon() {
     console.log('deploy-common: apps-common done');
 }
 
-async function deployRequireJS(entry) {
-    const requireOut = path.dirname(path.join(BUILD_OUT, entry.dest));
-    cleanDir(requireOut);
+async function deployVendors(vendors) {
+    for (const v of vendors) cleanDir(path.join(BUILD_OUT, v.dir ? v.dest : path.dirname(v.dest)));
 
-    const src    = fs.readFileSync(path.join(VENDOR_SRC, entry.src), 'utf8');
-    const result = await minify(src, { compress: true, mangle: true, format: { comments: false } });
-    ensureDir(requireOut);
-    fs.writeFileSync(path.join(BUILD_OUT, entry.dest), result.code, 'utf8');
-    console.log('deploy-common: requirejs done');
+    for (const v of vendors) {
+        const src  = path.join(v.local ? VENDOR_SRC : NODE_MODULES, v.src);
+        const dest = path.join(BUILD_OUT, v.dest);
+        if (!fs.existsSync(src)) throw new Error(`vendor ${v.name}: source not found: ${src}`);
+        let code;
+        if (v.dir) {
+            copyDirFiltered(src, dest, { include: v.include, exclude: v.exclude });
+        } else if (v.jquery) {
+            const result = await jqueryMin(src);
+            code = result.code;
+            console.log(`deploy-common: jquery ${result.patched ? 'patched and minified' : 'copied unpatched'}`);
+        } else if (v.minify) {
+            code = (await minify(fs.readFileSync(src, 'utf8'),
+                { compress: true, mangle: true, format: { comments: false } })).code;
+        } else {
+            copyFile(src, dest);
+        }
+        if (code !== undefined) {
+            ensureDir(path.dirname(dest));
+            fs.writeFileSync(dest, code, 'utf8');
+        }
+        console.log(`deploy-common: ${v.name} done`);
+    }
 }
 
 function deployCommonEmbed() {
@@ -187,13 +206,6 @@ function deployCommonEmbed() {
         path.join(embedOut, 'resources', 'img', 'logo.svg')
     );
     console.log('deploy-common: common-embed done');
-}
-
-function deployMonaco(entry) {
-    const monacoOut = path.join(BUILD_OUT, entry.dest);
-    cleanDir(monacoOut);
-    copyDir(path.join(VENDOR_SRC, entry.src), monacoOut);
-    console.log('deploy-common: monaco done');
 }
 
 // ---- main -------------------------------------------------------------------
@@ -210,21 +222,8 @@ function deployMonaco(entry) {
     deployAPI();
     await deployAppsCommon();
 
-    // vendor: file copies from manifest (plain copies — no dir, no minify)
-    const cleaned = new Set();
-    for (const v of VENDORS.filter(v => !v.dir && !v.minify)) {
-        const vendorDir = path.dirname(path.join(BUILD_OUT, v.dest));
-        if (!cleaned.has(vendorDir)) {
-            cleanDir(vendorDir);
-            cleaned.add(vendorDir);
-        }
-        copyFile(path.join(VENDOR_SRC, v.src), path.join(BUILD_OUT, v.dest), { required: true });
-        console.log(`deploy-common: ${v.name} done`);
-    }
-
-    await deployRequireJS(VENDORS.find(v => v.name === 'requirejs'));
+    await deployVendors(VENDORS);
     deployCommonEmbed();
-    deployMonaco(VENDORS.find(v => v.name === 'monaco'));
 
     console.log('deploy-common: all tasks done');
 })().catch(err => {
