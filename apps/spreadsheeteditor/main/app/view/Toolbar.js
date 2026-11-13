@@ -1565,7 +1565,7 @@ define([
                 me.btnSmartPicker = new Common.UI.Button({
                     id: 'tlbtn-smartpicker',
                     cls: 'btn-toolbar x-huge icon-top',
-                    iconCls: 'toolbar__icon btn-big-nc-add',
+                    iconCls: 'toolbar__icon btn-big-nc-smart-picker',
                     lock: [_set.lostConnect, _set.disableOnStart, _set.viewMode],
                     caption: me.capSmartPicker,
                     action: 'smart-picker',
