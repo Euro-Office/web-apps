@@ -112,7 +112,6 @@ define([
 
             this.statusbar.tabbar.on({
                 'tab:dragstart': _.bind(function (dataTransfer, selectTabs) {
-                    Common.Utils.isIE && (this.isDrop = false);
                     Common.UI.Menu.Manager.hideAll();
                     this.api.asc_closeCellEditor();
                     var arrTabs = [],
@@ -144,18 +143,12 @@ define([
                     arr.push({type: 'names', value: arrName});
                     arr.push({type: 'key', value: Common.Utils.InternalSettings.get("sse-doc-info-key")});
                     var json = JSON.stringify(arr);
-                    if (!Common.Utils.isIE) {
-                        dataTransfer.setData('onlyoffice', json);
-                    } else {
-                        dataTransfer.setData('text', 'sheet');
-                        this.dataTransfer = json;
-                    }
+                    dataTransfer.setData('onlyoffice', json);
                     this.dropTabs = selectTabs;
                 }, this),
                 'tab:drop': _.bind(function (dataTransfer, index, copy) {
-                    if (this.isEditFormula || (Common.Utils.isIE && this.dataTransfer === undefined)) return;
-                    Common.Utils.isIE && (this.isDrop = true);
-                    var data = !Common.Utils.isIE ? dataTransfer.getData('onlyoffice') : this.dataTransfer;
+                    if (this.isEditFormula) return;
+                    var data = dataTransfer.getData('onlyoffice');
                     if (data) {
                         var arrData = JSON.parse(data);
                         if (arrData) {
@@ -173,7 +166,7 @@ define([
                     }
                 }, this),
                 'tab:dragend':  _.bind(function (cut) {
-                    if (cut && !(Common.Utils.isIE && this.isDrop === false)) {
+                    if (cut) {
                         if (this.dropTabs.length > 0) {
                             var arr = [];
                             this.dropTabs.forEach(function (tab) {
@@ -183,10 +176,6 @@ define([
                         }
                     }
                     this.dropTabs = undefined;
-                    if (Common.Utils.isIE) {
-                        this.isDrop = undefined;
-                        this.dataTransfer = undefined;
-                    }
                     Common.NotificationCenter.trigger('tabs:dragend', this);
                 }, this)
             });

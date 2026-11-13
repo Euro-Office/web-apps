@@ -109,75 +109,71 @@ define([
                 scope: this
             }));
 
-            if (Common.Utils.isIE) {
-                document.getElementById('preview-group-draw').style.display = 'none';
-            } else {
-                this.btnDraw = new Common.UI.Button({
-                    parentEl: $('#btn-preview-draw', this.el),
-                    cls: 'btn-toolbar small',
-                    iconCls: 'toolbar__icon btn-pen-tool',
-                    onlyIcon: true,
-                    stopPropagation: true,
-                    hint: this.txtDraw,
-                    hintAnchor: 'top',
-                    hintContainer: '#pe-preview',
-                    menu: new Common.UI.Menu({
-                        menuAlign: 'tl-tr',
-                        cls: "shifted-right",
-                        style: 'min-width: 120px; height: auto; min-height: fit-content;',
-                        additionalAlign: function (root) {
-                            var parent = root.parent();
-                            var parentOffset = Common.Utils.getOffset(parent);
-                            root.css({
-                                left: parentOffset.left + (parent.outerWidth() - root.outerWidth()) / 2,
-                                top: parentOffset.top - root.outerHeight() - 8
-                            });
+            this.btnDraw = new Common.UI.Button({
+                parentEl: $('#btn-preview-draw', this.el),
+                cls: 'btn-toolbar small',
+                iconCls: 'toolbar__icon btn-pen-tool',
+                onlyIcon: true,
+                stopPropagation: true,
+                hint: this.txtDraw,
+                hintAnchor: 'top',
+                hintContainer: '#pe-preview',
+                menu: new Common.UI.Menu({
+                    menuAlign: 'tl-tr',
+                    cls: "shifted-right",
+                    style: 'min-width: 120px; height: auto; min-height: fit-content;',
+                    additionalAlign: function (root) {
+                        var parent = root.parent();
+                        var parentOffset = Common.Utils.getOffset(parent);
+                        root.css({
+                            left: parentOffset.left + (parent.outerWidth() - root.outerWidth()) / 2,
+                            top: parentOffset.top - root.outerHeight() - 8
+                        });
+                    },
+                    items: [
+                        new Common.UI.MenuItem({
+                            caption: this.txtPen,
+                            value: 'pen',
+                            iconCls: 'menu__icon btn-pen-tool',
+                            checkable: true,
+                            toggleGroup: 'preview-draw-tool'
+                        }),
+                        new Common.UI.MenuItem({
+                            caption: this.txtHighlighter,
+                            value: 'highlighter',
+                            iconCls: 'menu__icon btn-highlighter-tool',
+                            checkable: true,
+                            toggleGroup: 'preview-draw-tool'
+                        }),
+                        { caption: '--' },
+                        {
+                            caption: this.txtInkColor,
+                            menu: new Common.UI.Menu({
+                                menuAlign: 'tl-tr',
+                                cls: "preview-draw-color-picker-menu",
+                                style: 'min-width: 140px; padding: 0px; height: auto; min-height: fit-content;',
+                            })
                         },
-                        items: [
-                            new Common.UI.MenuItem({
-                                caption: this.txtPen,
-                                value: 'pen',
-                                iconCls: 'menu__icon btn-pen-tool',
-                                checkable: true,
-                                toggleGroup: 'preview-draw-tool'
-                            }),
-                            new Common.UI.MenuItem({
-                                caption: this.txtHighlighter,
-                                value: 'highlighter',
-                                iconCls: 'menu__icon btn-highlighter-tool',
-                                checkable: true,
-                                toggleGroup: 'preview-draw-tool'
-                            }),
-                            { caption: '--' },
-                            {
-                                caption: this.txtInkColor,
-                                menu: new Common.UI.Menu({
-                                    menuAlign: 'tl-tr',
-                                    cls: "preview-draw-color-picker-menu",
-                                    style: 'min-width: 140px; padding: 0px; height: auto; min-height: fit-content;',
-                                })
-                            },
-                            { caption: '--' },
-                            new Common.UI.MenuItem({
-                                caption: this.txtEraser,
-                                value: 'eraser',
-                                iconCls: 'menu__icon btn-clearstyle',
-                                checkable: true,
-                                toggleGroup: 'preview-draw-tool'
-                            }),
-                            { caption: this.txtEraseScreen, value: 'eraseAll', iconCls: 'menu__icon btn-clear-all' },
-                        ]
-                    }),
-                });
+                        { caption: '--' },
+                        new Common.UI.MenuItem({
+                            caption: this.txtEraser,
+                            value: 'eraser',
+                            iconCls: 'menu__icon btn-clearstyle',
+                            checkable: true,
+                            toggleGroup: 'preview-draw-tool'
+                        }),
+                        { caption: this.txtEraseScreen, value: 'eraseAll', iconCls: 'menu__icon btn-clear-all' },
+                    ]
+                }),
+            });
 
-                this.drawColorPicker = new Common.UI.ColorPaletteExt({
-                    el: $('.preview-draw-color-picker-menu'),
-                    colors: ["FFFFFF","000000","E81416","FFA500","FAEB36","79C314","487DE7","4B369D","70369D"],
-                    value: 'E81416'
-                });
-                this.drawColorPicker.on('select', _.bind(this.onDrawColorSelect, this));
-                this.btnDraw.menu.on('item:click', _.bind(this.onDrawMenuItemClick, this));
-            }
+            this.drawColorPicker = new Common.UI.ColorPaletteExt({
+                el: $('.preview-draw-color-picker-menu'),
+                colors: ["FFFFFF","000000","E81416","FFA500","FAEB36","79C314","487DE7","4B369D","70369D"],
+                value: 'E81416'
+            });
+            this.drawColorPicker.on('select', _.bind(this.onDrawColorSelect, this));
+            this.btnDraw.menu.on('item:click', _.bind(this.onDrawMenuItemClick, this));
 
             this.btnPrev = new Common.UI.Button({
                 el: $('#btn-preview-prev',this.el),
@@ -334,20 +330,9 @@ define([
                     me.$el.css('cursor', '');
                 },100);
 
-                if (Common.Utils.isIE) { // for tooltips in IE
-                    me.btnFullScreen.updateHint( fselem ? '' : me.txtFullScreen);
-                    me.btnPrev.updateHint( fselem ? '' : me.txtPrev);
-                    me.btnPlay.updateHint( fselem ? '' : ($('.icon', me.btnPlay.cmpEl).hasClass('btn-preview-pause') ? me.txtPause : me.txtPlay));
-                    me.btnNext.updateHint( fselem ? '' : me.txtNext);
-                    me.btnClose.updateHint( fselem ? '' : me.txtClose);
-                } else
-                    me.btnFullScreen.updateHint( fselem ? me.txtExitFullScreen: me.txtFullScreen);
+                me.btnFullScreen.updateHint( fselem ? me.txtExitFullScreen: me.txtFullScreen);
                 me.editComplete();
             });
-
-            if (Common.Utils.isIE) {
-                me.previewControls.css('opacity', '0.4');
-            }
 
             this.separatorFullScreen = el.find('.separator.fullscreen');
 
@@ -439,7 +424,7 @@ define([
 
         setMode: function(mode) {
             this.mode = mode;
-            if (this.mode.isDesktopApp || Common.Utils.isIE11 || !document.fullscreenEnabled) {
+            if (this.mode.isDesktopApp || !document.fullscreenEnabled) {
                 this.btnFullScreen.setVisible(false);
                 this.separatorFullScreen.hide();
                 $(document).off("webkitfullscreenchange mozfullscreenchange fullscreenchange MSFullscreenChange");
@@ -559,7 +544,7 @@ define([
             if (!document.fullscreenElement && !document.msFullscreenElement && 
                 !document.mozFullScreenElement && !document.webkitFullscreenElement)
             {
-                if (this.mode.isDesktopApp || Common.Utils.isIE11) return;
+                if (this.mode.isDesktopApp) return;
                 const elem = document.getElementById('pe-preview');
                 if ( elem ) {
                     Common.Utils.startFullscreenForElement(elem);

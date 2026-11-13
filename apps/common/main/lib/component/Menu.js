@@ -183,8 +183,6 @@ define([
                     !this.options.maxHeight && (this.options.maxHeight = this.options.restoreHeight);
                 }
 
-                Common.Utils.isIE && (this.options.restoreHeightAndTop = false);
-
                 if (!this.options.cyclic) this.options.cls += ' no-cyclic';
 
                 _.each(this.options.items, function(item) {

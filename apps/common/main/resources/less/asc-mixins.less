@@ -12,7 +12,6 @@
     background: -moz-linear-gradient(center bottom, @start 0%, @stop 100%);
     background: -o-linear-gradient(@stop, @start);
     background: linear-gradient(bottom, @start, @stop);
-//    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",@stop, @start));
 }
 
 .box-shadow(@arguments) {
@@ -791,9 +790,6 @@
 
 .vertical-align-baseline {
     vertical-align: baseline !important;
-    .ie & {
-        vertical-align: middle !important;
-    }
 }
 
 .vertical-align-middle {

@@ -71,8 +71,8 @@ define([
                 height: 16,
                 border:0.5,
                 activeThumbIndex: 0,
-                borderColor: Common.Utils.isIE ?'#cfcfcf' :Common.UI.Themes.currentThemeColor('--border-regular-control'),
-                borderColorActive: Common.Utils.isIE? '#848484' :Common.UI.Themes.currentThemeColor('--border-control-focus')
+                borderColor: Common.UI.Themes.currentThemeColor('--border-regular-control'),
+                borderColorActive: Common.UI.Themes.currentThemeColor('--border-control-focus')
             };
             this.scale = Common.Utils.applicationPixelRatio() >= 1 ? Common.Utils.applicationPixelRatio() : 1,
             Common.UI.MultiSlider.prototype.initialize.call(this, options);
@@ -135,11 +135,6 @@ define([
             if (this.styleStr.specific) {
                 style = Common.Utils.String.format(this.styleStr.specific, this.getColorValues().concat(this.getValues()));
                 this.trackEl.css('background', style);
-            }
-            if (Common.Utils.isIE) {
-                style = Common.Utils.String.format('progid:DXImageTransform.Microsoft.gradient( startColorstr={0}, endColorstr={1},GradientType=1 )',
-                    this.getColorValue(0), this.getColorValue(this.thumbs.length-1));
-                this.trackEl.css('filter', style);
             }
             if (this.styleStr.common) {
                 style = Common.Utils.String.format(this.styleStr.common, this.getColorValues().concat(this.getValues()));
@@ -290,7 +285,6 @@ define([
         },
 
         changeColors: function () {
-            if(Common.Utils.isIE) return;
             this.tmbOptions.borderColor = Common.UI.Themes.currentThemeColor('--border-regular-control');
             this.tmbOptions.borderColorActive = Common.UI.Themes.currentThemeColor('--border-control-focus');
             for(var i=0; i< this.thumbs.length; i++){
@@ -353,8 +347,6 @@ define([
                 this.styleStr.specific = '-moz-linear-gradient(left';
             else if (Common.Utils.isOpera && Common.Utils.operaVersion>11.0)
                 this.styleStr.specific = '-o-linear-gradient(left';
-            else if (Common.Utils.isIE)
-                this.styleStr.specific = '-ms-linear-gradient(left';
 
             for (var i=0; i<this.thumbs.length; i++) {
                 this.styleStr.common += ', {' + i + '} {' + (this.thumbs.length + i) + '}%';

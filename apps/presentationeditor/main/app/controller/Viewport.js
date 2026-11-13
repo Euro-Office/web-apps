@@ -299,7 +299,7 @@ define([
                     isCurrent ? me.api.StartDemonstrationFromCurrentSlide('presentation-preview', reporterObject) : me.api.StartDemonstrationFromBeginning('presentation-preview', reporterObject);
                     Common.component.Analytics.trackEvent('Viewport', 'Preview');
                 };
-                if (!me.viewport.mode.isDesktopApp && !Common.Utils.isIE11 && !presenter && !!document.fullscreenEnabled) {
+                if (!me.viewport.mode.isDesktopApp && !presenter && !!document.fullscreenEnabled) {
                     Common.NotificationCenter.on('window:resize', _onWindowResize);
                     !fromApiEvent && Common.Utils.startFullscreenForElement($("#pe-preview").get(0));
                     setTimeout(function(){

@@ -320,25 +320,7 @@
         // if (!(/android|avantgo|playbook|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od|ad)|iris|kindle|lge |maemo|midp|mmp|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent || navigator.vendor || window.opera)))
             // document.getElementsByTagName('html')[0].setAttribute('style', 'zoom: ' + 1 / (window.devicePixelRatio < 2 ? window.devicePixelRatio : window.devicePixelRatio / 2) + ';');
 
-        var userAgent = navigator.userAgent.toLowerCase(),
-            check = function(regex){ return regex.test(userAgent); },
-            stopLoading = false,
-            isIEBrowser = !check(/opera/) && (check(/msie/) || check(/trident/)),
-            ieVer = /msie (\d+\.\d+)/.exec(userAgent);
-        if (isIEBrowser) {
-            if (ieVer && parseFloat(ieVer[1]) < 10.0) {
-                document.write(
-                    '<div class="app-error-panel">' +
-                        '<div class="message-block">' +
-                            '<div class="message-inner">' +
-                                '<div class="title">Your browser is not supported.</div>' +
-                                '<div class="text">Sorry, Visio Editor is currently only supported in the latest versions of the Chrome, Firefox, Safari or Internet Explorer web browsers.</div>' +
-                            '</div>' +
-                        '</div>' +
-                    '</div>');
-                stopLoading = true;
-            }
-        }
+        var stopLoading = false;
 
         function getUrlParams() {
             var e,
@@ -380,10 +362,6 @@
         window.frameEditorId = params["frameEditorId"];
         window.parentOrigin = params["parentOrigin"];
 
-        if(/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) {
-            document.write('<script src="../../common/main/lib/util/fix-ie-compat.js"><\/script>');
-            document.write('<script src="../../../../sdkjs/vendor/string.js"><\/script>');
-        }
     </script>
 
     <!-- debug begin -->
@@ -495,14 +473,12 @@
                     var isDarkTheme = /theme-(?:[a-z]+-)?dark(?:-[a-z]*)?/.test(document.body.className),
                         image = logo || logoDark || logoLight,
                         isDark = true;
-                    if (!(isIEBrowser && ieVer && parseFloat(ieVer[1]) < 11.0)) {
-                        var docstyle = getComputedStyle(document.body),
-                            header_color = docstyle.getPropertyValue('--toolbar-header-visio'),
-                            toolbar_color = docstyle.getPropertyValue('--background-toolbar');
-                        logo_type = (view || compact) && (tabBackground==='toolbar') ? toolbar_color : header_color;
-                        isDark = logo_type ? isDarkColor(logo_type) : isDarkTheme ? true : !((view || compact) && (tabBackground==='toolbar'));
-                        image = isDark ? logoDark || logo || logoLight : logoLight || logo || logoDark;
-                    }
+                    var docstyle = getComputedStyle(document.body),
+                        header_color = docstyle.getPropertyValue('--toolbar-header-visio'),
+                        toolbar_color = docstyle.getPropertyValue('--background-toolbar');
+                    logo_type = (view || compact) && (tabBackground==='toolbar') ? toolbar_color : header_color;
+                    isDark = logo_type ? isDarkColor(logo_type) : isDarkTheme ? true : !((view || compact) && (tabBackground==='toolbar'));
+                    image = isDark ? logoDark || logo || logoLight : logoLight || logo || logoDark;
                     if (image) {
                         elem.setAttribute('src', image);
                     } else if (!isDark) {
