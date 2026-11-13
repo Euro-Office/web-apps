@@ -143,7 +143,6 @@ SRC_ROOT
 Several JSON files define build instructions and previously contained hard-coded relative paths, for example:
 
 ```shell
-build/common.json
 build/presentationeditor.json
 build/documenteditor.json
 ...
