@@ -8,7 +8,7 @@
 
 // Replaces grunt's common.json deploy task chain: api, sdk, apps-common,
 // vendor scripts (jquery, megapixel, socketio, xregexp, underscore, iscroll,
-// fetch, es6-promise, requirejs), common-embed, and monaco.
+// requirejs), common-embed, and monaco.
 //
 // Run from web-apps/build/ instead of grunt once Phase E grunt removal is done:
 //   BUILD_ROOT=/var/www/... PRODUCT_VERSION=9.2.1 node scripts/deploy-common.js

@@ -8,10 +8,7 @@
     if (currentScriptDirectoryIndex != -1)
         currentScriptDirectory = currentScriptDirectory.substr(0, currentScriptDirectoryIndex);
 
-    var userAgent = navigator && navigator.userAgent ? navigator.userAgent.toLowerCase() : "";
-    var isIE = /msie|trident/i.test(userAgent);
-
-    var monacoFolderName = isIE ? "monaco-for-ie" : "monaco";
+    var monacoFolderName = "monaco";
     var LOADIND_LOCAL = {
         URL : "./" + monacoFolderName + "/min/vs/loader.js",
         WORKER : function(moduleId, label) {

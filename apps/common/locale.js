@@ -167,16 +167,7 @@ Common.Locale = new(function() {
         }
     };
 
-    if ( !window.fetch ) {
-        /* use fetch polifill if native method isn't supported */
-        var polyfills = ['../vendor/fetch/fetch.umd'];
-        if ( !window.Promise ) {
-            require(['../vendor/es6-promise/es6-promise.auto.min'],
-                function () {
-                    require(polyfills, _requireLang);
-                });
-        } else require(polyfills, _requireLang);
-    } else _requireLang();
+    _requireLang();
 
     const _isCurrentRtl = function () {
         return currentLang && (/^(ar|he|ur)$/i.test(currentLang));
