@@ -79,6 +79,7 @@ define([
                     'zoom:topage': _.bind(this.onBtnZoomTo, this, 'topage'),
                     'zoom:towidth': _.bind(this.onBtnZoomTo, this, 'towidth'),
                     'darkmode:change': _.bind(this.onChangeDarkMode, this),
+                    'zenmode:request': _.bind(this.onChangeZenMode, this),
                     'macros:click':  _.bind(this.onClickMacros, this)
                 },
                 'Toolbar': {
@@ -324,6 +325,12 @@ define([
                 Common.UI.Themes.setContentTheme(isdarkmode?'dark':'light');
             } else
                 this.onContentThemeChangedToDark(Common.UI.Themes.isContentThemeDark());
+        },
+
+        onChangeZenMode: function () {
+            Common.NotificationCenter.trigger('zenmode:request', true);
+            // return the focus to the document: the Zen Mode button keeps it and is then hidden
+            Common.NotificationCenter.trigger('edit:complete', this.view);
         },
 
         onContentThemeChangedToDark: function (isdark) {

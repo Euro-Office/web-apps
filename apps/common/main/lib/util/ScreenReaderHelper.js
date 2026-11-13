@@ -64,4 +64,16 @@ const helper = function() {
 !window.Common && (window.Common = {});
 !Common.Utils && (Common.Utils = {});
 
-Common.Utils.ScreeenReaderHelper = new helper();
+Common.Utils.ScreenReaderHelper = new helper();
+
+// Create the aria-live region up front (on DOM ready). If it were only created
+// lazily by the first speech() call, that first text set would be treated as the
+// region's initial content and not announced (Chromium/WebKit); with the region
+// already in the DOM, the first speech is a real change and gets announced.
+var enableOnReady = function() { Common.Utils.ScreenReaderHelper.setEnabled(true); };
+if (document.readyState === 'loading') {
+    // once: the listener removes itself after firing — it is only needed until DOM ready
+    document.addEventListener('DOMContentLoaded', enableOnReady, { once: true });
+} else {
+    enableOnReady();
+}
