@@ -49,6 +49,7 @@ const LongActionsController = inject('storeAppOptions')(({storeAppOptions}) => {
             api.asc_registerCallback('asc_onEndAction', onLongActionEnd);
             api.asc_registerCallback('asc_onOpenDocumentProgress', onOpenDocument);
             api.asc_registerCallback('asc_onConfirmAction', onConfirmAction);
+            api.asc_registerCallback('asc_onConfirmLargePaste', onConfirmLargePaste);
         };
 
         const api = Common.EditorApi.get();
@@ -66,6 +67,7 @@ const LongActionsController = inject('storeAppOptions')(({storeAppOptions}) => {
                 api.asc_unregisterCallback('asc_onEndAction', onLongActionEnd);
                 api.asc_unregisterCallback('asc_onOpenDocumentProgress', onOpenDocument);
                 api.asc_unregisterCallback('asc_onConfirmAction', onConfirmAction);
+                api.asc_unregisterCallback('asc_onConfirmLargePaste', onConfirmLargePaste);
             }
 
             Common.Notifications.off('engineCreated', on_engine_created);
@@ -288,6 +290,29 @@ const LongActionsController = inject('storeAppOptions')(({storeAppOptions}) => {
                 ],
             }).open();
         }
+    };
+
+    const onConfirmLargePaste = (cellCount, minSeconds, apiCallback) => {
+        let cells;
+        try {
+            cells = cellCount.toLocaleString(Common.Locale.currentLang);
+        } catch (e) {
+            cells = cellCount.toLocaleString('en');
+        }
+        let paste = false;
+        f7.dialog.create({
+            title: _t.notcriticalErrorTitle,
+            // Looked up by key so that untranslated locales fall back to English; _t holds only the current locale
+            text: t('LongActions.confirmLargePaste').replace('%1', cells).replace('%2', minSeconds),
+            buttons: [
+                {text: _t.textCancel, strong: true},
+                {text: t('LongActions.textPaste'), onClick: () => { paste = true; }}
+            ],
+            on: {
+                // The paste blocks the tab, so answer only once the closing animation has finished
+                closed: () => apiCallback(paste)
+            }
+        }).open();
     };
 
     const onOpenDocument = (progress) => {
