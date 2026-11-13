@@ -1,0 +1,8 @@
+{
+    "tests": ["test/unit-tests/*", "build/test/*", "*.test.js", "*.spec.js"],
+    "ignore": [
+        "*/locale/*", "translation/*", "*/resources/*", "theme/*", "*.less", "vendor/*", "docs/*",
+        "*package.json", "*package-lock.json", ".docker/*",
+        ".github/*", "*.md", "LICENSE*", "3DPARTY.md", ".gitignore", "renovate.json"
+    ]
+}
