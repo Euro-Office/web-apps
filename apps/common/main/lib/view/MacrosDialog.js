@@ -873,7 +873,7 @@ define([], function () {
         },
         
         onHelp: function() {
-            window.open('https://api.onlyoffice.com/docs/macros/get-started/', '_blank')
+            window.open('https://euro-office.github.io/documentation/usage/macros/', '_blank')
         },
         onBtnClick: function(event) {
             this._handleInput(event.currentTarget.attributes['result'].value);
