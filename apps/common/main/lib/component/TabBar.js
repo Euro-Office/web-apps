@@ -272,7 +272,8 @@ define([
         config: {
             placement   : 'top',
             items       : [],
-            draggable   : false
+            draggable   : false,
+            smoothScroll: false
         },
 
         tabs: [],
@@ -280,7 +281,7 @@ define([
         selectTabs: [],
 
         initialize : function (options) {
-            _.extend(this.config, options);
+            this.config = _.extend({}, this.config, options);
             Common.UI.BaseView.prototype.initialize.call(this, options);
 
             this.saved = [];
@@ -288,6 +289,8 @@ define([
         },
 
         render: function () {
+            this.cancelTabScroll();
+            this._wheelRemainder = 0;
             this.$el.html(this.template(this.config));
             this.$bar = this.$el.find('ul');
 
@@ -295,7 +298,12 @@ define([
                 elem.addEventListener ? elem.addEventListener( type, fn, false ) : elem.attachEvent( "on" + type, fn );
             };
 
-            this.$bar[0].addEventListener('wheel', _.bind(this._onMouseWheelThrottled, this));
+            if (this.config.smoothScroll) {
+                this.$bar[0].addEventListener('wheel', _.bind(this._onMouseWheel, this), {passive: false});
+                this.$bar.on('scroll', _.bind(function () { this.checkInvisible(); }, this));
+            } else {
+                this.$bar[0].addEventListener('wheel', _.bind(this._onMouseWheelThrottled, this));
+            }
             addEvent(this.$bar[0], 'dragstart', _.bind(function (event) {
                 event.dataTransfer.effectAllowed = 'copyMove';
             }, this));
@@ -341,6 +349,95 @@ define([
 
             this.rendered = true;
             return this;
+        },
+
+        _onMouseWheel: function(e) {
+            var bar = this.$bar[0],
+                mode = e.deltaMode,
+                horizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY),
+                delta = horizontal ? e.deltaX : e.deltaY,
+                limit = bar.scrollWidth - bar.clientWidth;
+            if (e.ctrlKey || e.metaKey || !delta || limit <= 0) {
+                return;
+            }
+
+            e.preventDefault();
+            if (mode === 1)
+                delta *= parseFloat(window.getComputedStyle(bar).lineHeight) || 16;
+            else if (mode === 2)
+                delta *= bar.clientWidth;
+
+            this.cancelTabScroll();
+            var target = bar.scrollLeft + delta + (this._wheelRemainder || 0);
+            target = this.isRTL ? Math.max(-limit, Math.min(0, target)) : Math.max(0, Math.min(limit, target));
+            bar.scrollLeft = target;
+            this._wheelRemainder = target - bar.scrollLeft;
+            Common.NotificationCenter.trigger('hints:clear');
+        },
+
+        scrollTabs: function(forward) {
+            this._wheelRemainder = 0;
+            var bar = this.$bar[0],
+                position = bar.scrollLeft,
+                limit = bar.scrollWidth - bar.clientWidth,
+                min = this.isRTL ? -limit : 0,
+                max = this.isRTL ? 0 : limit,
+                direction = forward ? 1 : -1,
+                start = this._tabScrollFrame && (this._tabScrollTarget - position) * direction > 0
+                    ? this._tabScrollTarget : position,
+                page = Math.max(min, Math.min(max, start + direction * Math.round(bar.clientWidth * 0.8)));
+
+            this._tabScrollTarget = page;
+            if (page > min && page < max) {
+                // Align the first visible tab with the start of the strip.
+                var bounds = bar.getBoundingClientRect(),
+                    scale = bar.clientWidth / bounds.width,
+                    edge = this.isRTL ? 'right' : 'left',
+                    bestDistance = Math.abs(page - start);
+                for (var i = 0; i < this.tabs.length; i++) {
+                    var rect = this.tabs[i].$el[0].getBoundingClientRect(),
+                        boundary = position + Math.round((rect[edge] - bounds[edge]) * scale),
+                        distance = Math.abs(boundary - page);
+                    if (boundary >= min && boundary <= max && (boundary - start) * direction > 0 &&
+                            Math.abs(boundary - start) <= bar.clientWidth && distance < bestDistance) {
+                        this._tabScrollTarget = boundary;
+                        bestDistance = distance;
+                    }
+                }
+            }
+
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                this.cancelTabScroll();
+                bar.scrollLeft = this._tabScrollTarget;
+            } else if (!this._tabScrollFrame && this._tabScrollTarget !== position) {
+                var lastTime = performance.now(),
+                    tick = _.bind(function (now) {
+                        if (!bar.isConnected || bar !== this.$bar[0]) {
+                            this._tabScrollFrame = 0;
+                            return;
+                        }
+
+                        var remaining = this._tabScrollTarget - position;
+                        if (Math.abs(remaining) < 2) {
+                            bar.scrollLeft = this._tabScrollTarget;
+                            this._tabScrollFrame = 0;
+                            return;
+                        }
+
+                        position += remaining * (1 - Math.exp(-Math.max(0, now - lastTime) / 85));
+                        lastTime = now;
+                        bar.scrollLeft = position;
+                        this._tabScrollFrame = requestAnimationFrame(tick);
+                    }, this);
+                this._tabScrollFrame = requestAnimationFrame(tick);
+            }
+        },
+
+        cancelTabScroll: function() {
+            if (this._tabScrollFrame) {
+                cancelAnimationFrame(this._tabScrollFrame);
+                this._tabScrollFrame = 0;
+            }
         },
 
         _onMouseWheelThrottled: function(e) {
@@ -452,6 +549,8 @@ define([
         },
 
         empty: function(suppress) {
+            this.cancelTabScroll();
+            this._wheelRemainder = 0;
             var me = this;
             this.tabs.forEach(function(tab){
                 me.manager.detach(tab);
@@ -528,6 +627,15 @@ define([
         },
 
         setTabVisible: function(index, suppress) {
+            if (this.config.smoothScroll) {
+                if (index === 'forward' || index === 'backward') {
+                    this.scrollTabs(index === 'forward');
+                    return;
+                }
+                this.cancelTabScroll();
+                this._wheelRemainder = 0;
+            }
+
             if (index <= 0) {
                 this.$bar.scrollLeft(0);
                 this.checkInvisible(suppress);
@@ -623,10 +731,19 @@ define([
         },
 
         checkInvisible: function(suppress) {
-            var result = {
-                first: !this.isTabVisible(this.isRTL ? this.tabs.length-1 : 0),
-                last: !this.isTabVisible(this.isRTL ? 0 : this.tabs.length-1)
-            };
+            var result;
+            if (this.config.smoothScroll) {
+                var bar = this.$bar[0],
+                    scrollWidth = bar.scrollWidth - bar.clientWidth,
+                    left = this.isRTL ? scrollWidth + bar.scrollLeft : bar.scrollLeft;
+                // The browser rounds scrollWidth and clientWidth independently.
+                result = {first: left > 1, last: scrollWidth - left > 1};
+            } else {
+                result = {
+                    first: !this.isTabVisible(this.isRTL ? this.tabs.length-1 : 0),
+                    last: !this.isTabVisible(this.isRTL ? 0 : this.tabs.length-1)
+                };
+            }
 
             !suppress && this.fireEvent('tab:invisible', this, result);
             return result;
@@ -689,6 +806,10 @@ define([
         },
 
         setDirection: function(isRTL) {
+            if (isRTL !== this.isRTL) {
+                this.cancelTabScroll();
+                this._wheelRemainder = 0;
+            }
             this.isRTL = isRTL;
         }
     });
