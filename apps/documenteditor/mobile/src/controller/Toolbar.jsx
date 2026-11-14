@@ -124,13 +124,11 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
             }
 
             function hideNavbar () {
-                props.closeOptions('fab');
                 f7.navbar.hide('.main-navbar');
                 api.SetMobileTopOffset(undefined, 0);
             };
 
             function showNavbar () {
-                props.openOptions('fab');
                 f7.navbar.show('.main-navbar');
                 api.SetMobileTopOffset(undefined, navbarHeight);
             };
