@@ -236,7 +236,7 @@ const ToolbarController = inject('storeAppOptions', 'users', 'storeReview', 'sto
         api.asc_addRestriction(Asc.c_oAscRestrictionType.View);
         Common.Notifications.trigger('draw:stop');
 
-        // Disable the iOS keyboard overlay — mirrors showKeyboard() in turnOffViewerMode.
+        // Disable the iOS keyboard overlay — mirrors enableVirtualKeyboard_Hard() in turnOffViewerMode.
         // Use AscBrowser.isSafariMobile (not Device.ios) — Device is minified in the bundle.
         if (window.AscCommon && window.AscCommon.AscBrowser && window.AscCommon.AscBrowser.isSafariMobile && window.AscCommon.g_inputContext) {
             window.AscCommon.g_inputContext.preventVirtualKeyboard_Hard();

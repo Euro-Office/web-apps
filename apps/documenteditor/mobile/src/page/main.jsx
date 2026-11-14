@@ -250,6 +250,12 @@ const MainPage = inject('storeDocumentInfo', 'users', 'storeAppOptions', 'storeV
         appOptions.changeViewerMode(false);
         api.asc_removeRestriction(Asc.c_oAscRestrictionType.View)
         api.asc_addRestriction(Asc.c_oAscRestrictionType.None);
+
+        // iOS: turnOnViewerMode switches the keyboard overlay off; switch it on again here, otherwise the first tap
+        // on the text only enables it and the keyboard opens on the second tap.
+        const AC = window.AscCommon;
+        if (AC && AC.AscBrowser && AC.AscBrowser.isSafariMobile && AC.g_inputContext)
+            AC.g_inputContext.enableVirtualKeyboard_Hard();
     };
 
     return (
