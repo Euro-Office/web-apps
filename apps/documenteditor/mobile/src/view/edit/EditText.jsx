@@ -2,6 +2,8 @@ import React, {Fragment, useEffect, useState } from 'react';
 import {observer, inject} from "mobx-react";
 import { f7, View, List, ListItem, Icon, Button, Page, Navbar, NavRight, Segmented, BlockTitle, Link } from 'framework7-react';
 import { useTranslation } from 'react-i18next';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
 import {Device} from '../../../../../common/mobile/utils/device';
 import { ThemeColorPalette, CustomColorPicker } from '../../../../../common/mobile/lib/component/ThemeColorPalette.jsx';
 import HighlightColorPalette from '../../../../../common/mobile/lib/component/HighlightColorPalette.jsx';
@@ -331,35 +333,32 @@ const PageBulletsAndNumbers = props => {
                     </NavRight>
                 }
             </Navbar>
-            <div className="swiper-container swiper-init" data-pagination='{"el": ".swiper-pagination"}'>
-                <div className="swiper-wrapper">
-                    <div className="swiper-slide">
-                        <PageNumbers 
-                            storeTextSettings={storeTextSettings} 
-                            onNumber={props.onNumber} 
-                            getIconsBulletsAndNumbers={props.getIconsBulletsAndNumbers}
-                            updateBulletsNumbers={props.updateBulletsNumbers}
-                        />
-                    </div>
-                    <div className="swiper-slide">
-                        <PageBullets 
-                            storeTextSettings={storeTextSettings} 
-                            onBullet={props.onBullet} 
-                            getIconsBulletsAndNumbers={props.getIconsBulletsAndNumbers}
-                            updateBulletsNumbers={props.updateBulletsNumbers}
-                        />
-                    </div>
-                    <div className="swiper-slide">
-                        <PageMultiLevel 
-                            storeTextSettings={storeTextSettings} 
-                            onMultiLevelList={props.onMultiLevelList} 
-                            getIconsBulletsAndNumbers={props.getIconsBulletsAndNumbers}
-                            updateBulletsNumbers={props.updateBulletsNumbers}
-                        />
-                    </div>
-                </div>
-                <div className="swiper-pagination"></div>
-            </div>
+            <Swiper modules={[Pagination]} pagination>
+                <SwiperSlide>
+                    <PageNumbers 
+                        storeTextSettings={storeTextSettings} 
+                        onNumber={props.onNumber} 
+                        getIconsBulletsAndNumbers={props.getIconsBulletsAndNumbers}
+                        updateBulletsNumbers={props.updateBulletsNumbers}
+                    />
+                </SwiperSlide>
+                <SwiperSlide>
+                    <PageBullets 
+                        storeTextSettings={storeTextSettings} 
+                        onBullet={props.onBullet} 
+                        getIconsBulletsAndNumbers={props.getIconsBulletsAndNumbers}
+                        updateBulletsNumbers={props.updateBulletsNumbers}
+                    />
+                </SwiperSlide>
+                <SwiperSlide>
+                    <PageMultiLevel 
+                        storeTextSettings={storeTextSettings} 
+                        onMultiLevelList={props.onMultiLevelList} 
+                        getIconsBulletsAndNumbers={props.getIconsBulletsAndNumbers}
+                        updateBulletsNumbers={props.updateBulletsNumbers}
+                    />
+                </SwiperSlide>
+            </Swiper>
         </Page>
     )
 };
