@@ -668,6 +668,20 @@ define([
                 return selectedElement ? selectedElement.value : undefined;
             },
 
+            clearMenuParameters: function () // no effect options to show (e.g. different effects selected): only the text sequence items stay
+            {
+                var menu = this.btnParameters && this.btnParameters.menu;
+                if (!menu || !menu.items) return;
+                this.removeMenuTextSequence();
+                menu.getItemsLength() > this.startIndexParam && menu.removeItems(this.startIndexParam, menu.getItemsLength() - this.startIndexParam);
+                menu.items[0].hide();
+                menu.items[1].hide();
+                this.isColor = false;
+                // the next setMenuParameters builds the effect items again
+                this._effectId = this._groupName = this._familyEffect = undefined;
+                this.addMenuTextSequence();
+            },
+
             setMenuTextSequence: function (value) // value: AscFormat.TEXT_SEQUENCE_*, undefined - mixed selection, null - no text to animate
             {
                 this._textSequence = value;
