@@ -486,6 +486,9 @@ define([
 
                     view.isColor  && view.setColor(this.AnimationProperties.asc_getColor());
                     this._state.noAnimationParam = view.btnParameters.menu.getItemsLength() === view.startIndexParam && !view.isColor;
+                } else {
+                    // different effects selected (or no options): the directions and family items of the previous effect don't apply
+                    view.clearMenuParameters();
                 }
                 view.hasMenuTextSequence() && (this._state.noAnimationParam = false);
 
