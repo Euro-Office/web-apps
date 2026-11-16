@@ -957,6 +957,30 @@ define([], function () {
         }
     };
 
+    // Resolves a link entry of editorConfig.customization (feedback, suggestFeature, ...) that is opened outside the editor.
+    // value:    false, true, undefined or { visible, url }
+    // themeUrl: the build-time theme value used when value has no valid url
+    // Returns { visible, url }. Only http(s) and mailto urls are accepted, and the entry is hidden when no url resolves.
+    Common.Utils.resolveCustomizationExternalLink = function (value, themeUrl) {
+        var parseUrl = function (url) {
+            if (typeof url !== 'string') return '';
+            try {
+                var parsed = new URL(url);
+                if (parsed.protocol === 'http:' || parsed.protocol === 'https:') return parsed.href;
+                if (parsed.protocol === 'mailto:' && parsed.pathname) return parsed.href;
+                return '';
+            } catch (e) {
+                return '';
+            }
+        };
+
+        if (value === false || value && value.visible === false)
+            return { visible: false, url: '' };
+
+        var url = (value && parseUrl(value.url)) || parseUrl(themeUrl);
+        return { visible: !!url, url: url };
+    };
+
     Common.Utils.applyCustomizationPlugins = function (plugins) {
         if (!plugins || plugins.length < 1) return;
 
