@@ -1761,6 +1761,9 @@ define([
                 this.appOptions.canDownload       = this.permissions.download !== false;
                 this.appOptions.showSaveButton = this.appOptions.isEdit || !this.appOptions.isRestrictedEdit && this.appOptions.isPDFForm && this.appOptions.canDownload; // save to file or save to file copy (for pdf-form viewer)
                 this.appOptions.canSuggest     = !((typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.suggestFeature===false);
+                this.appOptions.externalLinks = {
+                    feedback: Common.Utils.resolveCustomizationExternalLink(this.editorConfig.customization && this.editorConfig.customization.feedback, '{{SUPPORT_URL}}')
+                };
                 this.appOptions.canCopy        = this.permissions.copy !== false;
 
                 if (this.appOptions.isPDFForm && !this.appOptions.isEdit && !this.appOptions.isRestrictedEdit) {
@@ -2612,6 +2615,7 @@ define([
                             this.appOptions.customization.about = true;
                     }
                     Common.Utils.applyCustomization(this.appOptions.customization, mapCustomizationElements);
+                    this.appOptions.externalLinks && !this.appOptions.externalLinks.feedback.visible && $(mapCustomizationElements.feedback).hide();
                     if (this.appOptions.canBrandingExt) {
                         Common.Utils.applyCustomization(this.appOptions.customization, mapCustomizationExtElements);
                         if (this.appOptions.customization && this.appOptions.customization.layout && this.appOptions.customization.layout.toolbar && (typeof this.appOptions.customization.layout.toolbar === 'object') &&

@@ -1379,6 +1379,9 @@ define([
                 this.appOptions.canSaveToFile = this.appOptions.isEdit || this.appOptions.isRestrictedEdit;
                 this.appOptions.showSaveButton = this.appOptions.isEdit;
                 this.appOptions.canSuggest     = !((typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.suggestFeature===false);
+                this.appOptions.externalLinks = {
+                    feedback: Common.Utils.resolveCustomizationExternalLink(this.editorConfig.customization && this.editorConfig.customization.feedback, '{{SUPPORT_URL}}')
+                };
                 this.appOptions.canCopy        = this.permissions.copy !== false;
 
                 this.appOptions.compactHeader = this.appOptions.customization && (typeof (this.appOptions.customization) == 'object') && !!this.appOptions.customization.compactHeader;
@@ -2063,6 +2066,7 @@ define([
                             this.appOptions.customization.about = true;
                     }
                     Common.Utils.applyCustomization(this.appOptions.customization, mapCustomizationElements);
+                    this.appOptions.externalLinks && !this.appOptions.externalLinks.feedback.visible && $(mapCustomizationElements.feedback).hide();
                     if (this.appOptions.canBrandingExt) {
                         Common.Utils.applyCustomization(this.appOptions.customization, mapCustomizationExtElements);
                         Common.UI.LayoutManager.applyCustomization();

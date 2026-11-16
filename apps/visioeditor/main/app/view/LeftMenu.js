@@ -93,10 +93,8 @@ define([
                 disabled: true
             });
             this.btnSupport.on('click', _.bind(function() {
-                var config = this.mode.customization;
-                config && !!config.feedback && !!config.feedback.url ?
-                    window.open(config.feedback.url) :
-                    window.open('{{SUPPORT_URL}}');
+                // url resolved in Main.js by Common.Utils.resolveCustomizationExternalLink; the button is hidden when no url resolves
+                window.open(this.mode.externalLinks.feedback.url);
                 Common.NotificationCenter.trigger('edit:complete', this);
             }, this));
 
