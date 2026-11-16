@@ -103,7 +103,7 @@ define([
                 disabled: true
             });
             this.btnSupport.on('click', _.bind(function() {
-                // url resolved in Main.js by Common.Utils.resolveCustomizationExternalLink; the button is hidden when no url resolves
+                // url resolved by Common.Utils.resolveCustomizationExternalLink into externalLinks; the button is hidden when no url resolves
                 window.open(this.mode.externalLinks.feedback.url, "_blank", "noopener");
                 Common.NotificationCenter.trigger('edit:complete', this);
             }, this));

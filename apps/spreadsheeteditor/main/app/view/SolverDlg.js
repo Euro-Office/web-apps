@@ -133,7 +133,7 @@ define([
 
             this.api = this.options.api;
             this.lang = this.options.lang;
-            this.suggestLink = this.options.suggestLink;
+            this.suggestLink = this.options.suggestLink || { visible: false, url: '' };
             this.props = this.options.props;
             this._constraintOperator = {};
             this._maxConstraintIndex = 0;

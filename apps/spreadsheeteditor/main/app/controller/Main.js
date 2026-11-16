@@ -723,7 +723,7 @@ define([
             },
 
             onSuggest: function() {
-                // url resolved in onEditorPermissions by Common.Utils.resolveCustomizationExternalLink; the menu item is hidden when no url resolves
+                // url resolved by Common.Utils.resolveCustomizationExternalLink into externalLinks; the menu item is hidden when no url resolves
                 window.open(this.appOptions.externalLinks.suggest.url, "_blank", "noopener");
             },
 
@@ -2524,6 +2524,7 @@ define([
                             this.appOptions.customization.about = true;
                     }
                     Common.Utils.applyCustomization(this.appOptions.customization, mapCustomizationElements);
+                    // externalLinks is not set yet when an error is reported before the editor permissions arrive
                     this.appOptions.externalLinks && !this.appOptions.externalLinks.feedback.visible && $(mapCustomizationElements.feedback).hide();
                     if (this.appOptions.canBrandingExt) {
                         Common.Utils.applyCustomization(this.appOptions.customization, mapCustomizationExtElements);
