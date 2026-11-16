@@ -422,6 +422,29 @@ define([
             assert.deepEqual({ visible: false, url: '' }, resolve(undefined, '{{SUPPORT_URL}}'));
         });
 
+        it('Warns only when a given integrator url is rejected', function(){
+            var warn = console.warn, calls = [];
+            console.warn = function () { calls.push(arguments); };
+            try {
+                resolve({ url: 'javascript:alert(1)' }, theme);
+                resolve({ url: 123 }, theme);
+                resolve({ url: Object.create(null) }, theme);
+                assert.equal(3, calls.length);
+                assert.equal('javascript:alert(1)', calls[0][1]);
+
+                calls = [];
+                resolve({ url: 'https://x.example.com/' }, theme);
+                resolve({ url: '' }, theme);
+                resolve(true, theme);
+                resolve(undefined, '{{SUPPORT_URL}}');
+                resolve(false, theme);
+                resolve({ visible: false, url: 'javascript:alert(1)' }, theme);
+                assert.equal(0, calls.length);
+            } finally {
+                console.warn = warn;
+            }
+        });
+
         it('Returns the normalized url', function(){
             assert.deepEqual({ visible: true, url: 'https://x.example.com/' }, resolve({ url: ' https://x.example.com\n' }, theme));
             assert.deepEqual({ visible: true, url: 'https://x.example.com/my%20page' }, resolve({ url: 'https://x.example.com/my page' }, theme));

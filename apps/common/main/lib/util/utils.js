@@ -961,6 +961,7 @@ define([], function () {
     // value:    false, true, undefined or { visible, url }
     // themeUrl: the build-time theme value used when value has no valid url
     // Returns { visible, url }. Only http(s) and mailto urls are accepted, and the entry is hidden when no url resolves.
+    // A rejected integrator url is reported with console.warn; the theme value never is.
     Common.Utils.resolveCustomizationExternalLink = function (value, themeUrl) {
         var parseUrl = function (url) {
             if (typeof url !== 'string') return '';
@@ -977,7 +978,10 @@ define([], function () {
         if (value === false || value && value.visible === false)
             return { visible: false, url: '' };
 
-        var url = (value && parseUrl(value.url)) || parseUrl(themeUrl);
+        var url = value && parseUrl(value.url);
+        if (!url && value && value.url)
+            console.warn('Customization links accept only http(s) and mailto urls. Ignored url:', value.url);
+        url = url || parseUrl(themeUrl);
         return { visible: !!url, url: url };
     };
 
