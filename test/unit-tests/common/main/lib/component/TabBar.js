@@ -126,13 +126,10 @@ define([
                     assert.equal(bar.scrollLeft, 0);
                 });
 
-                it('snaps arrow paging to tab starts and exposes the last tab at the end', async function () {
+                it('snaps arrow paging to tab starts and exposes the last tab at the end', function () {
                     preferReducedMotion(true);
                     var startState = {first: rtl, last: !rtl},
-                        endState = {first: !rtl, last: rtl},
-                        visibilityChanged = new Promise(function (resolve) {
-                            tabbar.once('tab:invisible', function (source, state) { resolve(state); });
-                        });
+                        endState = {first: !rtl, last: rtl};
 
                     function assertAligned(index) {
                         var tab = tabbar.getAt(index).$el[0];
@@ -156,7 +153,7 @@ define([
                     tabbar.setTabVisible(towardEnd);
                     tabbar.setTabVisible(towardEnd);
                     assert.isTrue(tabbar.isTabVisible(tabbar.getCount() - 1));
-                    assert.deepEqual(await visibilityChanged, endState);
+                    assert.deepEqual(tabbar.checkInvisible(true), endState);
                     assert.equal(tabbar.getActive(), 0, 'arrow paging preserves the active sheet');
                 });
 
@@ -246,6 +243,20 @@ define([
                     assert.isTrue(tabbar.isTabVisible(0));
                 });
             });
+        });
+
+        it('disables Next when revealing the last sheet leaves only spacer overflow', function () {
+            render('ltr');
+            fixture.width(334);
+            var last = tabbar.getCount() - 1, visibility;
+            assert.isTrue(tabbar.checkInvisible(true).last);
+            tabbar.setActive(last);
+            tabbar.once('tab:invisible', function (source, state) { visibility = state; });
+            tabbar.setTabVisible(last);
+
+            assert.isTrue(tabbar.isTabVisible(last));
+            assert.isAbove(bar.scrollWidth - bar.clientWidth - bar.scrollLeft, 1, 'the spacer still overflows');
+            assert.deepEqual(visibility, {first: true, last: false});
         });
 
         it('leaves modified wheel events and wheel events on a fitting strip available to the editor', function () {

@@ -289,8 +289,7 @@ define([
         },
 
         render: function () {
-            this.cancelTabScroll();
-            this._wheelRemainder = 0;
+            this.resetTabScroll();
             this.$el.html(this.template(this.config));
             this.$bar = this.$el.find('ul');
 
@@ -440,6 +439,11 @@ define([
             }
         },
 
+        resetTabScroll: function() {
+            this.cancelTabScroll();
+            this._wheelRemainder = 0;
+        },
+
         _onMouseWheelThrottled: function(e) {
             var rawDelta = e.deltaY !== undefined
                 ? -(e.deltaMode === 1 ? e.deltaY * 30 : e.deltaY)
@@ -549,8 +553,7 @@ define([
         },
 
         empty: function(suppress) {
-            this.cancelTabScroll();
-            this._wheelRemainder = 0;
+            this.resetTabScroll();
             var me = this;
             this.tabs.forEach(function(tab){
                 me.manager.detach(tab);
@@ -632,8 +635,7 @@ define([
                     this.scrollTabs(index === 'forward');
                     return;
                 }
-                this.cancelTabScroll();
-                this._wheelRemainder = 0;
+                this.resetTabScroll();
             }
 
             if (index <= 0) {
@@ -733,11 +735,15 @@ define([
         checkInvisible: function(suppress) {
             var result;
             if (this.config.smoothScroll) {
-                var bar = this.$bar[0],
-                    scrollWidth = bar.scrollWidth - bar.clientWidth,
-                    left = this.isRTL ? scrollWidth + bar.scrollLeft : bar.scrollLeft;
-                // The browser rounds scrollWidth and clientWidth independently.
-                result = {first: left > 1, last: scrollWidth - left > 1};
+                result = {first: false, last: false};
+                if (this.tabs.length) {
+                    var bounds = this.$bar[0].getBoundingClientRect(),
+                        first = this.tabs[0].$el[0].getBoundingClientRect(),
+                        last = this.tabs[this.tabs.length - 1].$el[0].getBoundingClientRect();
+                    // Only the outer tab edges determine whether either arrow can reveal more.
+                    result.first = bounds.left - (this.isRTL ? last.left : first.left) > 1;
+                    result.last = (this.isRTL ? first.right : last.right) - bounds.right > 1;
+                }
             } else {
                 result = {
                     first: !this.isTabVisible(this.isRTL ? this.tabs.length-1 : 0),
@@ -807,8 +813,7 @@ define([
 
         setDirection: function(isRTL) {
             if (isRTL !== this.isRTL) {
-                this.cancelTabScroll();
-                this._wheelRemainder = 0;
+                this.resetTabScroll();
             }
             this.isRTL = isRTL;
         }
