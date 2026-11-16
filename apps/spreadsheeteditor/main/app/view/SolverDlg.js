@@ -275,7 +275,7 @@ define([
             if (this.suggestLink.visible) {
                 lblNotSupported.html(this.textNotSupported.replace(/%1/g, '<span class="link">' + this.textTellUs + '</span>'));
                 lblNotSupported.find('span').on('click', function (e) {
-                    window.open(me.suggestLink.url, "_blank");
+                    window.open(me.suggestLink.url, "_blank", "noopener");
                 });
             } else
                 lblNotSupported.text(this.textNotSupported.replace(/%1/g, this.textTellUs));

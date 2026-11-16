@@ -1009,7 +1009,7 @@ define([
 
             onSuggest: function() {
                 // url resolved in onEditorPermissions by Common.Utils.resolveCustomizationExternalLink; the menu item is hidden when no url resolves
-                window.open(this.appOptions.externalLinks.suggest.url, "_blank");
+                window.open(this.appOptions.externalLinks.suggest.url, "_blank", "noopener");
             },
 
             closeEditor: function() {
