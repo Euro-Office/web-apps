@@ -7,6 +7,7 @@
         <!-- /** coauthoring end **/ -->
         <button id="left-btn-navigation" class="btn btn-category" data-hint="0" data-hint-direction="right" data-hint-offset="big" content-target="" data-layout-name="leftMenu-navigation"><svg class="icon uni-scale"><use href="#btn-menu-navigation"></use></svg></button>
         <button id="left-btn-thumbnails" class="btn btn-category" data-hint="0" data-hint-direction="right" data-hint-offset="big" content-target=""><svg class="icon uni-scale"><use href="#btn-menu-thumbs"></use></svg></button>
+        <button id="left-btn-changespane" class="btn btn-category" data-hint="0" data-hint-direction="right" data-hint-offset="big" content-target="left-panel-changespane" data-layout-name="leftMenu-changespane"><svg class="icon uni-scale"><use href="#btn-ic-review"></use></svg></button>
         <button id="left-btn-support" class="btn btn-category" data-hint="0" data-hint-direction="right" data-hint-offset="big" content-target=""><svg class="icon uni-scale"><use href="#btn-menu-support"></use></svg></button>
         <button id="left-btn-about" class="btn btn-category" data-hint="0" data-hint-direction="right" data-hint-offset="big" content-target=""><svg class="icon uni-scale"><use href="#btn-menu-about"></use></svg></button>
         <div id="slot-left-menu-more"></div>
@@ -19,5 +20,6 @@
         <!-- /** coauthoring end **/ -->
         <div id="left-panel-navigation" class="content-box" style="display: none; height: 100%;"></div>
         <div id="left-panel-thumbnails" class="content-box" style="display: none; height: 100%;"></div>
+        <div id="left-panel-changespane" class="content-box" style="display: none; height: 100%;"></div>
     </div>
 </div>

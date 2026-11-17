@@ -1,0 +1,133 @@
+// SPDX-FileCopyrightText: 2026 Euro-Office contributors
+// SPDX-License-Identifier: AGPL-3.0-only
+
+#changespane-box {
+    display: table;
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    #changespane-header {
+        position: absolute;
+        height: 45px;
+        left: 0;
+        top: 0;
+        right: 0;
+        padding: 12px;
+        overflow: hidden;
+        border-bottom: @scaled-one-px-value-ie solid @border-toolbar-ie;
+        border-bottom: @scaled-one-px-value solid @border-toolbar;
+
+        label {
+            .font-size-medium();
+            .font-weight-bold();
+            margin-top: 2px;
+        }
+    }
+
+    .changespane-content {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 100%;
+        padding: 45px 15px 12px 15px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .changespane-filter {
+        padding-top: 12px;
+
+        label {
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .combobox {
+            width: 100%;
+        }
+    }
+
+    #changespane-count {
+        .font-size-normal();
+        color: @text-secondary-ie;
+        color: @text-secondary;
+        padding: 8px 0;
+    }
+
+    #changespane-list {
+        flex: 1 1 auto;
+        min-height: 0;
+        position: relative;
+
+        .changespane-item {
+            padding: 6px 8px;
+            border-bottom: @scaled-one-px-value-ie solid @border-divider-ie;
+            border-bottom: @scaled-one-px-value solid @border-divider;
+            white-space: normal;
+        }
+
+        .changespane-head {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .changespane-color {
+            flex: 0 0 auto;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .changespane-user {
+            .font-weight-bold();
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .changespane-date {
+            .font-size-small();
+            color: @text-secondary-ie;
+            color: @text-secondary;
+            margin-left: auto;
+            white-space: nowrap;
+        }
+
+        .changespane-text {
+            margin-top: 2px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            word-break: break-word;
+        }
+
+        .changespane-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 3px;
+        }
+
+        .changespane-action {
+            .font-size-small();
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+
+    .changespane-bulk {
+        display: flex;
+        gap: 6px;
+        padding-top: 8px;
+
+        > div {
+            flex: 1 1 50%;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+}
