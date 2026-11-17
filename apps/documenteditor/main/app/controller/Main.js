@@ -1312,6 +1312,7 @@ define([
                 value = Common.localStorage.getBool("de-settings-resolvedcomment");
                 Common.Utils.InternalSettings.set("de-settings-resolvedcomment", value);
                 this.isLiveCommenting ? this.api.asc_showComments(value) : this.api.asc_hideComments();
+                Common.Utils.InternalSettings.set("de-settings-comments-display", Common.localStorage.getItem("de-settings-comments-display") === 'list' ? 'list' : 'contextual');
                 /** coauthoring end **/
 
                 value = Common.localStorage.getItem("de-settings-zoom");

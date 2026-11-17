@@ -78,6 +78,9 @@ define([
                     '<span class="btn-slot text x-huge slot-comment"></span>' +
                     '<span class="btn-slot text x-huge" id="slot-comment-remove"></span>' +
                     '<span class="btn-slot text x-huge" id="slot-comment-resolve"></span>' +
+                    '<span class="btn-slot text x-huge" id="slot-comment-prev"></span>' +
+                    '<span class="btn-slot text x-huge" id="slot-comment-next"></span>' +
+                    '<span class="btn-slot text x-huge" id="slot-comments-display"></span>' +
                 '</div>' +
                 '<div class="separator long comments"></div>' +
                 '<div class="group">' +
@@ -235,6 +238,12 @@ define([
                     me.fireEvent('comment:removeComments', [item.value]);
                 });
             }
+            this.btnCommentPrev && this.btnCommentPrev.on('click', function (e) {
+                me.fireEvent('comment:navigate', [false]);
+            });
+            this.btnCommentNext && this.btnCommentNext.on('click', function (e) {
+                me.fireEvent('comment:navigate', [true]);
+            });
             if (this.btnCommentResolve) {
                 this.btnCommentResolve.on('click', function (e) {
                     me.fireEvent('comment:resolveComments', ['current']);
@@ -244,6 +253,10 @@ define([
                     me.fireEvent('comment:resolveComments', [item.value]);
                 });
             }
+
+            this.btnCommentsDisplay && this.btnCommentsDisplay.menu.on('item:click', function (menu, item, e) {
+                me.fireEvent('comments:display', [item.value]);
+            });
 
             this.mnuMailRecepients && this.mnuMailRecepients.on('item:click', function(menu, item, e) {
                     me.fireEvent('collaboration:mailmerge', [item.value]);
@@ -511,6 +524,45 @@ define([
                         });
                         this.lockedControls.push(this.btnCommentResolve);
                     }
+                    if (this.appPrefix === 'de-') {
+                        this.btnCommentsDisplay = new Common.UI.Button({
+                            cls: 'btn-toolbar x-huge icon-top',
+                            caption: this.txtCommentsDisplay,
+                            iconCls: 'toolbar__icon btn-menu-comments',
+                            lock: [_set.viewFormMode, _set.lostConnect],
+                            menu: true,
+                            action: 'comments-display',
+                            dataHint: '1',
+                            dataHintDirection: 'bottom',
+                            dataHintOffset: 'small'
+                        });
+                        this.lockedControls.push(this.btnCommentsDisplay);
+                    }
+                }
+
+                // going from comment to comment is only supported by the document editor
+                if ( this.appConfig.canComments && this.appPrefix === 'de-' ) {
+                    this.btnCommentPrev = new Common.UI.Button({
+                        cls: 'btn-toolbar x-huge icon-top',
+                        caption: this.txtCommentPrev,
+                        iconCls: Common.UI.isRTL() ? 'toolbar__icon btn-review-next' : 'toolbar__icon btn-review-prev',
+                        lock: [_set.previewReviewMode, _set.viewFormMode, _set.hideComments, _set.docLockForms],
+                        dataHint: '1',
+                        dataHintDirection: 'bottom',
+                        dataHintOffset: 'small'
+                    });
+                    this.lockedControls.push(this.btnCommentPrev);
+
+                    this.btnCommentNext = new Common.UI.Button({
+                        cls: 'btn-toolbar x-huge icon-top',
+                        caption: this.txtCommentNext,
+                        iconCls: Common.UI.isRTL() ? 'toolbar__icon btn-review-prev' : 'toolbar__icon btn-review-next',
+                        lock: [_set.previewReviewMode, _set.viewFormMode, _set.hideComments, _set.docLockForms],
+                        dataHint: '1',
+                        dataHintDirection: 'bottom',
+                        dataHintOffset: 'small'
+                    });
+                    this.lockedControls.push(this.btnCommentNext);
                 }
 
                 if (this.appConfig.isEdit && this.appConfig.canCoAuthoring && this.appConfig.canUseMailMerge) {
@@ -747,9 +799,41 @@ define([
                         );
                         me.btnCommentResolve.updateHint([me.tipCommentResolveCurrent, me.tipCommentResolve]);
                     }
+                    me.btnCommentPrev && me.btnCommentPrev.updateHint(me.tipCommentPrev);
+                    me.btnCommentNext && me.btnCommentNext.updateHint(me.tipCommentNext);
+
+                    if (me.btnCommentsDisplay) {
+                        var isList = Common.localStorage.getItem(me.appPrefix + 'settings-comments-display') === 'list';
+                        me.btnCommentsDisplay.setMenu(
+                            new Common.UI.Menu({
+                                cls: 'ppm-toolbar',
+                                style: 'max-width: 220px;',
+                                items: [
+                                    {
+                                        caption: me.txtCommentsContextual,
+                                        checkable: true,
+                                        toggleGroup: 'menuCommentsDisplay',
+                                        checked: !isList,
+                                        template: menuTemplate,
+                                        description: me.txtCommentsContextualDesc,
+                                        value: 'contextual'
+                                    },
+                                    {
+                                        caption: me.txtCommentsList,
+                                        checkable: true,
+                                        toggleGroup: 'menuCommentsDisplay',
+                                        checked: isList,
+                                        template: menuTemplate,
+                                        description: me.txtCommentsListDesc,
+                                        value: 'list'
+                                    }
+                                ]
+                            }));
+                        me.btnCommentsDisplay.updateHint(me.tipCommentsDisplay);
+                    }
 
                     var separator_sharing = !(me.btnSharing || me.btnCoAuthMode) ? me.$el.find('.separator.sharing') : '.separator.sharing',
-                        separator_comments = !(me.btnCommentRemove || me.btnCommentResolve) ? me.$el.find('.separator.comments') : '.separator.comments',
+                        separator_comments = !(me.btnCommentRemove || me.btnCommentResolve || me.btnCommentsDisplay) ? me.$el.find('.separator.comments') : '.separator.comments',
                         separator_review = !(config.canReview || config.canViewReview) ? me.$el.find('.separator.review') : '.separator.review',
                         separator_compare = !(config.canReview && config.canFeatureComparison) ? me.$el.find('.separator.compare') : '.separator.compare',
                         separator_chat = !me.btnChat ? me.$el.find('.separator.chat') : '.separator.chat',
@@ -822,6 +906,9 @@ define([
                 this.btnChat && this.btnChat.render(this.$el.find('#slot-btn-chat'));
                 this.btnCommentRemove && this.btnCommentRemove.render(this.$el.find('#slot-comment-remove'));
                 this.btnCommentResolve && this.btnCommentResolve.render(this.$el.find('#slot-comment-resolve'));
+                this.btnCommentPrev && this.btnCommentPrev.render(this.$el.find('#slot-comment-prev'));
+                this.btnCommentNext && this.btnCommentNext.render(this.$el.find('#slot-comment-next'));
+                this.btnCommentsDisplay && this.btnCommentsDisplay.render(this.$el.find('#slot-comments-display'));
                 this.btnMailRecepients && this.btnMailRecepients.render(this.$el.find('#slot-btn-mailrecepients'));
 
                 return this.$el;
@@ -1037,12 +1124,22 @@ define([
             txtCommentRemMy: 'Remove My Comments',
             txtCommentRemAll: 'Remove All Comments',
             txtCommentResolve: 'Resolve',
+            txtCommentPrev: 'Previous comment',
+            txtCommentNext: 'Next comment',
+            tipCommentPrev: 'To previous comment',
+            tipCommentNext: 'To next comment',
             tipCommentResolveCurrent: 'Resolve current comments',
             tipCommentResolve: 'Resolve comments',
             txtCommentResolveCurrent: 'Resolve Current Comments',
             txtCommentResolveMyCurrent: 'Resolve My Current Comments',
             txtCommentResolveMy: 'Resolve My Comments',
             txtCommentResolveAll: 'Resolve All Comments',
+            txtCommentsDisplay: 'Show Comments',
+            tipCommentsDisplay: 'Choose how comments are shown',
+            txtCommentsContextual: 'Contextual',
+            txtCommentsContextualDesc: 'Show each comment next to its text',
+            txtCommentsList: 'List',
+            txtCommentsListDesc: 'Show all comments in the side panel',
             txtOnGlobal: 'ON for me and everyone',
             txtOffGlobal: 'OFF for me and everyone',
             txtOn: 'ON for me',
