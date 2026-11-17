@@ -140,6 +140,19 @@ body[data-editor-type="drawing"] {
   display: none;
 }
 
+// Desktop: a tab moved to its own window gets a title bar drawn by the window
+// over the page's title row, which hid the strip right of the quick access
+// buttons. Lift the title row into the strip's place and draw the strip under
+// it, so it runs across the whole window as in the main window.
+:root body[data-editor-type].desktop-singlewindow #box-document-title {
+  top: -@eo-app-accent-height;
+  box-shadow: 0 @eo-app-accent-height 0 0 var(--eo-app-accent);
+}
+
+:root body[data-editor-type].desktop-singlewindow #viewport::before {
+  display: none;
+}
+
 :root body[data-editor-type="document"] {
   --eo-app-accent: @eo-app-accent-document;
 }

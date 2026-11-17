@@ -95,9 +95,13 @@ define([
                     if ( obj.singlewindow !== undefined ) {
                         // $('#box-document-title .hedset')[obj.singlewindow ? 'hide' : 'show']();
 
-                        if ( config.isFillFormApp ) {
-                            $("#title-doc-name")[obj.singlewindow ? 'hide' : 'show']();
-                        } else {
+                        // A tab moved into its own window (singlewindow) gets the file name drawn by the window itself;
+                        // the page's own title would show through underneath it (long names), so hide it in all editors.
+                        $("#title-doc-name")[obj.singlewindow ? 'hide' : 'show']();
+                        // The window draws its own title bar over the page's title row; let the styles move
+                        // what would show through underneath it (accent strip, user avatar).
+                        $('body').toggleClass('desktop-singlewindow', !!obj.singlewindow);
+                        if ( !config.isFillFormApp ) {
                             titlebuttons && titlebuttons.home && titlebuttons.home.btn.setVisible(obj.singlewindow);
                         }
 
@@ -519,8 +523,8 @@ define([
             }
 
             if ( native.features.singlewindow !== undefined ) {
-                if ( config.isFillFormApp )
-                    $("#title-doc-name")[native.features.singlewindow ? 'hide' : 'show']();
+                $("#title-doc-name")[native.features.singlewindow ? 'hide' : 'show']();
+                $('body').toggleClass('desktop-singlewindow', !!native.features.singlewindow);
 
                 // $('#box-document-title .hedset')[native.features.singlewindow ? 'hide' : 'show']();
                 !!titlebuttons.home && titlebuttons.home.btn.setVisible(native.features.singlewindow);
