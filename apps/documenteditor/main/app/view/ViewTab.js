@@ -100,7 +100,9 @@ define([
                 '<div class="elset">' +
                     '<span class="btn-slot text" id="slot-chk-rulers"></span>' +
                 '</div>' +
-                '<div class="elset"></div>' +
+                '<div class="elset">' +
+                    '<span class="btn-slot text" id="slot-chk-keep-indents"></span>' +
+                '</div>' +
             '</div>' +
             '<div class="separator long macro"></div>' +
             '<div class="group macro">' +
@@ -142,6 +144,9 @@ define([
                 }, me));
                 me.chRulers.on('change', _.bind(function (checkbox, state) {
                     me.fireEvent('rulers:change', [me.chRulers, state === 'checked']);
+                }, me));
+                me.chKeepIndents.on('change', _.bind(function (checkbox, state) {
+                    me.fireEvent('rulers:keepindents', [me.chKeepIndents, state === 'checked']);
                 }, me));
                 me.chLeftMenu.on('change', _.bind(function (checkbox, state) {
                     me.fireEvent('leftmenu:hide', [me.chLeftMenu, state === 'checked']);
@@ -304,6 +309,17 @@ define([
                 });
                 this.lockedControls.push(this.chRulers);
 
+                // ruler: move the indents of all selected paragraphs by the same distance (keeps list levels apart)
+                this.chKeepIndents = new Common.UI.CheckBox({
+                    lock: [_set.lostConnect, _set.disableOnStart],
+                    labelText: this.textKeepIndents,
+                    value: Common.localStorage.getBool('de-settings-ruler-keep-indents', false),
+                    dataHint: '1',
+                    dataHintDirection: 'left',
+                    dataHintOffset: 'small'
+                });
+                this.lockedControls.push(this.chKeepIndents);
+
                 this.btnMultiplePages = new Common.UI.Button({
                     cls: 'btn-toolbar',
                     iconCls: 'toolbar__icon btn-multiple-pages',
@@ -462,6 +478,8 @@ define([
                 this.chStatusbar.render($host.find('#slot-chk-statusbar'));
                 this.chToolbar.render($host.find('#slot-chk-toolbar'));
                 this.chRulers.render($host.find('#slot-chk-rulers'));
+                this.chKeepIndents.render($host.find('#slot-chk-keep-indents'));
+                this.chKeepIndents.$el && this.chKeepIndents.$el.attr('title', this.tipKeepIndents);
                 this.btnMacros && this.btnMacros.render($host.find('#slot-btn-macros'));
                 this.chLeftMenu.render($host.find('#slot-chk-leftmenu'));
                 this.chRightMenu.render($host.find('#slot-chk-rightmenu'));
@@ -563,6 +581,8 @@ define([
             textStatusBar: 'Status Bar',
             textAlwaysShowToolbar: 'Always show toolbar',
             textRulers: 'Rulers',
+            textKeepIndents: 'Keep indent differences',
+            tipKeepIndents: 'When several paragraphs are selected, dragging an indent marker on the ruler moves all of them by the same distance (e.g. the levels of a list stay apart). Off: all get the same indent.',
             textDarkDocument: 'Dark document',
             textPageless: 'Pageless',
             tipHeadings: 'Headings',

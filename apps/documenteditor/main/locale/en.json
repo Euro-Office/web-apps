@@ -4339,6 +4339,8 @@
   "DE.Views.ViewTab.textResumeMacro": "Resume recording",
   "DE.Views.ViewTab.textRightMenu": "Right Panel",
   "DE.Views.ViewTab.textRulers": "Rulers",
+  "DE.Views.ViewTab.textKeepIndents": "Keep indent differences",
+  "DE.Views.ViewTab.tipKeepIndents": "When several paragraphs are selected, dragging an indent marker on the ruler moves all of them by the same distance (e.g. the levels of a list stay apart). Off: all get the same indent.",
   "DE.Views.ViewTab.textStatusBar": "Status Bar",
   "DE.Views.ViewTab.textStopMacro": "Stop recording",
   "DE.Views.ViewTab.textTabStyle": "Tab style",

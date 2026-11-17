@@ -59,6 +59,7 @@ define([
         setApi: function (api) {
             if (api) {
                 this.api = api;
+                this.api.isRulerKeepIndentDifferences = Common.localStorage.getBool('de-settings-ruler-keep-indents', false);
                 this.api.asc_registerCallback('asc_onZoomChange', _.bind(this.onZoomChange, this));
                 this.api.asc_registerCallback('asc_onMacroRecordingStart', _.bind(this.updateMacroState, this, true, false));
                 this.api.asc_registerCallback('asc_onMacroRecordingStop', _.bind(this.updateMacroState, this, false));
@@ -84,6 +85,7 @@ define([
                     'zoom:towidth': _.bind(this.onBtnZoomTo, this, 'towidth'),
                     'zoom:100': _.bind(this.onZoomTo100, this),
                     'rulers:change': _.bind(this.onChangeRulers, this),
+                    'rulers:keepindents': _.bind(this.onChangeKeepIndents, this),
                     'darkmode:change': _.bind(this.onChangeDarkMode, this),
                     'macros:click':  _.bind(this.onClickMacros, this),
                     'macros:record':  _.bind(this.onClickMacrosRec, this),
@@ -378,6 +380,12 @@ define([
 
         onZoomTo100: function () {
             this.api && this.api.zoom(100);
+        },
+
+        onChangeKeepIndents: function (btn, checked) {
+            Common.localStorage.setBool('de-settings-ruler-keep-indents', checked);
+            this.api && (this.api.isRulerKeepIndentDifferences = checked);
+            Common.NotificationCenter.trigger('edit:complete', this.view);
         },
 
         onChangeRulers: function (btn, checked) {

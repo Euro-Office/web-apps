@@ -4331,6 +4331,8 @@
   "DE.Views.ViewTab.textResumeMacro": "Aufnahme fortsetzen",
   "DE.Views.ViewTab.textRightMenu": "Rechtes Bedienungsfeld ",
   "DE.Views.ViewTab.textRulers": "Lineale",
+  "DE.Views.ViewTab.textKeepIndents": "Einzugsabstände beibehalten",
+  "DE.Views.ViewTab.tipKeepIndents": "Sind mehrere Absätze markiert, verschiebt das Ziehen einer Einzugsmarke im Lineal alle um dieselbe Strecke (z. B. bleiben die Ebenen einer Liste gestaffelt). Aus: alle erhalten denselben Einzug.",
   "DE.Views.ViewTab.textStatusBar": "Statusleiste",
   "DE.Views.ViewTab.textStopMacro": "Aufnahme beenden",
   "DE.Views.ViewTab.textTabStyle": "Stil der Registerkarte",
