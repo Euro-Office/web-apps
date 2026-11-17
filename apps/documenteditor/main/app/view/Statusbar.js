@@ -162,6 +162,8 @@ define([
             })
 
             me.btnDocInfo.menu.on('show:after', _.bind(this.onDocInfoShow, this));
+            me.chIncludeHdrFtr.on('toggle', _.bind(this.onIncludeHdrFtrToggle, this));
+            me.chIncludeComments.on('toggle', _.bind(this.onIncludeCommentsToggle, this));
 
             me.onChangeProtectDocument();
         }
@@ -328,7 +330,22 @@ define([
                             { caption: this.txtParagraphs, value: 0 },
                             { caption: this.txtWords, value: 0 },
                             { caption: this.txtSymbols, value: 0 },
-                            { caption: this.txtSpaces, value: 0 }
+                            { caption: this.txtSpaces, value: 0 },
+                            { caption: this.txtAddedWords, value: 0 },
+                            { caption: this.txtDeletedWords, value: 0 },
+                            { caption: '--', template: Common.UI.MenuItem.prototype.template },
+                            this.chIncludeHdrFtr = new Common.UI.MenuItem({
+                                caption: this.txtIncludeHdrFtr,
+                                checkable: true,
+                                checked: Common.localStorage.getBool('de-settings-count-hdrftr', false),
+                                stopPropagation: true
+                            }),
+                            this.chIncludeComments = new Common.UI.MenuItem({
+                                caption: this.txtIncludeComments,
+                                checkable: true,
+                                checked: Common.localStorage.getBool('de-settings-count-comments', false),
+                                stopPropagation: true
+                            })
                         ]
                     })
                 });
@@ -490,7 +507,23 @@ define([
             onDocInfoShow: function() {
                 if (!this.api) return;
                 this._selInfo = this.api.asc_GetSelectionDocInfo ? this.api.asc_GetSelectionDocInfo() : null;
-                this.api.startGetDocInfo();
+                this.api.startGetDocInfo(Common.localStorage.getBool('de-settings-count-hdrftr', false), Common.localStorage.getBool('de-settings-count-comments', false));
+            },
+
+            onIncludeHdrFtrToggle: function(item, checked) {
+                Common.localStorage.setBool('de-settings-count-hdrftr', checked);
+                this.restartDocInfo();
+            },
+
+            onIncludeCommentsToggle: function(item, checked) {
+                Common.localStorage.setBool('de-settings-count-comments', checked);
+                this.restartDocInfo();
+            },
+
+            restartDocInfo: function() {
+                if (!this.api) return;
+                this.api.stopGetDocInfo();
+                this.onDocInfoShow();
             },
 
             onGetDocInfoStart: function() {
@@ -502,9 +535,10 @@ define([
                     var me = this,
                         items = this.btnDocInfo.menu.items,
                         sel = this._selInfo;
-                    ['get_PageCount', 'get_ParagraphCount', 'get_WordsCount', 'get_SymbolsCount', 'get_SymbolsWSCount'].forEach(function(getter, i) {
+                    ['get_PageCount', 'get_ParagraphCount', 'get_WordsCount', 'get_SymbolsCount', 'get_SymbolsWSCount', 'get_AddedWordsCount', 'get_DeletedWordsCount'].forEach(function(getter, i) {
+                        if (!obj[getter]) return;
                         var total = obj[getter](),
-                            part = sel ? sel[getter]() : -1;
+                            part = sel && sel[getter] ? sel[getter]() : -1;
                         if (total>-1)
                             items[i].options.value = part>-1 ? Common.Utils.String.format(me.txtSelectionOf, part, total) : total;
                     });
@@ -526,7 +560,8 @@ define([
             fillDocInfo:  function() {
                 if (!this.btnDocInfo || !this.btnDocInfo.menu || !this.btnDocInfo.menu.isVisible()) return;
 
-                this.btnDocInfo.menu.items.forEach(function(item){
+                // only the statistic rows show values, the rest of the menu keeps its own markup
+                this.btnDocInfo.menu.items.slice(0, 7).forEach(function(item){
                     $(item.el).html(item.template({id: item.id, caption : item.caption, options : item.options}));
                 });
             },
@@ -555,7 +590,11 @@ define([
             txtParagraphs: 'Paragraphs',
             txtSymbols: 'Symbols',
             txtSpaces: 'Symbols with spaces',
-            txtSelectionOf: '{0} of {1}'
+            txtSelectionOf: '{0} of {1}',
+            txtIncludeHdrFtr: 'Include headers and footers',
+            txtIncludeComments: 'Include comments',
+            txtAddedWords: 'Inserted words (tracked changes)',
+            txtDeletedWords: 'Deleted words (tracked changes)'
         }, DE.Views.Statusbar || {}));
     }
 );

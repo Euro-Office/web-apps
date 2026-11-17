@@ -1924,7 +1924,7 @@ define([], function () {
 
         updateStatisticInfo: function() {
             if ( this.api && this.doc ) {
-                this.api.startGetDocInfo();
+                this.api.startGetDocInfo(Common.localStorage.getBool('de-settings-count-hdrftr', false), Common.localStorage.getBool('de-settings-count-comments', false));
             }
         },
 
