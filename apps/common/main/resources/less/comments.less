@@ -173,7 +173,9 @@
         margin-bottom: 5px;
         border: @scaled-one-px-value-ie solid @border-regular-control-ie;
         border: @scaled-one-px-value solid @border-regular-control;
-        word-break: break-all;
+        // break between words; only a word too long for the line is split (break-all cut every word anywhere)
+        word-break: normal;
+        overflow-wrap: anywhere;
         line-height: 15px;
         color: @text-normal-ie;
         color: @text-normal;
@@ -291,7 +293,9 @@
         border-left: @scaled-one-px-value-ie solid #939393;
         border-left: @scaled-one-px-value solid #939393;
         border-right: none;
-        word-break: break-all;
+        // break between words; only a word too long for the line is split (break-all cut every word anywhere)
+        word-break: normal;
+        overflow-wrap: anywhere;
         white-space: pre-wrap;
         cursor: pointer;
         .rtl & {
