@@ -738,7 +738,7 @@ define([
                         dataHintOffset: 'big'
                     });
                     this.paragraphControls.push(this.numSpacingBefore);
-                    this.spinners.push({cmp: this.numSpacingBefore, step: .01});
+                    this.spinners.push({cmp: this.numSpacingBefore, step: .01, spacing: true});
 
                     this.lblSpacingBefore = new Common.UI.Label({
                         caption: this.textSpaceBefore,
@@ -762,7 +762,7 @@ define([
                         dataHintOffset: 'small'
                     });
                     this.paragraphControls.push(this.numSpacingAfter);
-                    this.spinners.push({cmp: this.numSpacingAfter, step: .01});
+                    this.spinners.push({cmp: this.numSpacingAfter, step: .01, spacing: true});
 
                     this.lblSpacingAfter = new Common.UI.Label({
                         caption: this.textSpaceAfter,
@@ -3373,9 +3373,10 @@ define([
                 }
                 if (this.spinners) {
                     for (var i=0; i<this.spinners.length; i++) {
-                        var spinner = this.spinners[i].cmp;
-                        spinner.setDefaultUnit(Common.Utils.Metric.getCurrentMetricName());
-                        spinner.setStep(Common.Utils.Metric.getCurrentMetric()==Common.Utils.Metric.c_MetricUnits.pt ? 1 : this.spinners[i].step);
+                        var spinner = this.spinners[i].cmp,
+                            metric = this.spinners[i].spacing ? Common.Utils.Metric.getSpacingMetric() : Common.Utils.Metric.getCurrentMetric();
+                        spinner.setDefaultUnit(Common.Utils.Metric.getMetricName(metric));
+                        spinner.setStep(metric==Common.Utils.Metric.c_MetricUnits.pt ? 1 : this.spinners[i].step);
                     }
                 }
             },
