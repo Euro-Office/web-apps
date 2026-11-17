@@ -1125,6 +1125,16 @@ define([], function () {
                 caption     : me.splitCellsText
             });
 
+            // Split the whole table above the current row, like Word's Layout > Split Table (also Ctrl+Shift+Enter)
+            me.mnuTableSplitTable = new Common.UI.MenuItem({
+                caption     : me.textSplitTable
+            });
+
+            // Put a table that sticks out of the page between the margins, like Word's AutoFit Window
+            me.mnuTableFitMargins = new Common.UI.MenuItem({
+                caption     : me.textFitTableToMargins
+            });
+
             me.menuTableCellAlign = new Common.UI.MenuItem({
                 caption     : me.AlignText,
                 menu        : new Common.UI.Menu({
@@ -1677,6 +1687,8 @@ define([], function () {
                     if (me.api) {
                         me.mnuTableMerge.setDisabled(disabled || !me.api.CheckBeforeMergeCells());
                         me.mnuTableSplit.setDisabled(disabled || !me.api.CheckBeforeSplitCells());
+                        me.mnuTableSplitTable.setDisabled(disabled || !(me.api.asc_CanSplitTable && me.api.asc_CanSplitTable()));
+                        me.mnuTableFitMargins.setDisabled(disabled || !(me.api.asc_CanFitTableToMargins && me.api.asc_CanFitTableToMargins()));
                     }
 
                     me.menuTableDistRows.setDisabled(disabled);
@@ -1868,9 +1880,11 @@ define([], function () {
                     { caption: '--' },
                     me.mnuTableMerge,
                     me.mnuTableSplit,
+                    me.mnuTableSplitTable,
                     { caption: '--' },
                     me.menuTableDistRows,
                     me.menuTableDistCols,
+                    me.mnuTableFitMargins,
                     { caption: '--' },
                     me.menuTableCellAlign,
                     me.menuTableDirection,
