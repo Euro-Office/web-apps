@@ -3078,5 +3078,7 @@
   "PDFE.Views.ViewTab.tipFitToWidth": "Fit to width",
   "PDFE.Views.ViewTab.tipHeadings": "Headings",
   "PDFE.Views.ViewTab.tipInterfaceTheme": "Interface theme",
-  "PDFE.Views.ViewTab.tipRecognize": "Edit text"
+  "PDFE.Views.ViewTab.tipRecognize": "Edit text",
+  "PDFE.Views.ViewTab.textPageByPage": "Page by page",
+  "PDFE.Views.ViewTab.tipPageByPage": "A turn of the mouse wheel or Page Down shows the next page. Works best with Fit to Page."
 }

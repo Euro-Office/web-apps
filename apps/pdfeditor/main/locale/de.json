@@ -3074,5 +3074,7 @@
   "PDFE.Views.ViewTab.tipFitToWidth": "Breite anpassen",
   "PDFE.Views.ViewTab.tipHeadings": "Überschriften",
   "PDFE.Views.ViewTab.tipInterfaceTheme": "Thema der Benutzeroberfläche",
-  "PDFE.Views.ViewTab.tipRecognize": "Text bearbeiten"
+  "PDFE.Views.ViewTab.tipRecognize": "Text bearbeiten",
+  "PDFE.Views.ViewTab.textPageByPage": "Seitenweise blättern",
+  "PDFE.Views.ViewTab.tipPageByPage": "Ein Dreh am Mausrad oder Bild ab zeigt die nächste Seite. Am besten zusammen mit „Seite anpassen“."
 }

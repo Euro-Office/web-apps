@@ -79,7 +79,8 @@ define([
                     'zoom:topage': _.bind(this.onBtnZoomTo, this, 'topage'),
                     'zoom:towidth': _.bind(this.onBtnZoomTo, this, 'towidth'),
                     'darkmode:change': _.bind(this.onChangeDarkMode, this),
-                    'macros:click':  _.bind(this.onClickMacros, this)
+                    'macros:click':  _.bind(this.onClickMacros, this),
+                    'viewtab:pagebypage': _.bind(this.onPageByPage, this)
                 },
                 'Toolbar': {
                     'view:compact': _.bind(function (toolbar, state) {
@@ -251,6 +252,15 @@ define([
 
         onDocumentReady: function() {
             Common.Utils.lockControls(Common.enumLock.disableOnStart, false, {array: this.view.lockedControls});
+            if (this.api && this.api.asc_SetPageByPage && Common.localStorage.getBool("pdfe-settings-pagebypage", false))
+                this.api.asc_SetPageByPage(true);
+        },
+
+        // page by page: a wheel step or Page Down shows the next page; remembered for the next PDFs
+        onPageByPage: function(isOn) {
+            Common.localStorage.setBool("pdfe-settings-pagebypage", isOn);
+            this.api && this.api.asc_SetPageByPage && this.api.asc_SetPageByPage(isOn);
+            Common.NotificationCenter.trigger('edit:complete', this.view);
         },
 
         onZoomChange: function (percent, type) {

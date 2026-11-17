@@ -59,6 +59,13 @@ define([
                     '<span class="btn-slot text slot-btn-ftw" style="text-align: center;"></span>' +
                 '</div>' +
             '</div>' +
+            // own column: the toolbar has room for two rows only, a third row overlapped the document
+            '<div class="group small">' +
+                '<div class="elset">' +
+                    '<span class="btn-slot text" id="slot-chk-pagebypage"></span>' +
+                '</div>' +
+                '<div class="elset"></div>' +
+            '</div>' +
             '<div class="separator long"></div>' +
             '<div class="group">' +
                 '<span class="btn-slot text x-huge" id="slot-btn-interface-theme"></span>' +
@@ -106,6 +113,9 @@ define([
                     });
                 });
 
+                me.chPageByPage.on('change', function (checkbox, state) {
+                    me.fireEvent('viewtab:pagebypage', [state === 'checked']);
+                });
                 me.chToolbar.on('change', _.bind(function(checkbox, state) {
                     me.fireEvent('toolbar:setcompact', [me.chToolbar, state !== 'checked']);
                 }, me));
@@ -204,6 +214,16 @@ define([
                     dataHintOffset: 'small'
                 });
                 this.lockedControls.push(this.btnDarkDocument);
+
+                this.chPageByPage = new Common.UI.CheckBox({
+                    lock: [_set.lostConnect, _set.disableOnStart],
+                    labelText: this.textPageByPage,
+                    value: Common.localStorage.getBool("pdfe-settings-pagebypage", false),
+                    dataHint: '1',
+                    dataHintDirection: 'left',
+                    dataHintOffset: 'small'
+                });
+                this.lockedControls.push(this.chPageByPage);
 
                 this.chStatusbar = new Common.UI.CheckBox({
                     lock: [_set.lostConnect, _set.disableOnStart],
@@ -308,6 +328,7 @@ define([
                 this.btnsFitToWidth[0].render($host.find('.slot-btn-ftw'));
                 this.btnInterfaceTheme.render($host.find('#slot-btn-interface-theme'));
                 this.btnDarkDocument.render($host.find('#slot-btn-dark-document'));
+                this.chPageByPage.render($host.find('#slot-chk-pagebypage'));
                 this.chStatusbar.render($host.find('#slot-chk-statusbar'));
                 this.chToolbar.render($host.find('#slot-chk-toolbar'));
                 this.chLeftMenu.render($host.find('#slot-chk-leftmenu'));
@@ -342,6 +363,7 @@ define([
                 this.btnsFitToWidth.forEach(function (btn) {
                     btn.updateHint(me.tipFitToWidth);
                 });
+                this.chPageByPage.$el && this.chPageByPage.$el.attr('title', this.tipPageByPage);
 
                 var value = Common.UI.LayoutManager.getInitValue('leftMenu');
                 value = (value!==undefined) ? !value : false;
@@ -393,6 +415,8 @@ define([
             textFitToWidth: 'Fit To Width',
             textInterfaceTheme: 'Interface theme',
             textStatusBar: 'Status Bar',
+            textPageByPage: 'Page by page',
+            tipPageByPage: 'A turn of the mouse wheel or Page Down shows the next page. Works best with Fit to Page.',
             textAlwaysShowToolbar: 'Always show toolbar',
             textDarkDocument: 'Dark document',
             tipHeadings: 'Headings',
