@@ -1,0 +1,178 @@
+
+#spellcheck-box {
+    display: table;
+    position: relative;
+
+    #spellcheck-header {
+        position: absolute;
+        height: 45px;
+        left: 0;
+        top: 0;
+        right: 0;
+        padding: 12px;
+        overflow: hidden;
+        border-bottom: @scaled-one-px-value-ie solid @border-toolbar-ie;
+        border-bottom: @scaled-one-px-value solid @border-toolbar;
+
+        label {
+            .font-size-medium();
+            .font-weight-bold();
+            margin-top: 2px;
+        }
+    }
+
+    .spellcheck-settings {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 100%;
+        padding-top: 45px;
+        overflow: hidden;
+
+        label {
+            .font-size-normal();
+        }
+
+        .spellcheck-settings-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            padding: 0 15px 12px 15px;
+            overflow: hidden;
+
+            .ps-scrollbar-y-rail {
+                margin-top: 5px;
+                margin-bottom: 5px;
+                right: 4px !important;
+
+                .rtl & {
+                    right: unset !important;
+                    left: 4px !important;
+                }
+            }
+        }
+    }
+
+    #spellcheck-progress {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding-top: 16px;
+        .font-size-normal();
+    }
+
+    .spellcheck-progress-track {
+        height: 4px;
+        border-radius: 2px;
+        overflow: hidden;
+        background-color: @border-toolbar-ie;
+        background-color: @border-toolbar;
+    }
+
+    #spellcheck-progress-bar {
+        height: 100%;
+        width: 0;
+        background-color: @highlight-button-pressed-ie;
+        background-color: @highlight-button-pressed;
+        transition: width 0.3s;
+
+        &.complete {
+            background-color: @icon-success-ie;
+            background-color: @icon-success;
+        }
+    }
+
+    #spellcheck-missing-languages {
+        color: @brand-danger;
+    }
+
+    #spellcheck-current-word {
+        vertical-align: top;
+        width: 100%;
+        display: inline-block;
+    }
+
+    #spellcheck-next {
+        display: inline-block;
+
+        .btn {
+            .margin-left-5();
+        }
+    }
+
+    #spellcheck-suggestions-list {
+        width: 100%;
+        height: 116px;
+        background-color: @background-normal-ie;
+        background-color: @background-normal;
+        margin-bottom: 8px;
+    }
+
+    .spellcheck-suggestion {
+        display: flex;
+        align-items: center;
+
+        .spellcheck-suggestion-text {
+            flex: 1 1 auto;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .spellcheck-more {
+            flex: 0 0 auto;
+            width: 20px;
+            text-align: center;
+            border-radius: 2px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: @highlight-button-hover-ie;
+                background-color: @highlight-button-hover;
+            }
+        }
+    }
+
+    #spellcheck-ignore-group {
+        display: inline-block;
+        vertical-align: top;
+        padding-bottom: 16px;
+    }
+
+    #spellcheck-ignore-all {
+        margin-top: 6px;
+    }
+
+    #spellcheck-add-to-dictionary {
+        min-width: 110px;
+        display: block;
+        margin-bottom: 16px;
+    }
+
+
+    #spellcheck-complete {
+        display: flex;
+        .font-size-normal();
+
+        .btn-resolve {
+            display: inline-block;
+        }
+    }
+    .btn-resolve
+    {
+        position: relative;
+
+        &:after {
+            content: '';
+            position: absolute;
+            border: solid @text-normal-ie;
+            border: solid @text-normal;
+            border-color: @icon-success-ie;
+            border-color: @icon-success;
+            border-width: 0 3px 3px 0;
+            transform: rotate(40deg);
+            width: 6px;
+            height: 10px;
+        }
+    }
+}
