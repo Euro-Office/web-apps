@@ -1671,6 +1671,16 @@ define([], function () {
                 iconCls: 'menu__icon btn-rotate-270',
                 caption     : me.txtRotateLeft
             });
+            me.mnuRotateAllRight = new Common.UI.MenuItem({
+                iconCls: 'menu__icon btn-rotate-90',
+                caption     : me.txtRotateAllRight,
+                value: 90
+            });
+            me.mnuRotateAllLeft = new Common.UI.MenuItem({
+                iconCls: 'menu__icon btn-rotate-270',
+                caption     : me.txtRotateAllLeft,
+                value: -90
+            });
             me.mnuCutPage = new Common.UI.MenuItem({
                 iconCls: 'menu__icon btn-cut',
                 caption     : me.textCut,
@@ -1740,6 +1750,11 @@ define([], function () {
                     var canRotate = me.api.asc_CanRotatePages();
                     me.mnuRotatePageRight.setDisabled(page_rotate_lock || page_deleted || !canRotate);
                     me.mnuRotatePageLeft.setDisabled(page_rotate_lock || page_deleted || !canRotate);
+                    var allPages = [];
+                    for (var j = 0; j < me.api.getCountPages(); j++) allPages.push(j);
+                    var canRotateAll = allPages.length > 0 && me.api.asc_CanRotatePages(allPages);
+                    me.mnuRotateAllRight.setDisabled(!canRotateAll);
+                    me.mnuRotateAllLeft.setDisabled(!canRotateAll);
                     var canRemove = me.api.asc_CanRemovePages();
                     me.mnuDeletePage.setDisabled(me._pagesCount<2 || page_deleted || !canRemove);
                     me.mnuCutPage.setDisabled(me._pagesCount<2 || page_deleted || !canRemove);
@@ -1759,6 +1774,8 @@ define([], function () {
                     menuPageNewSeparator,
                     me.mnuRotatePageRight,
                     me.mnuRotatePageLeft,
+                    me.mnuRotateAllRight,
+                    me.mnuRotateAllLeft,
                     menuPageDelSeparator,
                     me.mnuDeletePage
                 ]

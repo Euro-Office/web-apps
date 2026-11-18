@@ -2600,6 +2600,13 @@ define([
         },
 
         onRotatePageMenu: function(menu, item) {
+            if (this.api && item.options.allPages) {
+                var pages = [];
+                for (var i = 0, count = this.api.getCountPages(); i < count; i++) pages.push(i);
+                this.api.asc_RotatePage(item.value, pages);
+                Common.NotificationCenter.trigger('edit:complete', this.toolbar);
+                return;
+            }
             this.api && this.api.asc_RotatePage(item.value, [this.api.getCurrentPage()]);
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
         },
