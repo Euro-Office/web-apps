@@ -998,6 +998,19 @@ define([
                     });
                     this.toolbarControls.push(this.btnStamp);
 
+                    // up to 3 saved signatures, placed as a picture on the page
+                    this.btnSignature = new Common.UI.Button({
+                        cls: 'btn-toolbar x-huge icon-top',
+                        caption: this.capBtnSignature,
+                        iconCls: 'toolbar__icon btn-ic-signature',
+                        lock: [_set.pageDeleted, _set.disableOnStart],
+                        menu: new Common.UI.Menu({items: []}),
+                        dataHint: '1',
+                        dataHintDirection: 'bottom',
+                        dataHintOffset: 'small'
+                    });
+                    this.toolbarControls.push(this.btnSignature);
+
                     var colorsconfig = Common.UI.simpleColorsConfig;
                     this.btnStrikeout = new Common.UI.ButtonColored({
                         id: 'id-toolbar-btn-strikeout',
@@ -1631,6 +1644,7 @@ define([
                 _injectComponent('#slot-btn-text-comment', this.btnTextComment);
                 _injectComponent('#slot-btn-shape-comment', this.btnShapeComment);
                 _injectComponent('#slot-btn-stamp', this.btnStamp);
+                _injectComponent('#slot-btn-signature', this.btnSignature);
                 this.btnEditMode ? _injectComponent('#slot-btn-tb-edit-mode', this.btnEditMode) : $host.findById('#slot-btn-tb-edit-mode').parents('.group').hide().next('.separator').hide();
             },
 
@@ -1866,6 +1880,7 @@ define([
                 this.btnTextComment.updateHint(this.tipInsertTextComment);
                 this.btnShapeComment.updateHint(this.tipInsertRectComment);
                 this.btnStamp.updateHint(this.tipInsertStamp);
+                this.btnSignature && this.btnSignature.updateHint(this.tipSignature);
                 this.btnEditMode && this.btnEditMode.updateHint(this.tipEditMode);
             },
 
@@ -2192,7 +2207,21 @@ define([
             tipNumNumbersPoint: '1. 2. 3.',
             tipNumNumbersParentheses: '1) 2) 3)',
             tipNumRoman: 'I. II. III.',
-            tipNumRomanSmall: 'i. ii. iii.'
+            tipNumRomanSmall: 'i. ii. iii.',
+            capBtnSignature: 'Signature',
+            tipSignature: 'Insert a saved signature',
+            txtSignatureN: 'Signature {0}',
+            txtNewSignature: 'New signature…',
+            txtDeleteSignature: 'Delete signature',
+            txtNoSignature: 'No saved signature yet',
+            txtSignatureTitle: 'New signature',
+            txtSignatureHint: 'Sign with the mouse in the white field, or load a picture of your signature.',
+            txtClear: 'Clear',
+            txtLoadImage: 'Load picture…',
+            txtSaveAs: 'Save as',
+            txtEmptySlot: 'empty',
+            txtSaveInsert: 'Save and insert',
+            txtPlaceSignatureHint: 'Mouse wheel or + / −: size · Click: insert · Esc: cancel'
         }
     })(), PDFE.Views.Toolbar || {}));
 });

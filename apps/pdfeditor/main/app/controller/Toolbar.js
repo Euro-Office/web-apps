@@ -263,6 +263,10 @@ define([
             toolbar.btnStamp.on('click',                                _.bind(this.onBtnStampClick, this));
             toolbar.btnStamp.menu.on('item:click',                      _.bind(this.onMenuStampClick, this));
             toolbar.btnStamp.menu.on('show:after',                      _.bind(this.onStampShowAfter, this));
+            if (toolbar.btnSignature) {
+                toolbar.btnSignature.menu.on('show:before', _.bind(this.fillSignatureMenu, this));
+                toolbar.btnSignature.menu.on('item:click', _.bind(this.onSignatureMenu, this));
+            }
             // toolbar.btnRotate.on('click',                               _.bind(this.onRotateClick, this));
             Common.NotificationCenter.on('leftmenu:save', _.bind(this.tryToSave, this));
             Common.NotificationCenter.on('draw:start', _.bind(this.onDrawStart, this));
@@ -1208,6 +1212,223 @@ define([
             (value) ? this.api.asc_showComments(Common.Utils.InternalSettings.get("pdfe-settings-resolvedcomment")) : this.api.asc_hideComments();
         },
 
+        // saved signatures: pictures of a handwritten signature, kept only in the browser (localStorage)
+        getSignatures: function() {
+            var list = [];
+            try {
+                list = JSON.parse(Common.localStorage.getItem('pdfe-signatures') || '[]') || [];
+            } catch (e) {
+                list = [];
+            }
+            if (!Array.isArray(list))
+                list = [];
+            list.length = 3;
+            // only pictures this dialog saved (PNG data URLs) are used
+            for (var i = 0; i < 3; i++) {
+                if (typeof list[i] !== 'string' || list[i].indexOf('data:image/png;base64,') !== 0 || /["'<>\s]/.test(list[i]))
+                    list[i] = null;
+            }
+            return list;
+        },
+
+        setSignatures: function(list) {
+            Common.localStorage.setItem('pdfe-signatures', JSON.stringify(list.slice(0, 3)));
+        },
+
+        fillSignatureMenu: function(menu) {
+            var me = this, toolbar = this.toolbar, list = this.getSignatures(), items = [], deleteItems = [];
+            menu.removeAll();
+            list.forEach(function(url, index) {
+                if (!url) return;
+                var caption = Common.Utils.String.format(toolbar.txtSignatureN, index + 1);
+                items.push({
+                    caption: caption,
+                    value: {action: 'insert', index: index},
+                    template: _.template('<a id="<%= id %>" tabindex="-1" type="menuitem" style="display:flex;align-items:center;gap:10px;">' +
+                        '<img src="' + url + '" style="height:32px;max-width:140px;background:#fff;border:1px solid #ccc;"><span><%= caption %></span></a>')
+                });
+                deleteItems.push({caption: caption, value: {action: 'delete', index: index}});
+            });
+            if (!items.length)
+                items.push({caption: toolbar.txtNoSignature, disabled: true});
+            items.push({caption: '--'});
+            items.push({caption: toolbar.txtNewSignature, value: {action: 'new'}});
+            if (deleteItems.length) {
+                items.push({
+                    caption: toolbar.txtDeleteSignature,
+                    menu: new Common.UI.Menu({menuAlign: 'tl-tr', items: deleteItems}).on('item:click', function(m, item) {
+                        me.onSignatureMenu(m, item);
+                    })
+                });
+            }
+            items.forEach(function(item) { menu.addItem(item); });
+        },
+
+        onSignatureMenu: function(menu, item) {
+            var value = item && item.value;
+            if (!value) return;
+            var list = this.getSignatures();
+            if (value.action === 'insert' && list[value.index]) {
+                this.insertSignature(list[value.index]);
+            } else if (value.action === 'delete') {
+                list[value.index] = null;
+                this.setSignatures(list);
+            } else if (value.action === 'new') {
+                this.showSignatureDialog();
+            }
+        },
+
+        insertSignature: function(url) {
+            var me = this, main = this.getApplication().getController('Main');
+            // the signature follows the mouse and a click on the page drops it there (about 6 cm wide)
+            // the mouse wheel or + / - change the size while placing; the last size is used next time
+            var place = function() {
+                var width = parseFloat(Common.localStorage.getItem('pdfe-signature-width')) || 60;
+                me.api && me.api.asc_StartPlaceImage && me.api.asc_StartPlaceImage(url, width, function(placedWidth) {
+                    Common.localStorage.setItem('pdfe-signature-width', String(Math.round(placedWidth)));
+                }, me.toolbar.txtPlaceSignatureHint);
+            };
+            // a picture can only be placed in edit mode
+            if (!this.mode.isPDFEdit && main && main.appOptions.canSwitchMode && main.appOptions.canPDFEdit)
+                main.onPdfModeApply('edit', undefined, function() { setTimeout(place, 300); });
+            else
+                place();
+        },
+
+        showSignatureDialog: function() {
+            var me = this, toolbar = this.toolbar, list = this.getSignatures();
+            var free = list.findIndex(function(url) { return !url; });
+            var slots = [0, 1, 2].map(function(i) {
+                return '<label style="display:inline-flex;align-items:center;margin-right:14px;gap:4px;">' +
+                    '<input type="radio" name="sig-slot" value="' + i + '"' + (i === (free < 0 ? 0 : free) ? ' checked' : '') + '>' +
+                    Common.Utils.String.format(toolbar.txtSignatureN, i + 1) +
+                    (list[i] ? '' : ' (' + toolbar.txtEmptySlot + ')') + '</label>';
+            }).join('');
+            var win = new Common.UI.Window({
+                title: toolbar.txtSignatureTitle,
+                width: 560,
+                cls: 'modal-dlg',
+                buttons: [{value: 'ok', caption: toolbar.txtSaveInsert, primary: true}, 'cancel'],
+                tpl: '<div class="box" style="padding: 10px 15px;">' +
+                        '<div style="margin-bottom:8px;">' + toolbar.txtSignatureHint + '</div>' +
+                        '<canvas id="sig-canvas" width="1000" height="320" style="width:500px;height:160px;background:#fff;border:1px solid #888;cursor:crosshair;touch-action:none;"></canvas>' +
+                        '<div style="margin:8px 0 12px;">' +
+                            '<button type="button" id="sig-clear" class="btn btn-text-default" style="width:auto;padding:0 12px;margin-right:8px;">' + toolbar.txtClear + '</button>' +
+                            '<button type="button" id="sig-load" class="btn btn-text-default" style="width:auto;padding:0 12px;">' + toolbar.txtLoadImage + '</button>' +
+                            '<input type="file" id="sig-file" accept="image/*" style="display:none;">' +
+                        '</div>' +
+                        '<div><span style="margin-right:10px;">' + toolbar.txtSaveAs + ':</span>' + slots + '</div>' +
+                     '</div>'
+            });
+            var canvas, ctx, drawn = false, drawing = false, last = null;
+
+            function point(e) {
+                var r = canvas.getBoundingClientRect();
+                return {x: (e.clientX - r.left) * canvas.width / r.width, y: (e.clientY - r.top) * canvas.height / r.height};
+            }
+            function clear() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawn = false;
+            }
+            // a loaded picture: white and light paper become transparent, the strokes keep soft edges
+            function removeBackground() {
+                var data = ctx.getImageData(0, 0, canvas.width, canvas.height), px = data.data;
+                for (var i = 0; i < px.length; i += 4) {
+                    var light = 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2];
+                    var alpha = light >= 215 ? 0 : (light <= 140 ? 255 : Math.round(255 * (215 - light) / 75));
+                    px[i + 3] = Math.min(px[i + 3], alpha);
+                }
+                ctx.putImageData(data, 0, 0);
+            }
+            function showImage(src) {
+                var img = new Image();
+                img.onload = function() {
+                    clear();
+                    var k = Math.min(canvas.width / img.width, canvas.height / img.height, 1);
+                    ctx.drawImage(img, (canvas.width - img.width * k) / 2, (canvas.height - img.height * k) / 2, img.width * k, img.height * k);
+                    removeBackground();
+                    drawn = true;
+                };
+                img.src = src;
+            }
+            // the drawn part only, so the picture has no empty border
+            function cropped() {
+                var data = ctx.getImageData(0, 0, canvas.width, canvas.height).data, w = canvas.width, h = canvas.height;
+                var minX = w, minY = h, maxX = -1, maxY = -1;
+                for (var y = 0; y < h; y++) {
+                    for (var x = 0; x < w; x++) {
+                        if (data[(y * w + x) * 4 + 3] > 10) {
+                            if (x < minX) minX = x; if (x > maxX) maxX = x;
+                            if (y < minY) minY = y; if (y > maxY) maxY = y;
+                        }
+                    }
+                }
+                if (maxX < 0) return null;
+                var pad = 6, out = document.createElement('canvas');
+                minX = Math.max(0, minX - pad); minY = Math.max(0, minY - pad);
+                maxX = Math.min(w - 1, maxX + pad); maxY = Math.min(h - 1, maxY + pad);
+                out.width = maxX - minX + 1;
+                out.height = maxY - minY + 1;
+                out.getContext('2d').drawImage(canvas, minX, minY, out.width, out.height, 0, 0, out.width, out.height);
+                return out.toDataURL('image/png');
+            }
+
+            win.on('render:after', function() {
+                var $w = win.$window;
+                canvas = $w.find('#sig-canvas')[0];
+                ctx = canvas.getContext('2d');
+                ctx.strokeStyle = '#1a2a6c';
+                ctx.lineWidth = 5;
+                ctx.lineCap = ctx.lineJoin = 'round';
+                canvas.addEventListener('pointerdown', function(e) {
+                    drawing = true; last = point(e); canvas.setPointerCapture(e.pointerId);
+                });
+                canvas.addEventListener('pointermove', function(e) {
+                    if (!drawing) return;
+                    var p = point(e);
+                    ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+                    last = p; drawn = true;
+                });
+                canvas.addEventListener('pointerup', function() { drawing = false; });
+                $w.find('#sig-clear').on('click', clear);
+                $w.find('#sig-load').on('click', function() {
+                    var desktop = window.AscDesktopEditor;
+                    if (desktop && desktop.OpenFilenameDialog && desktop.GetImageBase64) {
+                        desktop.OpenFilenameDialog('images', false, function(file) {
+                            if (Array.isArray(file)) file = file[0];
+                            if (file) showImage(desktop.GetImageBase64(file));
+                        });
+                    } else {
+                        $w.find('#sig-file').click();
+                    }
+                });
+                $w.find('#sig-file').on('change', function(e) {
+                    var f = e.target.files && e.target.files[0];
+                    if (!f) return;
+                    var reader = new FileReader();
+                    reader.onload = function() { showImage(reader.result); };
+                    reader.readAsDataURL(f);
+                });
+            });
+            win.on('render:after', function() {
+                win.$window.find('.footer .dlg-btn').on('click', function(e) {
+                    var result = $(e.currentTarget).attr('result');
+                    if (result === 'ok') {
+                        var url = drawn ? cropped() : null;
+                        if (!url) return;
+                        var slot = parseInt(win.$window.find('input[name=sig-slot]:checked').val() || '0', 10);
+                        var current = me.getSignatures();
+                        current[slot] = url;
+                        me.setSignatures(current);
+                        win.close();
+                        me.insertSignature(url);
+                    } else {
+                        win.close();
+                    }
+                });
+            });
+            win.show();
+        },
         onRotateClick: function(btn, e) {
             // this.api && this.api.asc_Rotate();
         },
