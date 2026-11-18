@@ -3789,6 +3789,7 @@
   "DE.Views.Spellcheck.txtLoadingSuggestions": "Vorschläge werden geladen...",
   "DE.Views.Spellcheck.txtMissingLanguages": "Kein Wörterbuch für: {0}. Wörter in diesen Sprachen werden nicht geprüft.",
   "DE.Views.Spellcheck.txtNextTip": "Zum nächsten Wort wechseln",
+  "DE.Views.Spellcheck.txtSkippedLocked": "{0} Vorkommen wurden nicht geändert, weil sie gesperrt sind.",
   "DE.Views.Spellcheck.txtSpellcheckOff": "Die Rechtschreibprüfung ist in den Einstellungen ausgeschaltet",
   "DE.Views.Spellcheck.txtSpelling": "Rechtschreibung",
   "DE.Views.Spellcheck.txtStillChecking": "Das Dokument wird geprüft: {0} %. Das nächste falsch geschriebene Wort erscheint, sobald es gefunden ist.",

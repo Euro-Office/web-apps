@@ -3794,6 +3794,7 @@
   "DE.Views.Spellcheck.txtLoadingSuggestions": "Loading suggestions...",
   "DE.Views.Spellcheck.txtMissingLanguages": "No dictionary for: {0}. Words in these languages are not checked.",
   "DE.Views.Spellcheck.txtNextTip": "Go to the next word",
+  "DE.Views.Spellcheck.txtSkippedLocked": "{0} occurrences were not changed because they are locked.",
   "DE.Views.Spellcheck.txtSpellcheckOff": "Spell checking is turned off in the settings",
   "DE.Views.Spellcheck.txtSpelling": "Spelling",
   "DE.Views.Spellcheck.txtStillChecking": "Checking the document: {0}%. The next misspelled word appears as soon as it is found.",

@@ -38,6 +38,7 @@ define([], function () {
                             '<div id="spellcheck-progress-label"></div>',
                             '<div class="spellcheck-progress-track"><div id="spellcheck-progress-bar"></div></div>',
                             '<div id="spellcheck-missing-languages" class="hidden"></div>',
+                            '<div id="spellcheck-skipped" class="hidden"></div>',
                         '</div>',
                         '<div style="display: flex; width: 100%; padding-bottom: 8px; padding-top: 8px;">',
                             '<div id="spellcheck-current-word"></div>',
@@ -163,6 +164,7 @@ define([], function () {
             this.lblProgress = this.$el.find('#spellcheck-progress-label');
             this.barProgress = this.$el.find('#spellcheck-progress-bar');
             this.lblMissingLanguages = this.$el.find('#spellcheck-missing-languages');
+            this.lblSkipped = this.$el.find('#spellcheck-skipped');
             this.trigger('render:after', this);
 
             if (_.isUndefined(this.scroller)) {
@@ -229,6 +231,7 @@ define([], function () {
         txtCheckedAll: 'The whole document has been checked',
         txtSpellcheckOff: 'Spell checking is turned off in the settings',
         txtMissingLanguages: 'No dictionary for: {0}. Words in these languages are not checked.',
+        txtSkippedLocked: '{0} occurrences were not changed because they are locked.',
         txtClosePanel: 'Close spelling',
         tipMoreOptions: 'More options'
 
