@@ -17,7 +17,7 @@
   "PE.ApplicationController.errorLoadingFont": "Шрифти не завантажені.<br>Будь ласка, зверніться до адміністратора Сервера документів.",
   "PE.ApplicationController.errorTokenExpire": "Термін дії токену безпеки документа закінчився. <br> Будь ласка, зв'яжіться з адміністратором сервера документів.",
   "PE.ApplicationController.errorUpdateVersionOnDisconnect": "Підключення до Інтернету було відновлено, а версія файлу змінена. <br> Перш ніж продовжувати роботу, потрібно завантажити файл або скопіювати його вміст, щоб переконатися, що нічого не втрачено, а потім перезавантажити цю сторінку.",
-  "PE.ApplicationController.errorUserDrop": "На даний момент файл не доступний.",
+  "PE.ApplicationController.errorUserDrop": "Наразі файл не доступний.",
   "PE.ApplicationController.notcriticalErrorTitle": "Застереження",
   "PE.ApplicationController.openErrorText": "Під час відкриття файлу сталася помилка.",
   "PE.ApplicationController.scriptLoadError": "З'єднання занадто повільне, деякі компоненти не вдалося завантажити. Перезавантажте сторінку.",
@@ -34,5 +34,11 @@
   "PE.ApplicationView.txtFileLocation": "Відкрити розташування файлу",
   "PE.ApplicationView.txtFullScreen": "Повноекранний режим",
   "PE.ApplicationView.txtPrint": "Друк",
-  "PE.ApplicationView.txtShare": "Доступ"
+  "PE.ApplicationView.txtShare": "Поділитися",
+  "common.view.modals.txtIncorrectPwd": "Неправильний пароль",
+  "common.view.modals.txtOpenFile": "Зазначте пароль, щоби відкрити файл",
+  "common.view.modals.txtTitleProtected": "Захищений файл",
+  "common.view.SearchBar.textFind": "Знайти",
+  "PE.ApplicationController.warnLicenseExp": "Ваша ліцензія закінчилася. Оновіть ліцензію та перезавантажте сторінку.",
+  "PE.ApplicationController.errorCopyDisabled": "З міркувань безпеки вміст цього документу неможливо скопіювати."
 }

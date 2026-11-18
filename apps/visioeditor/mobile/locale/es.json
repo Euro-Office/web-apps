@@ -7,7 +7,7 @@
     "textEmail": "Correo electrónico",
     "textPoweredBy": "Impulsado por",
     "textTel": "Tel.",
-    "textVersion": "Versión "
+    "textVersion": "Versión"
   },
   "Common": {
     "Collaboration": {
@@ -16,7 +16,7 @@
       "textCancel": "Cancelar",
       "textCollaboration": "Colaboración",
       "textEditUser": "Usuarios que están editando el archivo:",
-      "textOk": "OK",
+      "textOk": "Aceptar",
       "textSharingSettings": "Ajustes de uso compartido",
       "textUsers": "Usuarios"
     },
@@ -29,7 +29,7 @@
   },
   "ContextMenu": {
     "menuCancel": "Cancelar",
-    "textOk": "OK",
+    "textOk": "Aceptar",
     "txtWarnUrl": "Hacer clic en este enlace puede ser perjudicial para su dispositivo y sus datos. Esta ubicación puede ser insegura:<br>{0}<br>¿Está seguro de que quiere continuar?"
   },
   "Controller": {
@@ -52,7 +52,7 @@
       "textGuest": "Invitado",
       "textNo": "No",
       "textNoLicenseTitle": "Se ha alcanzado el límite de la licencia",
-      "textOk": "OK",
+      "textOk": "Aceptar",
       "textOpenFile": "Introduzca la contraseña para abrir el archivo",
       "textPaidFeature": "Característica de pago",
       "textYes": "Sí",
@@ -114,14 +114,16 @@
     "errorUsersExceed": "Se ha excedido el número de usuarios permitido por su plan contratado",
     "errorViewerDisconnect": "Se ha perdido la conexión. Todavía puede ver el documento,<br>pero no podrá descargarlo ni imprimirlo hasta que se restablezca la conexión y se recargue la página.",
     "notcriticalErrorTitle": "Advertencia",
-    "openErrorText": "Se ha producido un error al abrir el archivo ",
-    "saveErrorText": "Se ha producido un error al guardar el archivo ",
+    "openErrorText": "Se ha producido un error al abrir el archivo",
+    "saveErrorText": "Se ha producido un error al guardar el archivo",
     "scriptLoadError": "La conexión es demasiado lenta, algunos de los componentes no se han podido cargar. Por favor, vuelva a cargar la página.",
     "textOk": "OK",
     "unknownErrorText": "Error desconocido.",
     "uploadImageExtMessage": "Formato de imagen desconocido.",
     "uploadImageFileCountMessage": "No se ha cargado ninguna imagen.",
-    "uploadImageSizeMessage": "La imagen es demasiado grande. El tamaño máximo es de 25 MB."
+    "uploadImageSizeMessage": "La imagen es demasiado grande. El tamaño máximo es de 25 MB.",
+    "errorFileNotAssembled": "Este archivo está abierto desde una copia de respaldo del servidor y no está guardado para almacenaje.<br>Utilice la opción 'Guardar como...' para guardarla en una unidad.",
+    "errorForcedViewMode": "Este archivo está abierto en modo de vista.<br>El archivo está bloqueado para editar o sus derechos de acceso no conceden editar."
   },
   "LongActions": {
     "applyChangesTextText": "Cargando datos...",
@@ -168,13 +170,13 @@
     "Edit": {
       "notcriticalErrorTitle": "Advertencia",
       "textCancel": "Cancelar",
-      "textInvalidName": "El nombre del archivo no puede contener ninguno de los siguientes símbolos:",
-      "textOk": "OK"
+      "textInvalidName": "El nombre del archivo no puede contener ninguno de los siguientes símbolos: ",
+      "textOk": "Aceptar"
     },
     "Settings": {
       "notcriticalErrorTitle": "Advertencia",
       "textAbout": "Acerca de",
-      "textAddress": "dirección: ",
+      "textAddress": "dirección:",
       "textApplication": "Aplicación",
       "textApplicationSettings": "Ajustes de aplicación",
       "textAuthor": "Autor",
@@ -196,7 +198,7 @@
       "textLight": "Claro",
       "textLoading": "Cargando...",
       "textLocation": "Ubicación",
-      "textOk": "OK",
+      "textOk": "Aceptar",
       "textOwner": "Propietario",
       "textPoweredBy": "Impulsado por",
       "textPrint": "Imprimir",
@@ -209,7 +211,7 @@
       "textTheme": "Tema",
       "textTitle": "Título",
       "textUploaded": "Cargado",
-      "textVersion": "Versión ",
+      "textVersion": "Versión",
       "textVisioInfo": "Información del visor de diagramas",
       "textVisioSettings": "Configuración del visor de diagramas",
       "textVisioTitle": "Título del visor de diagramas"

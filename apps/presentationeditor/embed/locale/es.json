@@ -1,13 +1,13 @@
 {
   "common.view.modals.txtCopy": "Copiar al portapapeles",
-  "common.view.modals.txtEmbed": "Insertar",
+  "common.view.modals.txtEmbed": "Embeber",
   "common.view.modals.txtHeight": "Altura",
   "common.view.modals.txtIncorrectPwd": "La contraseña es incorrecta",
-  "common.view.modals.txtOpenFile": "Introduzca la contraseña para abrir el archivo",
+  "common.view.modals.txtOpenFile": "Escriba una contraseña para abrir el archivo",
   "common.view.modals.txtShare": "Compartir enlace",
   "common.view.modals.txtTitleProtected": "Archivo protegido",
   "common.view.modals.txtWidth": "Ancho",
-  "common.view.SearchBar.textFind": "Buscar",
+  "common.view.SearchBar.textFind": "Encontrar",
   "PE.ApplicationController.convertationErrorText": "Se ha producido un error en la conversión.",
   "PE.ApplicationController.convertationTimeoutText": "Se ha superado el tiempo de conversión.",
   "PE.ApplicationController.criticalErrorTitle": "Error",
@@ -50,10 +50,11 @@
   "PE.ApplicationController.warnLicenseBefore": "Su licencia no está activada. Por favor, contacte a su administrador.",
   "PE.ApplicationController.warnLicenseExp": "Su licencia ha expirado. Por favor, renueve su licencia y recargue la página.",
   "PE.ApplicationView.txtDownload": "Descargar",
-  "PE.ApplicationView.txtEmbed": "Insertar",
+  "PE.ApplicationView.txtEmbed": "Embeber",
   "PE.ApplicationView.txtFileLocation": "Abrir ubicación del archivo",
   "PE.ApplicationView.txtFullScreen": "Pantalla completa",
   "PE.ApplicationView.txtPrint": "Imprimir",
   "PE.ApplicationView.txtSearch": "Buscar",
-  "PE.ApplicationView.txtShare": "Compartir"
+  "PE.ApplicationView.txtShare": "Compartir",
+  "PE.ApplicationController.errorFileNotAssembled": "Este archivo se abre desde una copia de respaldo del servidor y no se guarda en el almacenamiento.<br>Utilice la opción «Guardar como...» para guardarlo en una unidad."
 }
