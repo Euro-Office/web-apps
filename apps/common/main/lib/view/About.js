@@ -85,6 +85,7 @@ define([
 
             !(/\s$/.test(this.txtAddress)) && (this.txtAddress += " ");
             !(/\s$/.test(this.txtMail)) && (this.txtMail += " ");
+            !(/\s$/.test(this.txtSales)) && (this.txtSales += " ");
             !(/\s$/.test(this.txtTel)) && (this.txtTel += " ");
             !(/\s$/.test(this.txtVersion)) && (this.txtVersion += " ");
 
@@ -139,6 +140,12 @@ define([
                     '</tr>',
                     '<tr>',
                         '<td align="center" class="padding-small">',
+                            '<label class="asc-about-desc-name">' + this.txtSales + '</label>',
+                            '<a href="mailto:" id="id-about-company-sales"></a>',
+                        '</td>',
+                    '</tr>',
+                    '<tr>',
+                        '<td align="center" class="padding-small">',
                             '<label class="asc-about-desc-name">' + this.txtTel + '</label>',
                             '<label class="asc-about-desc" id="id-about-company-tel"></label>',
                         '</td>',
@@ -187,6 +194,7 @@ define([
                 this.lblCompanyName = _$l.findById('#id-about-company-name');
                 this.lblCompanyAddress = _$l.findById('#id-about-company-address');
                 this.lblCompanyMail = _$l.findById('#id-about-company-mail');
+                this.lblCompanySales = _$l.findById('#id-about-company-sales');
                 this.lblCompanyUrl = _$l.findById('#id-about-company-url');
                 this.lblCompanyLic = _$l.findById('#id-about-company-lic');
                 this.lblCompanyTel = _$l.findById('#id-about-company-tel');
@@ -218,6 +226,7 @@ define([
                         name: customerValue(customer.name),
                         address: customerValue(customer.address),
                         mail: customerEmail(customer.mail),
+                        salesMail: customerEmail(customer.salesMail),
                         phone: customerValue(customer.phone),
                         www: customerValue(customer.www),
                         info: customerValue(customer.info),
@@ -248,6 +257,10 @@ define([
                     (value = values.mail) ?
                         this.lblCompanyMail.attr('href', "mailto:"+value).text(value) :
                         this.lblCompanyMail.parents('tr').addClass('hidden');
+
+                    (value = values.salesMail) ?
+                        this.lblCompanySales.attr('href', "mailto:"+value).text(value) :
+                        this.lblCompanySales.parents('tr').addClass('hidden');
 
                     value = values.phone;
                     value ?
@@ -310,6 +323,7 @@ define([
         txtLicensee: 'LICENSEE',
         txtAddress: 'address: ',
         txtMail: 'email: ',
+        txtSales: 'sales: ',
         txtTel: 'tel.: ',
         txtEdition: 'Integration Edition '
 
