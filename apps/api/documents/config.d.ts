@@ -92,14 +92,14 @@ interface DocumentStateChangeEvent {
      * `false` — the current user's changes are sent to the **document editing service.**
      */
     data?: boolean;
-};
+}
 
 interface RequestHistoryDataEvent {
     /**
      * The document version number.
      */
     data?: number;
-};
+}
 
 interface RequestRestoreEvent {
     data?: {
@@ -118,7 +118,7 @@ interface RequestRestoreEvent {
          */
         version?: number;
     };
-};
+}
 
 interface ErrorEvent {
     data?: {
@@ -132,7 +132,7 @@ interface ErrorEvent {
          */
         errorDescription?: string;
     };
-};
+}
 
 interface WarningEvent {
     data?: {
@@ -146,7 +146,7 @@ interface WarningEvent {
          */
         warningDescription?: string;
     };
-};
+}
 
 interface InfoEvent {
     data?: {
@@ -155,7 +155,7 @@ interface InfoEvent {
          */
         mode?: "view" | "edit";
     };
-};
+}
 
 interface DownloadAsEvent {
     data?: {
@@ -168,7 +168,7 @@ interface DownloadAsEvent {
          */
         url?: string;
     };
-};
+}
 
 interface RequestSaveAsEvent {
     data?: {
@@ -185,14 +185,14 @@ interface RequestSaveAsEvent {
          */
         url?: string;
     };
-};
+}
 
 interface RequestRenameEvent {
     /**
      * The new title of the document.
      */
     data?: string;
-};
+}
 
 interface MetaChangeEvent {
     data?: {
@@ -205,7 +205,7 @@ interface MetaChangeEvent {
          */
         favorite?: boolean;
     };
-};
+}
 
 interface RequestUsersEvent {
     /**
@@ -222,7 +222,7 @@ interface RequestUsersEvent {
          */
         id?: string[];
     };
-};
+}
 
 interface RequestSendNotifyEvent {
     data?: {
@@ -239,7 +239,7 @@ interface RequestSendNotifyEvent {
          */
         emails?: string[];
     };
-};
+}
 
 interface MakeActionLinkEvent {
     data?: {
@@ -248,7 +248,7 @@ interface MakeActionLinkEvent {
          */
         actionLink?: ActionLink;
     };
-};
+}
 
 interface RequestInsertImageEvent {
     data?: {
@@ -257,7 +257,7 @@ interface RequestInsertImageEvent {
          */
         c?: string;
     };
-};
+}
 
 interface RequestReferenceDataEvent {
     data?: {
@@ -274,7 +274,7 @@ interface RequestReferenceDataEvent {
          */
         path?: string;
     };
-};
+}
 
 interface RequestOpenEvent {
     data?: {
@@ -291,7 +291,7 @@ interface RequestOpenEvent {
          */
         windowName?: string;
     };
-};
+}
 
 interface RequestSelectDocumentEvent {
     data?: {
@@ -300,7 +300,7 @@ interface RequestSelectDocumentEvent {
          */
         c?: string;
     };
-};
+}
 
 interface RequestSelectSpreadsheetEvent {
     data?: {
@@ -309,7 +309,7 @@ interface RequestSelectSpreadsheetEvent {
          */
         c?: string;
     };
-};
+}
 
 interface RequestReferenceSourceEvent {
     data?: {
@@ -322,7 +322,7 @@ interface RequestReferenceSourceEvent {
          */
         path?: string;
     };
-};
+}
 
 
 // Interfaces for arrays
@@ -611,7 +611,7 @@ interface ReferenceData {
      * @example "https://example.com"
      */
     instanceId?: string;
-};
+}
 
 interface ActionLink {
     // TODO: Not in the documentation
@@ -626,7 +626,7 @@ interface ActionLink {
          */
         data?: string;
     }
-};
+}
 
 interface DocumentBase {
     /**
