@@ -3792,6 +3792,7 @@
   "DE.Views.Statusbar.tipZoomOut": "Zoom out",
   "DE.Views.Statusbar.txtIncludeHdrFtr": "Include headers and footers",
   "DE.Views.Statusbar.txtIncludeComments": "Include comments",
+  "DE.Views.Statusbar.txtDashSeparatesWords": "Dashes separate words",
   "DE.Views.Statusbar.txtAddedWords": "Inserted words (tracked changes)",
   "DE.Views.Statusbar.txtDeletedWords": "Deleted words (tracked changes)",
   "DE.Views.Statusbar.txtPageNumInvalid": "Page number invalid",

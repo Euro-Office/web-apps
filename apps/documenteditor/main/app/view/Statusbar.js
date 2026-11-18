@@ -164,6 +164,7 @@ define([
             me.btnDocInfo.menu.on('show:after', _.bind(this.onDocInfoShow, this));
             me.chIncludeHdrFtr.on('toggle', _.bind(this.onIncludeHdrFtrToggle, this));
             me.chIncludeComments.on('toggle', _.bind(this.onIncludeCommentsToggle, this));
+            me.chDashSeparatesWords.on('toggle', _.bind(this.onDashSeparatesWordsToggle, this));
 
             me.onChangeProtectDocument();
         }
@@ -345,6 +346,12 @@ define([
                                 checkable: true,
                                 checked: Common.localStorage.getBool('de-settings-count-comments', false),
                                 stopPropagation: true
+                            }),
+                            this.chDashSeparatesWords = new Common.UI.MenuItem({
+                                caption: this.txtDashSeparatesWords,
+                                checkable: true,
+                                checked: Common.localStorage.getBool('de-settings-count-dashes', false),
+                                stopPropagation: true
                             })
                         ]
                     })
@@ -506,8 +513,17 @@ define([
 
             onDocInfoShow: function() {
                 if (!this.api) return;
-                this._selInfo = this.api.asc_GetSelectionDocInfo ? this.api.asc_GetSelectionDocInfo() : null;
-                this.api.startGetDocInfo(Common.localStorage.getBool('de-settings-count-hdrftr', false), Common.localStorage.getBool('de-settings-count-comments', false));
+                var options = this.getCountOptions();
+                this._selInfo = this.api.asc_GetSelectionDocInfo ? this.api.asc_GetSelectionDocInfo(options) : null;
+                this.api.startGetDocInfo(options);
+            },
+
+            getCountOptions: function() {
+                return {
+                    includeHdrFtr: Common.localStorage.getBool('de-settings-count-hdrftr', false),
+                    includeComments: Common.localStorage.getBool('de-settings-count-comments', false),
+                    dashSeparatesWords: Common.localStorage.getBool('de-settings-count-dashes', false)
+                };
             },
 
             onIncludeHdrFtrToggle: function(item, checked) {
@@ -517,6 +533,11 @@ define([
 
             onIncludeCommentsToggle: function(item, checked) {
                 Common.localStorage.setBool('de-settings-count-comments', checked);
+                this.restartDocInfo();
+            },
+
+            onDashSeparatesWordsToggle: function(item, checked) {
+                Common.localStorage.setBool('de-settings-count-dashes', checked);
                 this.restartDocInfo();
             },
 
@@ -593,6 +614,7 @@ define([
             txtSelectionOf: '{0} of {1}',
             txtIncludeHdrFtr: 'Include headers and footers',
             txtIncludeComments: 'Include comments',
+            txtDashSeparatesWords: 'Dashes separate words',
             txtAddedWords: 'Inserted words (tracked changes)',
             txtDeletedWords: 'Deleted words (tracked changes)'
         }, DE.Views.Statusbar || {}));

@@ -1924,7 +1924,11 @@ define([], function () {
 
         updateStatisticInfo: function() {
             if ( this.api && this.doc ) {
-                this.api.startGetDocInfo(Common.localStorage.getBool('de-settings-count-hdrftr', false), Common.localStorage.getBool('de-settings-count-comments', false));
+                this.api.startGetDocInfo({
+                    includeHdrFtr: Common.localStorage.getBool('de-settings-count-hdrftr', false),
+                    includeComments: Common.localStorage.getBool('de-settings-count-comments', false),
+                    dashSeparatesWords: Common.localStorage.getBool('de-settings-count-dashes', false)
+                });
             }
         },
 

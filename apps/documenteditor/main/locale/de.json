@@ -3787,6 +3787,7 @@
   "DE.Views.Statusbar.tipZoomOut": "Verkleinern",
   "DE.Views.Statusbar.txtIncludeHdrFtr": "Kopf- und Fußzeilen einbeziehen",
   "DE.Views.Statusbar.txtIncludeComments": "Kommentare einbeziehen",
+  "DE.Views.Statusbar.txtDashSeparatesWords": "Gedankenstriche trennen Wörter",
   "DE.Views.Statusbar.txtAddedWords": "Eingefügte Wörter (Änderungen)",
   "DE.Views.Statusbar.txtDeletedWords": "Gelöschte Wörter (Änderungen)",
   "DE.Views.Statusbar.txtPageNumInvalid": "Ungültige Seitennummer",
