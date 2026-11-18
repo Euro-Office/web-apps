@@ -305,8 +305,8 @@ define([
         },
 
         onNavigateComment: function (isNext) {
-            if (this.api && this.api.asc_GoToNextComment) {
-                var id = this.api.asc_GoToNextComment(isNext);
+            if (this.api && this.api.asc_GotoComment) {
+                var id = this.api.asc_GotoComment(isNext);
                 id && this.api.asc_showComment(id, false);
             }
         },
