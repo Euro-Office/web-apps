@@ -11,10 +11,10 @@
 <script src="../../../vendor/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
 
 <script type="module">
-    // chai 5.x ships ESM only, so it cannot be pulled in by requirejs.
+    // chai ships ESM only, so it cannot be pulled in by requirejs.
     // Import it here and register it under the id the test files already use,
     // so define(['chai']) and require('chai') keep working unchanged.
-    import * as chai from '../../../build/node_modules/chai/chai.js';
+    import * as chai from '../../../build/node_modules/chai/index.js';
     window.chai = chai;
     define('chai', [], function () { return chai; });
 
