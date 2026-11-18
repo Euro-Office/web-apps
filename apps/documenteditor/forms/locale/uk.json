@@ -172,7 +172,7 @@
   "DE.Views.ApplicationView.txtFullScreen": "Повноекранний режим",
   "DE.Views.ApplicationView.txtPrint": "Друк",
   "DE.Views.ApplicationView.txtSearch": "Пошук",
-  "DE.Views.ApplicationView.txtShare": "Доступ",
+  "DE.Views.ApplicationView.txtShare": "Поділитися",
   "DE.Views.ApplicationView.txtTheme": "Тема інтерфейсу",
   "Common.UI.SearchBar.textFind": "Знайти",
   "Common.UI.SynchronizeTip.textDontShow": "Більше не показувати це повідомлення",
@@ -187,5 +187,8 @@
   "DE.Controllers.ApplicationController.errorCopyDisabled": "З мрікувань безпеки, вміст цього документу неможливо скопіювати.",
   "DE.Controllers.ApplicationController.errorFileNotAssembled": "Цей файл відкрито з резервної копії, файл не збережено на диску.<br>Щоб зберегти файл на диску, натисніть \"Зберегти як...\".",
   "DE.Controllers.ApplicationController.errorForcedViewMode": "Файл відкрито у режимі перегляду.<br>Цей файл заблоковано від редагування або у вас відсутні права на редагування.",
-  "DE.Controllers.ApplicationController.errorInconsistentExt": "Помилка під час відкриття файлу.<br>Вміст файлу не відповідає розширенню файлу."
+  "DE.Controllers.ApplicationController.errorInconsistentExt": "Помилка під час відкриття файлу.<br>Вміст файлу не відповідає розширенню файлу.",
+  "DE.Views.ApplicationView.textMultiplePages": "Кілька сторінок",
+  "DE.Controllers.ApplicationController.errorTextFormWrongFormat": "Введене значення не відповідає формату поля.",
+  "DE.Views.ApplicationView.textClearField": "Очистити поле"
 }

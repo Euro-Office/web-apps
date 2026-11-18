@@ -2,7 +2,7 @@
   "common.view.modals.txtCopy": "Копіювати в буфер обміну",
   "common.view.modals.txtEmbed": "Вставити",
   "common.view.modals.txtHeight": "Висота",
-  "common.view.modals.txtShare": "Розповсюдити посилання",
+  "common.view.modals.txtShare": "Поділитися посиланням",
   "common.view.modals.txtWidth": "Ширина",
   "common.view.SearchBar.textFind": "Знайти",
   "SSE.ApplicationController.convertationErrorText": "Не вдалося конвертувати",
@@ -18,7 +18,7 @@
   "SSE.ApplicationController.errorLoadingFont": "Шрифти не завантажені.<br>Будь ласка, зверніться до адміністратора Сервера документів.",
   "SSE.ApplicationController.errorTokenExpire": "Термін дії токену безпеки документа закінчився. <br> Будь ласка, зв'яжіться з адміністратором сервера документів.",
   "SSE.ApplicationController.errorUpdateVersionOnDisconnect": "Підключення до Інтернету було відновлено, а версія файлу змінена. <br> Перш ніж продовжувати роботу, потрібно завантажити файл або скопіювати його вміст, щоб переконатися, що нічого не втрачено, а потім перезавантажити цю сторінку.",
-  "SSE.ApplicationController.errorUserDrop": "На даний момент файл не доступний.",
+  "SSE.ApplicationController.errorUserDrop": "Наразі файл не доступний.",
   "SSE.ApplicationController.notcriticalErrorTitle": "Застереження",
   "SSE.ApplicationController.openErrorText": "Під час відкриття файлу сталася помилка.",
   "SSE.ApplicationController.scriptLoadError": "З'єднання занадто повільне, деякі компоненти не вдалося завантажити. Перезавантажте сторінку.",
@@ -36,6 +36,10 @@
   "SSE.ApplicationView.txtFullScreen": "Повноекранний режим",
   "SSE.ApplicationView.txtPrint": "Друк",
   "SSE.ApplicationView.txtSearch": "Пошук",
-  "SSE.ApplicationView.txtShare": "Доступ",
-  "SSE.ApplicationController.warnLicenseExp": "Термін вашої ліцензії сплив. Оновіть вашу ліцензію та перезавантажте сторінку."
+  "SSE.ApplicationView.txtShare": "Поділитися",
+  "SSE.ApplicationController.warnLicenseExp": "Термін вашої ліцензії сплив. Оновіть вашу ліцензію та перезавантажте сторінку.",
+  "common.view.modals.txtIncorrectPwd": "Неправильний пароль",
+  "common.view.modals.txtOpenFile": "Зазначте пароль, щоби відкрити файл",
+  "common.view.modals.txtTitleProtected": "Захищений файл",
+  "SSE.ApplicationController.errorCopyDisabled": "З міркувань безпеки вміст цього документу неможливо скопіювати."
 }
