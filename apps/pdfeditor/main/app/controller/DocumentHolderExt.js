@@ -200,6 +200,7 @@ define([], function () {
                 view.mnuNewPageBefore.on('click', _.bind(me.onNewPage, me));
                 view.mnuNewPageAfter.on('click', _.bind(me.onNewPage, me));
                 view.mnuDeletePage.on('click', _.bind(me.onDeletePage, me));
+                view.mnuExtractPages.on('click', _.bind(me.onExtractPages, me));
                 view.mnuRotatePageRight.on('click', _.bind(me.onRotatePage, me, 90));
                 view.mnuRotatePageLeft.on('click', _.bind(me.onRotatePage, me, -90));
                 view.mnuCopyPage.on('click', _.bind(me.onCutCopyPaste, me));
@@ -2470,6 +2471,32 @@ define([], function () {
             this.api && this.api.asc_RemovePage();
 
             Common.NotificationCenter.trigger('edit:complete', this.documentHolder);
+        };
+
+        // Keeps the selected pages, removes all others and opens "Save as", so the extract is saved under a new name.
+        // Only offered in the desktop app for local files, where the original file stays unchanged on disk.
+        dh.onExtractPages = function() {
+            var me = this, view = this.documentHolder, api = this.api;
+            if (!api) return;
+            var keep = api.getSelectedPages().slice();
+            var remove = [];
+            for (var i = 0, count = api.getCountPages(); i < count; i++)
+                (keep.indexOf(i) < 0) && remove.push(i);
+            if (!keep.length || !remove.length) return;
+            Common.UI.warning({
+                title: view.txtExtractPagesTitle || 'Extract selected pages',
+                msg: Common.Utils.String.format(view.txtExtractWarning || 'The {0} selected pages are kept, all other pages are removed, and "Save as" opens: save the extract under a new name. The original file stays unchanged on disk; afterwards the extract is open. If you cancel saving, Ctrl+Z brings the pages back.<br>To split a file, extract one part after the other from the original.', keep.length),
+                maxwidth: 600,
+                buttons: ['ok', 'cancel'],
+                primary: 'ok',
+                callback: function(btn) {
+                    if (btn !== 'ok') return;
+                    api.asc_RemovePage(remove);
+                    setTimeout(function() {
+                        me.getApplication().getController('LeftMenu').clickMenuFileItem(null, 'save-desktop');
+                    }, 300);
+                }
+            });
         };
 
         dh.onRotatePage = function(angle, item) {
