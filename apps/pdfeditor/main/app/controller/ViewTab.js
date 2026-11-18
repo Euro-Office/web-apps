@@ -79,7 +79,8 @@ define([
                     'zoom:topage': _.bind(this.onBtnZoomTo, this, 'topage'),
                     'zoom:towidth': _.bind(this.onBtnZoomTo, this, 'towidth'),
                     'darkmode:change': _.bind(this.onChangeDarkMode, this),
-                    'macros:click':  _.bind(this.onClickMacros, this)
+                    'macros:click':  _.bind(this.onClickMacros, this),
+                    'viewtab:pageoverview': _.bind(this.onPageOverview, this)
                 },
                 'Toolbar': {
                     'view:compact': _.bind(function (toolbar, state) {
@@ -347,6 +348,54 @@ define([
                 _.each(this.view.menuTabStyle.items, function(item){
                     item.setChecked(Common.Utils.InternalSettings.get("settings-tab-style")===item.value, true);
                 });
+            }
+        },
+
+        // The page panel almost as wide as the window, with small pages side by side.
+        // Pressed again, or when the page panel is closed, the panel goes back to how it was.
+        onPageOverview: function(pressed) {
+            var me = this,
+                leftMenu = this.getApplication().getController('LeftMenu').leftMenu,
+                btnThumbs = leftMenu && leftMenu.btnThumbnails;
+            if (!btnThumbs || !this.api) return;
+            if (pressed) {
+                this._overview = {
+                    width: leftMenu.$el.width(),
+                    wasOpen: btnThumbs.pressed,
+                    zoom: (this.getApplication().getController('PageThumbnails').thumbnailsSize || 50) / 100
+                };
+                if (!btnThumbs.pressed) {
+                    btnThumbs.toggle(true, true);
+                    leftMenu.onBtnMenuClick(btnThumbs);
+                }
+                leftMenu.$el.width(Math.max(600, window.innerWidth - 120));
+                Common.NotificationCenter.trigger('layout:changed', 'leftmenu');
+                setTimeout(function() { me.api.asc_setViewerThumbnailsZoom(0.2); }, 200);
+                // closing the page panel ends the overview too
+                if (!this._overviewListener) {
+                    this._overviewListener = true;
+                    btnThumbs.on('toggle', function(btn, state) {
+                        var saved = me._overview;
+                        if (!state && saved) {
+                            me._overview = null;
+                            me.view.btnPageOverview.toggle(false, true);
+                            // the left menu stores the width it is closed with, so put the old width back first
+                            leftMenu.$el.width(saved.width);
+                            setTimeout(function() { me.api.asc_setViewerThumbnailsZoom(saved.zoom); }, 200);
+                        }
+                    });
+                }
+            } else if (this._overview) {
+                var saved = this._overview;
+                this._overview = null;
+                leftMenu.$el.width(saved.width);
+                if (!saved.wasOpen) {
+                    btnThumbs.toggle(false, true);
+                    leftMenu.onBtnMenuClick(btnThumbs);
+                } else {
+                    Common.NotificationCenter.trigger('layout:changed', 'leftmenu');
+                }
+                setTimeout(function() { me.api.asc_setViewerThumbnailsZoom(saved.zoom); }, 200);
             }
         },
 
