@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 
 # Translations come from Weblate (https://hosted.weblate.org/projects/euro-office/), so PRs
-# change only the English source. Weblate's own PRs are exempt.
+# change only the English source. Weblate's own PRs are exempt and get approved by weblate-approve-merge.yml.
 name: Translations
 
 on:
@@ -18,9 +18,7 @@ concurrency:
 jobs:
   translations:
     name: Translations on Weblate
-    if: >-
-      github.event.pull_request.user.login != 'weblate' &&
-      github.event.pull_request.user.login != 'weblate[bot]'
+    if: github.event.pull_request.user.login != 'hosted-weblate[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
