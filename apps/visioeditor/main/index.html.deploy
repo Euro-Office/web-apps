@@ -500,6 +500,9 @@
                 coapisettings: "coapisettings",
                 api:           "api/documents/api"
             },
+            shim: {
+                sdk: { deps: ["jquery", "allfonts", "xregexp", "socketio"] }
+            },
             callback: function(){
                 clearTimeout(requireTimeoutID);
             }
