@@ -277,7 +277,8 @@
                     startFillingForm: {
                         text: 'Share & collect' // caption of the start filling button, used for pdf-forms
                     },
-                    suggestFeature: true/false
+                    suggestFeature: true/false,
+                    pdfOpenInViewMode: false // true - a PDF that opens in commenting mode switches to viewing once it is loaded (pdf editor only, not for forms)
                 },
                  coEditing: {
                      mode: 'fast', // <coauthoring mode>, 'fast' or 'strict'. if 'fast' and 'customization.autosave'=false -> set 'customization.autosave'=true. 'fast' - default for editor
