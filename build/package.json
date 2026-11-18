@@ -4,8 +4,9 @@
   "homepage": "http://www.onlyoffice.com",
   "private": true,
   "scripts": {
-    "test": "npx -y mocha-headless-chrome@5.1.0 -a allow-file-access-from-files -a no-sandbox -f ../test/unit-tests/common/index.html",
-    "test:scripts": "node --test scripts/tests/*.test.mjs"
+    "test": "node scripts/unit-tests.js && node --test test/ scripts/tests/*.test.mjs",
+    "test:scripts": "node --test scripts/tests/*.test.mjs",
+    "coverage": "node scripts/unit-tests.js --coverage && cd .. && c8 --all --src build --include 'build/**/*.{js,mjs}' --exclude 'build/node_modules/**' --exclude 'build/test/**' --exclude 'build/scripts/tests/**' --exclude build/scripts/unit-tests.js --temp-directory coverage/build/tmp --reports-dir coverage/build --reporter lcovonly --reporter text-summary node --test build/test/ build/scripts/tests/*.test.mjs"
   },
   "dependencies": {
     "copy-webpack-plugin": "^14.0.0",
@@ -22,7 +23,9 @@
     "webpack-cli": "^7.0.0"
   },
   "devDependencies": {
+    "c8": "^12.0.0",
     "chai": "^5.1.0",
-    "mocha": "^12.0.0"
+    "mocha": "^12.0.0",
+    "puppeteer": "^24.43.1"
   }
 }
