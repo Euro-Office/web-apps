@@ -699,6 +699,7 @@ define([], function () {
             this.pnlTable = this.pnlSettings.find('table');
             this.trApply = $markup.find('.fms-btn-apply');
 
+            Common.Controllers.Desktop.renderAutoSaveFile(this, $markup);
             this.$el = $(node).html($markup);
 
             if (_.isUndefined(this.scroller)) {
@@ -781,6 +782,7 @@ define([], function () {
         },
 
         updateSettings: function() {
+            Common.Controllers.Desktop.updateAutoSaveFile(this);
             this.chUseAltKey.setValue(Common.Utils.InternalSettings.get("pdfe-settings-show-alt-hints"));
             this.chScreenReader.setValue(Common.Utils.InternalSettings.get("app-settings-screen-reader"));
             this.chUseAnnotateBar.setValue(Common.Utils.InternalSettings.get("pdfe-settings-annot-bar"));
@@ -850,6 +852,7 @@ define([], function () {
         },
 
         applySettings: function() {
+            Common.Controllers.Desktop.applyAutoSaveFile(this);
             var canPDFSave = (this.mode.isPDFAnnotate || this.mode.isPDFEdit) && this.mode.canSaveToFile;
             Common.UI.Themes.setTheme(this.cmbTheme.getValue());
             if (!this.chDarkMode.isDisabled() && (this.chDarkMode.isChecked() !== Common.UI.Themes.isContentThemeDark()))
