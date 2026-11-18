@@ -584,6 +584,26 @@
                 .font-weight-bold();
             }
         }
+
+        // a click on a user moves to the cursor of the user: the items take the corner radius and the hover of the
+        // toolbar buttons of the theme, with the same small gap on all sides of the user
+        &.move-to-cursor {
+            li {
+                padding: calc(2 * @scaled-two-px-value);
+                cursor: pointer;
+                .border-radius(@border-radius-button-toolbar-ie);
+                .border-radius(@border-radius-button-toolbar);
+            }
+
+            li:hover {
+                background-color: @highlight-button-hover-ie;
+                background-color: @highlight-button-hover;
+            }
+
+            .user-name {
+                cursor: pointer;
+            }
+        }
     }
 
     #tlb-users-menu-descr {
