@@ -13,7 +13,7 @@ the webpack 5 build system.
 ## Quick start
 
 ```bash
-# In the eo container (or any machine with Node 20 + BUILD_ROOT set):
+# In the eo container (or any machine with Node 26 + BUILD_ROOT set):
 cd /develop/web-apps/build
 PRODUCT_VERSION=9.2.1 BUILD_ROOT=/var/www/onlyoffice/documentserver THEME=euro-office \
   node scripts/build-pipeline.js
