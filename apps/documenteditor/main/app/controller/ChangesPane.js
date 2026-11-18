@@ -25,10 +25,6 @@ define([
                 'ChangesPane': {
                     'show': function() {
                         me.updateList(true);
-                        me.startWatch();
-                    },
-                    'hide': function() {
-                        me.stopWatch();
                     }
                 }
             });
@@ -41,7 +37,13 @@ define([
 
         setApi: function(api) {
             this.api = api;
+            // sent by the document when tracked changes were added, removed or changed
+            this.api.asc_registerCallback('asc_onRevisionChangesUpdated', _.bind(this.onRevisionChangesUpdated, this));
             return this;
+        },
+
+        onRevisionChangesUpdated: function() {
+            this.updateList(false);
         },
 
         onAfterRender: function(panel) {
@@ -59,21 +61,6 @@ define([
             return this.panel && this.panel.rendered && this.panel.isVisible();
         },
 
-        // the document has no event for "tracked changes changed", so the list is checked while it is open and only
-        // drawn again when something is different
-        startWatch: function() {
-            var me = this;
-            this.stopWatch();
-            this._watch = setInterval(function() {
-                me.isPanelVisible() ? me.updateList(false) : me.stopWatch();
-            }, 1500);
-        },
-
-        stopWatch: function() {
-            this._watch && clearInterval(this._watch);
-            this._watch = null;
-        },
-
         getChanges: function() {
             return this.api && this.api.asc_GetRevisionChangesInOrder ? this.api.asc_GetRevisionChangesInOrder() : [];
         },
@@ -86,7 +73,7 @@ define([
                 panel = this.panel,
                 changes = this.getChanges();
 
-            // a cheap fingerprint of the list: no redraw (and no lost scroll position) while nothing changed
+            // a cheap fingerprint of the list: no redraw (and no lost scroll position) when nothing shown changed
             var signature = this._author + '|' + _.map(changes, function(c) {
                 return c.get_UserName() + ':' + c.get_Type() + ':' + c.get_DateTime() + ':' + JSON.stringify(c.get_Value());
             }).join('|');
@@ -164,11 +151,15 @@ define([
                 callback: function(btn) {
                     if (btn !== 'yes')
                         return;
+                    var result = 0;
                     if (me._author)
-                        isAccept ? me.api.asc_AcceptRevisionChangesOfUser(me._author) : me.api.asc_RejectRevisionChangesOfUser(me._author);
+                        result = isAccept ? me.api.asc_AcceptRevisionChangesOfUser(me._author) : me.api.asc_RejectRevisionChangesOfUser(me._author);
                     else
                         isAccept ? me.api.asc_AcceptAllChanges() : me.api.asc_RejectAllChanges();
                     me.updateList(true);
+                    // -1: a paragraph with one of these changes is being edited by someone else, nothing was changed
+                    if (result < 0)
+                        Common.UI.warning({msg: panel.txtLocked});
                     Common.NotificationCenter.trigger('edit:complete', me);
                 }
             });

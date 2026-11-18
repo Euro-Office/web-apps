@@ -3265,6 +3265,7 @@
   "DE.Views.ChangesPane.txtRejectAll": "Reject all shown",
   "DE.Views.ChangesPane.txtConfirmAll": "Accept all {0} changes shown?",
   "DE.Views.ChangesPane.txtConfirmRejectAll": "Reject all {0} changes shown?",
+  "DE.Views.ChangesPane.txtLocked": "Someone else is editing a paragraph with one of these changes. Nothing was changed.",
   "DE.Views.LeftMenu.tipSupport": "Feedback & Support",
   "DE.Views.LeftMenu.tipTitles": "Titles",
   "DE.Views.LeftMenu.txtDeveloper": "DEVELOPER MODE",

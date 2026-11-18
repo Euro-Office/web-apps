@@ -134,7 +134,8 @@ define([], function () {
         txtAcceptAll: 'Accept all shown',
         txtRejectAll: 'Reject all shown',
         txtConfirmAll: 'Accept all {0} changes shown?',
-        txtConfirmRejectAll: 'Reject all {0} changes shown?'
+        txtConfirmRejectAll: 'Reject all {0} changes shown?',
+        txtLocked: 'Someone else is editing a paragraph with one of these changes. Nothing was changed.'
 
     }, DE.Views.ChangesPane || {}));
 });
