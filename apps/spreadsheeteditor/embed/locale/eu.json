@@ -48,5 +48,14 @@
   "SSE.ApplicationView.txtFullScreen": "Pantaila osoa",
   "SSE.ApplicationView.txtPrint": "Inprimatu",
   "SSE.ApplicationView.txtSearch": "Bilatu",
-  "SSE.ApplicationView.txtShare": "Partekatu"
+  "SSE.ApplicationView.txtShare": "Partekatu",
+  "SSE.ApplicationController.errorCopyDisabled": "Segurtasun arrazoiengatik, dokumentu honen edukia ezin da kopiatu.",
+  "SSE.ApplicationController.errorFileNotAssembled": "Fitxategi hau zerbitzariaren babeskopia batetik irekitzen da eta ez da biltegian gordetzen.<br>Erabili 'Gorde honela...' aukera disko batean gordetzeko.",
+  "SSE.ApplicationController.errorForcedViewMode": "Fitxategi hau ikusteko moduan ireki da.<br>Fitxategia editatzeko blokeatuta dago edo zure sarbide-eskubideek ez dute editatzeko aukera ematen.",
+  "SSE.ApplicationController.errorEditingDownloadas": "Errore bat gertatu da dokumentuarekin lanean.<br>Erabili 'Deskargatu honela' aukera fitxategiaren babeskopia disko batean gordetzeko.",
+  "SSE.ApplicationController.errorToken": "Dokumentuaren segurtasun-tokena ez dago behar bezala eratuta.<br>Mesedez, jarri harremanetan Dokumentuen Zerbitzariaren administratzailearekin.",
+  "SSE.ApplicationController.txtNo": "Ez",
+  "SSE.ApplicationController.txtOpenWarning": "Esteka honetan klik egitea kaltegarria izan daiteke zure gailu eta datuentzat. Zure ordenagailua babesteko, egin klik iturri fidagarrietako esteketan soilik. Baliteke kokapen hau segurua ez izatea:<br>%1<br>Ziur jarraitu nahi duzula?",
+  "SSE.ApplicationController.txtPressLink": "Egin klik estekan irekitzeko",
+  "SSE.ApplicationController.txtYes": "Bai"
 }

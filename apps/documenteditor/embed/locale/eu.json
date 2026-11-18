@@ -64,5 +64,16 @@
   "DE.ApplicationView.txtFullScreen": "Pantaila osoa",
   "DE.ApplicationView.txtPrint": "Inprimatu",
   "DE.ApplicationView.txtSearch": "Bilatu",
-  "DE.ApplicationView.txtShare": "Partekatu"
+  "DE.ApplicationView.txtShare": "Partekatu",
+  "DE.ApplicationController.errorCopyDisabled": "Segurtasun arrazoiengatik, dokumentu honen edukia ezin da kopiatu.",
+  "DE.ApplicationController.errorFileNotAssembled": "Fitxategi hau zerbitzariaren babeskopia batetik irekitzen da eta ez da biltegian gordetzen.<br>Erabili 'Gorde honela...' aukera disko batean gordetzeko.",
+  "DE.ApplicationController.errorForcedViewMode": "Fitxategi hau ikusteko moduan ireki da.<br>Fitxategia editatzeko blokeatuta dago edo zure sarbide-eskubideek ez dute editatzeko aukera ematen.",
+  "DE.ApplicationController.textCancel": "Utzi",
+  "DE.ApplicationController.textOk": "Ados",
+  "DE.ApplicationController.txtNo": "Ez",
+  "DE.ApplicationController.txtOpenWarning": "Esteka honetan klik egitea kaltegarria izan daiteke zure gailu eta datuentzat. Zure ordenagailua babesteko, egin klik iturri fidagarrietako esteketan soilik. Baliteke kokapen hau segurua ez izatea:<br>%1<br>Ziur jarraitu nahi duzula?",
+  "DE.ApplicationController.txtSecurityWarningLink": "Dokumentu hau %1-ra konektatzen saiatzen ari da.<br>Gune honetaz fidatzen bazara, sakatu \"Ados\" Ktrl tekla sakatuta eduki bitartean.",
+  "DE.ApplicationController.txtSecurityWarningLinkOk": "Dokumentu hau %1-ra konektatzen saiatzen ari da.<br>Gune honetaz fidatzen bazara, sakatu \"Ados\".",
+  "DE.ApplicationController.txtSecurityWarningOpenFile": "Dokumentu hau fitxategien elkarrizketa-koadroa irekitzen saiatzen ari da, sakatu \"Ados\" irekitzeko.",
+  "DE.ApplicationController.txtYes": "Bai"
 }
