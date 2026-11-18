@@ -1522,6 +1522,12 @@ define([], function () {
                             '</button>',
                             '</td>',
                         '</tr>',
+                        '<tr class="docx-info">',
+                            '<td class="left"></td>',
+                            '<td class="right">',
+                            '<button type="button" id="fminfo-btn-remove-personal" class="btn btn-text-default" style="width:auto;display:inline-block;padding-right:10px;padding-left:10px;margin-top:10px;" data-hint="2" data-hint-direction="bottom" data-hint-offset="big">' + this.txtRemovePersonal + '</button>',
+                            '</td>',
+                        '</tr>',
                     '</tbody>',
                 '</table>'
             ].join(''));
@@ -1699,6 +1705,11 @@ define([], function () {
                 el: $markup.findById('#fminfo-btn-add-property')
             });
             this.btnAddProperty.on('click', _.bind(this.onAddPropertyClick, this));
+
+            this.btnRemovePersonal = new Common.UI.Button({
+                el: $markup.findById('#fminfo-btn-remove-personal')
+            });
+            this.btnRemovePersonal.on('click', _.bind(this.onRemovePersonalClick, this));
 
             this.rendered = true;
 
@@ -1952,6 +1963,7 @@ define([], function () {
             this.mode = mode;
             this.inputAuthor.setVisible(mode.isEdit);
             this.btnAddProperty.setVisible(mode.isEdit);
+            this.btnRemovePersonal.setVisible(mode.isEdit);
             this.tblAuthor.find('.close').toggleClass('hidden', !mode.isEdit);
             this.inputTitle._input.attr('placeholder', mode.isEdit ? this.txtAddText : '');
             this.inputTags._input.attr('placeholder', mode.isEdit ? this.txtAddText : '');
@@ -2136,7 +2148,25 @@ define([], function () {
             this.tblAuthor.find('.close').toggleClass('disabled', this._state._locked);
             this.tblAuthor.toggleClass('disabled', disable);
             this.btnAddProperty.setDisabled(disable);
+            this.btnRemovePersonal.setDisabled(disable);
             this.setDisabledCustomProperties(disable);
+        },
+
+        onRemovePersonalClick: function() {
+            var me = this;
+            Common.UI.warning({
+                title: this.txtRemovePersonal,
+                msg: this.txtRemovePersonalWarning,
+                maxwidth: 600,
+                buttons: ['ok', 'cancel'],
+                primary: 'ok',
+                callback: function(btn) {
+                    if (btn == 'ok') {
+                        me.api.asc_RemovePersonalInformation('Author');
+                        me.updateFileInfo();
+                    }
+                }
+            });
         },
 
         onAddPropertyClick: function() {
@@ -2196,7 +2226,9 @@ define([], function () {
         txtDocumentInfo: 'Document Info',
         txtDocumentPropertyUpdateTitle: "Document Property",
         txtPropertyTitleConflictError: 'Property with this title already exists',
-        txtAddProperty: 'Add property'
+        txtAddProperty: 'Add property',
+        txtRemovePersonal: 'Remove personal information',
+        txtRemovePersonalWarning: 'All author names in comments, replies and tracked changes will be replaced with "Author". All document properties are removed: author, last modified by, title, subject, tags, comments, custom properties, company and manager. Dates of comments and changes are kept. You can undo this with Ctrl+Z, except for company and manager.'
 
     }, DE.Views.FileMenuPanels.DocumentInfo || {}));
 

@@ -2724,6 +2724,8 @@
   "DE.Views.FileMenuPanels.DocumentInfo.txtPlacement": "Speicherort",
   "DE.Views.FileMenuPanels.DocumentInfo.txtProperties": "Eigenschaften",
   "DE.Views.FileMenuPanels.DocumentInfo.txtPropertyTitleConflictError": "Eine Eigenschaft mit diesem Titel existiert bereits",
+  "DE.Views.FileMenuPanels.DocumentInfo.txtRemovePersonal": "Persönliche Informationen entfernen",
+  "DE.Views.FileMenuPanels.DocumentInfo.txtRemovePersonalWarning": "Alle Autorennamen in Kommentaren, Antworten und nachverfolgten Änderungen werden durch „Author“ ersetzt. Alle Dokumenteigenschaften werden entfernt: Autor, „Zuletzt geändert von“, Titel, Thema, Schlagwörter, Kommentare, eigene Eigenschaften, Firma und Manager. Datum und Uhrzeit von Kommentaren und Änderungen bleiben erhalten. Sie können dies mit Strg+Z rückgängig machen, außer Firma und Manager.",
   "DE.Views.FileMenuPanels.DocumentInfo.txtRights": "Personen mit Berechtigungen",
   "DE.Views.FileMenuPanels.DocumentInfo.txtSpaces": "Zeichen mit Leerzeichen",
   "DE.Views.FileMenuPanels.DocumentInfo.txtStatistics": "Statistiken",
