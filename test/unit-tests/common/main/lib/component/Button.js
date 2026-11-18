@@ -137,4 +137,99 @@ define([
 //            domPlaceholder.remove();
         });
     });
+
+    describe('Common.UI.Button hint on a disabled button', function(){
+        var button,
+            domPlaceholder = document.createElement('div');
+
+        // the real tooltip is created on the first mouseenter; a stand-in is enough to see what setDisabled does
+        var fakeTip = function () {
+            return {enabled: true, hidden: 0, hide: function () { this.hidden++; }, updateTitle: function () {}};
+        };
+
+        beforeEach(function(){
+            $('body').append(domPlaceholder);
+        });
+
+        afterEach(function(){
+            button && button.remove();
+            button = null;
+            $(domPlaceholder).empty();
+        });
+
+        it('a disabled button without a hint still gets the disabled attribute', function(){
+            button = new Common.UI.Button({caption: 'plain', disabled: true});
+            button.render($(domPlaceholder));
+
+            assert.isTrue(button.isDisabled());
+            assert.isTrue(button.cmpEl.hasClass('disabled'));
+            assert.equal(button.cmpEl.attr('disabled'), 'disabled');
+        });
+
+        it('a disabled button with a hint keeps mouse events and its hint', function(){
+            button = new Common.UI.Button({caption: 'hinted', hint: 'What this button does'});
+            button.render($(domPlaceholder));
+            var tip = fakeTip();
+            button.btnEl.data('bs.tooltip', tip);
+
+            button.setDisabled(true);
+            assert.isTrue(button.cmpEl.hasClass('disabled'), 'greyed out');
+            assert.isUndefined(button.cmpEl.attr('disabled'), 'no disabled attribute, so hover still works');
+            assert.isTrue(tip.enabled, 'hint stays switched on');
+            assert.equal(tip.hidden, 1, 'an open hint is closed once');
+
+            button.setDisabled(false);
+            assert.isFalse(button.cmpEl.hasClass('disabled'));
+            assert.isTrue(tip.enabled);
+        });
+
+        it('a click on a disabled button with a hint does nothing', function(){
+            var clicks = 0;
+            button = new Common.UI.Button({caption: 'hinted', hint: 'What this button does', disabled: true});
+            button.render($(domPlaceholder));
+            button.on('click', function () { clicks++; });
+
+            button.cmpEl.trigger($.Event('click', {which: 1}));
+            assert.equal(clicks, 0);
+
+            button.setDisabled(false);
+            button.cmpEl.trigger($.Event('click', {which: 1}));
+            assert.equal(clicks, 1);
+        });
+
+        it('a hint added to a button that is already disabled lets it get mouse events', function(){
+            button = new Common.UI.Button({caption: 'late', disabled: true});
+            button.render($(domPlaceholder));
+            assert.equal(button.cmpEl.attr('disabled'), 'disabled');
+
+            button.updateHint('Added later');
+            assert.isUndefined(button.cmpEl.attr('disabled'));
+            assert.isTrue(button.cmpEl.hasClass('disabled'));
+        });
+
+        it('a disabled split button with hints: both parts greyed out, no disabled attribute, no click', function(){
+            var clicks = 0;
+            button = new Common.UI.Button({
+                caption : 'split',
+                split   : true,
+                hint    : ['Main part', 'Menu part'],
+                menu    : new Common.UI.Menu({items: [{caption: 'one', value: 1}]})
+            });
+            button.render($(domPlaceholder));
+            button.on('click', function () { clicks++; });
+
+            button.setDisabled(true);
+            var parts = button.cmpEl.children('button');
+            assert.equal(parts.length, 2);
+            parts.each(function () {
+                assert.isTrue($(this).hasClass('disabled'));
+                assert.isUndefined($(this).attr('disabled'));
+            });
+
+            parts.first().trigger($.Event('mousedown', {which: 1}));
+            assert.isFalse(parts.first().hasClass('active'), 'no pressed look on mousedown');
+            parts.first().trigger($.Event('click', {which: 1}));
+            assert.equal(clicks, 0);
+        });
+    });
 });

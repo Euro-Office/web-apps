@@ -566,6 +566,7 @@ define([
 
                 var splitElement;
                 var onMouseDown = function (e) {
+                    if (me.disabled) return; // a disabled button with a hint gets mouse events, see setDisabled
                     splitElement = e.currentTarget.className.match(/dropdown/) ? 'arrow' : 'button';
                     doSplitSelect(true, splitElement, e);
                     $(document).on('mouseup',   onMouseUp);
@@ -717,8 +718,12 @@ define([
                 if (disabled !== el.hasClass('disabled')) {
                     var decorateBtn = function(button) {
                         button.toggleClass('disabled', disabled);
-                        if (!me.options.allowMouseEventsOnDisabled)
+                        // A disabled button with a hint keeps mouse events, so its hint still shows on hover.
+                        // Clicks stay blocked by the "disabled" checks in the handlers and in the dropdown.
+                        if (!me.options.allowMouseEventsOnDisabled && !me.options.hint)
                             (disabled) ? button.attr({disabled: disabled}) : button.removeAttr('disabled');
+                        else
+                            button.removeAttr('disabled');
                     };
 
                     decorateBtn(el);
@@ -729,13 +734,13 @@ define([
                     var tip = this.btnEl.data('bs.tooltip');
                     if (tip) {
                         disabled && tip.hide();
-                        !Common.Utils.isGecko && (tip.enabled = !disabled);
+                        !Common.Utils.isGecko && (tip.enabled = true);
                     }
                     if (this.btnMenuEl) {
                         tip = this.btnMenuEl.data('bs.tooltip');
                         if (tip) {
                             disabled && tip.hide();
-                            !Common.Utils.isGecko && (tip.enabled = !disabled);
+                            !Common.Utils.isGecko && (tip.enabled = true);
                         }
                     }
                 }
@@ -843,6 +848,11 @@ define([
                 modalParents = cmpEl.closest('.asc-window'),
                 tipZIndex = modalParents.length > 0 ? parseInt(modalParents.css('z-index')) + 10 : undefined;
 
+            if (this.disabled) { // the hint was added to a button that is already disabled: let it get mouse events
+                cmpEl.removeAttr('disabled');
+                cmpEl.hasClass('btn-group') && cmpEl.children('button').removeAttr('disabled');
+            }
+
             if (!this.btnEl) {
                 if (typeof this.options.hint == 'object' && this.options.hint.length>1 && $('button', cmpEl).length>0) {
                     var btnEl = $('button', cmpEl);
@@ -869,7 +879,7 @@ define([
                             zIndex : tipZIndex,
                             container   : me.options.hintContainer
                         });
-                        !Common.Utils.isGecko && (me.btnEl.data('bs.tooltip').enabled = !me.disabled);
+                        !Common.Utils.isGecko && (me.btnEl.data('bs.tooltip').enabled = true);
                         me.btnEl.mouseenter();
                     });
                     this.btnMenuEl && this.btnMenuEl.one('mouseenter', function(){ // hide tooltip when mouse is over menu
@@ -880,7 +890,7 @@ define([
                             zIndex : tipZIndex,
                             container   : me.options.hintContainer
                         });
-                        !Common.Utils.isGecko && (me.btnMenuEl.data('bs.tooltip').enabled = !me.disabled);
+                        !Common.Utils.isGecko && (me.btnMenuEl.data('bs.tooltip').enabled = true);
                         me.btnMenuEl.mouseenter();
                     });
                 } else {
@@ -935,13 +945,13 @@ define([
                 var tip = this.btnEl.data('bs.tooltip');
                 if (tip) {
                     this.disabled && tip.hide();
-                    !Common.Utils.isGecko && (tip.enabled = !this.disabled);
+                    !Common.Utils.isGecko && (tip.enabled = true);
                 }
                 if (this.btnMenuEl) {
                     tip = this.btnMenuEl.data('bs.tooltip');
                     if (tip) {
                         this.disabled && tip.hide();
-                        !Common.Utils.isGecko && (tip.enabled = !this.disabled);
+                        !Common.Utils.isGecko && (tip.enabled = true);
                     }
                 }
             }
