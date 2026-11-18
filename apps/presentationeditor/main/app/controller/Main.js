@@ -950,9 +950,12 @@ define([
                     Common.Utils.InternalSettings.set("pe-spellcheck-ignore-uppercase-words", value);
                     value = Common.localStorage.getBool("pe-spellcheck-ignore-numbers-words", true);
                     Common.Utils.InternalSettings.set("pe-spellcheck-ignore-numbers-words", value);
+                    value = Common.localStorage.getBool("pe-spellcheck-wavy-line", true);
+                    Common.Utils.InternalSettings.set("pe-spellcheck-wavy-line", value);
                     value = new AscCommon.CSpellCheckSettings();
                     value.put_IgnoreWordsInUppercase(Common.Utils.InternalSettings.get("pe-spellcheck-ignore-uppercase-words"));
                     value.put_IgnoreWordsWithNumbers(Common.Utils.InternalSettings.get("pe-spellcheck-ignore-numbers-words"));
+                    value.put_WavyLine(Common.Utils.InternalSettings.get("pe-spellcheck-wavy-line"));
                     this.api.asc_setSpellCheckSettings(value);
                 }
 
