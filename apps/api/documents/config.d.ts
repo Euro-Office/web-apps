@@ -326,6 +326,17 @@ interface RequestReferenceSourceEvent {
 
 
 // Interfaces for arrays
+interface RequestSmartPickerEvent {
+    data: {
+        /** The text selected in the document, empty if nothing is selected */
+        selectedText: string;
+        /** Where the request came from, `smartpicker` by default */
+        source: string;
+        /** The Smart Picker provider to open directly, empty to show all providers */
+        providerId: string;
+    };
+}
+
 interface SharingSetting {
     /**
      * The name of the user the document will be shared with.
@@ -1813,6 +1824,14 @@ interface EditorConfigNormal extends EditorConfigBase {
         hideRightMenu?: boolean;
 
         /**
+         * Defines the default outer width of the right **plugin panels** in pixels, until the user resizes them.
+         * The value is clamped between the default panel width and the smaller of 596 pixels and half the window width.
+         *
+         * @forType `desktop`
+         */
+        pluginsPanelWidth?: number;
+
+        /**
          * Defines if the **top toolbar** is displayed or hidden.  
          *
          * @deprecated Starting from version 7.1, please use the `layout.toolbar` parameter instead.
@@ -2755,6 +2774,24 @@ interface EventsNormal extends EventsBase {
     onRequestCompareFile?: () => void;
 
     /**
+     * The function called when the user is trying to select **mail merge recipients** from a spreadsheet.
+     * The `setMailMergeRecipients` method must be called in response.
+     *
+     * @deprecated Use `onRequestSelectSpreadsheet` instead.
+     * @forType `desktop`
+     */
+    onRequestMailMergeRecipients?: () => void;
+
+    /**
+     * The function called when the editor requests the **email addresses** for sending a merged document by email.
+     * The `setEmailAddresses` method must be called in response.
+     *
+     * @deprecated
+     * @forType `desktop`
+     */
+    onRequestEmailAddresses?: () => void;
+
+    /**
      * The function called when the user is trying to manage document access rights by clicking the **Change access rights** button.
      *
      * @note When the access rights are changed, you must call the `setSharingSettings` method to update the settings. If this method is not declared, the Change access rights button will not be displayed.
@@ -3007,6 +3044,25 @@ interface EventsNormal extends EventsBase {
      * @forType `desktop` | `mobile`
      */
     onStartFilling?: () => void;
+
+    /**
+     * The function called when the user asks to open the **Nextcloud Smart Picker**,
+     * for example from the **Insert** tab, the context menu or by typing `/`.
+     * The host should open the picker, then insert the result with the `insertLink`, `insertPlainText` or `insertAssistantResult` method, or call `setSmartPickerCancel` if the user closes it.
+     * Use `setSmartPickerAvailable` and `setSmartPickerProviders` to enable the feature and list the providers.
+     *
+     * @param event
+     * @forType `desktop`
+     */
+    onRequestSmartPicker?: (event: RequestSmartPickerEvent) => void;
+
+    /**
+     * The function called while the user is working in the editor (keyboard, pointer or wheel input), at most every 10 seconds.
+     * Lets hosts with an idle logout keep the session alive.
+     *
+     * @forType `desktop` | `mobile`
+     */
+    onUserActivity?: () => void;
 }
 
 interface EventsEmbedded extends EventsBase {
