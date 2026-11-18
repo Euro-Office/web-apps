@@ -998,6 +998,28 @@ define([
                     });
                     this.toolbarControls.push(this.btnStamp);
 
+                    this.btnCommentPrev = new Common.UI.Button({
+                        cls: 'btn-toolbar x-huge icon-top',
+                        caption: this.txtCommentPrev,
+                        iconCls: Common.UI.isRTL() ? 'toolbar__icon btn-review-next' : 'toolbar__icon btn-review-prev',
+                        lock: [_set.disableOnStart],
+                        dataHint: '1',
+                        dataHintDirection: 'bottom',
+                        dataHintOffset: 'small'
+                    });
+                    this.toolbarControls.push(this.btnCommentPrev);
+
+                    this.btnCommentNext = new Common.UI.Button({
+                        cls: 'btn-toolbar x-huge icon-top',
+                        caption: this.txtCommentNext,
+                        iconCls: Common.UI.isRTL() ? 'toolbar__icon btn-review-prev' : 'toolbar__icon btn-review-next',
+                        lock: [_set.disableOnStart],
+                        dataHint: '1',
+                        dataHintDirection: 'bottom',
+                        dataHintOffset: 'small'
+                    });
+                    this.toolbarControls.push(this.btnCommentNext);
+
                     var colorsconfig = Common.UI.simpleColorsConfig;
                     this.btnStrikeout = new Common.UI.ButtonColored({
                         id: 'id-toolbar-btn-strikeout',
@@ -1631,6 +1653,8 @@ define([
                 _injectComponent('#slot-btn-text-comment', this.btnTextComment);
                 _injectComponent('#slot-btn-shape-comment', this.btnShapeComment);
                 _injectComponent('#slot-btn-stamp', this.btnStamp);
+                _injectComponent('#slot-btn-comment-prev', this.btnCommentPrev);
+                _injectComponent('#slot-btn-comment-next', this.btnCommentNext);
                 this.btnEditMode ? _injectComponent('#slot-btn-tb-edit-mode', this.btnEditMode) : $host.findById('#slot-btn-tb-edit-mode').parents('.group').hide().next('.separator').hide();
             },
 
@@ -1866,6 +1890,8 @@ define([
                 this.btnTextComment.updateHint(this.tipInsertTextComment);
                 this.btnShapeComment.updateHint(this.tipInsertRectComment);
                 this.btnStamp.updateHint(this.tipInsertStamp);
+                this.btnCommentPrev && this.btnCommentPrev.updateHint(this.tipCommentPrev);
+                this.btnCommentNext && this.btnCommentNext.updateHint(this.tipCommentNext);
                 this.btnEditMode && this.btnEditMode.updateHint(this.tipEditMode);
             },
 
@@ -2192,7 +2218,11 @@ define([
             tipNumNumbersPoint: '1. 2. 3.',
             tipNumNumbersParentheses: '1) 2) 3)',
             tipNumRoman: 'I. II. III.',
-            tipNumRomanSmall: 'i. ii. iii.'
+            tipNumRomanSmall: 'i. ii. iii.',
+            txtCommentPrev: 'Previous comment',
+            txtCommentNext: 'Next comment',
+            tipCommentPrev: 'To previous comment',
+            tipCommentNext: 'To next comment'
         }
     })(), PDFE.Views.Toolbar || {}));
 });

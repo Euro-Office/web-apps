@@ -261,6 +261,8 @@ define([
             toolbar.btnShapeComment.menu.on('show:after',               _.bind(this.onMenuShapeCommentShowAfter, this));
             toolbar.btnShapeComment.on('color:select',                  _.bind(this.onSelectShapeCommentColor, this));
             toolbar.btnStamp.on('click',                                _.bind(this.onBtnStampClick, this));
+            toolbar.btnCommentPrev && toolbar.btnCommentPrev.on('click', _.bind(this.onGotoComment, this, false));
+            toolbar.btnCommentNext && toolbar.btnCommentNext.on('click', _.bind(this.onGotoComment, this, true));
             toolbar.btnStamp.menu.on('item:click',                      _.bind(this.onMenuStampClick, this));
             toolbar.btnStamp.menu.on('show:after',                      _.bind(this.onStampShowAfter, this));
             // toolbar.btnRotate.on('click',                               _.bind(this.onRotateClick, this));
@@ -1200,6 +1202,14 @@ define([
                 button.toggle(false, true);
             });
             this.toolbar.btnTextHighlightColor && this.toolbar.btnTextHighlightColor.toggle(false, true);
+        },
+
+        onGotoComment: function(isNext) {
+            if (this.api && this.api.asc_GotoComment) {
+                var id = this.api.asc_GotoComment(isNext);
+                id && this.api.asc_showComment(id);
+            }
+            Common.NotificationCenter.trigger('edit:complete', this.toolbar);
         },
 
         onShowCommentsChange: function(checkbox, state) {
