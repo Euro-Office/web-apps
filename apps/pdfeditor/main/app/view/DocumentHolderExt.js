@@ -1671,6 +1671,9 @@ define([], function () {
                 iconCls: 'menu__icon btn-rotate-270',
                 caption     : me.txtRotateLeft
             });
+            me.mnuInsertFromPdf = new Common.UI.MenuItem({
+                caption     : me.txtInsertFromPdf || 'Insert pages from PDF…'
+            });
             me.mnuCutPage = new Common.UI.MenuItem({
                 iconCls: 'menu__icon btn-cut',
                 caption     : me.textCut,
@@ -1746,6 +1749,7 @@ define([], function () {
                     var canPaste = me.api.asc_CanPastePage();
                     me.mnuPastePageBefore.setDisabled(!canPaste);
                     me.mnuPastePageAfter.setDisabled(!canPaste);
+                    me.mnuInsertFromPdf.setDisabled(!canPaste);
                 },
                 items: [
                     me.mnuCutPage,
@@ -1756,6 +1760,7 @@ define([], function () {
                     { caption     : '--' },
                     me.mnuNewPageBefore,
                     me.mnuNewPageAfter,
+                    me.mnuInsertFromPdf,
                     menuPageNewSeparator,
                     me.mnuRotatePageRight,
                     me.mnuRotatePageLeft,

@@ -405,7 +405,9 @@ define([
                         new Common.UI.Menu({
                             items: [
                                 {caption: me.txtNewPageBefore, value: true},
-                                {caption: me.txtNewPageAfter, value: false}
+                                {caption: me.txtNewPageAfter, value: false},
+                                {caption: '--'},
+                                {caption: me.txtInsertFromPdf || 'Insert pages from PDF…', value: 'pdf'}
                             ]
                         }).on('item:click', function (menu, item, e) {
                             me.fireEvent('insert:page', [item.value]);

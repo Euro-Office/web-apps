@@ -678,6 +678,10 @@ define([
         },
 
         onAddPage: function(before) {
+            if (before === 'pdf') {
+                this.api && this.api.asc_InsertPagesFromFile && this.api.asc_InsertPagesFromFile(this.api.getCurrentPage() + 1);
+                return;
+            }
             this.api && this.api.asc_AddPage(this.api.getCurrentPage() + (before ? 0 : 1) );
         },
 

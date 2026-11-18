@@ -199,6 +199,9 @@ define([], function () {
                 view.menuParagraphEquation.menu.on('item:click', _.bind(me.convertEquation, me));
                 view.mnuNewPageBefore.on('click', _.bind(me.onNewPage, me));
                 view.mnuNewPageAfter.on('click', _.bind(me.onNewPage, me));
+                view.mnuInsertFromPdf.on('click', _.bind(function() {
+                    this.api && this.api.asc_InsertPagesFromFile && this.api.asc_InsertPagesFromFile(Math.max.apply(null, this.api.getSelectedPages()) + 1);
+                }, me));
                 view.mnuDeletePage.on('click', _.bind(me.onDeletePage, me));
                 view.mnuRotatePageRight.on('click', _.bind(me.onRotatePage, me, 90));
                 view.mnuRotatePageLeft.on('click', _.bind(me.onRotatePage, me, -90));
