@@ -150,6 +150,10 @@ define([
                     this.AnimationProperties.asc_putSubtype(value);
                     this.api.asc_SetAnimationProperties(this.AnimationProperties, !Common.Utils.InternalSettings.get("pe-animation-no-auto-preview"));
                 }
+                else if(toggleGroup == 'textsequence') {
+                    this.AnimationProperties.asc_putTextSequence(value);
+                    this.api.asc_SetAnimationProperties(this.AnimationProperties, !Common.Utils.InternalSettings.get("pe-animation-no-auto-preview"));
+                }
                 else if(toggleGroup == 'custompath') {
                     var groupName = _.findWhere(this.EffectGroups, {value: AscFormat.PRESET_CLASS_PATH}).id;
                     this.addNewEffect(AscFormat.MOTION_CUSTOM_PATH, AscFormat.PRESET_CLASS_PATH, groupName,true, value);
@@ -473,6 +477,8 @@ define([
                     }
                 }
 
+                // "As one object" / "By paragraph": null - no text to animate, undefined - mixed selection
+                view.setMenuTextSequence(this._state.noAnimation || !this.AnimationProperties.asc_getTextSequence ? null : this.AnimationProperties.asc_getTextSequence());
                 this._state.EffectOption = this.AnimationProperties.asc_getSubtype();
                 if (this._state.EffectOption !== null && this._state.Effect !== AscFormat.ANIM_PRESET_MULTIPLE && this._state.Effect !== AscFormat.ANIM_PRESET_NONE) {
                     var rec = _.findWhere(this.EffectGroups,{value: this._state.EffectGroup});
@@ -480,7 +486,11 @@ define([
 
                     view.isColor  && view.setColor(this.AnimationProperties.asc_getColor());
                     this._state.noAnimationParam = view.btnParameters.menu.getItemsLength() === view.startIndexParam && !view.isColor;
+                } else {
+                    // different effects selected (or no options): the directions and family items of the previous effect don't apply
+                    view.clearMenuParameters();
                 }
+                view.hasMenuTextSequence() && (this._state.noAnimationParam = false);
 
                 value = this.AnimationProperties.asc_getDuration();
                 this._state.Duration = (value>=0) ? value/1000 : value ; // undefined or <0
@@ -521,6 +531,7 @@ define([
                 this._state.Effect = this._state.EffectGroup = this._state.EffectOption = undefined;
                 if (this.view && this.view.listEffects)
                     this.view.listEffects.fieldPicker.deselectAll();
+                this.view && this.view.setMenuTextSequence(null);
             }
             if (!this.arrEmphasis) {
                 this.arrEmphasis = store.filter(function(item, index){
