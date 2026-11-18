@@ -194,5 +194,21 @@
   "DE.Views.ApplicationView.txtPrint": "Cetak",
   "DE.Views.ApplicationView.txtSearch": "Cari",
   "DE.Views.ApplicationView.txtShare": "Bagikan",
-  "DE.Views.ApplicationView.txtTheme": "Tema interface"
+  "DE.Views.ApplicationView.txtTheme": "Tema interface",
+  "Common.UI.SynchronizeTip.textNew": "Baru",
+  "Common.UI.Themes.txtThemeModernDark": "Gelap Modern",
+  "Common.UI.Themes.txtThemeModernLight": "Terang Modern",
+  "DE.Controllers.ApplicationController.criticalErrorExtText": "Tekan \"OK\" untuk kembali ke daftar dokumen.",
+  "DE.Controllers.ApplicationController.criticalErrorExtTextClose": "Tekan \"OK\" untuk menutup editor.",
+  "DE.Controllers.ApplicationController.errorCopyDisabled": "Demi keamanan, isi dokumen ini tidak dapat disalin.",
+  "DE.Controllers.ApplicationController.errorFileNotAssembled": "File ini dibuka dari salinan cadangan server dan tidak disimpan ke penyimpanan.<br>Gunakan opsi 'Simpan sebagai...' untuk menyimpannya ke drive.",
+  "DE.Controllers.ApplicationController.errorForcedViewMode": "File ini dibuka dalam mode tampilan.<br>File dikunci untuk pengeditan atau hak akses Anda tidak mengizinkan pengeditan.",
+  "DE.Controllers.ApplicationController.textContinue": "Lanjutkan",
+  "DE.Controllers.ApplicationController.tipLicenseExceeded": "Dokumen dibuka dalam mode hanya baca karena jumlah maksimum koneksi simultan yang diizinkan oleh lisensi telah tercapai.<br><br>Silakan coba lagi nanti atau hubungi pemilik dokumen jika Anda memerlukan akses pengeditan.",
+  "DE.Controllers.ApplicationController.tipLicenseUsersExceeded": "Dokumen dibuka dalam mode hanya baca karena jumlah maksimum pengguna yang diizinkan oleh lisensi untuk mengedit dokumen telah tercapai.<br><br>Silakan coba lagi nanti atau hubungi pemilik dokumen jika Anda memerlukan akses pengeditan.",
+  "DE.Controllers.ApplicationController.titleReadOnly": "Mode Hanya Baca",
+  "DE.Controllers.ApplicationController.txtSignedForm": "Dokumen ini telah ditandatangani dan tidak dapat diedit.",
+  "DE.Controllers.ApplicationController.txtWarnUrl": "Mengeklik tautan ini dapat membahayakan perangkat dan data Anda. Untuk melindungi komputer Anda, klik hanya tautan dari sumber tepercaya. Lokasi ini mungkin tidak aman:<br><br>{0}<br><br>Apakah Anda yakin ingin melanjutkan?",
+  "DE.Controllers.ApplicationController.warnStartFilling": "Pengisian formulir sedang berlangsung.<br>Pengeditan file saat ini tidak tersedia.",
+  "DE.Views.ApplicationView.textMultiplePages": "Beberapa halaman"
 }

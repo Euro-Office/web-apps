@@ -21,6 +21,10 @@ If you have any problems with or questions about [Euro-Office Document Server][2
   [1]: https://github.com/Euro-Office
   [2]: https://github.com/Euro-Office/DocumentServer
 
+## Translations
+
+The UI is translated on [Hosted Weblate](https://hosted.weblate.org/projects/euro-office/). See [docs/translations.md](docs/translations.md) for how to contribute.
+
 ## Styling
 
 Styling is accomplished via LESS, there is the content set by Euro-Office. Before you do anything, please read the section under this about modifications.
