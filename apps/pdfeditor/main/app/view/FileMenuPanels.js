@@ -1193,6 +1193,12 @@ define([], function () {
                             '</table>',
                             '</div></td>',
                         '</tr>',
+                        '<tr>',
+                            '<td class="left"></td>',
+                            '<td class="right">',
+                            '<button type="button" id="fminfo-btn-remove-personal" class="btn btn-text-default" style="width:auto;display:inline-block;padding-right:10px;padding-left:10px;margin-top:10px;" data-hint="2" data-hint-direction="bottom" data-hint-offset="big">' + this.txtRemovePersonal + '</button>',
+                            '</td>',
+                        '</tr>',
                     '</tbody>',
                     '<tbody>',
                         '<tr>',
@@ -1381,6 +1387,11 @@ define([], function () {
             // this.btnApply.on('click', _.bind(this.applySettings, this));
 
             this.pnlApply = $markup.findById('#fms-flex-apply');
+
+            this.btnRemovePersonal = new Common.UI.Button({
+                el: $markup.findById('#fminfo-btn-remove-personal')
+            });
+            this.btnRemovePersonal.on('click', _.bind(this.onRemovePersonalClick, this));
 
             this.rendered = true;
 
@@ -1669,6 +1680,7 @@ define([], function () {
 
         setMode: function(mode) {
             this.mode = mode;
+            this.btnRemovePersonal.setVisible(!!(mode.isEdit || mode.canComments));
             var isEdit = false; // isPDFEdit?
             this.inputAuthor.setVisible(isEdit);
             this.pnlApply.toggleClass('hidden', !isEdit);
@@ -1755,6 +1767,22 @@ define([], function () {
             this.tblAuthor.find('.close').toggleClass('disabled', this._state._locked);
             this.tblAuthor.toggleClass('disabled', disable);
             // this.btnApply.setDisabled(this._state._locked);
+            this.btnRemovePersonal.setDisabled(!!this._state.disableEditing);
+        },
+
+        onRemovePersonalClick: function() {
+            var me = this;
+            Common.UI.warning({
+                title: this.txtRemovePersonal,
+                msg: this.txtRemovePersonalWarning,
+                maxwidth: 600,
+                buttons: ['ok', 'cancel'],
+                primary: 'ok',
+                callback: function(btn) {
+                    if (btn == 'ok')
+                        me.api.asc_RemovePersonalInformation('Author');
+                }
+            });
         },
 
         applySettings: function() {
@@ -1801,6 +1829,8 @@ define([], function () {
         txtPdfProducer: 'PDF Producer',
         txtDocumentInfo: 'Document Info',
         txtCommon: 'Common',
+        txtRemovePersonal: 'Remove personal information',
+        txtRemovePersonalWarning: 'All author names in comments, replies and other annotations will be replaced with "Author", and their user IDs are removed. Dates of comments and annotations are kept. You can undo this with Ctrl+Z. The document properties of the PDF (author, title, subject, producer) are not changed, as this editor cannot edit them.'
     }, PDFE.Views.FileMenuPanels.DocumentInfo || {}));
 
     PDFE.Views.FileMenuPanels.DocumentRights = Common.UI.BaseView.extend(_.extend({
