@@ -5226,5 +5226,8 @@
   "SSE.Views.WBProtection.txtSheetUnlockDescription": "양식 보호를 해제하려면 비밀번호를 입력하세요.",
   "SSE.Views.WBProtection.txtSheetUnlockTitle": "시트 보호해제",
   "SSE.Views.WBProtection.txtWBUnlockDescription": "통합 문서 보호를 해제하려면 비밀번호를 입력하세요.",
-  "SSE.Views.WBProtection.txtWBUnlockTitle": "통합 문서 보호 잠금 해제"
+  "SSE.Views.WBProtection.txtWBUnlockTitle": "통합 문서 보호 잠금 해제",
+  "SSE.Controllers.Toolbar.helpCellFormat": "시트, 행 및 열 작업에 필요한 모든 옵션에 쉽게 액세스하세요.",
+  "SSE.Controllers.Toolbar.helpCellFormatHeader": "새 버튼: 서식",
+  "SSE.Views.Toolbar.textCellFormat": "서식"
 }
