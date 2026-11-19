@@ -1386,7 +1386,7 @@ define([
                 this.appOptions.canSuggest     = !((typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.suggestFeature===false);
                 this.appOptions.canCopy        = this.permissions.copy !== false;
 
-                this.appOptions.compactHeader = !(this.appOptions.customization && typeof this.appOptions.customization == 'object' && this.appOptions.customization.compactHeader === false);
+                this.appOptions.compactHeader = Common.Utils.isCompactHeader(this.appOptions.customization);
                 this.appOptions.twoLevelHeader = this.appOptions.isEdit || this.appOptions.isRestrictedEdit; // when compactHeader=true some buttons move to toolbar
 
                 if ( !this.appOptions.canCoAuthoring ) {
