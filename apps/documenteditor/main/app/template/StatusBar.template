@@ -33,7 +33,7 @@
         <button id="btn-zoom-down" type="button" class="btn small btn-toolbar"><svg class="icon uni-scale"><use href="#btn-zoomdown"></use></svg></button>
         <div class="cnt-zoom">
             <div class="dropdown-toggle" data-toggle="dropdown" data-hint="0" data-hint-direction="top" role="button" aria-haspopup="menu" aria-expanded="false">
-                <label id="label-zoom" class="status-label">Zoom 100%</label>
+                <label id="label-zoom" class="status-label">100%</label>
             </div>
         </div>
         <button id="btn-zoom-up" type="button" class="btn small btn-toolbar"><svg class="icon uni-scale"><use href="#btn-zoomup"></use></svg></button>

@@ -10,7 +10,7 @@
     background-color: @background-statusbar-ie;
     background-color: @background-statusbar;
     .box-inner-shadow(0 @scaled-one-px-value-ie 0 @border-toolbar-ie);
-    .box-inner-shadow(0 @scaled-one-px-value 0 @border-toolbar);
+    box-shadow: inset 0 1px 0 var(--eo-border-subtle);
 
     .status-label {
         color: @text-normal-ie;
@@ -23,4 +23,35 @@
     .font-size-normal();
 
     .status-group {}
+
+    .btn.small.btn-toolbar,
+    .el-edit .btn-toolbar {
+        min-width: var(--eo-target-min);
+        min-height: var(--eo-target-min);
+        border-radius: var(--eo-radius-sm);
+    }
+
+    .cnt-zoom .dropdown-toggle {
+        display: flex;
+        align-items: center;
+        min-height: var(--eo-target-min);
+        padding: 0 var(--eo-space-1);
+        border-radius: var(--eo-radius-sm);
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--eo-hover);
+        }
+    }
+
+    // "Set language for whole document…" stays visible at the bottom of the long language list
+    .lang-menu > li:has(> a[langval="eo-doc-lang"]) {
+        position: sticky;
+        bottom: 0;
+        z-index: 1;
+        margin-top: var(--eo-space-1);
+        padding-top: var(--eo-space-1);
+        border-top: 1px solid var(--eo-border-subtle);
+        background-color: inherit;
+    }
 }
