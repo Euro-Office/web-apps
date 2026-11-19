@@ -44,6 +44,36 @@
     }
 }
 
+// Same 24px buttons as the toolbar, centred under the header icons:
+// the document icon and Save/Print on the left, the avatar on the right
+.tool-menu.left .tool-menu-btns,
+.tool-menu.right .tool-menu-btns {
+    align-items: flex-start;
+
+    .btn-category {
+        width: 24px;
+        min-width: 24px;
+        height: 24px;
+        line-height: 22px;
+        margin-bottom: var(--eo-space-2);
+        padding: 0;
+    }
+
+    #slot-left-menu-more, #slot-right-menu-more {
+        width: 24px;
+    }
+}
+
+.tool-menu.left .tool-menu-btns {
+    padding-left: 14px;
+    padding-right: 0;
+}
+
+.tool-menu.right .tool-menu-btns {
+    padding-left: 0;
+    padding-right: 0;
+}
+
 .right-panel .content-box .settings-panel {
     padding: var(--eo-space-3) var(--eo-space-3) 0;
 
