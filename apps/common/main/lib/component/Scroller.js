@@ -55,6 +55,21 @@ define([
             }
         };
 
+        var canScroll = function(delta, pos, size, max) {
+            return delta > 0 ? pos + size < max - 1 : delta < 0 && pos > 0;
+        };
+
+        // sdkjs cancels plain wheel events on #viewport (apiBase _correctEmbeddedWork), which also
+        // cancels native scrolling, so keep them from bubbling there while this element can scroll
+        var onWheel = function(e) {
+            var el = e.currentTarget;
+            if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) return;
+            if ((el.style.overflowY !== 'hidden' && canScroll(e.deltaY, el.scrollTop, el.clientHeight, el.scrollHeight)) ||
+                (el.style.overflowX !== 'hidden' && canScroll(e.deltaX, Math.abs(el.scrollLeft), el.clientWidth, el.scrollWidth))) {
+                e.stopPropagation();
+            }
+        };
+
         return _.extend(Common.UI.BaseView.extend({
             options: {
                 suppressScrollX         : false,
@@ -78,6 +93,7 @@ define([
                     me.rendered = true;
                     me._onScroll = function(e) { me.options.onChange && me.options.onChange(e); };
                     me.cmpEl.addClass('eo-scroller').on('scroll', me._onScroll).on('mousedown', onMouseDown);
+                    me.cmpEl[0] && me.cmpEl[0].addEventListener('wheel', onWheel, {passive: true});
                     me.update();
                 }
 
@@ -101,6 +117,7 @@ define([
             destroy: function() {
                 this.cmpEl.removeClass('eo-scroller').css({'overflow-x': '', 'overflow-y': ''})
                     .off('scroll', this._onScroll).off('mousedown', onMouseDown);
+                this.cmpEl[0] && this.cmpEl[0].removeEventListener('wheel', onWheel, {passive: true});
                 this.rendered = false;
             },
 
