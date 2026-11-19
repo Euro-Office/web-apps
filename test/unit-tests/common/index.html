@@ -30,9 +30,7 @@
             'jquery'            : '../vendor/jquery/jquery.min',
             'underscore'        : '../vendor/underscore/underscore',
             'backbone'          : '../vendor/backbone/backbone',
-            'bootstrap'         : '../vendor/bootstrap/dist/js/bootstrap',
-            'perfectscrollbar'  : '../vendor/perfect-scrollbar/src/perfect-scrollbar',
-            'jmousewheel'       : '../vendor/perfect-scrollbar/src/jquery.mousewheel'
+            'bootstrap'         : '../vendor/bootstrap/dist/js/bootstrap'
         },
         shim: {
             backbone: {
@@ -53,16 +51,6 @@
             common: {
                 deps: [
                     'backbone'
-                ]
-            },
-            jmousewheel: {
-                deps: [
-                    'jquery'
-                ]
-            },
-            perfectscrollbar: {
-                deps: [
-                    'jmousewheel'
                 ]
             }
         }

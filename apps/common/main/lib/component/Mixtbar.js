@@ -63,8 +63,9 @@ define([
 
         var onWheelTabs = function(e) {
             e.preventDefault();
-            var deltaX = e.deltaX || e.detail || e.deltaY;
-            $boxTabs.scrollLeft($boxTabs.scrollLeft() + (deltaX * 60));
+            var oe = e.originalEvent,
+                delta = Math.abs(oe.deltaX) > Math.abs(oe.deltaY) ? oe.deltaX : oe.deltaY;
+            $boxTabs.scrollLeft($boxTabs.scrollLeft() + delta);
             setScrollButtonsDisabeled();
         };
 
@@ -174,7 +175,7 @@ define([
 
                 $boxTabs.on('dblclick', '> .ribtab', onTabDblclick.bind(this));
                 $boxTabs.on('click', '> .ribtab', me.onTabClick.bind(this));
-                $boxTabs.on('mousewheel', onWheelTabs);
+                $boxTabs.on('wheel', onWheelTabs);
                 me.initTabHighlight();
             },
 
