@@ -537,6 +537,8 @@ define([], function () {
                 ariaLabel: this.strFast + ' ' + this.txtFastTip
             }).on('change', function (field, newValue, eOpts) {
                 newValue && me.chAutosave.setValue(1);
+                // fast co-editing always saves automatically, the autosave option only matters in strict mode
+                $('tr.autosave', me.el).toggleClass('eo-hidden', !!newValue);
             });
             this.rbCoAuthModeFast.$el.parent().on('click', function (){me.rbCoAuthModeFast.setValue(true);});
 
@@ -547,6 +549,9 @@ define([], function () {
                 dataHintDirection: 'left',
                 dataHintOffset: 'small',
                 ariaLabel: this.strStrict + ' ' + this.txtStrictTip
+            });
+            this.rbCoAuthModeStrict.on('change', function (field, newValue) {
+                newValue && $('tr.autosave', me.el).removeClass('eo-hidden');
             });
             this.rbCoAuthModeStrict.$el.parent().on('click', function (){me.rbCoAuthModeStrict.setValue(true);});
             /** coauthoring end **/
@@ -1094,6 +1099,7 @@ define([], function () {
 
             var fast_coauth = Common.Utils.InternalSettings.get("sse-settings-coauthmode");
             this.rbCoAuthModeFast.setValue(fast_coauth);
+            $('tr.autosave', this.el).toggleClass('eo-hidden', !!fast_coauth);
             this.rbCoAuthModeStrict.setValue(!fast_coauth);
             /** coauthoring end **/
             this.chLiveViewer.setValue(Common.Utils.InternalSettings.get("sse-settings-coauthmode"));
