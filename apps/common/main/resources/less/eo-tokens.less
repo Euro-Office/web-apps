@@ -4,12 +4,12 @@
 // Euro-Office design tokens. Frame components (header, tabs, side panels,
 // status bar) style themselves from these, not from literal values.
 
-// Accent tokens derive from the per-editor --eo-app-color (the file type icon
-// colour, set on body by the theme). Declared on body, where the app colour
+// Accent tokens derive from the per-editor --eo-app-color and its variants
+// (the file type icon colour, set on body by the theme). Declared on body, where the app colour
 // is set: on :root they would resolve before it exists.
 body {
     --eo-accent: var(--eo-app-color, #3b6fd4);
-    --eo-accent-soft: color-mix(in srgb, var(--eo-accent) 12%, transparent);
+    --eo-accent-soft: var(--eo-app-color-soft, rgba(59, 111, 212, .12));
     // filled backgrounds behind white text, at least 4.5:1 for every app colour
     --eo-accent-strong: var(--eo-accent);
 }
@@ -48,8 +48,8 @@ body {
 
     .theme-type-dark {
         // lighter app colour, readable on dark surfaces
-        --eo-accent: color-mix(in srgb, var(--eo-app-color, #3b6fd4) 55%, #ffffff);
-        --eo-accent-soft: color-mix(in srgb, var(--eo-app-color, #3b6fd4) 30%, transparent);
+        --eo-accent: var(--eo-app-color-light, #6b9bf2);
+        --eo-accent-soft: var(--eo-app-color-soft-dark, rgba(107, 155, 242, .18));
         --eo-accent-strong: var(--eo-app-color, #3b6fd4);
         --eo-focus-ring-color: #8ab4ff;
 

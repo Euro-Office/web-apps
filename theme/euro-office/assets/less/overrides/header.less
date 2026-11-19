@@ -140,27 +140,38 @@ body[data-editor-type="drawing"] {
   display: none;
 }
 
+// Each editor sets its base colour and variants computed at build time, the
+// desktop app's Chromium (103-109) has no color-mix(). eo-tokens.less maps
+// them onto the accent tokens.
+.eo-app-colors(@c) {
+  --eo-app-color: @c;
+  --eo-app-color-soft: fade(@c, 12%);
+  // lighter, readable on dark surfaces
+  --eo-app-color-light: mix(@c, #ffffff, 55%);
+  --eo-app-color-soft-dark: fade(@c, 30%);
+}
+
 :root body[data-editor-type="document"] {
-  --eo-app-color: @eo-app-color-document;
+  .eo-app-colors(@eo-app-color-document);
 }
 
 // PDF forms run inside the document editor and expose data-editor-type="document".
 :root body.pdf-form {
-  --eo-app-color: @eo-app-color-pdf;
+  .eo-app-colors(@eo-app-color-pdf);
 }
 
 :root body[data-editor-type="spreadsheet"] {
-  --eo-app-color: @eo-app-color-spreadsheet;
+  .eo-app-colors(@eo-app-color-spreadsheet);
 }
 
 :root body[data-editor-type="presentation"] {
-  --eo-app-color: @eo-app-color-presentation;
+  .eo-app-colors(@eo-app-color-presentation);
 }
 
 :root body[data-editor-type="pdf"] {
-  --eo-app-color: @eo-app-color-pdf;
+  .eo-app-colors(@eo-app-color-pdf);
 }
 
 :root body[data-editor-type="drawing"] {
-  --eo-app-color: @eo-app-color-drawing;
+  .eo-app-colors(@eo-app-color-drawing);
 }
