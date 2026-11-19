@@ -1796,13 +1796,13 @@ define([
                         autoWidth:       true,
                         itemTemplate: _.template([
                             '<div class="style" id="<%= id %>">',
-                                '<div style="background-image: url(<%= imageUrl %>); background-size: contain; background-repeat: no-repeat; background-position: center; width: ' + itemWidth + 'px; height: ' + itemHeight + 'px;"></div>',
+                                '<div class="eo-style-center" style="background-image: url(<%= typeof centeredUrl !== \'undefined\' ? centeredUrl : imageUrl %>); width: ' + itemWidth + 'px; height: ' + itemHeight + 'px;"></div>',
+                                '<div class="eo-style-left" style="background-image: url(<%= imageUrl %>);"></div>',
                             '</div>'
                         ].join('')),
                         beforeOpenHandler: function (e) {
                             var cmp = this,
-                                menu = cmp.openButton.menu,
-                                minMenuColumn = 6;
+                                menu = cmp.openButton.menu;
 
                             if (menu.cmpEl) {
                                 var itemEl = $(cmp.cmpEl.find('.dataview.inner .style').get(0)).parent();
@@ -1812,14 +1812,11 @@ define([
                                     (cmp.itemWidth + parseFloat(itemEl.css('padding-left')) + parseFloat(itemEl.css('padding-right')) +
                                         parseFloat(itemEl.css('border-left-width')) + parseFloat(itemEl.css('border-right-width')));
 
-                                var minCount = cmp.menuPicker.store.length >= minMenuColumn ? minMenuColumn : cmp.menuPicker.store.length,
-                                    columnCount = Math.min(cmp.menuPicker.store.length, Math.round($('.dataview', $(cmp.fieldPicker.el)).width() / (itemMargin + _width)));
-
-                                columnCount = columnCount < minCount ? minCount : columnCount;
                                 menu.menuAlignEl = cmp.cmpEl;
 
                                 menu.menuAlign = 'tl-tl';
-                                var menuWidth = columnCount * (itemMargin + _width),
+                                // Euro-Office: the dropdown is a one-column list, like Word
+                                var menuWidth = 240,
                                     buttonOffsetLeft = Common.Utils.getOffset(cmp.openButton.$el).left;
                                 // if (menuWidth>buttonOffsetLeft)
                                 //     menuWidth = Math.max(Math.floor(buttonOffsetLeft/(itemMargin + _width)), 2) * (itemMargin + _width);

@@ -39,6 +39,45 @@ define([
 ], function () {
     'use strict';
 
+    // Copy of a style preview with its content moved to the horizontal centre.
+    // Light pixels (white background, grey separators) don't count as content.
+    function eoCenterImage(img) {
+        var w = img.naturalWidth, h = img.naturalHeight,
+            src = document.createElement('canvas');
+        src.width = w; src.height = h;
+        var ctx = src.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        var data = ctx.getImageData(0, 0, w, h).data, min = w, max = -1;
+        for (var x = 0; x < w; x++) {
+            for (var y = 0; y < h; y++) {
+                var i = (y * w + x) * 4;
+                if (data[i] < 200 || data[i + 1] < 200 || data[i + 2] < 200) {
+                    min = Math.min(min, x); max = x;
+                    break;
+                }
+            }
+        }
+        if (max < 0) return null;
+        var out = document.createElement('canvas'), octx = out.getContext('2d'), cw = max - min + 1;
+        out.width = w; out.height = h;
+        octx.fillStyle = '#ffffff';
+        octx.fillRect(0, 0, w, h);
+        octx.drawImage(src, min, 0, cw, h, Math.round((w - cw) / 2), 0, cw, h);
+        return out.toDataURL();
+    }
+
+    function eoCenterImages(urls, done) {
+        var map = {}, left = urls.length;
+        _.each(urls, function(url) {
+            var img = new Image();
+            img.onload = img.onerror = function() {
+                img.naturalWidth && (map[url] = eoCenterImage(img) || url);
+                --left || done(map);
+            };
+            img.src = url;
+        });
+    }
+
     DE.Controllers.Toolbar = Backbone.Controller.extend(_.extend({
         models: [],
         collections: [],
@@ -3680,9 +3719,22 @@ define([
             var isFirstStyle = function (style) { return /^(Normal|Heading [1-3])$/.test(style.get_Name()); };
             var merged = styles.get_MergedStyles();
             merged = _.filter(merged, isFirstStyle).concat(_.reject(merged, isFirstStyle));
+
+            // The gallery tiles show previews with the text centred. sdkjs draws it at the left,
+            // so centre copies once they are decoded and fill the gallery again.
+            var urls = _.map(merged, function(style) { return style.asc_getImage(); }),
+                centered = self._eoCenteredStyles || {},
+                missing = _.filter(urls, function(url) { return url && !centered[url]; });
+            self._eoLatestStyles = styles;
+            missing.length && eoCenterImages(missing, function(map) {
+                self._eoCenteredStyles = _.pick(_.extend({}, centered, map), urls);
+                self._eoLatestStyles === styles && self._onInitEditorStyles(styles);
+            });
+
             _.each(merged, function(style){
                 arr.push({
                     imageUrl: style.asc_getImage(),
+                    centeredUrl: centered[style.asc_getImage()] || style.asc_getImage(),
                     title   : style.get_Name(),
                     tip     : mainController.translationTable[style.get_Name()] || style.get_Name(),
                     id      : Common.UI.getId()
