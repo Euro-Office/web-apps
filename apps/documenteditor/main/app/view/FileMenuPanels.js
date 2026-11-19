@@ -1158,6 +1158,8 @@ define([], function () {
         },
 
         fillShowChanges: function(fastmode) {
+            // fast co-editing always saves automatically, the autosave option only matters in strict mode
+            $('tr.autosave', this.el).toggleClass('eo-hidden', !!fastmode);
             if(fastmode)
                 this.rbShowChangesLast.$el.parent().hide();
             else
