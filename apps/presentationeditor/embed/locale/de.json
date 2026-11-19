@@ -55,5 +55,7 @@
   "PE.ApplicationView.txtFullScreen": "Vollbild-Modus",
   "PE.ApplicationView.txtPrint": "Drucken",
   "PE.ApplicationView.txtSearch": "Suche",
-  "PE.ApplicationView.txtShare": "Freigeben"
+  "PE.ApplicationView.txtShare": "Freigeben",
+  "PE.ApplicationController.errorFileNotAssembled": "Diese Datei wurde aus einer Sicherungskopie auf dem Server geöffnet und ist nicht im Speicher abgelegt.<br>Verwenden Sie die Option \"Speichern als...\", um sie auf einem Laufwerk zu speichern.",
+  "PE.ApplicationController.errorForcedViewMode": "Diese Datei ist im Ansichtsmodus geöffnet.<br>Die Datei ist für die Bearbeitung gesperrt oder Ihre Zugriffsrechte erlauben keine Bearbeitung."
 }

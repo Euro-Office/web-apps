@@ -477,5 +477,7 @@
   "VE.Views.ViewTab.textZoom": "Zoom",
   "VE.Views.ViewTab.tipFitPage": "Seite anpassen",
   "VE.Views.ViewTab.tipFitWidth": "Breite anpassen",
-  "VE.Views.ViewTab.tipInterfaceTheme": "Thema der Benutzeroberfläche"
+  "VE.Views.ViewTab.tipInterfaceTheme": "Thema der Benutzeroberfläche",
+  "VE.Controllers.Main.errorFileNotAssembled": "Diese Datei wurde aus einer Sicherungskopie auf dem Server geöffnet und ist nicht im Speicher abgelegt.<br>Verwenden Sie die Option \"Speichern als...\", um sie auf einem Laufwerk zu speichern.",
+  "VE.Controllers.Main.errorForcedViewMode": "Diese Datei ist im Ansichtsmodus geöffnet.<br>Die Datei ist für die Bearbeitung gesperrt oder Ihre Zugriffsrechte erlauben keine Bearbeitung."
 }

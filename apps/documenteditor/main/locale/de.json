@@ -4371,5 +4371,13 @@
   "DE.Views.WatermarkSettingsDialog.textTransparency": "Halbtransparent",
   "DE.Views.WatermarkSettingsDialog.textUnderline": "Unterstrichen",
   "DE.Views.WatermarkSettingsDialog.tipFontName": "Schriftartname",
-  "DE.Views.WatermarkSettingsDialog.tipFontSize": "Schriftgrad"
+  "DE.Views.WatermarkSettingsDialog.tipFontSize": "Schriftgrad",
+  "Common.Utils.AssistantInsert.txtInsertFailed": "Der Editor ist ausgelastet, daher konnte das Ergebnis des Assistenten nicht eingefügt werden. Versuchen Sie erneut, es einzufügen.",
+  "Common.Views.SmartPickerMenu.txtAnyLink": "Beliebiger Link",
+  "Common.Views.SmartPickerMenu.txtNoResults": "Kein Vorschlag gefunden",
+  "Common.Views.SmartPickerMenu.txtOpenFailed": "Smart Picker konnte nicht geöffnet werden.",
+  "DE.Views.Statusbar.txtSelectionOf": "{0} von {1}",
+  "DE.Views.Toolbar.tipSmartPicker": "Smart Picker",
+  "DE.Views.ViewTab.textPageless": "Ohne Seiten",
+  "DE.Views.ViewTab.tipPageless": "Dokument als ein durchgehendes Blatt anzeigen"
 }

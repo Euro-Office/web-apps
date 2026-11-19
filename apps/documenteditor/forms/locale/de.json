@@ -208,5 +208,7 @@
   "DE.Views.ApplicationView.txtPrint": "Drucken",
   "DE.Views.ApplicationView.txtSearch": "Suche",
   "DE.Views.ApplicationView.txtShare": "Freigeben",
-  "DE.Views.ApplicationView.txtTheme": "Thema der Benutzeroberfläche"
+  "DE.Views.ApplicationView.txtTheme": "Thema der Benutzeroberfläche",
+  "DE.Controllers.ApplicationController.errorFileNotAssembled": "Diese Datei wurde aus einer Sicherungskopie auf dem Server geöffnet und ist nicht im Speicher abgelegt.<br>Verwenden Sie die Option \"Speichern als...\", um sie auf einem Laufwerk zu speichern.",
+  "DE.Controllers.ApplicationController.errorForcedViewMode": "Diese Datei ist im Ansichtsmodus geöffnet.<br>Die Datei ist für die Bearbeitung gesperrt oder Ihre Zugriffsrechte erlauben keine Bearbeitung."
 }
