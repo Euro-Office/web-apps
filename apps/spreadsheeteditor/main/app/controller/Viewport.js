@@ -169,7 +169,7 @@ define([
 
             me.header.btnSearch.on('toggle', me.onSearchToggle.bind(this));
 
-            $('#toolbar, #app-title').on('mousewheel', function (e) {
+            $('#toolbar, #app-title').on('wheel', function (e) {
                 e.preventDefault();
             });
         },

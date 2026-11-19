@@ -65,7 +65,7 @@
             </tbody>
         </table>
     </div>
-    <div id="search-results" class="ps-container oo">
+    <div id="search-results">
     </div>
     </div>
 </div>

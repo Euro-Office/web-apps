@@ -34,8 +34,6 @@ require.config({
         underscore      : '../vendor/underscore/underscore',
         backbone        : '../vendor/backbone/backbone',
         text            : '../vendor/requirejs-text/text',
-        perfectscrollbar: 'common/main/lib/mods/perfect-scrollbar',
-        jmousewheel     : '../vendor/perfect-scrollbar/src/jquery.mousewheel',
         xregexp         : '../vendor/xregexp/xregexp-all-min',
         socketio        : '../vendor/socketio/socket.io.min',
         allfonts        : '../../sdkjs/common/AllFonts',
@@ -59,11 +57,6 @@ require.config({
                 'jquery'
             ],
             exports: 'Backbone'
-        },
-        perfectscrollbar: {
-            deps: [
-                'jmousewheel'
-            ]
         },
         notification: {
             deps: [

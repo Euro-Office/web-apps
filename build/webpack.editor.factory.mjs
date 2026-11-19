@@ -110,8 +110,6 @@ export function editorConfig(editorName, opts = {}) {
             alias: {
                 underscore:       path.join(VENDOR_ROOT, 'underscore/underscore-min.js'),
                 backbone:         path.join(VENDOR_ROOT, 'backbone/backbone-min.js'),
-                perfectscrollbar: path.join(APPS_ROOT,   'common/main/lib/mods/perfect-scrollbar.js'),
-                jmousewheel:      path.join(VENDOR_ROOT, 'perfect-scrollbar/src/jquery.mousewheel.js'),
                 core:             path.join(APPS_ROOT,   'common/main/lib/core/application.js'),
                 notification:     path.join(APPS_ROOT,   'common/main/lib/core/NotificationCenter.js'),
                 keymaster:        path.join(APPS_ROOT,   'common/main/lib/core/keymaster.js'),

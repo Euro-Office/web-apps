@@ -62,7 +62,8 @@ define([
             // Workaround Safari's scrolling problem
             if (Common.Utils.isSafari) {
                 $('body').addClass('safari');
-                $('body').mousewheel(function(e){
+                $('body').on('wheel', function(e){
+                    if ($(e.target).closest('.eo-scroller').length) return;
                     e.preventDefault();
                     e.stopPropagation();
                 });
