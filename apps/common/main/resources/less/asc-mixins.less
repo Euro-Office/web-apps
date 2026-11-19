@@ -2,7 +2,11 @@
     -moz-user-select: none;
 }
 
-:focus {
+// Mouse focus and non-interactive targets (canvas, editor textarea, panels,
+// dialogs) never get the UA outline. Keyboard focus rings are opted in per
+// control in common.less, because text fields always match :focus-visible.
+:focus:not(:focus-visible),
+:focus-visible {
     outline: none;
 }
 
