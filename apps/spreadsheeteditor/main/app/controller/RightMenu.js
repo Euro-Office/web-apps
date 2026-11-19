@@ -277,7 +277,6 @@ define([
                 var pnl = this._settings[i];
                 if (pnl===undefined || pnl.btn===undefined || pnl.panel===undefined) continue;
 
-                pnl.btn.setVisible(!pnl.hidden);
                 if ( pnl.hidden ) {
                     if (!pnl.btn.isDisabled()) {
                         pnl.btn.setDisabled(true);
@@ -446,7 +445,6 @@ define([
             var disabled = (!valid || valid.length<1) && (!requested || requested.length<1),
                 type = Common.Utils.documentSettingsType.Signature;
             this._settings[type].hidden = disabled ? 1 : 0;
-            this._settings[type].btn.setVisible(!disabled);
             this._settings[type].btn.setDisabled(disabled);
             this.rightmenu.setDisabledMoreMenuItem(this._settings[type].btn, disabled);
             this._settings[type].panel.setLocked(this._settings[type].locked);

@@ -290,7 +290,6 @@ define([
                 var pnl = this._settings[i];
                 if (pnl===undefined || pnl.btn===undefined || pnl.panel===undefined) continue;
 
-                pnl.btn.setVisible(!pnl.hidden);
                 if ( pnl.hidden ) {
                     if (!pnl.btn.isDisabled()) {
                         pnl.btn.setDisabled(true);
@@ -477,7 +476,6 @@ define([
         onStartMailMerge: function() {
             var type = Common.Utils.documentSettingsType.MailMerge;
             this._settings[type].hidden = 0;
-            this._settings[type].btn.setVisible(true);
             this._settings[type].btn.setDisabled(false);
             this.rightmenu.setDisabledMoreMenuItem(this._settings[type].btn, false);
             this.rightmenu.SetActivePane(type, true);
@@ -489,7 +487,6 @@ define([
         onError: function(id, level, errData) {
             if (id==Asc.c_oAscError.ID.MailMergeLoadFile) {
                 this._settings[Common.Utils.documentSettingsType.MailMerge].hidden = 1;
-                this._settings[Common.Utils.documentSettingsType.MailMerge].btn.setVisible(false);
                 this._settings[Common.Utils.documentSettingsType.MailMerge].btn.setDisabled(true);
                 this.rightmenu.setDisabledMoreMenuItem(this._settings[Common.Utils.documentSettingsType.MailMerge].btn, true);
                 var selectedElements = this.api.getSelectedElements();
@@ -504,7 +501,6 @@ define([
             var disabled = (!valid || valid.length<1) && (!requested || requested.length<1),
                 type = Common.Utils.documentSettingsType.Signature;
             this._settings[type].hidden = disabled ? 1 : 0;
-            this._settings[type].btn.setVisible(!disabled);
             this._settings[type].btn.setDisabled(disabled);
             this.rightmenu.setDisabledMoreMenuItem(this._settings[type].btn, disabled);
             this._settings[type].panel.setLocked(this._settings[type].locked);
