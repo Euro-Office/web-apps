@@ -108,7 +108,6 @@ define([
         },
 
         onRightMenuClick: function(menu, type, minimized, event) {
-            minimized && event && (this._autoOpenDone = true);
             if (!minimized && this.editMode) {
                 if (event) { // user click event
                     if (!this._settings[Common.Utils.documentSettingsType.Form].hidden) {
@@ -154,13 +153,11 @@ define([
             return found;
         },
 
-        // Open the panel the first time an object is selected, unless the user closed it in this session
+        // Whether a different object got selected, so the open panel can switch to its settings
         followSelectedObject: function(objType) {
             var changed = objType !== this._lastObjectType;
             this._lastObjectType = objType;
-            var autoOpen = objType>=0 && this.rightmenu.minimizedMode && !this._autoOpenDone && this.rightmenu.$el.is(':visible');
-            autoOpen && (this._autoOpenDone = true);
-            return {changed: changed && objType>=0, open: autoOpen};
+            return {changed: changed && objType>=0};
         },
 
         onApiFocusObject: function(SelectedObjects) {
@@ -318,7 +315,6 @@ define([
                 this._settings[Common.Utils.documentSettingsType.Signature].panel.setProtected(isProtected);
 
             var follow = this.followSelectedObject(this.getSelectedObjectType([Common.Utils.documentSettingsType.Table, Common.Utils.documentSettingsType.TextArt, Common.Utils.documentSettingsType.Shape, Common.Utils.documentSettingsType.Image, Common.Utils.documentSettingsType.Chart]));
-            follow.open && (open = true);
 
             if (!this.rightmenu.minimizedMode || open) {
                 var active;

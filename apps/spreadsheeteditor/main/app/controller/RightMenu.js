@@ -112,7 +112,6 @@ define([
         },
 
         onRightMenuClick: function(menu, type, minimized, event) {
-            minimized && event && (this._autoOpenDone = true);
             if (!minimized && this.editMode) {
                 if (event) { // user click event
                     if (type == Common.Utils.documentSettingsType.Pivot)
@@ -148,13 +147,11 @@ define([
             return found;
         },
 
-        // Open the panel the first time an object is selected, unless the user closed it in this session
+        // Whether a different object got selected, so the open panel can switch to its settings
         followSelectedObject: function(objType) {
             var changed = objType !== this._lastObjectType;
             this._lastObjectType = objType;
-            var autoOpen = objType>=0 && this.rightmenu.minimizedMode && !this._autoOpenDone && this.rightmenu.$el.is(':visible');
-            autoOpen && (this._autoOpenDone = true);
-            return {changed: changed && objType>=0, open: autoOpen};
+            return {changed: changed && objType>=0};
         },
 
         onSelectionChanged: function(info) {
@@ -300,7 +297,6 @@ define([
             }
 
             var follow = this.followSelectedObject(this.getSelectedObjectType([Common.Utils.documentSettingsType.TextArt, Common.Utils.documentSettingsType.Shape, Common.Utils.documentSettingsType.Image, Common.Utils.documentSettingsType.Chart, Common.Utils.documentSettingsType.Pivot, Common.Utils.documentSettingsType.Slicer]));
-            follow.open && (this._openRightMenu = true);
 
             if (!this.rightmenu.minimizedMode || this._openRightMenu) {
                 var active;
