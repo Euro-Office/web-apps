@@ -1377,8 +1377,22 @@ section .field-styles {
         background-color: transparent;
         box-shadow: none;
 
+        // Grows from the centre to the label width when the tab becomes active
         &:after {
-            display: none;
+            content: '';
+            display: block;
+            position: absolute;
+            left: 50%;
+            bottom: 2px;
+            width: 0;
+            height: 3px;
+            margin: 0;
+            border: 0 none;
+            border-radius: 3px;
+            background-color: var(--eo-accent);
+            opacity: 0;
+            transform: translateX(-50%);
+            transition: width 300ms ease-in-out, opacity 300ms ease-in-out;
         }
 
         > a {
@@ -1397,23 +1411,60 @@ section .field-styles {
             box-shadow: none;
 
             &:after {
-                content: '';
-                display: block;
-                position: absolute;
-                left: var(--eo-space-3);
-                right: var(--eo-space-3);
-                bottom: 2px;
-                width: auto;
-                margin: 0;
-                border: 0 none;
-                height: 3px;
-                border-radius: 3px;
-                background-color: var(--eo-accent);
+                width: calc(100% - 2 * var(--eo-space-3));
+                opacity: 1;
             }
 
             > a {
                 color: var(--eo-accent);
             }
+        }
+    }
+
+    // Sliding hover highlight (Mixtbar.js), like the Nextcloud sidebar tabs:
+    // it follows the pointer from tab to tab and turns transparent over the
+    // active tab, which keeps its own background
+    &.eo-has-highlight {
+        position: relative;
+
+        > ul {
+            position: relative;
+            z-index: 1;
+        }
+
+        li:not(.active):hover {
+            background-color: transparent;
+        }
+    }
+
+    .eo-tab-highlight {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0;
+        border-radius: var(--eo-radius-md);
+        background-color: var(--eo-hover);
+        transition: opacity 100ms ease-in-out, background-color 100ms ease-in-out;
+
+        &.animated {
+            transition: transform 100ms ease-in-out, width 100ms ease-in-out,
+                opacity 100ms ease-in-out, background-color 100ms ease-in-out;
+        }
+
+        &.visible {
+            opacity: 1;
+        }
+
+        &.over-active {
+            background-color: transparent;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        li:after, .eo-tab-highlight, .eo-tab-highlight.animated {
+            transition: none;
         }
     }
 }

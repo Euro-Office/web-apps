@@ -175,6 +175,30 @@ define([
                 $boxTabs.on('dblclick', '> .ribtab', onTabDblclick.bind(this));
                 $boxTabs.on('click', '> .ribtab', me.onTabClick.bind(this));
                 $boxTabs.on('mousewheel', onWheelTabs);
+                me.initTabHighlight();
+            },
+
+            initTabHighlight: function() {
+                var $section = this.$('.tabs').addClass('eo-has-highlight'),
+                    $hl = $('<div class="eo-tab-highlight" aria-hidden="true"></div>').appendTo($section);
+
+                $boxTabs.on('mouseenter focusin click', '> .ribtab', function() {
+                    var box = $section[0].getBoundingClientRect(),
+                        r = this.getBoundingClientRect(),
+                        shown = $hl.hasClass('visible');
+                    // snap into place when (re)appearing, slide when moving between tabs
+                    $hl.toggleClass('animated', shown)
+                        .toggleClass('over-active', $(this).hasClass('active'))
+                        .css({transform: 'translate(' + (r.left - box.left) + 'px,' + (r.top - box.top) + 'px)', width: r.width, height: r.height});
+                    if (!shown) {
+                        $hl[0].offsetWidth;
+                        $hl.addClass('visible animated');
+                    }
+                });
+                $boxTabs.on('mouseleave', function() { $hl.removeClass('visible'); });
+                $boxTabs.on('focusout', function(e) {
+                    $boxTabs[0].contains(e.relatedTarget) || $hl.removeClass('visible');
+                });
             },
 
             isTabActive: function(tag) {
