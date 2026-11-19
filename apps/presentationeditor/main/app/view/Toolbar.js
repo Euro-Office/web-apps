@@ -1468,6 +1468,7 @@ define([
                 me.isCompactView = mode.compactview;
                 if ( mode.isEdit ) {
                     me.$el.html(me.rendererComponents(me.$layout));
+                    me.$layout.addClass(mode.compactHeader ? 'eo-static-home-only' : 'eo-clipboard-home-only');
 
                 } else {
                     me.$layout.find('.canedit').hide();
