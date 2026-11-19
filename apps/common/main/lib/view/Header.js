@@ -198,13 +198,15 @@ define([
         function applyUsers(count, originalCount) {
             if (!$btnUsers) return;
             var has_edit_users = appConfig && (count > 1 && (appConfig.isEdit || appConfig.isRestrictedEdit) || count > 0 && appConfig.canLiveView); // has other user(s) who edit document
-            if ( has_edit_users ) {
-                $panelUsers['show']();
-                $btnUsers.find('.caption').html(originalCount);
-            } else {
-                $panelUsers['hide']();
-            }
+            showUsersPanel(has_edit_users);
+            has_edit_users && $btnUsers.find('.caption').html(originalCount);
             updateDocNamePosition();
+        }
+
+        // With co-editors the users button lists everyone, so the own avatar next to it is hidden
+        function showUsersPanel(show) {
+            $panelUsers[show ? 'show' : 'hide']();
+            $panelUsers.closest('.hedset').parent().toggleClass('eo-cousers-shown', !!show);
         }
 
         function onLostEditRights() {
@@ -309,7 +311,7 @@ define([
         }
 
         function onResize() {
-            if (appConfig && appConfig.twoLevelHeader && !appConfig.compactHeader)
+            if (appConfig && appConfig.twoLevelHeader)
                 updateDocNamePosition();
         }
 
@@ -433,7 +435,7 @@ define([
                     html: true
                 });
                 $btnUsers.on('click', onUsersClick.bind(me));
-                $panelUsers[(appConfig && (editingUsers > 1 && (appConfig.isEdit || appConfig.isRestrictedEdit) || editingUsers > 0 && appConfig.canLiveView)) ? 'show' : 'hide']();
+                showUsersPanel(appConfig && (editingUsers > 1 && (appConfig.isEdit || appConfig.isRestrictedEdit) || editingUsers > 0 && appConfig.canLiveView));
                 updateDocNamePosition();
             }
 

@@ -741,3 +741,26 @@
         background-image: linear-gradient(rgba(0, 0, 0, .12), rgba(0, 0, 0, .12));
     }
 }
+
+// Compact header: the file name keeps room for about 20 characters, the tabs
+// scroll first and the right-hand buttons shrink before it gets cut.
+#rib-doc-name {
+    min-width: 140px;
+}
+
+.eo-cousers-shown .btn-current-user {
+    display: none;
+}
+
+@media (max-width: 1280px) {
+    #slot-btn-edit-mode .caption {
+        display: none;
+    }
+}
+
+@media (max-width: 1024px) {
+    #slot-btn-back,
+    #slot-btn-favorite {
+        display: none;
+    }
+}
