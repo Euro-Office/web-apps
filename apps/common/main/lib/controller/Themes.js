@@ -184,12 +184,10 @@ define([
         var get_current_theme_colors = function (c) {
             const colors = c || themeColorTokens;
             var out_object = {};
-            if ( !(Common.Utils.isIE10 || Common.Utils.isIE11) ) {
-                var style = getComputedStyle(document.body);
-                colors.forEach(function (item, index) {
-                    out_object[item] = style.getPropertyValue('--' + item).trim()
-                })
-            }
+            var style = getComputedStyle(document.body);
+            colors.forEach(function (item, index) {
+                out_object[item] = style.getPropertyValue('--' + item).trim()
+            })
 
             return out_object;
         }
@@ -418,25 +416,23 @@ define([
                 colors_obj.name = theme_id;
                 this.api.asc_setSkin(colors_obj);
 
-                if ( !(Common.Utils.isIE10 || Common.Utils.isIE11) ) {
-                    const theme_str = Common.localStorage.getItem("ui-theme");
-                    let theme_id;
-                    if ( theme_str ) {
-                        const reid = /id":\s?"([\w-]+)/.exec(theme_str);
-                        if ( reid[1] ) {
-                            theme_id = reid[1];
-                        }
+                const theme_str = Common.localStorage.getItem("ui-theme");
+                let theme_id;
+                if ( theme_str ) {
+                    const reid = /id":\s?"([\w-]+)/.exec(theme_str);
+                    if ( reid[1] ) {
+                        theme_id = reid[1];
                     }
+                }
 
-                    if ( theme_id !== id ) {
+                if ( theme_id !== id ) {
 
-                    // if ( themes_map[id].source != 'static' ) { // TODO: check writing styles
-                        const theme_obj = Object.assign({id:id, colors: colors_obj},
-                                                            themes_map[id]);
-                        delete theme_obj.source;
+                // if ( themes_map[id].source != 'static' ) { // TODO: check writing styles
+                    const theme_obj = Object.assign({id:id, colors: colors_obj},
+                                                        themes_map[id]);
+                    delete theme_obj.source;
 
-                        Common.localStorage.setItem('ui-theme', JSON.stringify(theme_obj));
-                    }
+                    Common.localStorage.setItem('ui-theme', JSON.stringify(theme_obj));
                 }
             }
             theme_props = {};
@@ -513,13 +509,13 @@ define([
                     }
                 }
 
-                if ( !(Common.Utils.isIE10 || Common.Utils.isIE11) && !Common.Controllers.Desktop.isActive() )
+                if ( !Common.Controllers.Desktop.isActive() )
                     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', on_system_theme_dark.bind(this));
                 Common.NotificationCenter.on('document:ready', on_document_ready.bind(this));
             },
 
             available: function () {
-                return !Common.Utils.isIE && !this.locked;
+                return !this.locked;
             },
 
             setAvailable: function (value) {
@@ -631,7 +627,7 @@ define([
                         };
                     }
                 } else if (prop==='tab-style') {
-                    return (Common.Utils.isIE || Common.Controllers.Desktop && Common.Controllers.Desktop.isWinXp()) ? 'fill' : window.getComputedStyle(document.body).getPropertyValue("--toolbar-preferred-tab-style") || 'line';
+                    return (Common.Controllers.Desktop && Common.Controllers.Desktop.isWinXp()) ? 'fill' : window.getComputedStyle(document.body).getPropertyValue("--toolbar-preferred-tab-style") || 'line';
                 } else if (prop==='small-btn-size') {
                     if (!theme_props[prop]) {
                         theme_props[prop] = window.getComputedStyle(document.body).getPropertyValue("--x-small-btn-size") || '20px';

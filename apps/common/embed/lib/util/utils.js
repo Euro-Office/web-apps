@@ -36,9 +36,7 @@
                 var m;
                 return (is && (m = regex.exec(userAgent))) ? parseFloat(m[1]) : 0;
             },
-            isOpera = check(/opera/),
-            isIE = !isOpera && (check(/msie/) || check(/trident/) || check(/edge/)),
-            isChrome = !isIE && check(/\bchrome\b/),
+            isChrome = check(/\bchrome\b/),
             chromeVersion = version(true, /\bchrome\/(\d+\.\d+)/),
             isMac = check(/macintosh|mac os x/),
             zoom = 1,
@@ -117,10 +115,8 @@
                     return pos;
                 return {left: pos.left * zoom, top: pos.top * zoom};
             };
-        if (!isIE) {
-            checkSize();
-            $(window).on('resize', checkSize);
-        }
+        checkSize();
+        $(window).on('resize', checkSize);
         return {
             openLink: function(url) {
                 if (url) {
@@ -190,8 +186,7 @@
             getOffset: getOffset,
             setOffset: setOffset,
             getPosition: getPosition,
-            isMac : isMac,
-            isIE: isIE
+            isMac : isMac
         };
     })();
 }();

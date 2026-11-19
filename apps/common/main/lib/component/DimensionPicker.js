@@ -75,10 +75,10 @@ define([
                 me.options.height = me.options.itemSize* this.options.minRows;
                 var rootEl = this.cmpEl;
 
-                me.borderColor = Common.Utils.isIE ?'#000000' :Common.UI.Themes.currentThemeColor('--canvas-high-contrast');
-                me.fillColor = Common.Utils.isIE ?'#fff' :Common.UI.Themes.currentThemeColor('--background-normal');
-                me.borderColorHighlighted = Common.Utils.isIE ?'#bababa' :Common.UI.Themes.currentThemeColor('--border-preview-hover');
-                me.fillColorHighlighted = Common.Utils.isIE ?'#446995' :Common.UI.Themes.currentThemeColor('--background-accent-button');
+                me.borderColor = Common.UI.Themes.currentThemeColor('--canvas-high-contrast');
+                me.fillColor = Common.UI.Themes.currentThemeColor('--background-normal');
+                me.borderColorHighlighted = Common.UI.Themes.currentThemeColor('--border-preview-hover');
+                me.fillColorHighlighted = Common.UI.Themes.currentThemeColor('--background-accent-button');
 
                 me.itemSize    = me.options.itemSize;
                 me.minRows     = me.options.minRows;
@@ -138,7 +138,7 @@ define([
                     me.areaStatus.html(!Common.UI.isRTL() ? this.curColumns + ' x ' + this.curRows : this.curRows + ' x ' + this.curColumns);
                     me.resizeCanvas();
                     $(window).resize(_.bind(me.resizeCanvas,me));
-                    (!Common.Utils.isIE) && Common.NotificationCenter.on('uitheme:changed', me.changeColors.bind(me));
+                    Common.NotificationCenter.on('uitheme:changed', me.changeColors.bind(me));
 
 
                     if (me.direction === 'right') {

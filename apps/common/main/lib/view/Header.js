@@ -1154,16 +1154,14 @@ define([
                     isDark = true;
                 tabStyle = tabStyle || Common.Utils.InternalSettings.get("settings-tab-style") || 'fill';
                 tabBackground = tabBackground || Common.Utils.InternalSettings.get("settings-tab-background") || 'header';
-                if (!Common.Utils.isIE) {
-                    var header_color = Common.UI.Themes.currentThemeColor(isDocEditor && config.isPDFForm || isPDFEditor ? '--toolbar-header-pdf' :
-                                                                            isDocEditor ? '--toolbar-header-document' : isSSEEditor ? '--toolbar-header-spreadsheet' :
-                                                                            isVisioEditor ? '--toolbar-header-visio' : '--toolbar-header-presentation'),
-                        toolbar_color = Common.UI.Themes.currentThemeColor('--background-toolbar'),
-                        logo_type = (!config.twoLevelHeader || config.compactHeader) && (tabBackground==='toolbar') ? toolbar_color : header_color;
-                    isDark = (new Common.Utils.RGBColor(logo_type)).isDark();
-                    image = !branding.logo ? null : isDark ? (branding.logo.imageDark || branding.logo.image || branding.logo.imageLight) :
-                                                             (branding.logo.imageLight || branding.logo.image || branding.logo.imageDark) ;
-                }
+                var header_color = Common.UI.Themes.currentThemeColor(isDocEditor && config.isPDFForm || isPDFEditor ? '--toolbar-header-pdf' :
+                                                                        isDocEditor ? '--toolbar-header-document' : isSSEEditor ? '--toolbar-header-spreadsheet' :
+                                                                        isVisioEditor ? '--toolbar-header-visio' : '--toolbar-header-presentation'),
+                    toolbar_color = Common.UI.Themes.currentThemeColor('--background-toolbar'),
+                    logo_type = (!config.twoLevelHeader || config.compactHeader) && (tabBackground==='toolbar') ? toolbar_color : header_color;
+                isDark = (new Common.Utils.RGBColor(logo_type)).isDark();
+                image = !branding.logo ? null : isDark ? (branding.logo.imageDark || branding.logo.image || branding.logo.imageLight) :
+                                                         (branding.logo.imageLight || branding.logo.image || branding.logo.imageDark) ;
                 return {image: image, isLight: !isDark};
             },
 

@@ -471,7 +471,7 @@ Common.UI.HintManager = new(function() {
     };
 
     var _init = function(api) {
-        if (Common.Utils.isIE || Common.UI.isMac && Common.Utils.isGecko) // turn off hints on IE and FireFox (shortcut F6 selects link in address bar)
+        if (Common.UI.isMac && Common.Utils.isGecko) // turn off hints on FireFox (shortcut F6 selects link in address bar)
             return;
         _api = api;
 
@@ -679,7 +679,7 @@ Common.UI.HintManager = new(function() {
     };
 
     var _clearHints = function (isComplete, leaveLockedKeyEvents) {
-        if (Common.Utils.isIE || Common.UI.isMac && Common.Utils.isGecko)
+        if (Common.UI.isMac && Common.Utils.isGecko)
             return;
         _hintVisible && _hideHints();
         if (_currentHints.length > 0) {

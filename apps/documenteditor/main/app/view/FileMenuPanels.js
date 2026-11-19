@@ -483,7 +483,7 @@ define([], function () {
                 dataHintDirection: 'left',
                 dataHintOffset: 'small'
             });
-            (Common.Utils.isIE || Common.Utils.isMac && Common.Utils.isGecko) && this.chUseAltKey.$el.parent().parent().hide();
+            (Common.Utils.isMac && Common.Utils.isGecko) && this.chUseAltKey.$el.parent().parent().hide();
 
             this.chTabBack = new Common.UI.CheckBox({
                 el: $markup.findById('#fms-chb-tab-background'),
@@ -965,9 +965,8 @@ define([], function () {
             if ( !Common.UI.Themes.available() ) {
                 $('tr.themes, tr.themes + tr.divider', this.el).hide();
             }
-            $('tr.tab-background', this.el)[!Common.Utils.isIE && Common.UI.FeaturesManager.canChange('tabBackground', true) ? 'show' : 'hide']();
-            $('tr.tab-style', this.el)[!Common.Utils.isIE && !Common.Controllers.Desktop.isWinXp() && Common.UI.FeaturesManager.canChange('tabStyle', true) ? 'show' : 'hide']();
-            $('tr.appearance', this.el)[!Common.Utils.isIE ? 'show' : 'hide']();
+            $('tr.tab-background', this.el)[Common.UI.FeaturesManager.canChange('tabBackground', true) ? 'show' : 'hide']();
+            $('tr.tab-style', this.el)[!Common.Controllers.Desktop.isWinXp() && Common.UI.FeaturesManager.canChange('tabStyle', true) ? 'show' : 'hide']();
             if (mode.compactHeader) {
                 $('tr.quick-access', this.el).hide();
             }
@@ -1129,11 +1128,11 @@ define([], function () {
             Common.localStorage.setItem("de-settings-smart-selection", this.chSmartSelection.isChecked() ? 1 : 0);
             //Common.localStorage.setBool("de-settings-quick-print-button", this.chQuickPrint.isChecked());
 
-            if (!Common.Utils.isIE && Common.UI.FeaturesManager.canChange('tabBackground', true)) {
+            if (Common.UI.FeaturesManager.canChange('tabBackground', true)) {
                 Common.UI.TabStyler.setBackground(this.chTabBack.isChecked() ? 'toolbar' : 'header');
             }
 
-            if (!Common.Utils.isIE && Common.UI.FeaturesManager.canChange('tabStyle', true) && this._isTabStyleChanged) {
+            if (Common.UI.FeaturesManager.canChange('tabStyle', true) && this._isTabStyleChanged) {
                 Common.UI.TabStyler.setStyle(this.cmbTabStyle.getValue());
                 Common.localStorage.setBool("settings-tab-style-newtheme", true); // use tab style from lc for all themes
                 this._isTabStyleChanged = false;
@@ -2399,10 +2398,6 @@ define([], function () {
                 {"src": "HelpfulHints/SupportedFormats.htm", "name": "Supported formats of electronic documents" },
                 {"src": "HelpfulHints/KeyboardShortcuts.htm", "name": "Keyboard shortcuts"}
             ];
-
-            if (Common.Utils.isIE) {
-                window.onhelp = function () { return false; }
-            }
         },
 
         render: function() {

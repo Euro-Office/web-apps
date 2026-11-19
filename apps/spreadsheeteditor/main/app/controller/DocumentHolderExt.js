@@ -2720,7 +2720,7 @@ define([], function () {
                 documentHolder.pmiAdvancedNumFormat.options.numformatinfo = documentHolder.pmiNumFormat.menu.options.numformatinfo = xfs.asc_getNumFormatInfo();
                 documentHolder.pmiAdvancedNumFormat.options.numformat = xfs.asc_getNumFormat();
 
-                documentHolder.pmiGetRangeList.setVisible(!Common.Utils.isIE && iscellmenu && !iscelledit && !ismultiselect && !internaleditor && this.permissions.canMakeActionLink && !!navigator.clipboard);
+                documentHolder.pmiGetRangeList.setVisible(iscellmenu && !iscelledit && !ismultiselect && !internaleditor && this.permissions.canMakeActionLink && !!navigator.clipboard);
 
                 _.each(documentHolder.ssMenu.items, function(item) {
                     item.setDisabled(isCellLocked || isUserProtected);
@@ -2841,7 +2841,7 @@ define([], function () {
             commentsController && commentsController.blockPopover(true);
             documentHolder.menuViewAddComment.setDisabled(isCellLocked || isTableLocked || this._state.wsProps['Objects']);
 
-            var canGetLink = !Common.Utils.isIE && iscellmenu && !iscelledit && !ismultiselect && this.permissions.canMakeActionLink && !!navigator.clipboard;
+            var canGetLink = iscellmenu && !iscelledit && !ismultiselect && this.permissions.canMakeActionLink && !!navigator.clipboard;
             documentHolder.pmiViewGetRangeList.setVisible(canGetLink);
             documentHolder.pmiViewGetRangeList.setDisabled(false);
             documentHolder.menuViewCommentSeparator.setVisible(canGetLink);

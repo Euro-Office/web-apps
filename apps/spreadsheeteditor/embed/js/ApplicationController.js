@@ -241,7 +241,7 @@ SSE.ApplicationController = new(function(){
 
     function updateRtlSheet() {
         var $container = $('#worksheet-container');
-        isRtlSheet = api && !common.utils.isIE ? !!api.asc_getSheetViewSettings().asc_getRightToLeft() : false;
+        isRtlSheet = api ? !!api.asc_getSheetViewSettings().asc_getRightToLeft() : false;
         $container.toggleClass('rtl-sheet', isRtlSheet);
         $container.attr({dir: isRtlSheet ? 'rtl' : 'ltr'});
     }
