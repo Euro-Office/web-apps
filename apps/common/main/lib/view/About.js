@@ -45,6 +45,12 @@ define([
         return /^[^\s@<>"'?,;]+@[^\s@<>"'?,;]+$/.test(value) ? value : '';
     };
 
+    // the logo for the current theme, or the other variant when that one is not set
+    var customerLogo = function (customer) {
+        var isDark = Common.UI.Themes.isDarkTheme();
+        return customerValue(isDark ? customer.logoDark : customer.logo) || customerValue(isDark ? customer.logo : customer.logoDark);
+    };
+
     Common.Views.About = Common.UI.BaseView.extend(_.extend({
         menu: undefined,
         rendered: false,
@@ -221,7 +227,6 @@ define([
                 this.licData = data || true;
             } else {
                 var customer = data && typeof data == 'object' && data.customer && typeof(data.customer)=='object' ? data.customer : null,
-                    isDark = Common.UI.Themes.isDarkTheme(),
                     values = customer ? {
                         name: customerValue(customer.name),
                         address: customerValue(customer.address),
@@ -230,7 +235,7 @@ define([
                         phone: customerValue(customer.phone),
                         www: customerValue(customer.www),
                         info: customerValue(customer.info),
-                        logo: customerValue(isDark ? customer.logoDark : customer.logo) || customerValue(isDark ? customer.logo : customer.logoDark)
+                        logo: customerLogo(customer)
                     } : {};
 
                 // the provider layout replaces the publisher block, so it is used only when it has something to show
@@ -279,7 +284,7 @@ define([
 
                     value = values.logo;
                     value ?
-                        this.divCompanyLogo.html('<img src="'+value+'" style="max-width:216px; max-height: 35px;" />') :
+                        this.divCompanyLogo.empty().append($('<img style="max-width:216px; max-height: 35px;" />').attr('src', value)) :
                         this.divCompanyLogo.parents('tr').addClass('hidden');
                     value && Common.NotificationCenter.on('uitheme:changed', this.changeLogo.bind(this));
                 } else {
@@ -292,9 +297,10 @@ define([
         changeLogo: function () {
             if (!this.licData) return;
 
-            var customer = this.licData.customer;
-            if ( customer.logo && customer.logoDark && customer.logo !== customer.logoDark) {
-                this.divCompanyLogo.find('img').attr('src', Common.UI.Themes.isDarkTheme() ? (customer.logoDark || customer.logo) : (customer.logo || customer.logoDark));
+            var img = this.divCompanyLogo.find('img'),
+                value = customerLogo(this.licData.customer);
+            if (value && value !== img.attr('src')) {
+                img.attr('src', value);
             }
         },
 
