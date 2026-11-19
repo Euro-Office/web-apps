@@ -215,6 +215,7 @@ define([
                 if ( this.isFolded ) {
                     optsFold.$bar.addClass('folded z-clear').toggleClass('expanded', false);
                     optsFold.$bar.find('.tabs .ribtab').removeClass('active');
+                    optsFold.$bar.find('.eo-tab-highlight').removeClass('over-active');
                     optsFold.$bar.on($.support.transition.end, function (e) {
                         if ( optsFold.$bar.hasClass('folded') && !optsFold.$bar.hasClass('expanded') )
                             optsFold.$bar.toggleClass('z-clear', true);
