@@ -1356,21 +1356,24 @@ section .field-styles {
     }
 }
 
-// Euro-Office pill tabs. The #toolbar id outranks the filled, lined and
-// style-off tab variants so one look applies whatever tab style is chosen.
+// Euro-Office tabs, like the Nextcloud sidebar tabs and app navigation:
+// rounded background with a short accent underline on the active tab.
+// The #toolbar id outranks the filled, lined and style-off tab variants so
+// one look applies whatever tab style is chosen.
 #toolbar .toolbar .tabs {
     > ul {
         display: flex;
         align-items: center;
-        gap: var(--eo-space-2);
+        gap: var(--eo-space-1);
         padding: 0;
     }
 
     li {
+        position: relative;
         flex-shrink: 0;
         height: auto;
         align-items: center;
-        border-radius: var(--eo-radius-pill);
+        border-radius: var(--eo-radius-md);
         background-color: transparent;
         box-shadow: none;
 
@@ -1380,7 +1383,7 @@ section .field-styles {
 
         > a {
             margin-bottom: 0;
-            padding: var(--eo-space-1) var(--eo-space-3);
+            padding: var(--eo-space-1) var(--eo-space-3) 6px;
             line-height: 16px;
         }
 
@@ -1392,6 +1395,18 @@ section .field-styles {
         &.active {
             background-color: var(--eo-accent-soft);
             box-shadow: none;
+
+            &:after {
+                content: '';
+                display: block;
+                position: absolute;
+                left: var(--eo-space-2);
+                right: var(--eo-space-2);
+                bottom: 2px;
+                height: 3px;
+                border-radius: 3px;
+                background-color: var(--eo-accent);
+            }
 
             > a {
                 color: var(--eo-accent);
