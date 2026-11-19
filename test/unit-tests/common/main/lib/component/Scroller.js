@@ -77,10 +77,15 @@ define([
             }, 50);
         });
 
-        it('Measures the native scrollbar width once', function(){
+        it('Measures the native scrollbar width on each call', function(){
             var w = Common.UI.Scroller.scrollbarWidth();
             w.should.be.a('number');
             w.should.be.at.least(0);
+
+            // headless Chrome hides scrollbars, so a border stands in for a zoom or OS setting change
+            var style = $('<style>.eo-scroller { border-left: 23px solid; }</style>').appendTo(document.head);
+            Common.UI.Scroller.scrollbarWidth().should.equal(w + 23);
+            style.remove();
             Common.UI.Scroller.scrollbarWidth().should.equal(w);
         });
 
@@ -114,6 +119,19 @@ define([
             cancelled.should.equal(2);
             wheel(-50, {ctrlKey: true});
             cancelled.should.equal(3);  // zoom gestures still reach the editor
+        });
+
+        it('Ignores presses on the scroller padding away from its scrollbar', function(){
+            var $el = makeBox(300), el = $el[0];
+            new Common.UI.Scroller({el: $el, suppressScrollX: true});
+            mouse(el, 'mousedown', 20, 10);
+            Common.UI.Scroller.isMouseCapture().should.equal(false);
+
+            // nothing to scroll, so no scrollbar at the edge either
+            var $short = makeBox(20);
+            new Common.UI.Scroller({el: $short});
+            mouse($short[0], 'mousedown', $short[0].offsetWidth - 2, 10);
+            Common.UI.Scroller.isMouseCapture().should.equal(false);
         });
 
         it('Captures the mouse only while a scrollbar drag is held', function(done){
