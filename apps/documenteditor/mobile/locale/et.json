@@ -1,0 +1,30 @@
+{
+  "About": {
+    "textAbout": "Rakenduse teave",
+    "textAddress": "Aadress",
+    "textBack": "Tagasi",
+    "textEmail": "E-post",
+    "textTel": "Telefon",
+    "textVersion": "Versioon"
+  },
+  "Add": {
+    "notcriticalErrorTitle": "Hoiatus",
+    "textAddLink": "Lisa link",
+    "textAddress": "Aadress",
+    "textBack": "Tagasi"
+  },
+  "Common": {
+    "Collaboration": {
+      "textBack": "Tagasi"
+    },
+    "VersionHistory": {
+      "textBack": "Tagasi"
+    }
+  },
+  "Edit": {
+    "textBack": "Tagasi"
+  },
+  "Settings": {
+    "textBack": "Tagasi"
+  }
+}
