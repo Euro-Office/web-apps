@@ -39,10 +39,13 @@ define([
         return typeof value === 'string' ? value.trim() : '';
     };
 
-    // a plain name@domain address, so the mailto: link cannot carry extra recipients or headers
+    // a plain name@domain address, so the mailto: link cannot carry extra recipients or headers.
+    // A leading mailto: is dropped; any other rejected value is reported with console.warn
     var customerEmail = function (value) {
-        value = customerValue(value);
-        return /^[^\s@<>"'?,;]+@[^\s@<>"'?,;]+$/.test(value) ? value : '';
+        var address = customerValue(value).replace(/^mailto:/i, '');
+        if (/^[^\s@<>"'?,;:]+@[^\s@<>"'?,;:]+$/.test(address)) return address;
+        address && console.warn('Customer e-mail fields accept only a plain address. Ignored value:', value);
+        return '';
     };
 
     // the logo for the current theme, or the other variant when that one is not set
