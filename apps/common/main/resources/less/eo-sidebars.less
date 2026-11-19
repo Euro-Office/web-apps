@@ -1,0 +1,122 @@
+// SPDX-FileCopyrightText: 2026 Euro-Office contributors
+// SPDX-License-Identifier: AGPL-3.0-only
+//
+// Euro-Office side bars: left and right icon bars and the right settings panel.
+
+.tool-menu .tool-menu-btns {
+    // the bar is absolutely positioned; as a flex box it no longer sits
+    // inline next to the open panel, so pin it to the top
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 var(--eo-space-1) var(--eo-space-2);
+
+    .eo-sidebar-spacer {
+        flex: 1 1 auto;
+    }
+
+    .btn-category {
+        flex: none;
+        width: 32px;
+        min-width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        margin: 0 0 var(--eo-space-1);
+        border-radius: var(--eo-radius-md);
+
+        &.hidden {
+            display: none;
+        }
+
+        &:hover:not(.disabled) {
+            background-color: var(--eo-hover);
+        }
+
+        &:active:not(.disabled),
+        &.active:not(.disabled) {
+            background-color: var(--eo-accent-soft);
+
+            svg.icon {
+                color: var(--eo-accent);
+            }
+        }
+    }
+
+    #slot-left-menu-more, #slot-right-menu-more {
+        width: 32px;
+    }
+}
+
+// Bars are @eo-sidebar-width wide (SCALE_MIN in LeftMenu.js/RightMenu.js)
+// so the buttons sit centred under the header icons: the document icon and
+// Save/Print on the left, the avatar on the right
+@eo-sidebar-width: 52px;
+
+.tool-menu .tool-menu-btns {
+    width: @eo-sidebar-width;
+}
+
+.tool-menu.right .tool-menu-btns {
+    padding-left: 0;
+    padding-right: 4px;
+
+    .rtl & {
+        padding-right: 0;
+        padding-left: 4px;
+    }
+}
+
+.left-panel {
+    padding: 0 0 0 @eo-sidebar-width;
+
+    .rtl & {
+        padding: 0 @eo-sidebar-width 0 0;
+    }
+}
+
+.right-panel {
+    padding: 0 @eo-sidebar-width 0 0;
+
+    .rtl & {
+        padding: 0 0 0 @eo-sidebar-width;
+    }
+}
+
+#left-panel-history {
+    left: @eo-sidebar-width;
+}
+
+.left-menu-full-ct {
+    left: @eo-sidebar-width;
+    .padding-right(@eo-sidebar-width);
+
+    .rtl & {
+        left: 0;
+        right: @eo-sidebar-width;
+    }
+}
+
+.right-panel .content-box .settings-panel {
+    padding: var(--eo-space-3) var(--eo-space-3) 0;
+
+    .rtl & {
+        padding: var(--eo-space-3) var(--eo-space-3) 0;
+    }
+
+    label.header {
+        display: inline-block;
+        margin-bottom: var(--eo-space-1);
+        font-size: var(--eo-font-size-md);
+        font-weight: 600;
+        color: var(--eo-text-secondary);
+    }
+
+    .separator.horizontal {
+        margin: var(--eo-space-2) 0;
+        border-top-color: var(--eo-border-subtle);
+    }
+}

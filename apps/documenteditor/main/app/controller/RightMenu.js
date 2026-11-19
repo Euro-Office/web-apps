@@ -143,6 +143,23 @@ define([
             this.rightmenu.fireEvent('editcomplete', this.rightmenu);
         },
 
+        // Highest settings type of a selected object (not plain text/cell/slide), -1 if none
+        getSelectedObjectType: function(types) {
+            var found = -1;
+            for (var i=0; i<types.length; i++) {
+                var pnl = this._settings[types[i]];
+                if (pnl && pnl.btn && !pnl.hidden && types[i]>found) found = types[i];
+            }
+            return found;
+        },
+
+        // Whether a different object got selected, so the open panel can switch to its settings
+        followSelectedObject: function(objType) {
+            var changed = objType !== this._lastObjectType;
+            this._lastObjectType = objType;
+            return {changed: changed && objType>=0};
+        },
+
         onApiFocusObject: function(SelectedObjects) {
             this.onFocusObject(SelectedObjects);
         },
@@ -297,6 +314,8 @@ define([
             if (!this._settings[Common.Utils.documentSettingsType.Signature].hidden)
                 this._settings[Common.Utils.documentSettingsType.Signature].panel.setProtected(isProtected);
 
+            var follow = this.followSelectedObject(this.getSelectedObjectType([Common.Utils.documentSettingsType.Table, Common.Utils.documentSettingsType.TextArt, Common.Utils.documentSettingsType.Shape, Common.Utils.documentSettingsType.Image, Common.Utils.documentSettingsType.Chart]));
+
             if (!this.rightmenu.minimizedMode || open) {
                 var active;
 
@@ -319,6 +338,8 @@ define([
                             priorityactive = Common.Utils.documentSettingsType.Image;
                     }
                 }
+
+                if (priorityactive<0 && follow.changed) priorityactive = this._lastObjectType;
 
                 if (priorityactive>-1) active = priorityactive;
                 else if (lastactive>=0 && currentactive<0) active = lastactive;

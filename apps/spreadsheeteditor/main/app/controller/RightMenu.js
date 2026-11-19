@@ -137,6 +137,23 @@ define([
             Common.NotificationCenter.trigger('edit:complete', this.rightmenu);
         },
 
+        // Highest settings type of a selected object (not plain text/cell/slide), -1 if none
+        getSelectedObjectType: function(types) {
+            var found = -1;
+            for (var i=0; i<types.length; i++) {
+                var pnl = this._settings[types[i]];
+                if (pnl && pnl.btn && !pnl.hidden && types[i]>found) found = types[i];
+            }
+            return found;
+        },
+
+        // Whether a different object got selected, so the open panel can switch to its settings
+        followSelectedObject: function(objType) {
+            var changed = objType !== this._lastObjectType;
+            this._lastObjectType = objType;
+            return {changed: changed && objType>=0};
+        },
+
         onSelectionChanged: function(info) {
             if (this.rangeSelectionMode || !info) return;
             
@@ -279,8 +296,12 @@ define([
                 }
             }
 
+            var follow = this.followSelectedObject(this.getSelectedObjectType([Common.Utils.documentSettingsType.TextArt, Common.Utils.documentSettingsType.Shape, Common.Utils.documentSettingsType.Image, Common.Utils.documentSettingsType.Chart, Common.Utils.documentSettingsType.Pivot, Common.Utils.documentSettingsType.Slicer]));
+
             if (!this.rightmenu.minimizedMode || this._openRightMenu) {
                 var active;
+
+                if (priorityactive<0 && follow.changed) priorityactive = this._lastObjectType;
 
                 if (priorityactive<0 && this._lastVisibleSettings!==undefined) {
                     var pnl = this._settings[this._lastVisibleSettings];
