@@ -39,17 +39,27 @@ define([
 ], function () { 'use strict';
 
     Common.UI.Scroller = (function(){
-        var mouseCapture, scrollbarWidth;
+        var mouseCapture;
 
         var releaseCapture = function() {
             document.removeEventListener('mouseup', releaseCapture, true);
             _.delay(function() { mouseCapture = false; }, 10);
         };
 
-        // Content clicks hit a child, so a press on the element itself is on its scrollbar
-        // (overlay scrollbars on macOS take no layout space, so geometry alone can't tell)
+        // Wide enough for thin classic scrollbars and macOS overlay ones, which take no layout space
+        var SCROLLBAR_HIT = 16;
+
+        // Content clicks hit a child, so a press on the element itself near an edge it scrolls along is on its scrollbar
+        var onScrollbar = function(e) {
+            var el = e.currentTarget, r = el.getBoundingClientRect(),
+                rtl = getComputedStyle(el).direction === 'rtl';
+            return e.target === el && (
+                (el.scrollHeight > el.clientHeight && (rtl ? e.clientX < r.left + SCROLLBAR_HIT : e.clientX >= r.right - SCROLLBAR_HIT)) ||
+                (el.scrollWidth > el.clientWidth && e.clientY >= r.bottom - SCROLLBAR_HIT));
+        };
+
         var onMouseDown = function(e) {
-            if (e.target === e.currentTarget) {
+            if (onScrollbar(e)) {
                 mouseCapture = true;
                 document.addEventListener('mouseup', releaseCapture, true);
             }
@@ -152,13 +162,12 @@ define([
             },
 
             // Width a thin native scrollbar takes from the layout, 0 for overlay scrollbars
+            // Not cached: it changes with browser zoom and OS scrollbar settings
             scrollbarWidth: function() {
-                if (scrollbarWidth === undefined) {
-                    var probe = $('<div class="eo-scroller" style="position:absolute;top:-100px;width:50px;height:50px;overflow:scroll;"></div>').appendTo(document.body);
-                    scrollbarWidth = probe[0].offsetWidth - probe[0].clientWidth;
-                    probe.remove();
-                }
-                return scrollbarWidth;
+                var probe = $('<div class="eo-scroller" style="position:absolute;top:-100px;width:50px;height:50px;overflow:scroll;"></div>').appendTo(document.body),
+                    width = probe[0].offsetWidth - probe[0].clientWidth;
+                probe.remove();
+                return width;
             }
         })
     })();
