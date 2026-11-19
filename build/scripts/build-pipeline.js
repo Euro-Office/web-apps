@@ -272,10 +272,10 @@ async function main() {
         phase1Tasks.push(task(`webpack:${name}`, wp, ['--config', cfg]));
     }
 
-    // Mobile: npm install first (sequential), then 4 editors in parallel.
+    // Mobile: npm ci first (sequential), then 4 editors in parallel.
     // Run as a pre-phase so all 4 editor tasks appear individually in the summary.
     const install = await runTask(task('mobile:install', 'npm',
-        ['install', '--include=dev', '--production=false'],
+        ['ci', '--include=dev'],
         { cwd: FRAMEWORK7_DIR }
     )).promise;
     if (install.code !== 0) {
