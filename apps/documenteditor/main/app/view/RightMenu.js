@@ -29,7 +29,7 @@
  *
  */
 
-var SCALE_MIN = 40;
+var SCALE_MIN = 52;
 var MENU_SCALE_PART = 260;
 var MENU_BASE_WIDTH = 220;
 

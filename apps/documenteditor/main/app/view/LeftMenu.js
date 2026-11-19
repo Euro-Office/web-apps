@@ -49,7 +49,7 @@ define([
 ], function (menuTemplate, $, _, Backbone) {
     'use strict';
 
-    var SCALE_MIN = 40;
+    var SCALE_MIN = 52;
     var MENU_SCALE_PART = 300;
 
     DE.Views.LeftMenu = Common.UI.SideMenu.extend(_.extend({

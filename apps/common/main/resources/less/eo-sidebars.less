@@ -44,34 +44,53 @@
     }
 }
 
-// Same 24px buttons as the toolbar, centred under the header icons:
-// the document icon and Save/Print on the left, the avatar on the right
-.tool-menu.left .tool-menu-btns,
-.tool-menu.right .tool-menu-btns {
-    align-items: flex-start;
+// Bars are @eo-sidebar-width wide (SCALE_MIN in LeftMenu.js/RightMenu.js)
+// so the buttons sit centred under the header icons: the document icon and
+// Save/Print on the left, the avatar on the right
+@eo-sidebar-width: 52px;
 
-    .btn-category {
-        width: 24px;
-        min-width: 24px;
-        height: 24px;
-        line-height: 22px;
-        margin-bottom: var(--eo-space-2);
-        padding: 0;
-    }
-
-    #slot-left-menu-more, #slot-right-menu-more {
-        width: 24px;
-    }
-}
-
-.tool-menu.left .tool-menu-btns {
-    padding-left: 14px;
-    padding-right: 0;
+.tool-menu .tool-menu-btns {
+    width: @eo-sidebar-width;
 }
 
 .tool-menu.right .tool-menu-btns {
     padding-left: 0;
-    padding-right: 0;
+    padding-right: 4px;
+
+    .rtl & {
+        padding-right: 0;
+        padding-left: 4px;
+    }
+}
+
+.left-panel {
+    padding: 0 0 0 @eo-sidebar-width;
+
+    .rtl & {
+        padding: 0 @eo-sidebar-width 0 0;
+    }
+}
+
+.right-panel {
+    padding: 0 @eo-sidebar-width 0 0;
+
+    .rtl & {
+        padding: 0 0 0 @eo-sidebar-width;
+    }
+}
+
+#left-panel-history {
+    left: @eo-sidebar-width;
+}
+
+.left-menu-full-ct {
+    left: @eo-sidebar-width;
+    .padding-right(@eo-sidebar-width);
+
+    .rtl & {
+        left: 0;
+        right: @eo-sidebar-width;
+    }
 }
 
 .right-panel .content-box .settings-panel {
