@@ -41,6 +41,18 @@ define([
 ], function () {
     'use strict';
 
+    function eoCenterImages(urls, tileW, tileH, done) {
+        var map = {}, left = urls.length;
+        _.each(urls, function(url) {
+            var img = new Image();
+            img.onload = img.onerror = function() {
+                map[url] = (img.naturalWidth && Common.Utils.centerStylePreview(img, tileW, tileH)) || {center: url, left: url};
+                --left || done(map);
+            };
+            img.src = url;
+        });
+    }
+
     DE.Controllers.Toolbar = Backbone.Controller.extend(_.extend({
         models: [],
         collections: [],
@@ -465,6 +477,8 @@ define([
 
             if (this.mode.isEdit) {
                 this.toolbar.setApi(api);
+                // Render style previews wider than the 104x40 tile and scale them down, so names like "Heading 1" fit
+                this.api.asc_setParagraphStylesSizes && this.api.asc_setParagraphStylesSizes(140, 46);
 
                 this.api.asc_registerCallback('asc_onFontSize', _.bind(this.onApiFontSize, this));
                 this.api.asc_registerCallback('asc_onBold', _.bind(this.onApiBold, this));
@@ -3707,9 +3721,27 @@ define([
 
             var arr = [];
             var mainController = this.getApplication().getController('Main');
-            _.each(styles.get_MergedStyles(), function(style){
+            var isFirstStyle = function (style) { return /^(Normal|Heading [1-3])$/.test(style.get_Name()); };
+            var merged = styles.get_MergedStyles();
+            merged = _.filter(merged, isFirstStyle).concat(_.reject(merged, isFirstStyle));
+
+            // The gallery tiles show previews with the text centred. sdkjs draws it at the left,
+            // so centre copies once they are decoded and fill the gallery again.
+            var urls = _.map(merged, function(style) { return style.asc_getImage(); }),
+                centered = self._eoCenteredStyles || {},
+                missing = _.filter(urls, function(url) { return url && !centered[url]; });
+            self._eoLatestStyles = styles;
+            missing.length && self._eoCentering !== styles && (self._eoCentering = styles) && eoCenterImages(missing, listStyles.options.itemWidth, listStyles.options.itemHeight, function(map) {
+                self._eoCentering = null;
+                self._eoCenteredStyles = _.pick(_.extend({}, centered, map), urls);
+                self._eoLatestStyles === styles && self._onInitEditorStyles(styles);
+            });
+
+            _.each(merged, function(style){
                 arr.push({
                     imageUrl: style.asc_getImage(),
+                    centeredUrl: centered[style.asc_getImage()] ? centered[style.asc_getImage()].center : style.asc_getImage(),
+                    leftUrl : centered[style.asc_getImage()] ? centered[style.asc_getImage()].left : style.asc_getImage(),
                     title   : style.get_Name(),
                     tip     : mainController.translationTable[style.get_Name()] || style.get_Name(),
                     id      : Common.UI.getId()
