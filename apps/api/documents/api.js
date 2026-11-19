@@ -241,7 +241,7 @@
                     commentAuthorOnly: false, // must be deprecated. use permissions.editCommentAuthorOnly and permissions.deleteCommentAuthorOnly instead
                     showReviewChanges: false, // must be deprecated. use customization.review.showReviewChanges instead
                     help: true,
-                    compactHeader: false,
+                    compactHeader: true,
                     toolbarNoTabs: false, // must be deprecated. use features.tabStyle.mode='line' && features.tabBackground='toolbar' instead
                     toolbarHideFileName: false,
                     reviewDisplay: 'original', // must be deprecated. use customization.review.reviewDisplay instead
@@ -1237,7 +1237,7 @@
             (config.document.isForm===true || config.document.isForm===false) && (params += "&isForm=" + config.document.isForm);
         }
 
-        if (config.editorConfig && config.editorConfig.customization && !!config.editorConfig.customization.compactHeader)
+        if (!(config.editorConfig && config.editorConfig.customization && config.editorConfig.customization.compactHeader === false))
             params += "&compact=true";
 
         if (config.editorConfig && config.editorConfig.customization && config.editorConfig.customization.features && config.editorConfig.customization.features.tabBackground) {
