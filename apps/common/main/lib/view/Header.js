@@ -411,8 +411,7 @@ define([
                     var _url = !!me.branding && !!me.branding.logo && (me.branding.logo.url!==undefined) ?
                         me.branding.logo.url : '{{PUBLISHER_URL}}';
                     if (_url) {
-                        var newDocumentPage = window.open(_url);
-                        newDocumentPage && newDocumentPage.focus();
+                        window.open(_url, "_blank", "noopener");
                     }
                 });
 
@@ -873,7 +872,7 @@ define([
                             this.logo.addClass('hidden');
                         } else if (this.branding.logo.image || this.branding.logo.imageDark || this.branding.logo.imageLight) {
                             _logoImage = logo.image;
-                            this.logo.html('<img src="' + _logoImage + '" style="max-width:300px; max-height:20px; margin: 0;"/>');
+                            this.logo.empty().append($('<img style="max-width:300px; max-height:20px; margin: 0;"/>').attr('src', _logoImage));
                             this.logo.css({'background-image': 'none', width: 'auto'});
                             (this.branding.logo.url || this.branding.logo.url===undefined) && this.logo.addClass('link');
                         }
@@ -1141,7 +1140,7 @@ define([
                         element.addClass('hidden');
                     } else if (value.logo.image || value.logo.imageDark || value.logo.imageLight) {
                         _logoImage = logo.image;
-                        element.html('<img src="' + _logoImage + '" style="max-width:300px; max-height:20px; margin: 0;"/>');
+                        element.empty().append($('<img style="max-width:300px; max-height:20px; margin: 0;"/>').attr('src', _logoImage));
                         element.css({'background-image': 'none', width: 'auto'});
                         (value.logo.url || value.logo.url===undefined) && element.addClass('link');
                     }
