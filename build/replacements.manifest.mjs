@@ -8,7 +8,6 @@
  *
  * Consumed by:
  *   theme.config.mjs     — scoping + keymaster entries (search/flags only; replace stays there)
- *   webpack.editor.factory.mjs — locale-fetch entry
  *   build/scripts/verify-replacements.mjs — source-side preflight gate (Check A)
  *
  * Semantic:
@@ -30,7 +29,7 @@ export const LOAD_BEARING = [
         id:       'common-guard',
         search:   'if \\(Common === undefined\\)(?:\\s*\\{)?\\s+var Common = \\{\\};(?:\\s*\\})?',
         flags:    'g',
-        minCount: 117,
+        minCount: 116,
     },
     {
         id:       'c_-const',
@@ -52,12 +51,6 @@ export const LOAD_BEARING = [
     {
         id:    'keymaster-global',
         search: 'global.key = assignKey;',
-        exact:  1,
-    },
-    {
-        id:    'locale-fetch',
-        search: 'if \\( !window\\.fetch \\) \\{[\\s\\S]*?\\} else _requireLang\\(\\);',
-        flags:  'g',
         exact:  1,
     },
 ];

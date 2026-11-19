@@ -94,8 +94,8 @@ table with per-step timing at end.
 ### `deploy-common.js`
 Copies SDK assets (sdkjs), api.js (with
 `{{PRODUCT_VERSION}}` token replacement), apps-common (HTML, SVGs, images),
-and vendor scripts (jQuery, socket.io, xregexp, underscore, iscroll, fetch,
-es6-promise, requirejs-terser, common-embed, monaco).
+and vendor scripts (jQuery, socket.io, xregexp, underscore, iscroll,
+requirejs-terser, common-embed, monaco).
 
 **Requires `PRODUCT_VERSION`** — used in api.js which EuroOffice checks at load time.
 
