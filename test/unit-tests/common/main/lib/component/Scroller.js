@@ -77,6 +77,13 @@ define([
             }, 50);
         });
 
+        it('Measures the native scrollbar width once', function(){
+            var w = Common.UI.Scroller.scrollbarWidth();
+            w.should.be.a('number');
+            w.should.be.at.least(0);
+            Common.UI.Scroller.scrollbarWidth().should.equal(w);
+        });
+
         it('Unbinds on destroy', function(){
             var $el = makeBox(300), calls = 0;
             var scroller = new Common.UI.Scroller({el: $el, onChange: function() { calls++; }});
@@ -90,7 +97,8 @@ define([
             var $el = makeBox(300), el = $el[0];
             new Common.UI.Scroller({el: $el});
 
-            mouse(el, 'mousedown', 10, 10);
+            // content clicks land on a child
+            mouse(el.firstChild, 'mousedown', 10, 10);
             Common.UI.Scroller.isMouseCapture().should.equal(false);
 
             mouse(el, 'mousedown', el.clientWidth + 1, 10);
@@ -99,7 +107,15 @@ define([
             mouse(document.body, 'mouseup', 0, 0);
             setTimeout(function() {
                 Common.UI.Scroller.isMouseCapture().should.equal(false);
-                done();
+
+                // overlay scrollbars sit inside the client box, the press still targets the element
+                mouse(el, 'mousedown', el.clientWidth - 2, 10);
+                Common.UI.Scroller.isMouseCapture().should.equal(true);
+                mouse(document.body, 'mouseup', 0, 0);
+                setTimeout(function() {
+                    Common.UI.Scroller.isMouseCapture().should.equal(false);
+                    done();
+                }, 30);
             }, 30);
         });
     });

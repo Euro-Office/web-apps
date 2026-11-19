@@ -39,17 +39,17 @@ define([
 ], function () { 'use strict';
 
     Common.UI.Scroller = (function(){
-        var mouseCapture;
+        var mouseCapture, scrollbarWidth;
 
         var releaseCapture = function() {
             document.removeEventListener('mouseup', releaseCapture, true);
             _.delay(function() { mouseCapture = false; }, 10);
         };
 
-        // A mousedown on the element itself outside its client box lands on a native scrollbar
+        // Content clicks hit a child, so a press on the element itself is on its scrollbar
+        // (overlay scrollbars on macOS take no layout space, so geometry alone can't tell)
         var onMouseDown = function(e) {
-            var el = e.currentTarget;
-            if (e.target === el && (e.offsetX >= el.clientWidth || e.offsetY >= el.clientHeight || e.offsetX < 0)) {
+            if (e.target === e.currentTarget) {
                 mouseCapture = true;
                 document.addEventListener('mouseup', releaseCapture, true);
             }
@@ -132,6 +132,16 @@ define([
         }), {
             isMouseCapture: function() {
                 return !!mouseCapture;
+            },
+
+            // Width a thin native scrollbar takes from the layout, 0 for overlay scrollbars
+            scrollbarWidth: function() {
+                if (scrollbarWidth === undefined) {
+                    var probe = $('<div class="eo-scroller" style="position:absolute;top:-100px;width:50px;height:50px;overflow:scroll;"></div>').appendTo(document.body);
+                    scrollbarWidth = probe[0].offsetWidth - probe[0].clientWidth;
+                    probe.remove();
+                }
+                return scrollbarWidth;
             }
         })
     })();
