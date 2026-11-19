@@ -42,7 +42,16 @@
     window.uitheme.DEFAULT_LIGHT_THEME_ID = !window.isIEBrowser ? 'theme-white' : 'theme-classic-light';
     window.uitheme.DEFAULT_DARK_THEME_ID = !window.isIEBrowser ? 'theme-night' : 'theme-dark';
 
+    const legacy_theme_ids = {
+        'theme-light': 'theme-white', 'theme-classic-light': 'theme-white', 'theme-gray': 'theme-white',
+        'theme-dark': 'theme-night', 'theme-contrast-dark': 'theme-eo-contrast-dark',
+    };
+    window.uitheme.normalize_id = function (id) {
+        return window.isIEBrowser ? id : legacy_theme_ids[id] || id;
+    }
+
     window.uitheme.set_id = function (id) {
+        id = this.normalize_id(id);
         if ( id == 'theme-system' )
             this.adapt_to_system_theme();
         else this.id = id;
@@ -57,9 +66,16 @@
         this.type = this.is_system_theme_dark() ? 'dark' : 'light';
     }
 
+    window.uitheme.SYSTEM_CONTRAST_QUERY = '(prefers-contrast: more), (forced-colors: active)';
+    window.uitheme.system_theme_id = function (dark) {
+        if ( !window.isIEBrowser && window.matchMedia && window.matchMedia(this.SYSTEM_CONTRAST_QUERY).matches )
+            return dark ? 'theme-eo-contrast-dark' : 'theme-eo-contrast-light';
+        return dark ? this.DEFAULT_DARK_THEME_ID : this.DEFAULT_LIGHT_THEME_ID;
+    }
+
     window.uitheme.relevant_theme_id = function () {
         if ( this.is_theme_system() )
-            return this.is_system_theme_dark() ? window.uitheme.DEFAULT_DARK_THEME_ID : window.uitheme.DEFAULT_LIGHT_THEME_ID;
+            return this.system_theme_id(this.is_system_theme_dark());
         return this.id;
     }
 
@@ -69,8 +85,14 @@
         }
 
     // localstorage.setItem('ui-theme-id', 'theme-white');
-    !window.uitheme.id && window.uitheme.set_id(localstorage.getItem("ui-theme-id"));
-    window.uitheme.iscontentdark = localstorage.getItem("content-theme") == 'dark';
+    const stored_theme_id = localstorage.getItem("ui-theme-id");
+    if ( local_storage_available && stored_theme_id && legacy_theme_ids[stored_theme_id] && !window.isIEBrowser )
+        localstorage.setItem("ui-theme-id", legacy_theme_ids[stored_theme_id]);
+    !window.uitheme.id && window.uitheme.set_id(stored_theme_id);
+    // Dark document is on by default for text and slides when the UI is dark;
+    // the spreadsheet grid waits for a proper dark mode (web-apps#360)
+    const stored_content_theme = localstorage.getItem("content-theme");
+    window.uitheme.iscontentdark = stored_content_theme ? stored_content_theme == 'dark' : !/spreadsheeteditor/.test(window.location.pathname);
 
     function inject_style_tag(content, id) {
         if ( id && !!document.getElementById(id) )

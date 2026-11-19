@@ -50,6 +50,7 @@ define([
                 text: locale.txtThemeLight || 'Light',
                 type: 'light',
                 source: 'static',
+                hidden: true,
                 skeleton: {
                     css: `.loadmask {--sk-height-toolbar-controls: 66px; --sk-layout-padding-toolbar: 0;
                                     --sk-shadow-toolbar: inset 0 -1px #cbcbcb; --sk-border-radius-toolbar: 0;
@@ -71,6 +72,7 @@ define([
                 text: locale.txtThemeClassicLight || 'Classic Light',
                 type: 'light',
                 source: 'static',
+                hidden: true,
                 skeleton: {
                     css: `.loadmask {--sk-height-toolbar-controls: 66px; --sk-layout-padding-toolbar: 0;
                                     --sk-shadow-toolbar: inset 0 -1px #cbcbcb; --sk-border-radius-toolbar: 0;
@@ -92,6 +94,7 @@ define([
                 text: locale.txtThemeDark || 'Dark',
                 type: 'dark',
                 source: 'static',
+                hidden: true,
                 skeleton: {
                     css: `.theme-dark .loadmask, .theme-type-dark .loadmask {
                                 --sk-height-toolbar-controls: 66px; --sk-layout-padding-toolbar: 0;
@@ -118,6 +121,7 @@ define([
                 text: locale.txtThemeContrastDark || 'Dark Contrast',
                 type: 'dark',
                 source: 'static',
+                hidden: true,
                 skeleton: {
                     css: `.theme-dark .loadmask, .theme-type-dark .loadmask {
                                 --sk-height-toolbar-controls: 66px; --sk-layout-padding-toolbar: 0;
@@ -144,6 +148,7 @@ define([
                 text: locale.txtThemeGray || 'Gray',
                 type: 'light',
                 source: 'static',
+                hidden: true,
                 skeleton: {
                     css: `.loadmask {--sk-height-toolbar-controls: 66px;--sk-layout-padding-toolbar: 0;
                                     --sk-shadow-toolbar: inset 0 -1px #cbcbcb; --sk-border-radius-toolbar: 0;
@@ -162,7 +167,7 @@ define([
                 },
             },
             'theme-white': {
-                text: locale.txtThemeModernLight || 'White',
+                text: locale.txtThemeLight || 'Light',
                 type: 'light',
                 source: 'static',
                 icons: {
@@ -170,12 +175,38 @@ define([
                 }
             },
             'theme-night': {
-                text: locale.txtThemeModernDark || 'Night',
+                text: locale.txtThemeDark || 'Dark',
                 type: 'dark',
                 source: 'static',
                 icons: {
                     cls: 'mod2',
                 }
+            },
+            'theme-eo-contrast-light': {
+                text: locale.txtThemeHighContrastLight || 'High contrast light',
+                type: 'light',
+                source: 'static',
+                icons: {
+                    cls: 'mod2',
+                }
+            },
+            'theme-eo-contrast-dark': {
+                text: locale.txtThemeHighContrastDark || 'High contrast dark',
+                type: 'dark',
+                source: 'static',
+                icons: {
+                    cls: 'mod2',
+                },
+                skeleton: {
+                    css: `.theme-eo-contrast-dark .loadmask {--sk-background-toolbar: #000; --sk-background-toolbar-controls: #000;
+                                    --sk-background-toolbar-header-word: #000; --sk-background-toolbar-header-pdf: #000;
+                                    --sk-background-toolbar-header-slide: #000; --sk-background-toolbar-header-cell: #000;
+                                    --sk-background-toolbar-header-visio: #000;
+                                    --sk-background-toolbar-tab: #1a2a40; --sk-background-toolbar-button: #1a2a40;
+                                    --sk-canvas-background: #000; --sk-canvas-page-border: #fff;
+                                    --sk-shadow-toolbar: 0 0 0 1px #fff;
+                                }`
+                },
             },
         }
 
@@ -343,9 +374,9 @@ define([
             }
 
             if ( objtheme && typeof(objtheme) == 'object' )
-                return objtheme.id;
+                return window.uitheme.normalize_id(objtheme.id);
 
-            return objtheme;
+            return window.uitheme.normalize_id(objtheme);
         }
 
         var on_document_open = function (data) {
@@ -362,8 +393,7 @@ define([
             return window.matchMedia('(prefers-color-scheme: dark)').matches ? THEME_TYPE_DARK : THEME_TYPE_LIGHT;
         }
         const get_system_default_theme = function () {
-            const id = get_system_theme_type() == THEME_TYPE_DARK ?
-                window.uitheme.DEFAULT_DARK_THEME_ID : window.uitheme.DEFAULT_LIGHT_THEME_ID;
+            const id = window.uitheme.system_theme_id(get_system_theme_type() == THEME_TYPE_DARK);
 
             return {id: id, info: themes_map[id]};
         };
@@ -514,7 +544,9 @@ define([
                 }
 
                 if ( !(Common.Utils.isIE10 || Common.Utils.isIE11) && !Common.Controllers.Desktop.isActive() )
-                    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', on_system_theme_dark.bind(this));
+                    ['(prefers-color-scheme: dark)', window.uitheme.SYSTEM_CONTRAST_QUERY].forEach(function (query) {
+                        window.matchMedia(query).addEventListener('change', on_system_theme_dark.bind(this));
+                    }, this);
                 Common.NotificationCenter.on('document:ready', on_document_ready.bind(this));
             },
 
@@ -527,13 +559,13 @@ define([
             },
 
             map: function () {
-                if ( Common.Controllers.Desktop.isActive() && !Common.Controllers.Desktop.systemThemeSupported() ) {
-                    const new_map = Object.assign({}, themes_map);
-                    delete new_map['theme-system'];
-
-                    return new_map;
+                const new_map = {};
+                const hide_system = Common.Controllers.Desktop.isActive() && !Common.Controllers.Desktop.systemThemeSupported();
+                for (const id in themes_map) {
+                    if ( !themes_map[id].hidden && !(hide_system && id == 'theme-system') )
+                        new_map[id] = themes_map[id];
                 }
-                return themes_map
+                return new_map;
             },
 
             get: function (id) {
@@ -549,7 +581,7 @@ define([
             },
 
             defaultThemeId: function (type) {
-                return type == 'dark' ? window.uitheme.DEFAULT_LIGHT_THEME_ID : window.uitheme.DEFAULT_LIGHT_THEME_ID;
+                return type == 'dark' ? window.uitheme.DEFAULT_DARK_THEME_ID : window.uitheme.DEFAULT_LIGHT_THEME_ID;
             },
 
             defaultTheme: function (type) {
