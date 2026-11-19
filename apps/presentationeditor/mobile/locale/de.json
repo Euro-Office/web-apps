@@ -242,7 +242,9 @@
     "unknownErrorText": "Unbekannter Fehler.",
     "uploadImageExtMessage": "Unbekanntes Bildformat.",
     "uploadImageFileCountMessage": "Keine Bilder hochgeladen.",
-    "uploadImageSizeMessage": "Das Bild ist zu groß. Die maximale Größe beträgt 25 MB."
+    "uploadImageSizeMessage": "Das Bild ist zu groß. Die maximale Größe beträgt 25 MB.",
+    "errorFileNotAssembled": "Diese Datei wurde aus einer Sicherungskopie auf dem Server geöffnet und ist nicht im Speicher abgelegt.<br>Verwenden Sie die Option \"Speichern als...\", um sie auf einem Laufwerk zu speichern.",
+    "errorForcedViewMode": "Diese Datei ist im Ansichtsmodus geöffnet.<br>Die Datei ist für die Bearbeitung gesperrt oder Ihre Zugriffsrechte erlauben keine Bearbeitung."
   },
   "LongActions": {
     "applyChangesTextText": "Daten werden geladen...",
@@ -332,7 +334,8 @@
       "textSlideNumber": "Foliennummer",
       "textTable": "Tabelle",
       "textTableSize": "Tabellengröße",
-      "txtNotUrl": "In dieses Feld soll eine URL im Format \"http://www.example.com\" eingetragen werden."
+      "txtNotUrl": "In dieses Feld soll eine URL im Format \"http://www.example.com\" eingetragen werden.",
+      "textPictureFromStorage": "Bild aus dem Speicher"
     },
     "Edit": {
       "notcriticalErrorTitle": "Warnung",
@@ -507,7 +510,8 @@
       "textZoomOut": "Verkleinern",
       "textZoomRotate": "Vergrößern und drehen",
       "txtHeight": "Höhe",
-      "txtWidth": "Breite"
+      "txtWidth": "Breite",
+      "textPictureFromStorage": "Bild aus dem Speicher"
     },
     "Settings": {
       "mniSlideStandard": "Standard (4:3)",

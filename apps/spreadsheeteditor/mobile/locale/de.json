@@ -380,7 +380,9 @@
     "uploadDocSizeMessage": "Die maximale Dokumentgröße wurde überschritten.",
     "uploadImageExtMessage": "Unbekanntes Bildformat.",
     "uploadImageFileCountMessage": "Keine Bilder hochgeladen.",
-    "uploadImageSizeMessage": "Die maximal zulässige Bildgröße von 25 MB ist überschritten."
+    "uploadImageSizeMessage": "Die maximal zulässige Bildgröße von 25 MB ist überschritten.",
+    "errorFileNotAssembled": "Diese Datei wurde aus einer Sicherungskopie auf dem Server geöffnet und ist nicht im Speicher abgelegt.<br>Verwenden Sie die Option \"Speichern als...\", um sie auf einem Laufwerk zu speichern.",
+    "errorForcedViewMode": "Diese Datei ist im Ansichtsmodus geöffnet.<br>Die Datei ist für die Bearbeitung gesperrt oder Ihre Zugriffsrechte erlauben keine Bearbeitung."
   },
   "LongActions": {
     "advDRMPassword": "Passwort",
@@ -529,7 +531,8 @@
       "txtNotUrl": "Dieser Bereich soll eine URL im Format \"http://www.example.com\" sein.",
       "txtSorting": "Sortierung",
       "txtSortSelected": "Ausgewählte sortieren",
-      "txtYes": "Ja"
+      "txtYes": "Ja",
+      "textPictureFromStorage": "Bild aus dem Speicher"
     },
     "Edit": {
       "notcriticalErrorTitle": "Warnung",
@@ -737,7 +740,8 @@
       "textYen": "Yen",
       "txtNotUrl": "Dieser Bereich soll eine URL im Format \"http://www.example.com\" sein.",
       "txtSortHigh2Low": "Absteigend sortieren",
-      "txtSortLow2High": "Aufsteigend sortieren"
+      "txtSortLow2High": "Aufsteigend sortieren",
+      "textPictureFromStorage": "Bild aus dem Speicher"
     },
     "Settings": {
       "advCSVOptions": "CSV-Optionen auswählen",

@@ -3565,5 +3565,16 @@
   "PE.Views.ViewTab.tipResumeMacro": "Aufnahme fortsetzen",
   "PE.Views.ViewTab.tipSelectTool": "Auswählungstool",
   "PE.Views.ViewTab.tipSlideMaster": "Folienmaster",
-  "PE.Views.ViewTab.tipStopMacro": "Aufnahme beenden"
+  "PE.Views.ViewTab.tipStopMacro": "Aufnahme beenden",
+  "Common.Utils.AssistantInsert.txtInsertFailed": "Der Editor ist ausgelastet, daher konnte das Ergebnis des Assistenten nicht eingefügt werden. Versuchen Sie erneut, es einzufügen.",
+  "Common.Views.SmartPickerMenu.txtAnyLink": "Beliebiger Link",
+  "Common.Views.SmartPickerMenu.txtNoResults": "Kein Vorschlag gefunden",
+  "Common.Views.SmartPickerMenu.txtOpenFailed": "Smart Picker konnte nicht geöffnet werden.",
+  "PE.Controllers.Main.errorFileNotAssembled": "Diese Datei wurde aus einer Sicherungskopie auf dem Server geöffnet und ist nicht im Speicher abgelegt.<br>Verwenden Sie die Option \"Speichern als...\", um sie auf einem Laufwerk zu speichern.",
+  "PE.Controllers.Main.errorForcedViewMode": "Diese Datei ist im Ansichtsmodus geöffnet.<br>Die Datei ist für die Bearbeitung gesperrt oder Ihre Zugriffsrechte erlauben keine Bearbeitung.",
+  "PE.Controllers.Toolbar.helpGifPlayback": "Erwecken Sie Ihre Folien zum Leben, indem Sie GIF-Animationen in der Bildschirmpräsentation abspielen.",
+  "PE.Controllers.Toolbar.helpGifPlaybackHeader": "GIF-Wiedergabe in der Bildschirmpräsentation",
+  "PE.Views.DocumentHolder.txtNcAssistant": "Nextcloud Assistent fragen",
+  "PE.Views.Toolbar.capSmartPicker": "Smart Picker",
+  "PE.Views.Toolbar.tipSmartPicker": "Smart Picker"
 }

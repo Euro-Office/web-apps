@@ -3074,5 +3074,9 @@
   "PDFE.Views.ViewTab.tipFitToWidth": "Breite anpassen",
   "PDFE.Views.ViewTab.tipHeadings": "Überschriften",
   "PDFE.Views.ViewTab.tipInterfaceTheme": "Thema der Benutzeroberfläche",
-  "PDFE.Views.ViewTab.tipRecognize": "Text bearbeiten"
+  "PDFE.Views.ViewTab.tipRecognize": "Text bearbeiten",
+  "PDFE.Controllers.Main.errorFileNotAssembled": "Diese Datei wurde aus einer Sicherungskopie auf dem Server geöffnet und ist nicht im Speicher abgelegt.<br>Verwenden Sie die Option \"Speichern als...\", um sie auf einem Laufwerk zu speichern.",
+  "PDFE.Controllers.Main.errorForcedViewMode": "Diese Datei ist im Ansichtsmodus geöffnet.<br>Die Datei ist für die Bearbeitung gesperrt oder Ihre Zugriffsrechte erlauben keine Bearbeitung.",
+  "PDFE.Controllers.Toolbar.helpCreateLink": "Fügen Sie ganz einfach Links zu einer externen Ressource oder zu einer Seite in der aktuellen Datei hinzu.",
+  "PDFE.Controllers.Toolbar.helpCreateLinkHeader": "Links erstellen und bearbeiten"
 }

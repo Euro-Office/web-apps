@@ -55,5 +55,7 @@
   "SSE.ApplicationView.txtFullScreen": "Vollbild-Modus",
   "SSE.ApplicationView.txtPrint": "Drucken",
   "SSE.ApplicationView.txtSearch": "Suche",
-  "SSE.ApplicationView.txtShare": "Freigeben"
+  "SSE.ApplicationView.txtShare": "Freigeben",
+  "SSE.ApplicationController.errorFileNotAssembled": "Diese Datei wurde aus einer Sicherungskopie auf dem Server geöffnet und ist nicht im Speicher abgelegt.<br>Verwenden Sie die Option \"Speichern als...\", um sie auf einem Laufwerk zu speichern.",
+  "SSE.ApplicationController.errorForcedViewMode": "Diese Datei ist im Ansichtsmodus geöffnet.<br>Die Datei ist für die Bearbeitung gesperrt oder Ihre Zugriffsrechte erlauben keine Bearbeitung."
 }
