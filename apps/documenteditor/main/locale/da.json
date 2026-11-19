@@ -2677,8 +2677,8 @@
   "DE.Views.FileMenuPanels.Settings.txtScreenReader": "Slå understøttelse af skærmlæser til",
   "DE.Views.FileMenuPanels.Settings.txtShowTrackChanges": "Vis registrerede ændringer",
   "DE.Views.FileMenuPanels.Settings.txtSpellCheck": "Stavekontrol",
-  "DE.Views.FileMenuPanels.Settings.txtStopMacros": "Deaktiver Alle",
-  "DE.Views.FileMenuPanels.Settings.txtStopMacrosDesc": "Deaktivér alle makroer uden besked",
+  "DE.Views.FileMenuPanels.Settings.txtStopMacros": "Deaktiver alle",
+  "DE.Views.FileMenuPanels.Settings.txtStopMacrosDesc": "Deaktiver alle makroer uden besked",
   "DE.Views.FileMenuPanels.Settings.txtStrictTip": "Brug \"Gem\"-knappen for at synkronisere ændringerne du og andre laver",
   "DE.Views.FileMenuPanels.Settings.txtTabBack": "Brug værktøjslinjens farve som baggrund for faner",
   "DE.Views.FileMenuPanels.Settings.txtUseAltKey": "Brug Alt-tasten til at navigere i brugergrænsefladen med tastaturet",
@@ -4224,5 +4224,13 @@
   "DE.Views.WatermarkSettingsDialog.textTransparency": "Halvgennemsigtig",
   "DE.Views.WatermarkSettingsDialog.textUnderline": "Understreg",
   "DE.Views.WatermarkSettingsDialog.tipFontName": "Skrifttypenavn",
-  "DE.Views.WatermarkSettingsDialog.tipFontSize": "Skriftstørrelse"
+  "DE.Views.WatermarkSettingsDialog.tipFontSize": "Skriftstørrelse",
+  "DE.Views.ViewTab.textPageless": "Weblayout",
+  "DE.Views.ViewTab.tipPageless": "Vis dokumentet som ét sammenhængende ark",
+  "Common.Utils.AssistantInsert.txtInsertFailed": "Editoren er optaget, så resultatet fra Assistant kunne ikke indsættes. Prøv at indsætte det igen.",
+  "Common.Views.SmartPickerMenu.txtAnyLink": "Ethvert link",
+  "Common.Views.SmartPickerMenu.txtNoResults": "Intet forslag fundet",
+  "Common.Views.SmartPickerMenu.txtOpenFailed": "Smart Picker kunne ikke åbnes.",
+  "DE.Views.Statusbar.txtSelectionOf": "{0} af {1}",
+  "DE.Views.Toolbar.tipSmartPicker": "Smart Picker"
 }
