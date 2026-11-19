@@ -10,7 +10,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: var(--eo-space-2) var(--eo-space-1);
+    padding: 0 var(--eo-space-1) var(--eo-space-2);
 
     .eo-sidebar-spacer {
         flex: 1 1 auto;
@@ -21,8 +21,15 @@
         width: 32px;
         min-width: 32px;
         height: 32px;
-        line-height: 30px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
         margin: 0 0 var(--eo-space-1);
+
+        &.hidden {
+            display: none;
+        }
         border-radius: var(--eo-radius-md);
 
         &:hover:not(.disabled) {
