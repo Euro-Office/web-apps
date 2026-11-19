@@ -127,7 +127,7 @@ body[data-editor-type="drawing"] {
   left: 0;
   right: 0;
   height: @eo-app-accent-height;
-  background: var(--eo-app-accent);
+  background: var(--eo-app-color);
 }
 
 // The slideshow fills #viewport, so the strip would stay on screen while
@@ -141,26 +141,26 @@ body[data-editor-type="drawing"] {
 }
 
 :root body[data-editor-type="document"] {
-  --eo-app-accent: @eo-app-accent-document;
+  --eo-app-color: @eo-app-color-document;
 }
 
 // PDF forms run inside the document editor and expose data-editor-type="document".
 :root body.pdf-form {
-  --eo-app-accent: @eo-app-accent-pdf;
+  --eo-app-color: @eo-app-color-pdf;
 }
 
 :root body[data-editor-type="spreadsheet"] {
-  --eo-app-accent: @eo-app-accent-spreadsheet;
+  --eo-app-color: @eo-app-color-spreadsheet;
 }
 
 :root body[data-editor-type="presentation"] {
-  --eo-app-accent: @eo-app-accent-presentation;
+  --eo-app-color: @eo-app-color-presentation;
 }
 
 :root body[data-editor-type="pdf"] {
-  --eo-app-accent: @eo-app-accent-pdf;
+  --eo-app-color: @eo-app-color-pdf;
 }
 
 :root body[data-editor-type="drawing"] {
-  --eo-app-accent: @eo-app-accent-drawing;
+  --eo-app-color: @eo-app-color-drawing;
 }
