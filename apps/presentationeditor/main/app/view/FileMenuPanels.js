@@ -2133,7 +2133,7 @@ define([], function () {
             '<div style="width:100%; height:100%; position: relative;">',
                 '<div id="id-print-settings" class="no-padding">',
                     '<div class="print-settings">',
-                        '<div class="flex-settings ps-container oo settings-container">',
+                        '<div class="flex-settings settings-container">',
                             '<div class="main-header"><%= scope.txtPrint %></div>',
                             '<table style="width: 100%;">',
                                 '<tbody>',

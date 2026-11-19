@@ -1583,7 +1583,7 @@ define([
                         itemWidth: 20,
                         itemHeight: 20,
                         menuMaxHeight: 652,
-                        menuWidth: 362,
+                        menuWidth: 374,
                         style: 'width: 145px;',
                         enableKeyEvents: true,
                         lock: [Common.enumLock.slideDeleted, Common.enumLock.lostConnect, Common.enumLock.noSlides, Common.enumLock.disableOnStart],
