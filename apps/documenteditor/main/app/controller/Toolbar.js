@@ -47,22 +47,23 @@ define([
         src.width = w; src.height = h;
         var ctx = src.getContext('2d');
         ctx.drawImage(img, 0, 0);
-        var data = ctx.getImageData(0, 0, w, h).data, min = w, max = -1;
-        for (var x = 0; x < w; x++) {
-            for (var y = 0; y < h; y++) {
+        var data = ctx.getImageData(0, 0, w, h).data, minX = w, maxX = -1, minY = h, maxY = -1;
+        for (var y = 0; y < h; y++) {
+            for (var x = 0; x < w; x++) {
                 var i = (y * w + x) * 4;
                 if (data[i] < 200 || data[i + 1] < 200 || data[i + 2] < 200) {
-                    min = Math.min(min, x); max = x;
-                    break;
+                    minX = Math.min(minX, x); maxX = Math.max(maxX, x);
+                    minY = Math.min(minY, y); maxY = y;
                 }
             }
         }
-        if (max < 0) return null;
-        var out = document.createElement('canvas'), octx = out.getContext('2d'), cw = max - min + 1;
+        if (maxX < 0) return null;
+        var out = document.createElement('canvas'), octx = out.getContext('2d'),
+            cw = maxX - minX + 1, ch = maxY - minY + 1;
         out.width = w; out.height = h;
         octx.fillStyle = '#ffffff';
         octx.fillRect(0, 0, w, h);
-        octx.drawImage(src, min, 0, cw, h, Math.round((w - cw) / 2), 0, cw, h);
+        octx.drawImage(src, minX, minY, cw, ch, Math.round((w - cw) / 2), Math.round((h - ch) / 2), cw, ch);
         return out.toDataURL();
     }
 
