@@ -93,6 +93,29 @@ define([
             calls.should.equal(1);
         });
 
+        it('Keeps wheel events from an ancestor that cancels them while it can scroll', function(){
+            var $el = makeBox(300), el = $el[0], cancelled = 0;
+            new Common.UI.Scroller({el: $el, suppressScrollX: true});
+            // like sdkjs' #viewport handler
+            host.addEventListener('wheel', function(e) { e.preventDefault(); cancelled++; });
+            var wheel = function(deltaY, opts) {
+                el.firstChild.dispatchEvent(new WheelEvent('wheel', _.extend({bubbles: true, cancelable: true, deltaY: deltaY}, opts)));
+            };
+
+            wheel(50);
+            cancelled.should.equal(0);
+            wheel(-50);
+            cancelled.should.equal(1);  // already at the top
+
+            el.scrollTop = el.scrollHeight;
+            wheel(50);
+            cancelled.should.equal(2);  // already at the bottom
+            wheel(-50);
+            cancelled.should.equal(2);
+            wheel(-50, {ctrlKey: true});
+            cancelled.should.equal(3);  // zoom gestures still reach the editor
+        });
+
         it('Captures the mouse only while a scrollbar drag is held', function(done){
             var $el = makeBox(300), el = $el[0];
             new Common.UI.Scroller({el: $el});
