@@ -198,13 +198,15 @@ define([
         function applyUsers(count, originalCount) {
             if (!$btnUsers) return;
             var has_edit_users = appConfig && (count > 1 && (appConfig.isEdit || appConfig.isRestrictedEdit) || count > 0 && appConfig.canLiveView); // has other user(s) who edit document
-            if ( has_edit_users ) {
-                $panelUsers['show']();
-                $btnUsers.find('.caption').html(originalCount);
-            } else {
-                $panelUsers['hide']();
-            }
+            showUsersPanel(has_edit_users);
+            has_edit_users && $btnUsers.find('.caption').html(originalCount);
             updateDocNamePosition();
+        }
+
+        // With co-editors the users button lists everyone, so the own avatar next to it is hidden
+        function showUsersPanel(show) {
+            $panelUsers[show ? 'show' : 'hide']();
+            $('body').toggleClass('eo-cousers-shown', !!show);
         }
 
         function onLostEditRights() {
@@ -309,7 +311,7 @@ define([
         }
 
         function onResize() {
-            if (appConfig && appConfig.twoLevelHeader && !appConfig.compactHeader)
+            if (appConfig && appConfig.twoLevelHeader)
                 updateDocNamePosition();
         }
 
@@ -433,7 +435,7 @@ define([
                     html: true
                 });
                 $btnUsers.on('click', onUsersClick.bind(me));
-                $panelUsers[(appConfig && (editingUsers > 1 && (appConfig.isEdit || appConfig.isRestrictedEdit) || editingUsers > 0 && appConfig.canLiveView)) ? 'show' : 'hide']();
+                showUsersPanel(appConfig && (editingUsers > 1 && (appConfig.isEdit || appConfig.isRestrictedEdit) || editingUsers > 0 && appConfig.canLiveView));
                 updateDocNamePosition();
             }
 
@@ -1405,6 +1407,67 @@ define([
                 }
             },
 
+            setApi: function (api) {
+                var me = this,
+                    isSave = function (id) {
+                        return id === Asc.c_oAscAsyncAction['Save'] || id === Asc.c_oAscAsyncAction['ForceSaveButton'];
+                    },
+                    settle = function () {
+                        me.setSaveStatus(api.isDocumentModified() ? 'unsaved' : (me._savedAt ? 'saved' : ''));
+                    },
+                    goOffline = function () {
+                        me.setSaveStatus('offline');
+                    };
+                if (!api || me._api === api) return this;
+                me._api = api;
+                api.asc_registerCallback('asc_onDocumentModifiedChanged', function () {
+                    (me._saveStatus !== 'saving' && me._saveStatus !== 'offline') && settle();
+                });
+                api.asc_registerCallback('asc_onStartAction', function (type, id) {
+                    isSave(id) && me._saveStatus !== 'offline' && me.setSaveStatus('saving');
+                });
+                api.asc_registerCallback('asc_onEndAction', function (type, id) {
+                    if (isSave(id) && me._saveStatus !== 'offline') {
+                        me._savedAt = Date.now();
+                        settle();
+                    } else if (id === Asc.c_oAscAsyncAction['Disconnect'])
+                        settle();
+                });
+                api.asc_registerCallback('asc_onCoAuthoringDisconnect', goOffline);
+                Common.NotificationCenter.on('api:disconnect', goOffline);
+                return this;
+            },
+
+            setSaveStatus: function (status) {
+                var me = this;
+                me._saveStatus = status;
+                clearInterval(me._saveStatusTimer);
+                if (!$labelDocName || !appConfig || !appConfig.isEdit) return;
+
+                if (!me.$saveStatus || !me.$saveStatus.parent().is($labelDocName.parent())) {
+                    me.$saveStatus && me.$saveStatus.remove();
+                    me.$saveStatus = $('<span class="eo-save-status" role="status" aria-live="polite"></span>').insertAfter($labelDocName);
+                }
+
+                var render = function () {
+                    var text = '';
+                    switch (status) {
+                    case 'saving': text = me.textSaving; break;
+                    case 'unsaved': text = me.textUnsavedChanges; break;
+                    case 'offline': text = me.textOffline; break;
+                    case 'saved':
+                        var mins = Math.floor((Date.now() - me._savedAt) / 60000);
+                        text = mins < 1 ? me.textSaved : Common.Utils.String.format(me.textSavedAgo,
+                            new Intl.RelativeTimeFormat(Common.Locale.getCurrentLanguage() || 'en', {style: 'short'})
+                                .format(mins < 60 ? -mins : -Math.floor(mins / 60), mins < 60 ? 'minute' : 'hour'));
+                        break;
+                    }
+                    me.$saveStatus.text(text).toggleClass('hidden', !text);
+                };
+                render();
+                (status === 'saved') && (me._saveStatusTimer = setInterval(render, 60000));
+            },
+
             setDocumentReadOnly: function (readonly) {
                 this.readOnly = readonly;
                 this.setDocumentCaption(this.documentCaption);
@@ -1448,6 +1511,11 @@ define([
             textShare: 'Share',
             tipPrintQuick: 'Quick print',
             textReadOnly: 'Read only',
+            textSaving: 'Saving…',
+            textSaved: 'Saved',
+            textSavedAgo: 'Saved · {0}',
+            textUnsavedChanges: 'Unsaved changes',
+            textOffline: 'Offline',
             textView: 'Viewing',
             textComment: 'Commenting',
             textEdit: 'Editing',

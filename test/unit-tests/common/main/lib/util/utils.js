@@ -378,4 +378,16 @@ define([
             assert.isFalse(new Common.Utils.RGBColor('#ffff00').isDark());
         });
     });
+    describe('Common.Utils.isCompactHeader', function(){
+        it('defaults to true', function(){
+            assert.isTrue(Common.Utils.isCompactHeader(undefined));
+            assert.isTrue(Common.Utils.isCompactHeader({}));
+            assert.isTrue(Common.Utils.isCompactHeader({compactHeader: true}));
+        });
+
+        it('is false only when an integration passes false', function(){
+            assert.isFalse(Common.Utils.isCompactHeader({compactHeader: false}));
+            assert.isTrue(Common.Utils.isCompactHeader({compactHeader: 0}));
+        });
+    });
 });

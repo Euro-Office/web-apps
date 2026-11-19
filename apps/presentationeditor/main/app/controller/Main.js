@@ -450,6 +450,7 @@ define([
                 this.appOptions.canBack = this.appOptions.canBackToFolder = !!_canback;
 
                 appHeader = this.getApplication().getController('Viewport').getView('Common.Views.Header');
+                appHeader.setApi(this.api);
                 appHeader.setCanBack(this.appOptions.canBack, this.appOptions.canBack ? this.appOptions.customization.goback.text : '');
 
                 if (this.editorConfig.lang)
@@ -1381,7 +1382,7 @@ define([
                 this.appOptions.canSuggest     = !((typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.suggestFeature===false);
                 this.appOptions.canCopy        = this.permissions.copy !== false;
 
-                this.appOptions.compactHeader = this.appOptions.customization && (typeof (this.appOptions.customization) == 'object') && !!this.appOptions.customization.compactHeader;
+                this.appOptions.compactHeader = Common.Utils.isCompactHeader(this.appOptions.customization);
                 this.appOptions.twoLevelHeader = this.appOptions.isEdit; // when compactHeader=true some buttons move to toolbar
 
                 this.appOptions.canUseHistory  = this.appOptions.canLicense && this.editorConfig.canUseHistory && this.appOptions.canCoAuthoring && !this.appOptions.isOffline;

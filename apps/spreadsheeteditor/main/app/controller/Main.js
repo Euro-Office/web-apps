@@ -493,6 +493,7 @@ define([
                 this.appOptions.canBack = this.appOptions.canBackToFolder = !!_canback;
 
                 this.headerView = this.getApplication().getController('Viewport').getView('Common.Views.Header');
+                this.headerView.setApi(this.api);
                 this.headerView.setCanBack(this.appOptions.canBack, this.appOptions.canBack ? this.editorConfig.customization.goback.text : '');
 
                 var reg = Common.localStorage.getItem("sse-settings-reg-settings"),
@@ -1509,7 +1510,7 @@ define([
                 this.appOptions.canSuggest     = !((typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.suggestFeature===false);
                 this.appOptions.canCopy        = this.permissions.copy !== false;
 
-                this.appOptions.compactHeader = this.appOptions.customization && (typeof (this.appOptions.customization) == 'object') && !!this.appOptions.customization.compactHeader;
+                this.appOptions.compactHeader = Common.Utils.isCompactHeader(this.appOptions.customization);
                 this.appOptions.twoLevelHeader = this.appOptions.isEdit; // when compactHeader=true some buttons move to toolbar
 
                 // change = true by default in editor
