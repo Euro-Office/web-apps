@@ -1610,4 +1610,9 @@ define([], function () {
 
         return (typeof val === 'number') ||  !(val === '' || !regstr.test(val.trim()) || isNaN(parseFloat(val)));
     };
+    // customization.compactHeader defaults to true: the title bar sits in the tab row
+    // unless an integration passes false
+    Common.Utils.isCompactHeader = function (customization) {
+        return !(customization && typeof customization == 'object' && customization.compactHeader === false);
+    };
 });
