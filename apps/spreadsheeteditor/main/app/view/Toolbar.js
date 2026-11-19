@@ -2554,6 +2554,7 @@ define([
 
             if ( mode.isEdit ) {
                 me.$el.html(me.rendererComponents(me.$layout));
+                !mode.isEditDiagram && !mode.isEditMailMerge && !mode.isEditOle && me.$layout.addClass(mode.compactHeader ? 'eo-static-home-only' : 'eo-clipboard-home-only');
             } else {
                 me.$layout.find('.canedit').hide();
                 me.$layout.addClass('folded');
