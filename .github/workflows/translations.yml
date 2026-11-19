@@ -1,0 +1,45 @@
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
+
+# Translations come from Weblate (https://hosted.weblate.org/projects/euro-office/), so PRs
+# change only the English source. Weblate's own PRs are exempt and get approved by weblate-approve-merge.yml.
+name: Translations
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: translations-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  translations:
+    name: Translations on Weblate
+    if: github.event.pull_request.user.login != 'hosted-weblate[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+          sparse-checkout: .github/scripts
+
+      - name: Test the check
+        run: .github/scripts/check-translations.test.sh
+
+      - name: Check that only the English source changes
+        run: |
+          # HEAD is the PR merged into the base branch, so its first parent is the base
+          if ! git -c core.quotePath=false diff --no-renames --name-only HEAD^1 HEAD | .github/scripts/check-translations.sh; then
+            {
+              echo "### Translations are managed on Weblate"
+              echo "This PR changes translated files. Translations are made on [Weblate](https://hosted.weblate.org/projects/euro-office/) and come in through Weblate's own PRs, so PRs change only the English source."
+              echo "See [how to contribute translations](https://github.com/Euro-Office/web-apps/blob/main/docs/translations.md)."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
