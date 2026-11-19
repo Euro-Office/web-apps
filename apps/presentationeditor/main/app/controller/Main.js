@@ -40,6 +40,7 @@ define([
     'common/main/lib/component/TreeView',
     'common/main/lib/component/RadioBox',
     'common/main/lib/controller/Fonts',
+    'common/main/lib/util/localsession/desktop',
     'common/main/lib/collection/TextArt',
     'common/main/lib/util/LocalStorage',
     'presentationeditor/main/app/collection/ShapeGroups',
@@ -238,6 +239,7 @@ define([
                     // Initialize api gateway
                     this.editorConfig = {};
                     this.appOptions = {};
+                    this.localSession = Common.LocalSession.createDesktopHost();
                     Common.Gateway.on('init',           _.bind(this.loadConfig, this));
                     Common.Gateway.on('showmessage',    _.bind(this.onExternalMessage, this));
                     Common.Gateway.on('opendocument',   _.bind(this.loadDocument, this));
@@ -481,6 +483,8 @@ define([
                     this.api.asc_registerCallback('asc_onRequestRefreshFile',       _.bind(this.onRequestRefreshFile, this));
                 }
 
+                this.appOptions.isLocalSession = Common.LocalSession.isLocalSessionConfig(this.editorConfig);
+
                 Common.Controllers.Desktop.init(this.appOptions);
                 Common.UI.HintManager.setMode(this.appOptions);
             },
@@ -493,6 +497,10 @@ define([
 
                 if (data.doc) {
                     this.permissions = $.extend(this.permissions, data.doc.permissions);
+                    // no DocService: chat and history are off, a viewer gets no editing rights
+                    if (this.appOptions.isLocalSession)
+                        this.localSession.openDocument({api: this.api, documentType: 'slide',
+                            user: this.appOptions.user, editorConfig: this.editorConfig, doc: data.doc, permissions: this.permissions});
 
                     var _options = $.extend({}, data.doc.options, this.editorConfig.actionLink || {});
 
@@ -1138,6 +1146,7 @@ define([
             },
 
             applyLicense: function() {
+                if (this.appOptions.isLocalSession) return; // no DocService, no license to apply
                 if (this.editorConfig.mode === 'view') {
                     if (this.appOptions.canLiveView && (this._state.licenseType===Asc.c_oLicenseResult.ConnectionsLive || this._state.licenseType===Asc.c_oLicenseResult.ConnectionsLiveOS ||
                                                         this._state.licenseType===Asc.c_oLicenseResult.UsersViewCount || this._state.licenseType===Asc.c_oLicenseResult.UsersViewCountOS ||
@@ -1339,7 +1348,7 @@ define([
                 this.appOptions.canLicense     = (licType === Asc.c_oLicenseResult.Success || licType === Asc.c_oLicenseResult.SuccessLimit);
                 this.appOptions.isLightVersion = params.asc_getIsLight();
                 /** coauthoring begin **/
-                this.appOptions.canCoAuthoring = !this.appOptions.isLightVersion;
+                this.appOptions.canCoAuthoring = !this.appOptions.isLightVersion && Common.LocalSession.canCoAuthoring(this.editorConfig);
                 /** coauthoring end **/
                 this.appOptions.canRequestEditRights = this.editorConfig.canRequestEditRights;
                 this.appOptions.canEdit        = this.permissions.edit !== false && // can edit
@@ -1361,6 +1370,7 @@ define([
                 this.appOptions.canRename      = this.editorConfig.canRename;
                 this.appOptions.canForcesave   = this.appOptions.isEdit && !this.appOptions.isOffline && (typeof (this.editorConfig.customization) == 'object' && !!this.editorConfig.customization.forcesave);
                 this.appOptions.forcesave      = this.appOptions.canForcesave;
+                Common.LocalSession.applyAppOptions(this.appOptions);
                 this.appOptions.canEditComments= this.appOptions.isOffline || !this.permissions.editCommentAuthorOnly;
                 this.appOptions.canDeleteComments= this.appOptions.isOffline || !this.permissions.deleteCommentAuthorOnly;
                 if ((typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.commentAuthorOnly===true) {
@@ -2091,7 +2101,7 @@ define([
 
             onDownloadUrl: function(url, fileType) {
                 if (this._state.isFromGatewayDownloadAs) {
-                    Common.Gateway.downloadAs(url, fileType);
+                    this.appOptions.isLocalSession ? this.localSession.downloadAs(url, fileType) : Common.Gateway.downloadAs(url, fileType);
                 }
                 this._state.isFromGatewayDownloadAs = false;
             },
@@ -2117,6 +2127,7 @@ define([
             },
 
             onServerVersion: function(buildVersion) {
+                if (this.appOptions.isLocalSession) return false; // no server to compare with
                 if (this.changeServerVersion) return true;
 
                 const cur_version = this.getApplication().getController('LeftMenu').leftMenu.getMenu('about').txtVersionNum;

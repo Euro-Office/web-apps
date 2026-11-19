@@ -12,6 +12,7 @@ import {
     ViewCommentsController
 } from "../../../../common/mobile/lib/controller/collaboration/Comments";
 import About from '../../../../common/mobile/lib/view/About';
+import { isLocalSessionConfig, createLocalSessionHost } from '../../../../common/mobile/utils/localSession.js';
 import EditorUIController from '../lib/patch';
 import ErrorController from "./Error";
 import LongActionsController from "./LongActions";
@@ -204,6 +205,9 @@ class MainController extends Component {
 
                 if (data.doc) {
                     this.permissions = Object.assign(this.permissions, data.doc.permissions);
+                    if (isLocalSessionConfig(this.editorConfig))
+                        this.localSession.openDocument({api: this.api, documentType: 'word',
+                            user: this.props.storeAppOptions.user, editorConfig: this.editorConfig, doc: data.doc, permissions: this.permissions});
 
                     const _options = Object.assign({}, data.doc.options, this.editorConfig.actionLink || {});
                     const _userOptions = this.props.storeAppOptions.user;
@@ -500,6 +504,8 @@ class MainController extends Component {
                     this.props.storeAppOptions.isMobileViewAvailable = !this.appOptions.isCorePDF;
                     this.bindEvents();
 
+                    this.localSession = createLocalSessionHost(this.props.t('Main', {returnObjects: true}));
+
                     Common.Gateway.on('init',           loadConfig);
                     Common.Gateway.on('showmessage',    this.onExternalMessage.bind(this));
                     Common.Gateway.on('opendocument',   loadDocument);
@@ -707,6 +713,7 @@ class MainController extends Component {
     }
 
     applyLicense () {
+        if (isLocalSessionConfig(this.editorConfig)) return; // no Document Server, no license to apply
         const { t } = this.props;
         const _t = t('Main', {returnObjects:true});
 
@@ -814,6 +821,7 @@ class MainController extends Component {
     }
 
     onServerVersion (buildVersion) {
+        if (isLocalSessionConfig(this.editorConfig)) return false; // no server to compare with
         if (this.changeServerVersion) return true;
         const { t } = this.props;
         const _t = t('Main', {returnObjects:true});
@@ -1387,7 +1395,7 @@ class MainController extends Component {
 
     onDownloadUrl (url, fileType) {
         if (this._state.isFromGatewayDownloadAs) {
-            Common.Gateway.downloadAs(url, fileType);
+            this.localSession.downloadAs(url, fileType);
         }
 
         this._state.isFromGatewayDownloadAs = false;
