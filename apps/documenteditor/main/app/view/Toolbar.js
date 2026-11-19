@@ -1797,7 +1797,7 @@ define([
                         itemTemplate: _.template([
                             '<div class="style" id="<%= id %>">',
                                 '<div class="eo-style-center" style="background-image: url(<%= typeof centeredUrl !== \'undefined\' ? centeredUrl : imageUrl %>); width: ' + itemWidth + 'px; height: ' + itemHeight + 'px;"></div>',
-                                '<div class="eo-style-left" style="background-image: url(<%= imageUrl %>);"></div>',
+                                '<div class="eo-style-left" style="background-image: url(<%= typeof leftUrl !== \'undefined\' ? leftUrl : imageUrl %>);"></div>',
                             '</div>'
                         ].join('')),
                         beforeOpenHandler: function (e) {

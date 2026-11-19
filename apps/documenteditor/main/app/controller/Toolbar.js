@@ -41,7 +41,10 @@ define([
 
     // Copy of a style preview with its content moved to the horizontal centre.
     // Light pixels (white background, grey separators) don't count as content.
-    function eoCenterImage(img) {
+    // sdkjs draws style previews 46px high at device resolution, text at the left
+    var EO_PREVIEW_HEIGHT = 46;
+
+    function eoCenterImage(img, tileW, tileH) {
         var w = img.naturalWidth, h = img.naturalHeight,
             src = document.createElement('canvas');
         src.width = w; src.height = h;
@@ -58,21 +61,33 @@ define([
             }
         }
         if (maxX < 0) return null;
-        var out = document.createElement('canvas'), octx = out.getContext('2d'),
-            cw = maxX - minX + 1, ch = maxY - minY + 1;
-        out.width = w; out.height = h;
-        octx.fillStyle = '#ffffff';
-        octx.fillRect(0, 0, w, h);
-        octx.drawImage(src, minX, minY, cw, ch, Math.round((w - cw) / 2), Math.round((h - ch) / 2), cw, ch);
-        return out.toDataURL();
+        var cw = maxX - minX + 1, ch = maxY - minY + 1,
+            k = h / EO_PREVIEW_HEIGHT;
+        var draw = function(outW, outH, x) {
+            var out = document.createElement('canvas'), octx = out.getContext('2d');
+            out.width = outW; out.height = outH;
+            octx.fillStyle = '#ffffff';
+            octx.fillRect(0, 0, outW, outH);
+            octx.drawImage(src, minX, minY, cw, ch, x, Math.round((outH - ch) / 2), cw, ch);
+            return out.toDataURL();
+        };
+        // Tiles: exactly the tile in device pixels, so the preview shows 1:1 and stays sharp.
+        // Only text wider than the tile gets a larger canvas, which the tile scales down.
+        var tw = Math.round(tileW * k), th = Math.round(tileH * k),
+            outW = Math.max(tw, cw + Math.round(8 * k)),
+            outH = Math.max(ch, Math.round(outW * th / tw));
+        return {
+            center: draw(outW, outH, Math.round((outW - cw) / 2)),
+            left: draw(w, h, minX)
+        };
     }
 
-    function eoCenterImages(urls, done) {
+    function eoCenterImages(urls, tileW, tileH, done) {
         var map = {}, left = urls.length;
         _.each(urls, function(url) {
             var img = new Image();
             img.onload = img.onerror = function() {
-                map[url] = (img.naturalWidth && eoCenterImage(img)) || url;
+                map[url] = (img.naturalWidth && eoCenterImage(img, tileW, tileH)) || {center: url, left: url};
                 --left || done(map);
             };
             img.src = url;
@@ -3727,7 +3742,7 @@ define([
                 centered = self._eoCenteredStyles || {},
                 missing = _.filter(urls, function(url) { return url && !centered[url]; });
             self._eoLatestStyles = styles;
-            missing.length && self._eoCentering !== styles && (self._eoCentering = styles) && eoCenterImages(missing, function(map) {
+            missing.length && self._eoCentering !== styles && (self._eoCentering = styles) && eoCenterImages(missing, listStyles.options.itemWidth, listStyles.options.itemHeight, function(map) {
                 self._eoCentering = null;
                 self._eoCenteredStyles = _.pick(_.extend({}, centered, map), urls);
                 self._eoLatestStyles === styles && self._onInitEditorStyles(styles);
@@ -3736,7 +3751,8 @@ define([
             _.each(merged, function(style){
                 arr.push({
                     imageUrl: style.asc_getImage(),
-                    centeredUrl: centered[style.asc_getImage()] || style.asc_getImage(),
+                    centeredUrl: centered[style.asc_getImage()] ? centered[style.asc_getImage()].center : style.asc_getImage(),
+                    leftUrl : centered[style.asc_getImage()] ? centered[style.asc_getImage()].left : style.asc_getImage(),
                     title   : style.get_Name(),
                     tip     : mainController.translationTable[style.get_Name()] || style.get_Name(),
                     id      : Common.UI.getId()
