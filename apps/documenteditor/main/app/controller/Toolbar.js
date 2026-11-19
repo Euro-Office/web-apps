@@ -71,7 +71,7 @@ define([
         _.each(urls, function(url) {
             var img = new Image();
             img.onload = img.onerror = function() {
-                img.naturalWidth && (map[url] = eoCenterImage(img) || url);
+                map[url] = (img.naturalWidth && eoCenterImage(img)) || url;
                 --left || done(map);
             };
             img.src = url;
@@ -3726,7 +3726,8 @@ define([
                 centered = self._eoCenteredStyles || {},
                 missing = _.filter(urls, function(url) { return url && !centered[url]; });
             self._eoLatestStyles = styles;
-            missing.length && eoCenterImages(missing, function(map) {
+            missing.length && self._eoCentering !== styles && (self._eoCentering = styles) && eoCenterImages(missing, function(map) {
+                self._eoCentering = null;
                 self._eoCenteredStyles = _.pick(_.extend({}, centered, map), urls);
                 self._eoLatestStyles === styles && self._onInitEditorStyles(styles);
             });
