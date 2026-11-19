@@ -5,11 +5,11 @@
     }
 
     #label-pages {
-        .margin-left-10();
+        .margin-left(var(--eo-space-2));
     }
 
     #btn-zoom-up {
-        .margin-right-10();
+        .margin-right(var(--eo-space-2));
     }
 
     #label-pages, #label-zoom {
@@ -21,7 +21,7 @@
     }
 
     #btn-zoom-topage, #btn-zoom-towidth, #status-btn-multiple-pages {
-        .margin-right-8();
+        .margin-right(var(--eo-space-1));
     }
 
     .status-group {
@@ -43,7 +43,7 @@
     }
 
     .separator {
-        margin: 0px 6px;
+        margin: 0 var(--eo-space-2);
 
         &.short {
             height: @statusbar-height-ie;
@@ -51,7 +51,7 @@
         }
 
         &.space {
-            margin: 0px 2px;
+            margin: 0 var(--eo-space-1);
             border: none;
         }
     }

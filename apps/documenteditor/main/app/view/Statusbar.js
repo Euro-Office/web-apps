@@ -52,7 +52,13 @@ define([
                 Common.Utils.String.format(this.pageIndexText, model.get('current'), model.get('count')) );
         }
 
+        var DOC_LANG_VALUE = 'eo-doc-lang';
+
         function _clickLanguage(menu, item) {
+            if (item.value === DOC_LANG_VALUE) {
+                this.fireEvent('langdoc', [this]);
+                return;
+            }
             this.langMenu.prevTip = item.value;
             this.btnLanguage.setCaption(item.caption);
             this.fireEvent('langchanged', [this, item.code, item.caption]);
@@ -270,6 +276,10 @@ define([
                     searchFields: ['caption', 'captionEn'],
                     focusToCheckedItem: true
                 });
+                var addLangToRecent = this.langMenu.addItemToRecent;
+                this.langMenu.addItemToRecent = function (item) {
+                    (item && item.value === DOC_LANG_VALUE) || addLangToRecent.apply(this, arguments);
+                };
                 this.zoomMenu = new Common.UI.Menu({
                     style: 'margin-top:-5px;',
                     menuAlign: 'bl-tl',
@@ -427,6 +437,9 @@ define([
                         spellcheck  : item['spellcheck']
                     });
                 });
+                if (arr.length && Common.UI.LayoutManager.isElementVisible('statusBar-docLang') && Common.UI.LayoutManager.isElementVisible('statusBar-textLang')) {
+                    arr.push({caption: this.textSetDocLang, captionEn: '', value: DOC_LANG_VALUE, spellcheck: false});
+                }
                 this.langMenu.setRecent({
                     count: Common.Utils.InternalSettings.get("app-settings-recent-langs-count") || 5,
                     offset: Common.Utils.InternalSettings.get("app-settings-recent-langs-offset") || 0,
@@ -542,7 +555,8 @@ define([
             tipFitWidth         : 'Fit to Width',
             tipZoomIn           : 'Zoom In',
             tipZoomOut          : 'Zoom Out',
-            tipZoomFactor       : 'Magnification',
+            tipZoomFactor       : 'Zoom',
+            textSetDocLang: 'Set language for whole document…',
             tipSetLang          : 'Set Text Language',
             txtPageNumInvalid   : 'Page number invalid',
             textTrackChanges    : 'Track Changes',
