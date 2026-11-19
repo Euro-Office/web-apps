@@ -291,3 +291,46 @@
         }
     }
 }
+
+// Style gallery like Word: up to three tiles with the preview centred, the
+// dropdown is a one-column list with left-aligned previews.
+.combo-styles {
+    max-width: 358px;
+
+    .style > div {
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .eo-style-left {
+        display: none;
+    }
+
+    .menu-picker {
+        .item {
+            width: 100%;
+        }
+
+        .style {
+            width: 100%;
+        }
+
+        .eo-style-center {
+            display: none;
+        }
+
+        .eo-style-left {
+            display: block;
+            width: 100%;
+            height: 46px;
+            background-position: left center;
+            background-size: auto 46px;
+
+            // the previews have a white background, keep row borders and hover visible
+            .theme-type-light & {
+                mix-blend-mode: multiply;
+            }
+        }
+    }
+}

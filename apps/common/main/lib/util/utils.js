@@ -1615,4 +1615,51 @@ define([], function () {
     Common.Utils.isCompactHeader = function (customization) {
         return !(customization && typeof customization == 'object' && customization.compactHeader === false);
     };
+
+    // sdkjs draws style previews 46px high at device resolution, the text at the left.
+    // Returns two copies with the content found by its non-light pixels moved:
+    // center - centred both ways on a tile-sized canvas in device pixels, so the tile shows
+    //          it 1:1, only content wider than the tile gets a larger canvas the tile scales down
+    // left   - same size as the preview, content left as drawn and centred vertically
+    // null when the preview is blank or cannot be read.
+    Common.Utils.centerStylePreview = function (img, tileW, tileH) {
+        var w = img.naturalWidth, h = img.naturalHeight,
+            src = document.createElement('canvas'), data;
+        src.width = w; src.height = h;
+        var ctx = src.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        try {
+            data = ctx.getImageData(0, 0, w, h).data;
+        } catch (e) {
+            return null;
+        }
+        var minX = w, maxX = -1, minY = h, maxY = -1;
+        for (var y = 0; y < h; y++) {
+            for (var x = 0; x < w; x++) {
+                var i = (y * w + x) * 4;
+                if (data[i] < 200 || data[i + 1] < 200 || data[i + 2] < 200) {
+                    minX = Math.min(minX, x); maxX = Math.max(maxX, x);
+                    minY = Math.min(minY, y); maxY = y;
+                }
+            }
+        }
+        if (maxX < 0) return null;
+        var cw = maxX - minX + 1, ch = maxY - minY + 1,
+            k = h / 46;
+        var draw = function(outW, outH, x) {
+            var out = document.createElement('canvas'), octx = out.getContext('2d');
+            out.width = outW; out.height = outH;
+            octx.fillStyle = '#ffffff';
+            octx.fillRect(0, 0, outW, outH);
+            octx.drawImage(src, minX, minY, cw, ch, x, Math.round((outH - ch) / 2), cw, ch);
+            return out.toDataURL();
+        };
+        var tw = Math.round(tileW * k), th = Math.round(tileH * k),
+            outW = Math.max(tw, cw + Math.round(8 * k)),
+            outH = Math.max(ch, Math.round(outW * th / tw));
+        return {
+            center: draw(outW, outH, Math.round((outW - cw) / 2)),
+            left: draw(w, h, minX)
+        };
+    };
 });

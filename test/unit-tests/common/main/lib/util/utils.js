@@ -390,4 +390,79 @@ define([
             assert.isTrue(Common.Utils.isCompactHeader({compactHeader: 0}));
         });
     });
+
+    describe('Common.Utils.centerStylePreview', function(){
+        // A white preview at 2x (280x92 = 140x46 css px) with a black box as content
+        var preview = function(box) {
+            var c = document.createElement('canvas');
+            c.width = 280; c.height = 92;
+            var ctx = c.getContext('2d');
+            ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, 280, 92);
+            ctx.fillStyle = '#000';
+            box && ctx.fillRect(box.x, box.y, box.w, box.h);
+            return load(c.toDataURL());
+        };
+        var load = function(url) {
+            return new Promise(function(resolve) {
+                var img = new Image();
+                img.onload = function() { resolve(img); };
+                img.src = url;
+            });
+        };
+        // Bounding box of the dark pixels
+        var inkBox = function(img) {
+            var c = document.createElement('canvas');
+            c.width = img.naturalWidth; c.height = img.naturalHeight;
+            var ctx = c.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            var d = ctx.getImageData(0, 0, c.width, c.height).data, r = {x0: c.width, x1: -1, y0: c.height, y1: -1};
+            for (var y = 0; y < c.height; y++)
+                for (var x = 0; x < c.width; x++)
+                    if (d[(y * c.width + x) * 4] < 128) {
+                        r.x0 = Math.min(r.x0, x); r.x1 = Math.max(r.x1, x);
+                        r.y0 = Math.min(r.y0, y); r.y1 = Math.max(r.y1, y);
+                    }
+            return {w: c.width, h: c.height, left: r.x0, right: c.width - 1 - r.x1, top: r.y0, bottom: c.height - 1 - r.y1};
+        };
+
+        it('centres content on a tile-sized canvas in device pixels', function(){
+            return preview({x: 4, y: 10, w: 60, h: 30}).then(function(img) {
+                return load(Common.Utils.centerStylePreview(img, 104, 40).center);
+            }).then(function(out) {
+                var b = inkBox(out);
+                assert.equal(b.w, 208);
+                assert.equal(b.h, 80);
+                assert.isAtMost(Math.abs(b.left - b.right), 1);
+                assert.isAtMost(Math.abs(b.top - b.bottom), 1);
+            });
+        });
+
+        it('keeps the tile aspect ratio for content wider than the tile', function(){
+            return preview({x: 0, y: 20, w: 260, h: 40}).then(function(img) {
+                return load(Common.Utils.centerStylePreview(img, 104, 40).center);
+            }).then(function(out) {
+                var b = inkBox(out);
+                assert.isAbove(b.w, 260);
+                assert.closeTo(b.w / b.h, 104 / 40, 0.05);
+                assert.isAtMost(Math.abs(b.left - b.right), 1);
+            });
+        });
+
+        it('keeps the list copy left-aligned and centres it vertically', function(){
+            return preview({x: 10, y: 4, w: 60, h: 30}).then(function(img) {
+                return load(Common.Utils.centerStylePreview(img, 104, 40).left);
+            }).then(function(out) {
+                var b = inkBox(out);
+                assert.equal(b.w, 280);
+                assert.equal(b.left, 10);
+                assert.isAtMost(Math.abs(b.top - b.bottom), 1);
+            });
+        });
+
+        it('returns null for a blank preview', function(){
+            return preview(null).then(function(img) {
+                assert.isNull(Common.Utils.centerStylePreview(img, 104, 40));
+            });
+        });
+    });
 });
