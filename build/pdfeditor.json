@@ -27,8 +27,6 @@
                         "backbone": "../vendor/backbone/backbone",
                         "text": "../vendor/requirejs-text/text",
                         "bootstrap": "../vendor/bootstrap/dist/js/bootstrap",
-                        "perfectscrollbar": "common/main/lib/mods/perfect-scrollbar",
-                        "jmousewheel": "../vendor/perfect-scrollbar/src/jquery.mousewheel",
                         "xregexp": "empty:",
                         "socketio": "empty:",
                         "coapisettings": "empty:",
@@ -58,11 +56,6 @@
                         "bootstrap": {
                             "deps": [
                                 "jquery"
-                            ]
-                        },
-                        "perfectscrollbar": {
-                            "deps": [
-                                "jmousewheel"
                             ]
                         },
                         "notification": {

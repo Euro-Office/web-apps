@@ -8,7 +8,6 @@
 * jQuery.browser v0.0.5 ([MIT](https://github.com/gabceb/jquery-browser-plugin/blob/master/MIT-LICENSE.txt))
 * Less.js 4.1.2 ([Apache License 2.0](https://github.com/less/less.js/blob/master/LICENSE))
 * Monaco Editor 0.52.2 ([MIT License](https://github.com/microsoft/monaco-editor/blob/main/LICENSE))
-* perfect-scrollbar v0.4.9 ([MIT License](https://github.com/mdbootstrap/perfect-scrollbar/blob/main/LICENSE))
 * RequireJS 2.1.10 ([MIT License](https://github.com/requirejs/requirejs/blob/master/LICENSE))
 * RequireJS text 2.0.10 ([MIT License](https://github.com/requirejs/text/blob/master/LICENSE))
 * Socket.IO 4.5.3 ([MIT License](https://github.com/socketio/socket.io/blob/main/LICENSE))

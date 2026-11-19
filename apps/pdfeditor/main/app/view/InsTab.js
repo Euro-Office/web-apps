@@ -280,7 +280,7 @@ define([
                     itemWidth: 20,
                     itemHeight: 20,
                     menuMaxHeight: 652,
-                    menuWidth: 330,
+                    menuWidth: 342,
                     style: 'width: 145px;',
                     enableKeyEvents: true,
                     lock: [_set.pageDeleted, _set.lostConnect, _set.disableOnStart],

@@ -757,7 +757,7 @@ define([
                     }
                 }
 
-                if (_.isUndefined(scrollY)) scrollY = parseInt($(me.el).find('.ps-scrollbar-x-rail').css('bottom'));
+                if (_.isUndefined(scrollY)) scrollY = -$(me.el).find('.dropdown-menu').scrollTop();
 
                 var scrollH = $(me.el).find('.dropdown-menu').height(),
                     count = Math.max(Math.floor(scrollH / listItemHeight) + 3, 0),

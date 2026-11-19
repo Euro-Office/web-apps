@@ -291,7 +291,7 @@ define([
                         '<div role="columnheader" class="header-item">' + this.textValue + '</div>' +
                         '<div role="columnheader" class="header-item">' + this.textFormula + '</div>' +
                         '</div></div>' +
-                        '<div role="rowgroup" class="ps-container oo search-items"></div>' +
+                        '<div role="rowgroup" class="search-items"></div>' +
                         '</div>',
                         $resultTable = $(tableTemplate).appendTo(this.$resultsContainer);
                     this.$resultsContainer.scroller = new Common.UI.Scroller({
@@ -364,14 +364,6 @@ define([
         updateScrollers: function () {
             this.$resultsContainer.scroller.update({alwaysVisibleY: true});
             this.$searchContainer.scroller.update({alwaysVisibleY: true});
-
-            setTimeout(_.bind(function () {
-                if (this.$searchContainer.find('> .ps-scrollbar-y-rail').is(':visible')) {
-                    this.$resultsContainer.find('.ps-scrollbar-y-rail').addClass('set-left');
-                } else {
-                    this.$resultsContainer.find('.ps-scrollbar-y-rail').removeClass('set-left');
-                }
-            }, this), 100);
         },
 
         updateResultsContainerHeight: function () {

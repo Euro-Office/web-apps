@@ -32,31 +32,58 @@
 if (Common === undefined)
     var Common = {};
 
+// Native overflow scrolling behind the old perfect-scrollbar API, so call sites stay untouched.
+// Scrollbar look comes from scroller.less (.eo-scroller); options without a native equivalent are ignored.
 define([
-    'jmousewheel',
-    'perfectscrollbar',
     'common/main/lib/component/BaseView'
 ], function () { 'use strict';
 
     Common.UI.Scroller = (function(){
         var mouseCapture;
 
+        var releaseCapture = function() {
+            document.removeEventListener('mouseup', releaseCapture, true);
+            _.delay(function() { mouseCapture = false; }, 10);
+        };
+
+        // Wide enough for thin classic scrollbars and macOS overlay ones, which take no layout space
+        var SCROLLBAR_HIT = 16;
+
+        // Content clicks hit a child, so a press on the element itself near an edge it scrolls along is on its scrollbar
+        var onScrollbar = function(e) {
+            var el = e.currentTarget, r = el.getBoundingClientRect(),
+                rtl = getComputedStyle(el).direction === 'rtl';
+            return e.target === el && (
+                (el.scrollHeight > el.clientHeight && (rtl ? e.clientX < r.left + SCROLLBAR_HIT : e.clientX >= r.right - SCROLLBAR_HIT)) ||
+                (el.scrollWidth > el.clientWidth && e.clientY >= r.bottom - SCROLLBAR_HIT));
+        };
+
+        var onMouseDown = function(e) {
+            if (onScrollbar(e)) {
+                mouseCapture = true;
+                document.addEventListener('mouseup', releaseCapture, true);
+            }
+        };
+
+        var canScroll = function(delta, pos, size, max) {
+            return delta > 0 ? pos + size < max - 1 : delta < 0 && pos > 0;
+        };
+
+        // sdkjs cancels plain wheel events on #viewport (apiBase _correctEmbeddedWork), which also
+        // cancels native scrolling, so keep them from bubbling there while this element can scroll
+        var onWheel = function(e) {
+            var el = e.currentTarget;
+            if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) return;
+            if ((el.style.overflowY !== 'hidden' && canScroll(e.deltaY, el.scrollTop, el.clientHeight, el.scrollHeight)) ||
+                (el.style.overflowX !== 'hidden' && canScroll(e.deltaX, Math.abs(el.scrollLeft), el.clientWidth, el.scrollWidth))) {
+                e.stopPropagation();
+            }
+        };
+
         return _.extend(Common.UI.BaseView.extend({
             options: {
-                wheelSpeed              : 20,
-                wheelPropagation        : false,
-                minScrollbarLength      : null,
-                useBothWheelAxes        : false,
-                useKeyboard             : true,
                 suppressScrollX         : false,
-                suppressScrollY         : false,
-                scrollXMarginOffset     : 5,
-                scrollYMarginOffset     : 5,
-                includePadding          : true,
-                includeMargin           : true,
-                alwaysVisibleX          : false,
-                alwaysVisibleY          : false,
-                scrollYStyle            : null
+                suppressScrollY         : false
             },
 
             initialize: function(options) {
@@ -73,13 +100,11 @@ define([
                 me.cmpEl = me.$el || $(this.el);
 
                 if (!me.rendered) {
-                    me.cmpEl.perfectScrollbar(_.extend({}, me.options));
                     me.rendered = true;
-
-                    this.setAlwaysVisibleX(me.options.alwaysVisibleX);
-                    this.setAlwaysVisibleY(me.options.alwaysVisibleY);
-
-                    (this.options.scrollYStyle) && (this.setOptionStyleY(this.options.scrollYStyle));
+                    me._onScroll = function(e) { me.options.onChange && me.options.onChange(e); };
+                    me.cmpEl.addClass('eo-scroller').on('scroll', me._onScroll).on('mousedown', onMouseDown);
+                    me.cmpEl[0] && me.cmpEl[0].addEventListener('wheel', onWheel, {passive: true});
+                    me.update();
                 }
 
                 return this;
@@ -91,50 +116,27 @@ define([
             },
 
             update: function(config) {
-                var options = this.options;
-                if (config) {
-                    this.destroy();
-                    options = _.extend(this.options, config);
-                    this.cmpEl.perfectScrollbar(options);
-                } else {
-                    this.cmpEl.perfectScrollbar('update');
-                }
-
-                this.setAlwaysVisibleX(options.alwaysVisibleX);
-                this.setAlwaysVisibleY(options.alwaysVisibleY);
-                
-                (options.scrollYStyle) && (this.setOptionStyleY(options.scrollYStyle));
-
-                // Emulate capture scroller
-                var mouseDownHandler = function(e) {
-                    mouseCapture = true;
-
-                    var upHandler = function(e) {
-                        $(document).unbind('mouseup', upHandler);
-                        _.delay(function() {
-                            mouseCapture = false;
-                        }, 10);
-                    };
-
-                    $(document).mouseup(upHandler);
-                };
-
-                $('.ps-scrollbar-x-rail, .ps-scrollbar-y-rail, .ps-scrollbar-x, .ps-scrollbar-y', this.cmpEl)
-                    .off('mousedown', mouseDownHandler).on('mousedown', mouseDownHandler);
+                config && _.extend(this.options, config);
+                this.cmpEl.css({
+                    'overflow-x': this.options.suppressScrollX ? 'hidden' : 'auto',
+                    'overflow-y': this.options.suppressScrollY ? 'hidden' : 'auto'
+                });
+                this.options.onChange && this.options.onChange();
             },
 
             destroy: function() {
-                this.cmpEl.perfectScrollbar('destroy');
+                this.cmpEl.removeClass('eo-scroller').css({'overflow-x': '', 'overflow-y': ''})
+                    .off('scroll', this._onScroll).off('mousedown', onMouseDown);
+                this.cmpEl[0] && this.cmpEl[0].removeEventListener('wheel', onWheel, {passive: true});
+                this.rendered = false;
             },
 
             scrollLeft: function(pos) {
                 this.cmpEl.scrollLeft(pos);
-                this.update();
             },
 
             scrollTop: function(pos) {
                 this.cmpEl.scrollTop(pos);
-                this.update();
             },
 
             getScrollTop: function () {
@@ -144,37 +146,28 @@ define([
             getScrollLeft: function () {
                 return this.cmpEl.scrollLeft();
             },
-            setAlwaysVisibleX: function(flag) {
-                if (flag) {
-                    $(this.el).find('.ps-scrollbar-x-rail').addClass('always-visible-x');
-                    $(this.el).find('.ps-scrollbar-x').addClass('always-visible-x');
-                } else {
-                    $(this.el).find('.ps-scrollbar-x-rail').removeClass('always-visible-x');
-                    $(this.el).find('.ps-scrollbar-x').addClass('always-visible-x');
-                }
-            },
-            setAlwaysVisibleY: function(flag) {
-                if (flag) {
-                    $(this.el).find('.ps-scrollbar-y-rail').addClass('always-visible-y');
-                    $(this.el).find('.ps-scrollbar-y').addClass('always-visible-y');
-                } else {
-                    $(this.el).find('.ps-scrollbar-y-rail').removeClass('always-visible-y');
-                    $(this.el).find('.ps-scrollbar-y').addClass('always-visible-y');
-                }
-            },
 
-            setOptionStyleY: function (style) {
-                $(this.el).find('.ps-scrollbar-y-rail').css(style);
-                this.cmpEl.perfectScrollbar('update');
-            },
+            setAlwaysVisibleX: function() {},
+            setAlwaysVisibleY: function() {},
+            setOptionStyleY: function() {},
 
             isVisible: function() {
-                return $(this.el).find('.ps-scrollbar-y-rail').is(':visible');
+                var el = this.cmpEl[0];
+                return !this.options.suppressScrollY && !!el && el.scrollHeight > el.clientHeight;
             }
 
         }), {
             isMouseCapture: function() {
-                return mouseCapture
+                return !!mouseCapture;
+            },
+
+            // Width a thin native scrollbar takes from the layout, 0 for overlay scrollbars
+            // Not cached: it changes with browser zoom and OS scrollbar settings
+            scrollbarWidth: function() {
+                var probe = $('<div class="eo-scroller" style="position:absolute;top:-100px;width:50px;height:50px;overflow:scroll;"></div>').appendTo(document.body),
+                    width = probe[0].offsetWidth - probe[0].clientWidth;
+                probe.remove();
+                return width;
             }
         })
     })();
