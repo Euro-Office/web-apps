@@ -253,7 +253,7 @@
                     plugins: true // can run plugins in document
                     macrosMode: 'warn' // warn about automatic macros, 'enable', 'disable', 'warn',
                     trackChanges: undefined // true/false - open editor with track changes mode on/off,  // must be deprecated. use customization.review.trackChanges instead
-                    hideRulers: false // hide or show rulers on first loading (presentation or document editor)
+                    hideRulers: true // hide or show rulers on first loading (presentation or document editor), hidden unless false
                     hideNotes: false // hide or show notes panel on first loading (presentation editor)
                     uiTheme: 'theme-dark' // set interface theme: id or default-dark/default-light
                     integrationMode: "embed" // turn off scroll to frame
