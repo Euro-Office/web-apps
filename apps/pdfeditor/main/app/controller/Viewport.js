@@ -235,7 +235,7 @@ define([
             case 'leftmenu':
                 var panel = this.viewport.hlayout.getItem('left');
                 if (panel.resize.el) {
-                    if (panel.el.width() > 40) {
+                    if (panel.el.width() > SCALE_MIN) {
                         this.boxSdk.css('border-left', '');
                         panel.resize.el.show();
                     } else {

@@ -40,7 +40,7 @@ define([
 ], function (menuTemplate, $, _, Backbone) {
     'use strict';
 
-    var SCALE_MIN = 40;
+    var SCALE_MIN = 52;
     var MENU_SCALE_PART = 300;
 
     SSE.Views.LeftMenu = Common.UI.SideMenu.extend(_.extend({
@@ -335,8 +335,7 @@ define([
                         this.btnComments.$el.focus();
                     }
                 } else if (menu == 'advancedsearch') {
-                    if ((this.btnSearchBar.isVisible() || this.isButtonInMoreMenu(this.btnSearchBar)) &&
-                        !this.btnSearchBar.isDisabled() && !this.btnSearchBar.pressed) {
+                    if (!this.btnSearchBar.isDisabled() && !this.btnSearchBar.pressed) {
                         this.btnSearchBar.toggle(true);
                         this.onBtnMenuClick(this.btnSearchBar);
                     }
@@ -446,7 +445,7 @@ define([
         },
 
         setButtons: function () {
-            var allButtons = [this.btnSearchBar, this.btnComments, this.btnChat, this.btnSpellcheck, this.btnSupport, this.btnAbout];
+            var allButtons = [this.btnComments, this.btnChat, this.btnSpellcheck, this.btnSupport, this.btnAbout];
             Common.UI.SideMenu.prototype.setButtons.apply(this, [allButtons]);
         },
 

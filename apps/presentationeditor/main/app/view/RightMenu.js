@@ -29,7 +29,7 @@
  *
  */
 
-var SCALE_MIN = 40;
+var SCALE_MIN = 52;
 var MENU_SCALE_PART = 260; // reassigned at runtime to MENU_BASE_WIDTH + the measured right-panel padding
 var MENU_BASE_WIDTH = 220;
 var MENU_MAX_WIDTH = 596; // resizer max in Viewport.js (600) minus the 4px resizer (layout.less)

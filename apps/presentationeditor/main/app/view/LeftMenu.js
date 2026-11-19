@@ -47,7 +47,7 @@ define([
 ], function (menuTemplate, $, _, Backbone) {
     'use strict';
 
-    var SCALE_MIN = 40;
+    var SCALE_MIN = 52;
     var MENU_SCALE_PART = 300;
 
     PE.Views.LeftMenu = Common.UI.SideMenu.extend(_.extend({
@@ -350,8 +350,7 @@ define([
                         this.onBtnMenuClick(this.btnComments);
                     }
                 } else if (menu == 'advancedsearch') {
-                    if ((this.btnSearchBar.isVisible() || this.isButtonInMoreMenu(this.btnSearchBar)) &&
-                        !this.btnSearchBar.isDisabled() && !this.btnSearchBar.pressed) {
+                    if (!this.btnSearchBar.isDisabled() && !this.btnSearchBar.pressed) {
                         this.btnSearchBar.toggle(true);
                         this.onBtnMenuClick(this.btnSearchBar);
                         !suspendAfter && this.fireEvent('search:aftershow');
@@ -462,7 +461,7 @@ define([
         },
 
         setButtons: function () {
-            var allButtons = [this.btnSearchBar, this.btnThumbs, this.btnComments, this.btnChat, this.btnSupport, this.btnAbout];
+            var allButtons = [this.btnThumbs, this.btnComments, this.btnChat, this.btnSupport, this.btnAbout];
             Common.UI.SideMenu.prototype.setButtons.apply(this, [allButtons]);
         },
 
