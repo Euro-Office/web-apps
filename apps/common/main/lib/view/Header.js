@@ -206,7 +206,7 @@ define([
         // With co-editors the users button lists everyone, so the own avatar next to it is hidden
         function showUsersPanel(show) {
             $panelUsers[show ? 'show' : 'hide']();
-            $panelUsers.closest('.hedset').parent().toggleClass('eo-cousers-shown', !!show);
+            $('body').toggleClass('eo-cousers-shown', !!show);
         }
 
         function onLostEditRights() {
