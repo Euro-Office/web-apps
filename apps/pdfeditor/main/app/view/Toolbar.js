@@ -2221,6 +2221,7 @@ define([
             txtSaveAs: 'Save as',
             txtEmptySlot: 'empty',
             txtSaveInsert: 'Save and insert',
+            txtReplaceSignature: 'Signature {0} is already saved. Saving replaces it.',
             txtPlaceSignatureHint: 'Mouse wheel or + / −: size · Click: insert · Esc: cancel'
         }
     })(), PDFE.Views.Toolbar || {}));

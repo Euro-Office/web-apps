@@ -1322,9 +1322,23 @@ define([
                             '<input type="file" id="sig-file" accept="image/*" style="display:none;">' +
                         '</div>' +
                         '<div><span style="margin-right:10px;">' + toolbar.txtSaveAs + ':</span>' + slots + '</div>' +
+                        '<div id="sig-replace" style="margin-top:8px;display:none;"></div>' +
                      '</div>'
             });
-            var canvas, ctx, drawn = false, drawing = false, last = null;
+            var canvas, ctx, drawn = false, drawing = false, last = null, inserted = false;
+
+            // "Save and insert" only works once something is drawn or loaded
+            function setDrawn(value) {
+                drawn = value;
+                win.$window && win.$window.find('.footer .dlg-btn[result=ok]').toggleClass('disabled', !value).prop('disabled', !value);
+            }
+            // say so when the chosen place already holds a signature, so it is not replaced silently
+            function updateReplaceNote() {
+                var $w = win.$window,
+                    slot = parseInt($w.find('input[name=sig-slot]:checked').val() || '0', 10),
+                    taken = !!me.getSignatures()[slot];
+                $w.find('#sig-replace').text(taken ? Common.Utils.String.format(toolbar.txtReplaceSignature, slot + 1) : '').toggle(taken);
+            }
 
             function point(e) {
                 var r = canvas.getBoundingClientRect();
@@ -1332,7 +1346,7 @@ define([
             }
             function clear() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                drawn = false;
+                setDrawn(false);
             }
             // a loaded picture: white and light paper become transparent, the strokes keep soft edges
             function removeBackground() {
@@ -1351,7 +1365,7 @@ define([
                     var k = Math.min(canvas.width / img.width, canvas.height / img.height, 1);
                     ctx.drawImage(img, (canvas.width - img.width * k) / 2, (canvas.height - img.height * k) / 2, img.width * k, img.height * k);
                     removeBackground();
-                    drawn = true;
+                    setDrawn(true);
                 };
                 img.src = src;
             }
@@ -1391,10 +1405,14 @@ define([
                     if (!drawing) return;
                     var p = point(e);
                     ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke();
-                    last = p; drawn = true;
+                    last = p;
+                    !drawn && setDrawn(true);
                 });
                 canvas.addEventListener('pointerup', function() { drawing = false; });
                 $w.find('#sig-clear').on('click', clear);
+                $w.find('input[name=sig-slot]').on('change', updateReplaceNote);
+                updateReplaceNote();
+                setDrawn(false);
                 $w.find('#sig-load').on('click', function() {
                     var desktop = window.AscDesktopEditor;
                     if (desktop && desktop.OpenFilenameDialog && desktop.GetImageBase64) {
@@ -1424,12 +1442,22 @@ define([
                         var current = me.getSignatures();
                         current[slot] = url;
                         me.setSignatures(current);
+                        inserted = true;
                         win.close();
                         me.insertSignature(url);
                     } else {
                         win.close();
                     }
                 });
+            });
+            // keyboard focus goes into the dialog, and back to the Signature button when it is closed without inserting
+            win.on('animate:after', function() {
+                var $w = win.$window;
+                if ($w && !$.contains($w[0], document.activeElement))
+                    $w.find('#sig-load').focus();
+            });
+            win.on('close', function() {
+                !inserted && toolbar.btnSignature && toolbar.btnSignature.focus();
             });
             win.show();
         },

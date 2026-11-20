@@ -3059,6 +3059,7 @@
   "PDFE.Views.Toolbar.txtPlaceSignatureHint": "Mouse wheel or + / −: size · Click: insert · Esc: cancel",
   "PDFE.Views.Toolbar.txtPolyLineComment": "Connected lines",
   "PDFE.Views.Toolbar.txtRectComment": "Rectangle",
+  "PDFE.Views.Toolbar.txtReplaceSignature": "Signature {0} is already saved. Saving replaces it.",
   "PDFE.Views.Toolbar.txtRotateLeft": "Rotate left",
   "PDFE.Views.Toolbar.txtRotatePage": "Rotate page",
   "PDFE.Views.Toolbar.txtRotatePageRight": "Rotate page right",
