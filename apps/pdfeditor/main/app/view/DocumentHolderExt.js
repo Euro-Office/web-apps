@@ -1691,7 +1691,7 @@ define([], function () {
             });
 
             me.mnuExtractPages = new Common.UI.MenuItem({
-                caption     : me.txtExtractPages || 'Extract selected pages…'
+                caption     : me.txtExtractPages
             });
 
             var menuPageDelSeparator = new Common.UI.MenuItem({
@@ -1734,7 +1734,7 @@ define([], function () {
                         me.mnuRotatePageRight.setVisible(value.isPageSelect===true);
                         me.mnuRotatePageLeft.setVisible(value.isPageSelect===true);
                         me.mnuDeletePage.setVisible(value.isPageSelect===true);
-                        me.mnuExtractPages.setVisible(value.isPageSelect===true && !!me.mode && !!me.mode.isDesktopApp && !!me.mode.isOffline);
+                        me.mnuExtractPages.setVisible(value.isPageSelect===true);
                         me.mnuCopyPage.setVisible(value.isPageSelect===true);
                         me.mnuCutPage.setVisible(value.isPageSelect===true);
                         menuPageNewSeparator.setVisible(value.isPageSelect===true);
@@ -1748,7 +1748,6 @@ define([], function () {
                     var canRemove = me.api.asc_CanRemovePages();
                     me.mnuDeletePage.setDisabled(me._pagesCount<2 || page_deleted || !canRemove);
                     me.mnuCutPage.setDisabled(me._pagesCount<2 || page_deleted || !canRemove);
-                    me.mnuExtractPages.setDisabled(me._pagesCount<2 || !canRemove);
                     var canPaste = me.api.asc_CanPastePage();
                     me.mnuPastePageBefore.setDisabled(!canPaste);
                     me.mnuPastePageAfter.setDisabled(!canPaste);

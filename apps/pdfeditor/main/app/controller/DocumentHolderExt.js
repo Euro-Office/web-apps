@@ -2473,30 +2473,31 @@ define([], function () {
             Common.NotificationCenter.trigger('edit:complete', this.documentHolder);
         };
 
-        // Keeps the selected pages, removes all others and opens "Save as", so the extract is saved under a new name.
-        // Only offered in the desktop app for local files, where the original file stays unchanged on disk.
+        // Writes the selected pages into a new PDF file and saves it under a new name (the browser downloads it,
+        // the desktop app asks where to save it). The open document is not changed.
         dh.onExtractPages = function() {
-            var me = this, view = this.documentHolder, api = this.api;
+            var view = this.documentHolder, api = this.api;
             if (!api) return;
-            var keep = api.getSelectedPages().slice();
-            var remove = [];
-            for (var i = 0, count = api.getCountPages(); i < count; i++)
-                (keep.indexOf(i) < 0) && remove.push(i);
-            if (!keep.length || !remove.length) return;
-            Common.UI.warning({
-                title: view.txtExtractPagesTitle || 'Extract selected pages',
-                msg: Common.Utils.String.format(view.txtExtractWarning || 'The {0} selected pages are kept, all other pages are removed, and "Save as" opens: save the extract under a new name. The original file stays unchanged on disk; afterwards the extract is open. If you cancel saving, Ctrl+Z brings the pages back.<br>To split a file, extract one part after the other from the original.', keep.length),
-                maxwidth: 600,
-                buttons: ['ok', 'cancel'],
-                primary: 'ok',
-                callback: function(btn) {
-                    if (btn !== 'ok') return;
-                    api.asc_RemovePage(remove);
-                    setTimeout(function() {
-                        me.getApplication().getController('LeftMenu').clickMenuFileItem(null, 'save-desktop');
-                    }, 300);
-                }
-            });
+            var pages = api.getSelectedPages().slice().sort(function(a, b) { return a - b; });
+            if (!pages.length) return;
+            if (!api.asc_CanGetPagesAsPdf(pages)) {
+                Common.UI.warning({title: view.txtExtractPagesTitle, msg: view.txtExtractNeedReopen, maxwidth: 600});
+                return;
+            }
+            // page numbers like "2-4, 7"
+            var ranges = [];
+            for (var i = 0; i < pages.length; i++) {
+                var start = pages[i];
+                while (i + 1 < pages.length && pages[i + 1] === pages[i] + 1) i++;
+                ranges.push(start === pages[i] ? '' + (start + 1) : (start + 1) + '-' + (pages[i] + 1));
+            }
+            var doc = this.getApplication().getController('Main').document,
+                title = ((doc && doc.title) || '').replace(/\.[^.]*$/, '') || 'PDF',
+                name = Common.Utils.String.format(view.txtExtractFileName, title, ranges.join(', ')) + '.pdf';
+            if (!api.asc_SavePagesAsPdf(pages, name))
+                Common.UI.warning({title: view.txtExtractPagesTitle, msg: view.txtExtractError});
+
+            Common.NotificationCenter.trigger('edit:complete', view);
         };
 
         dh.onRotatePage = function(angle, item) {
