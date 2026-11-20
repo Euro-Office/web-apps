@@ -169,6 +169,11 @@ const ErrorController = inject('storeAppOptions','storeSpreadsheetInfo')(({store
             case Asc.c_oAscError.ID.PasteMaxRangeError:
                 config.msg = _t.errorPasteMaxRange;
                 break;
+
+            case Asc.c_oAscError.ID.PasteSizeLimitError:
+                // By key, so that untranslated locales fall back to English
+                config.msg = t('Error.errorPasteSizeLimit');
+                break;
             
             case Asc.c_oAscError.ID.LockedCellPivot:
                 config.msg = _t.errorLockedCellPivot;
