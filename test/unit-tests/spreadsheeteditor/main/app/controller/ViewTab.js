@@ -18,7 +18,6 @@ SSE.Controllers = SSE.Controllers || {};
 SSE.Views = SSE.Views || {};
 
 define('spreadsheeteditor/main/app/view/ViewTab', [], function () {});
-define('core', ['common/main/lib/core/application'], function () {});
 
 define([
     'common/main/lib/component/Button',
