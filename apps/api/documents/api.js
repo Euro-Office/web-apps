@@ -279,6 +279,7 @@
                     },
                     suggestFeature: true/false,
                     pdfOpenInViewMode: false // true - a PDF that opens in commenting mode switches to viewing once it is loaded (pdf editor only, not for forms)
+                                             // applied on every load: after a reload the PDF opens in viewing again, even if the user switched to commenting or editing before
                 },
                  coEditing: {
                      mode: 'fast', // <coauthoring mode>, 'fast' or 'strict'. if 'fast' and 'customization.autosave'=false -> set 'customization.autosave'=true. 'fast' - default for editor
