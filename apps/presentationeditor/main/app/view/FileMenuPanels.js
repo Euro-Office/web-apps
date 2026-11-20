@@ -673,6 +673,7 @@ define([], function () {
             this.pnlTable = this.pnlSettings.find('table');
             this.trApply = $markup.find('.fms-btn-apply');
 
+            Common.Controllers.Desktop.renderAutoSaveFile(this, $markup);
             this.$el = $(node).html($markup);
 
             if (_.isUndefined(this.scroller)) {
@@ -753,6 +754,7 @@ define([], function () {
         },
 
         updateSettings: function() {
+            Common.Controllers.Desktop.updateAutoSaveFile(this);
             if (Common.UI.FeaturesManager.canChange('spellcheck')) {
                 this.chSpell.setValue(Common.Utils.InternalSettings.get("pe-settings-spellcheck"));
                 this.chIgnoreUppercase.setValue(Common.Utils.InternalSettings.get("pe-spellcheck-ignore-uppercase-words"));
@@ -822,6 +824,7 @@ define([], function () {
         },
 
         applySettings: function() {
+            Common.Controllers.Desktop.applyAutoSaveFile(this);
             Common.UI.Themes.setTheme(this.cmbTheme.getValue());
             if (Common.UI.FeaturesManager.canChange('spellcheck') && this.mode.isEdit) {
                 Common.localStorage.setItem("pe-settings-spellcheck", this.chSpell.isChecked() ? 1 : 0);

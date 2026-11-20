@@ -993,6 +993,7 @@ define([], function () {
             this.pnlTable = this.pnlSettings.find('table');
             this.trApply = $markup.find('.fms-btn-apply');
 
+            Common.Controllers.Desktop.renderAutoSaveFile(this, $markup);
             this.$el = $(node).html($markup);
 
             if (_.isUndefined(this.scroller)) {
@@ -1079,6 +1080,7 @@ define([], function () {
         },
 
         updateSettings: function() {
+            Common.Controllers.Desktop.updateAutoSaveFile(this);
             var value = Common.Utils.InternalSettings.get("sse-settings-zoom");
             value = (value!==null) ? parseInt(value) : (this.mode.customization && this.mode.customization.zoom ? parseInt(this.mode.customization.zoom) : 100);
             var item = this.cmbZoom.store.findWhere({value: value});
@@ -1249,6 +1251,7 @@ define([], function () {
         },
 
         applySettings: function() {
+            Common.Controllers.Desktop.applyAutoSaveFile(this);
             if (!this.isValid())
                 return;
 
