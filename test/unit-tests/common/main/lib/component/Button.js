@@ -231,5 +231,90 @@ define([
             parts.first().trigger($.Event('click', {which: 1}));
             assert.equal(clicks, 0);
         });
+
+        it('a disabled button with a hint is aria-disabled and out of the tab order', function(){
+            button = new Common.UI.Button({caption: 'hinted', hint: 'What this button does', disabled: true});
+            button.render($(domPlaceholder));
+
+            assert.equal(button.cmpEl.attr('aria-disabled'), 'true');
+            assert.equal(button.cmpEl.attr('tabindex'), '-1');
+
+            button.setDisabled(false);
+            assert.isUndefined(button.cmpEl.attr('aria-disabled'));
+            assert.isUndefined(button.cmpEl.attr('tabindex'), 'focusable again as a normal button');
+        });
+
+        it('enabling a button with a hint brings back its own tabindex', function(){
+            button = new Common.UI.Button({caption: 'hinted', hint: 'What this button does'});
+            button.render($(domPlaceholder));
+            button.cmpEl.attr('tabindex', '2');
+
+            button.setDisabled(true);
+            assert.equal(button.cmpEl.attr('tabindex'), '-1');
+            button.setDisabled(false);
+            assert.equal(button.cmpEl.attr('tabindex'), '2');
+
+            button.setTabIndex(5);
+            button.setDisabled(true);
+            assert.equal(button.cmpEl.attr('tabindex'), '-1');
+            button.setDisabled(false);
+            assert.equal(button.cmpEl.attr('tabindex'), '5');
+        });
+
+        it('a disabled split button with hints: both parts aria-disabled, the group itself untouched', function(){
+            button = new Common.UI.Button({
+                caption : 'split',
+                split   : true,
+                hint    : ['Main part', 'Menu part'],
+                menu    : new Common.UI.Menu({items: [{caption: 'one', value: 1}]})
+            });
+            button.render($(domPlaceholder));
+
+            button.setDisabled(true);
+            button.cmpEl.children('button').each(function () {
+                assert.equal($(this).attr('aria-disabled'), 'true');
+                assert.equal($(this).attr('tabindex'), '-1');
+            });
+            assert.isUndefined(button.cmpEl.attr('aria-disabled'));
+            assert.isUndefined(button.cmpEl.attr('tabindex'));
+
+            button.setDisabled(false);
+            button.cmpEl.children('button').each(function () {
+                assert.isUndefined($(this).attr('aria-disabled'));
+                assert.isUndefined($(this).attr('tabindex'));
+            });
+        });
+
+        it('a hint added to a button that is already disabled makes it aria-disabled', function(){
+            button = new Common.UI.Button({caption: 'late', disabled: true});
+            button.render($(domPlaceholder));
+            assert.isUndefined(button.cmpEl.attr('aria-disabled'), 'the disabled attribute is enough');
+
+            button.updateHint('Added later');
+            assert.equal(button.cmpEl.attr('aria-disabled'), 'true');
+            assert.equal(button.cmpEl.attr('tabindex'), '-1');
+        });
+
+        it('a mousedown on a disabled button with a hint does not take the focus or reach the document', function(){
+            var outside = 0,
+                onOutside = function () { outside++; };
+            button = new Common.UI.Button({caption: 'hinted', hint: 'What this button does', disabled: true});
+            button.render($(domPlaceholder));
+            $(document).on('mousedown click', onOutside);
+
+            var down = $.Event('mousedown', {which: 1});
+            button.cmpEl.trigger(down);
+            assert.isTrue(down.isDefaultPrevented(), 'no focus move on mousedown');
+            button.cmpEl.trigger($.Event('click', {which: 1}));
+            assert.equal(outside, 0, 'the press goes no further, as with the disabled attribute');
+
+            button.setDisabled(false);
+            down = $.Event('mousedown', {which: 1});
+            button.cmpEl.trigger(down);
+            assert.isFalse(down.isDefaultPrevented(), 'an enabled button behaves as before');
+            assert.equal(outside, 1);
+
+            $(document).off('mousedown click', onOutside);
+        });
     });
 });

@@ -601,6 +601,15 @@ define([
 
                 el.on('button.internal.active', _.bind(doSetActiveState, me));
 
+                // A disabled button with a hint has no "disabled" attribute (see setDisabled), so stop what that
+                // attribute would stop: the button takes no focus on mousedown and the press goes no further.
+                el.on('mousedown mouseup click', function(e) {
+                    if (me.disabled && me.hasHintOnDisabled()) {
+                        e.type === 'mousedown' && e.preventDefault();
+                        e.stopPropagation();
+                    }
+                });
+
                 el.on('mouseover', function(e) {
                     if (!me.disabled) {
                         me.cmpEl.addClass('over');
@@ -730,6 +739,9 @@ define([
                     isGroup && decorateBtn(el.children('button'));
                 }
 
+                // restore the tab order before the tabindex code below sets its own value
+                !disabled && this.setAriaDisabled(false);
+
                 if ((disabled || !Common.Utils.isGecko) && this.options.hint) {
                     var tip = this.btnEl.data('bs.tooltip');
                     if (tip) {
@@ -760,6 +772,9 @@ define([
                     disabled && (this.tabindex = el.attr('tabindex'));
                     el.attr('tabindex', disabled ? "-1" : me.tabindex);
                 }
+
+                // after the tabindex code above, so it saves the real tabindex and not our "-1"
+                disabled && this.setAriaDisabled(true);
             }
 
             this.disabled = disabled;
@@ -767,6 +782,33 @@ define([
 
         isDisabled: function() {
             return this.disabled;
+        },
+
+        // true when a disabled button keeps mouse events only because of its hint
+        hasHintOnDisabled: function() {
+            return !!this.options.hint && !this.options.allowMouseEventsOnDisabled;
+        },
+
+        // Without the "disabled" attribute, mark a disabled button with a hint as disabled for screen readers
+        // and take it out of the tab order, as the attribute would.
+        setAriaDisabled: function(disabled) {
+            if (!this.rendered || !this.hasHintOnDisabled()) return;
+
+            var el = this.cmpEl,
+                buttons = el.filter('button').add(el.hasClass('btn-group') ? el.children('button') : $());
+
+            buttons.each(function() {
+                var button = $(this);
+                if (disabled) {
+                    if (button.attr('aria-disabled') !== 'true')
+                        button.data('tabindex-enabled', button.attr('tabindex'));
+                    button.attr({'aria-disabled': 'true', tabindex: '-1'});
+                } else if (button.attr('aria-disabled') === 'true') {
+                    var tabindex = button.data('tabindex-enabled');
+                    button.removeAttr('aria-disabled').removeData('tabindex-enabled');
+                    (tabindex === undefined) ? button.removeAttr('tabindex') : button.attr('tabindex', tabindex);
+                }
+            });
         },
 
         setIconCls: function(cls) {
@@ -851,6 +893,7 @@ define([
             if (this.disabled) { // the hint was added to a button that is already disabled: let it get mouse events
                 cmpEl.removeAttr('disabled');
                 cmpEl.hasClass('btn-group') && cmpEl.children('button').removeAttr('disabled');
+                this.setAriaDisabled(true);
             }
 
             if (!this.btnEl) {
