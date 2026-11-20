@@ -1690,6 +1690,10 @@ define([], function () {
                 value : 'paste'
             });
 
+            me.mnuExtractPages = new Common.UI.MenuItem({
+                caption     : me.txtExtractPages
+            });
+
             var menuPageDelSeparator = new Common.UI.MenuItem({
                 caption     : '--'
             });
@@ -1730,6 +1734,7 @@ define([], function () {
                         me.mnuRotatePageRight.setVisible(value.isPageSelect===true);
                         me.mnuRotatePageLeft.setVisible(value.isPageSelect===true);
                         me.mnuDeletePage.setVisible(value.isPageSelect===true);
+                        me.mnuExtractPages.setVisible(value.isPageSelect===true);
                         me.mnuCopyPage.setVisible(value.isPageSelect===true);
                         me.mnuCutPage.setVisible(value.isPageSelect===true);
                         menuPageNewSeparator.setVisible(value.isPageSelect===true);
@@ -1760,6 +1765,7 @@ define([], function () {
                     me.mnuRotatePageRight,
                     me.mnuRotatePageLeft,
                     menuPageDelSeparator,
+                    me.mnuExtractPages,
                     me.mnuDeletePage
                 ]
             }).on('hide:after', function(menu, e, isFromInputControl) {
