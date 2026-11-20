@@ -1708,6 +1708,11 @@ define([], function () {
                 caption     : '--'
             });
 
+            // between rotating the selected page and rotating all pages, as in the Rotate Page menu on the Home tab
+            var menuPageRotateAllSeparator = new Common.UI.MenuItem({
+                caption     : '--'
+            });
+
             var menuPagePasteSeparator = new Common.UI.MenuItem({
                 caption     : '--'
             });
@@ -1774,6 +1779,7 @@ define([], function () {
                     menuPageNewSeparator,
                     me.mnuRotatePageRight,
                     me.mnuRotatePageLeft,
+                    menuPageRotateAllSeparator,
                     me.mnuRotateAllRight,
                     me.mnuRotateAllLeft,
                     menuPageDelSeparator,
