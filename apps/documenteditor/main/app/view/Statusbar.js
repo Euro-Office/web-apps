@@ -162,6 +162,12 @@ define([
             })
 
             me.btnDocInfo.menu.on('show:after', _.bind(this.onDocInfoShow, this));
+            me.chIncludeHdrFtr.on('toggle', _.bind(this.onIncludeHdrFtrToggle, this));
+            me.chIncludeComments.on('toggle', _.bind(this.onIncludeCommentsToggle, this));
+            me.chDashSeparatesWords.on('toggle', _.bind(this.onDashSeparatesWordsToggle, this));
+            me.btnDocInfo.menu.on('hide:after', _.bind(this.onDocInfoHide, this));
+            me.btnDocInfo.cmpEl && me.btnDocInfo.cmpEl.on('keydown', _.bind(this.onDocInfoKeyDown, this));
+            me.updateCountOptionsAria();
 
             me.onChangeProtectDocument();
         }
@@ -328,7 +334,28 @@ define([
                             { caption: this.txtParagraphs, value: 0 },
                             { caption: this.txtWords, value: 0 },
                             { caption: this.txtSymbols, value: 0 },
-                            { caption: this.txtSpaces, value: 0 }
+                            { caption: this.txtSpaces, value: 0 },
+                            { caption: this.txtAddedWords, value: 0 },
+                            { caption: this.txtDeletedWords, value: 0 },
+                            { caption: '--', template: Common.UI.MenuItem.prototype.template },
+                            this.chIncludeHdrFtr = new Common.UI.MenuItem({
+                                caption: this.txtIncludeHdrFtr,
+                                checkable: true,
+                                checked: Common.localStorage.getBool('de-settings-count-hdrftr', false),
+                                stopPropagation: true
+                            }),
+                            this.chIncludeComments = new Common.UI.MenuItem({
+                                caption: this.txtIncludeComments,
+                                checkable: true,
+                                checked: Common.localStorage.getBool('de-settings-count-comments', false),
+                                stopPropagation: true
+                            }),
+                            this.chDashSeparatesWords = new Common.UI.MenuItem({
+                                caption: this.txtDashSeparatesWords,
+                                checkable: true,
+                                checked: Common.localStorage.getBool('de-settings-count-dashes', false),
+                                stopPropagation: true
+                            })
                         ]
                     })
                 });
@@ -488,9 +515,83 @@ define([
             },
 
             onDocInfoShow: function() {
+                this._focusDocInfoOnHide = false;
+                this.updateCountOptionsAria();
                 if (!this.api) return;
-                this._selInfo = this.api.asc_GetSelectionDocInfo ? this.api.asc_GetSelectionDocInfo() : null;
-                this.api.startGetDocInfo();
+                var options = this.getCountOptions();
+                this._selInfo = this.api.asc_GetSelectionDocInfo ? this.api.asc_GetSelectionDocInfo(options) : null;
+                this.api.startGetDocInfo(options);
+            },
+
+            getCountOptions: function() {
+                return {
+                    includeHdrFtr: Common.localStorage.getBool('de-settings-count-hdrftr', false),
+                    includeComments: Common.localStorage.getBool('de-settings-count-comments', false),
+                    dashSeparatesWords: Common.localStorage.getBool('de-settings-count-dashes', false)
+                };
+            },
+
+            getCountOptionItems: function() {
+                return [this.chIncludeHdrFtr, this.chIncludeComments, this.chDashSeparatesWords];
+            },
+
+            // screen readers announce the options as check boxes in the menu
+            updateCountOptionsAria: function() {
+                this.getCountOptionItems().forEach(function(item) {
+                    item && item.rendered && item.cmpEl.find('> a').attr({role: 'menuitemcheckbox', 'aria-checked': !!item.isChecked()});
+                });
+            },
+
+            onDocInfoKeyDown: function(e) {
+                if (!this.btnDocInfo.isMenuOpen()) return;
+                if (e.keyCode === Common.UI.Keys.ESC) {
+                    this._focusDocInfoOnHide = true;
+                } else if (e.keyCode === Common.UI.Keys.RETURN || e.keyCode === Common.UI.Keys.SPACE) {
+                    // Enter or Space switches the focused option and keeps the menu open, like a mouse click
+                    var focused = document.activeElement,
+                        item = _.find(this.getCountOptionItems(), function(item) {
+                            return item && item.rendered && item.cmpEl.find('> a')[0] === focused;
+                        });
+                    if (item && !item.isDisabled()) {
+                        item.toggle();
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    }
+                }
+            },
+
+            onDocInfoHide: function() {
+                if (this._focusDocInfoOnHide) {
+                    // Escape gives the focus back to the word count button, not to the document
+                    this._focusDocInfoOnHide = false;
+                    var btn = this.btnDocInfo;
+                    setTimeout(function() { btn.focus(); }, 1);
+                }
+            },
+
+            onIncludeHdrFtrToggle: function(item, checked) {
+                Common.localStorage.setBool('de-settings-count-hdrftr', checked);
+                this.updateCountOptionsAria();
+                this.restartDocInfo();
+            },
+
+            onIncludeCommentsToggle: function(item, checked) {
+                Common.localStorage.setBool('de-settings-count-comments', checked);
+                this.updateCountOptionsAria();
+                this.restartDocInfo();
+            },
+
+            onDashSeparatesWordsToggle: function(item, checked) {
+                Common.localStorage.setBool('de-settings-count-dashes', checked);
+                this.updateCountOptionsAria();
+                this.restartDocInfo();
+            },
+
+            restartDocInfo: function() {
+                if (!this.api) return;
+                this.api.stopGetDocInfo();
+                this.onDocInfoShow();
             },
 
             onGetDocInfoStart: function() {
@@ -502,9 +603,10 @@ define([
                     var me = this,
                         items = this.btnDocInfo.menu.items,
                         sel = this._selInfo;
-                    ['get_PageCount', 'get_ParagraphCount', 'get_WordsCount', 'get_SymbolsCount', 'get_SymbolsWSCount'].forEach(function(getter, i) {
+                    ['get_PageCount', 'get_ParagraphCount', 'get_WordsCount', 'get_SymbolsCount', 'get_SymbolsWSCount', 'get_AddedWordsCount', 'get_DeletedWordsCount'].forEach(function(getter, i) {
+                        if (!obj[getter]) return;
                         var total = obj[getter](),
-                            part = sel ? sel[getter]() : -1;
+                            part = sel && sel[getter] ? sel[getter]() : -1;
                         if (total>-1)
                             items[i].options.value = part>-1 ? Common.Utils.String.format(me.txtSelectionOf, part, total) : total;
                     });
@@ -526,7 +628,8 @@ define([
             fillDocInfo:  function() {
                 if (!this.btnDocInfo || !this.btnDocInfo.menu || !this.btnDocInfo.menu.isVisible()) return;
 
-                this.btnDocInfo.menu.items.forEach(function(item){
+                // only the statistic rows show values, the rest of the menu keeps its own markup
+                this.btnDocInfo.menu.items.slice(0, 7).forEach(function(item){
                     $(item.el).html(item.template({id: item.id, caption : item.caption, options : item.options}));
                 });
             },
@@ -555,7 +658,12 @@ define([
             txtParagraphs: 'Paragraphs',
             txtSymbols: 'Symbols',
             txtSpaces: 'Symbols with spaces',
-            txtSelectionOf: '{0} of {1}'
+            txtSelectionOf: '{0} of {1}',
+            txtIncludeHdrFtr: 'Include headers and footers',
+            txtIncludeComments: 'Include comments',
+            txtDashSeparatesWords: 'Dashes separate words',
+            txtAddedWords: 'Inserted words (tracked changes)',
+            txtDeletedWords: 'Deleted words (tracked changes)'
         }, DE.Views.Statusbar || {}));
     }
 );
