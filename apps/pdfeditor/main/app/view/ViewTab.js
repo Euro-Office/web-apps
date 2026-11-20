@@ -416,7 +416,7 @@ define([
             textInterfaceTheme: 'Interface theme',
             textStatusBar: 'Status Bar',
             textPageByPage: 'Page by page',
-            tipPageByPage: 'A turn of the mouse wheel or Page Down shows the next page. Works best with Fit to Page.',
+            tipPageByPage: 'A turn of the mouse wheel or Page Down shows the next page. A page higher than the window is scrolled through first. To see every page whole, click Fit To Page.',
             textAlwaysShowToolbar: 'Always show toolbar',
             textDarkDocument: 'Dark document',
             tipHeadings: 'Headings',
