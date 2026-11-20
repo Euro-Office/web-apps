@@ -32,6 +32,7 @@
 var SCALE_MIN = 40;
 var MENU_SCALE_PART = 260; // reassigned at runtime to MENU_BASE_WIDTH + the measured right-panel padding
 var MENU_BASE_WIDTH = 220;
+var MENU_MIN_WIDTH = 260;
 var MENU_MAX_WIDTH = 596; // resizer max in Viewport.js (600) minus the 4px resizer (layout.less)
 
 define([
@@ -327,7 +328,7 @@ define([
                 } else if(isPlugin && pluginsPanelWidth > 0 && maxPanelWidth >= MENU_SCALE_PART) {
                     this.$el.width(Math.min(Math.max(MENU_SCALE_PART, pluginsPanelWidth), maxPanelWidth));
                 } else {
-                    this.setInnerWidth(MENU_BASE_WIDTH);
+                    this.setInnerWidth(isPlugin && btn.options.pluginWidth || MENU_BASE_WIDTH);
                 }
                 Common.NotificationCenter.trigger('layout:changed', 'rightmenu');
 
@@ -412,7 +413,7 @@ define([
         setInnerWidth: function(value) {
             const pane = $(this.el).find('.right-panel');
             const paddings = parseInt(pane.css('padding-left')) + parseInt(pane.css('padding-right'));
-            MENU_SCALE_PART = value + paddings;
+            MENU_SCALE_PART = Math.min(Math.max(value + paddings, MENU_MIN_WIDTH), MENU_MAX_WIDTH);
             this.$el.css('width', (!Common.Utils.InternalSettings.get("de-hide-right-settings") ? MENU_SCALE_PART : SCALE_MIN) + 'px');
         },
 
