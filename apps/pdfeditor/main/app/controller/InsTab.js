@@ -678,11 +678,20 @@ define([
         },
 
         onAddPage: function(before) {
-            if (before === 'pdf') {
-                this.api && this.api.asc_InsertPagesFromFile && this.api.asc_InsertPagesFromFile(this.api.getCurrentPage() + 1);
+            if (before === 'pdf-before' || before === 'pdf-after') {
+                this.api && this.insertPagesFromPdf(this.api.getCurrentPage() + (before === 'pdf-before' ? 0 : 1));
                 return;
             }
             this.api && this.api.asc_AddPage(this.api.getCurrentPage() + (before ? 0 : 1) );
+        },
+
+        insertPagesFromPdf: function(pos) {
+            var me = this;
+            me.api && me.api.asc_InsertPagesFromFile && me.api.asc_InsertPagesFromFile(pos, function(success) {
+                !success && Common.UI.warning({
+                    msg: me.txtInsertPdfError || 'The pages could not be inserted. The file may be damaged or protected with a password.'
+                });
+            });
         },
 
         mouseenterSmartArt: function (groupName, menu) {

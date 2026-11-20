@@ -1671,8 +1671,13 @@ define([], function () {
                 iconCls: 'menu__icon btn-rotate-270',
                 caption     : me.txtRotateLeft
             });
-            me.mnuInsertFromPdf = new Common.UI.MenuItem({
-                caption     : me.txtInsertFromPdf || 'Insert pages from PDF…'
+            me.mnuInsertFromPdfBefore = new Common.UI.MenuItem({
+                caption     : me.txtInsertFromPdfBefore || 'Insert pages from PDF before…',
+                value: true
+            });
+            me.mnuInsertFromPdfAfter = new Common.UI.MenuItem({
+                caption     : me.txtInsertFromPdfAfter || 'Insert pages from PDF after…',
+                value: false
             });
             me.mnuCutPage = new Common.UI.MenuItem({
                 iconCls: 'menu__icon btn-cut',
@@ -1749,7 +1754,8 @@ define([], function () {
                     var canPaste = me.api.asc_CanPastePage();
                     me.mnuPastePageBefore.setDisabled(!canPaste);
                     me.mnuPastePageAfter.setDisabled(!canPaste);
-                    me.mnuInsertFromPdf.setDisabled(!canPaste);
+                    me.mnuInsertFromPdfBefore.setDisabled(!canPaste);
+                    me.mnuInsertFromPdfAfter.setDisabled(!canPaste);
                 },
                 items: [
                     me.mnuCutPage,
@@ -1760,7 +1766,8 @@ define([], function () {
                     { caption     : '--' },
                     me.mnuNewPageBefore,
                     me.mnuNewPageAfter,
-                    me.mnuInsertFromPdf,
+                    me.mnuInsertFromPdfBefore,
+                    me.mnuInsertFromPdfAfter,
                     menuPageNewSeparator,
                     me.mnuRotatePageRight,
                     me.mnuRotatePageLeft,

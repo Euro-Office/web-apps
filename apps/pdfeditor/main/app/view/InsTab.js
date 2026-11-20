@@ -407,7 +407,8 @@ define([
                                 {caption: me.txtNewPageBefore, value: true},
                                 {caption: me.txtNewPageAfter, value: false},
                                 {caption: '--'},
-                                {caption: me.txtInsertFromPdf || 'Insert pages from PDF…', value: 'pdf'}
+                                {caption: me.txtInsertFromPdfBefore || 'Insert pages from PDF before…', value: 'pdf-before'},
+                                {caption: me.txtInsertFromPdfAfter || 'Insert pages from PDF after…', value: 'pdf-after'}
                             ]
                         }).on('item:click', function (menu, item, e) {
                             me.fireEvent('insert:page', [item.value]);
