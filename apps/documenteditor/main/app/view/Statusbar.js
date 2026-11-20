@@ -165,6 +165,9 @@ define([
             me.chIncludeHdrFtr.on('toggle', _.bind(this.onIncludeHdrFtrToggle, this));
             me.chIncludeComments.on('toggle', _.bind(this.onIncludeCommentsToggle, this));
             me.chDashSeparatesWords.on('toggle', _.bind(this.onDashSeparatesWordsToggle, this));
+            me.btnDocInfo.menu.on('hide:after', _.bind(this.onDocInfoHide, this));
+            me.btnDocInfo.cmpEl && me.btnDocInfo.cmpEl.on('keydown', _.bind(this.onDocInfoKeyDown, this));
+            me.updateCountOptionsAria();
 
             me.onChangeProtectDocument();
         }
@@ -512,6 +515,8 @@ define([
             },
 
             onDocInfoShow: function() {
+                this._focusDocInfoOnHide = false;
+                this.updateCountOptionsAria();
                 if (!this.api) return;
                 var options = this.getCountOptions();
                 this._selInfo = this.api.asc_GetSelectionDocInfo ? this.api.asc_GetSelectionDocInfo(options) : null;
@@ -526,18 +531,60 @@ define([
                 };
             },
 
+            getCountOptionItems: function() {
+                return [this.chIncludeHdrFtr, this.chIncludeComments, this.chDashSeparatesWords];
+            },
+
+            // screen readers announce the options as check boxes in the menu
+            updateCountOptionsAria: function() {
+                this.getCountOptionItems().forEach(function(item) {
+                    item && item.rendered && item.cmpEl.find('> a').attr({role: 'menuitemcheckbox', 'aria-checked': !!item.isChecked()});
+                });
+            },
+
+            onDocInfoKeyDown: function(e) {
+                if (!this.btnDocInfo.isMenuOpen()) return;
+                if (e.keyCode === Common.UI.Keys.ESC) {
+                    this._focusDocInfoOnHide = true;
+                } else if (e.keyCode === Common.UI.Keys.RETURN || e.keyCode === Common.UI.Keys.SPACE) {
+                    // Enter or Space switches the focused option and keeps the menu open, like a mouse click
+                    var focused = document.activeElement,
+                        item = _.find(this.getCountOptionItems(), function(item) {
+                            return item && item.rendered && item.cmpEl.find('> a')[0] === focused;
+                        });
+                    if (item && !item.isDisabled()) {
+                        item.toggle();
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    }
+                }
+            },
+
+            onDocInfoHide: function() {
+                if (this._focusDocInfoOnHide) {
+                    // Escape gives the focus back to the word count button, not to the document
+                    this._focusDocInfoOnHide = false;
+                    var btn = this.btnDocInfo;
+                    setTimeout(function() { btn.focus(); }, 1);
+                }
+            },
+
             onIncludeHdrFtrToggle: function(item, checked) {
                 Common.localStorage.setBool('de-settings-count-hdrftr', checked);
+                this.updateCountOptionsAria();
                 this.restartDocInfo();
             },
 
             onIncludeCommentsToggle: function(item, checked) {
                 Common.localStorage.setBool('de-settings-count-comments', checked);
+                this.updateCountOptionsAria();
                 this.restartDocInfo();
             },
 
             onDashSeparatesWordsToggle: function(item, checked) {
                 Common.localStorage.setBool('de-settings-count-dashes', checked);
+                this.updateCountOptionsAria();
                 this.restartDocInfo();
             },
 
