@@ -171,6 +171,20 @@ define([
             this.btnThumbnails.hide();
             this.btnThumbnails.on('click', this.onBtnMenuClick.bind(this));
 
+
+            // list of tracked changes with an author filter
+            this.btnChangesPane = new Common.UI.Button({
+                el: $markup.elementById('#left-btn-changespane'),
+                hint: this.tipChangesPane,
+                enableToggle: true,
+                disabled: true,
+                iconCls: 'btn-ic-review',
+                toggleGroup: 'leftMenuGroup'
+            });
+            this.btnChangesPane.hide();
+            this.btnChangesPane.on('click', this.onBtnMenuClick.bind(this));
+
+
             this.$el.html($markup);
             return this;
         },
@@ -247,6 +261,13 @@ define([
                     this.panelThumbnails.hide();
                 }
             }
+            if (this.panelChangesPane) {
+                if (this.btnChangesPane.pressed) {
+                    this.panelChangesPane.show();
+                } else {
+                    this.panelChangesPane.hide();
+                }
+            }
             if (this.panelSearch) {
                 if (this.btnSearchBar.pressed) {
                     this.panelSearch.show();
@@ -283,6 +304,9 @@ define([
             } else
             if (name == 'thumbnails') {
                 this.panelThumbnails = panel.render('#left-panel-thumbnails');
+            } else
+            if (name == 'changespane' && !this.panelChangesPane) {
+                this.panelChangesPane = panel.render('#left-panel-changespane');
             } else
             if (name == 'advancedsearch') {
                 this.panelSearch = panel.render('#left-panel-search');
@@ -335,6 +359,10 @@ define([
                     this.panelThumbnails['hide']();
                     this.btnThumbnails.toggle(false, true);
                 }
+                if (this.panelChangesPane) {
+                    this.panelChangesPane['hide']();
+                    this.btnChangesPane.toggle(false, true);
+                }
                 this.toggleActivePluginButton(false);
             }
         },
@@ -357,6 +385,7 @@ define([
             /** coauthoring end **/
             this.btnNavigation.setDisabled(false);
             this.btnThumbnails.setDisabled(false);
+            this.btnChangesPane.setDisabled(false);
             this.setDisabledAllMoreMenuItems(false);
         },
 
@@ -389,6 +418,12 @@ define([
                         !this.btnNavigation.isDisabled() && !this.btnNavigation.pressed) {
                         this.btnNavigation.toggle(true);
                         this.onBtnMenuClick(this.btnNavigation);
+                    }
+                } else if (menu == 'changespane') {
+                    if ((this.btnChangesPane.isVisible() || this.isButtonInMoreMenu(this.btnChangesPane)) &&
+                        !this.btnChangesPane.isDisabled() && !this.btnChangesPane.pressed) {
+                        this.btnChangesPane.toggle(true);
+                        this.onBtnMenuClick(this.btnChangesPane);
                     }
                 } else if (menu == 'advancedsearch') {
                     if ((this.btnSearchBar.isVisible() || this.isButtonInMoreMenu(this.btnSearchBar)) &&
@@ -517,6 +552,7 @@ define([
         tipSearch   : 'Search',
         tipPlugins  : 'Plugins',
         tipPageThumbnails: 'Page Thumbnails',
+        tipChangesPane: 'Tracked changes',
         txtDeveloper: 'DEVELOPER MODE',
         txtTrial: 'TRIAL MODE',
         txtTrialDev: 'Trial Developer Mode',
