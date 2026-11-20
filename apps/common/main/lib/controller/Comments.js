@@ -1162,10 +1162,24 @@ define([
         onCommentsDisplay: function (value) {
             if (value === 'list') {
                 this.onApiHideComment();
+                this.sortListByPosition();
             } else {
                 this.listActiveUid = undefined;
                 this.view && this.view.commentsView && this.view.commentsView.clearActive();
             }
+        },
+
+        // Previous / Next go by position in the document, so the list follows the same order.
+        // Only done when the list is chosen; a sort picked later in the panel menu is kept.
+        sortListByPosition: function () {
+            var type = this.getComparator();
+            if (type === 'position-asc' || type === 'position-desc') return;
+
+            this.setComparator('position-asc');
+            var menu = this.view && this.view.buttonSort && this.view.buttonSort.menu;
+            menu && _.each(menu.items, function (item) {
+                item.toggleGroup === 'sortcomments' && item.setChecked(item.value === 'position-asc', true);
+            });
         },
 
         showCommentInList: function (uids) {

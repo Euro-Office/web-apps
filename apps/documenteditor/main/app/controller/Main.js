@@ -1462,6 +1462,9 @@ define([
                 statusbarController.createDelayedElements();
 
                 leftmenuController.getView('LeftMenu').disableMenu('all',false);
+                // comments shown as a list: open the list again after a reload
+                if (Common.Utils.InternalSettings.get("de-settings-comments-display") === 'list')
+                    leftmenuController.onCommentsShowList();
 
                 if (me.appOptions.canBranding)
                     me.getApplication().getController('LeftMenu').leftMenu.getMenu('about').setLicInfo(me.editorConfig.customization);

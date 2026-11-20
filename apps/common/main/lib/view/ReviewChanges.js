@@ -532,6 +532,7 @@ define([
                             lock: [_set.viewFormMode, _set.lostConnect],
                             menu: true,
                             action: 'comments-display',
+                            ariaLabel: this.txtCommentsDisplay,
                             dataHint: '1',
                             dataHintDirection: 'bottom',
                             dataHintOffset: 'small'
@@ -545,6 +546,7 @@ define([
                     this.btnCommentPrev = new Common.UI.Button({
                         cls: 'btn-toolbar x-huge icon-top',
                         caption: this.txtCommentPrev,
+                        ariaLabel: this.txtCommentPrev,
                         iconCls: Common.UI.isRTL() ? 'toolbar__icon btn-review-next' : 'toolbar__icon btn-review-prev',
                         lock: [_set.previewReviewMode, _set.viewFormMode, _set.hideComments, _set.docLockForms],
                         dataHint: '1',
@@ -556,6 +558,7 @@ define([
                     this.btnCommentNext = new Common.UI.Button({
                         cls: 'btn-toolbar x-huge icon-top',
                         caption: this.txtCommentNext,
+                        ariaLabel: this.txtCommentNext,
                         iconCls: Common.UI.isRTL() ? 'toolbar__icon btn-review-prev' : 'toolbar__icon btn-review-next',
                         lock: [_set.previewReviewMode, _set.viewFormMode, _set.hideComments, _set.docLockForms],
                         dataHint: '1',
