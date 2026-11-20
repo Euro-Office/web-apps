@@ -1145,6 +1145,11 @@ define([
                         toolbarController.onApiFocusObject([]);
                         me.api.UpdateInterfaceState();
 
+                        // customization.pdfOpenInViewMode: open the PDF for reading (Viewing); Commenting and Editing stay
+                        // one click away in the mode switch in the header
+                        if (me.appOptions.pdfOpenInViewMode && me.appOptions.canSwitchMode && me.appOptions.isPDFAnnotate && !me.appOptions.isRestrictedEdit && !me.appOptions.isForm)
+                            me.onPdfModeApply('view');
+
                         Common.NotificationCenter.trigger('document:ready', 'main');
                         me.applyLicense();
                     }, 500);
@@ -1386,6 +1391,7 @@ define([
                 this.appOptions.canSuggest     = !((typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.suggestFeature===false);
                 this.appOptions.canCopy        = this.permissions.copy !== false;
 
+                this.appOptions.pdfOpenInViewMode = (typeof (this.editorConfig.customization) == 'object') && !!this.editorConfig.customization.pdfOpenInViewMode;
                 this.appOptions.compactHeader = this.appOptions.customization && (typeof (this.appOptions.customization) == 'object') && !!this.appOptions.customization.compactHeader;
                 this.appOptions.twoLevelHeader = this.appOptions.isEdit || this.appOptions.isRestrictedEdit; // when compactHeader=true some buttons move to toolbar
 
