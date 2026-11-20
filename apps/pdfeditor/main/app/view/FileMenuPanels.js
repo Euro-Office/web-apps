@@ -1772,15 +1772,20 @@ define([], function () {
 
         onRemovePersonalClick: function() {
             var me = this;
+            // close File first (as for the signature warning), so the result is visible in the comments
+            // and Escape in the warning doesn't close a panel behind it
+            this.menu && this.menu.hide();
             Common.UI.warning({
                 title: this.txtRemovePersonal,
-                msg: this.txtRemovePersonalWarning,
+                msg: Common.Utils.String.format(this.txtRemovePersonalWarning, Common.Utils.String.platformKey('Ctrl+Z', '{0}')),
                 maxwidth: 600,
                 buttons: ['ok', 'cancel'],
                 primary: 'ok',
                 callback: function(btn) {
-                    if (btn == 'ok')
+                    if (btn == 'ok') {
                         me.api.asc_RemovePersonalInformation('Author');
+                        Common.NotificationCenter.trigger('showmessage', {msg: me.txtRemovePersonalDone}, {timeout: 5000, hideCloseTip: true});
+                    }
                 }
             });
         },
@@ -1830,7 +1835,8 @@ define([], function () {
         txtDocumentInfo: 'Document Info',
         txtCommon: 'Common',
         txtRemovePersonal: 'Remove personal information',
-        txtRemovePersonalWarning: 'All author names in comments, replies and other annotations will be replaced with "Author", and their user IDs are removed. Dates of comments and annotations are kept. You can undo this with Ctrl+Z. The document properties of the PDF (author, title, subject, producer) are not changed, as this editor cannot edit them.'
+        txtRemovePersonalWarning: 'All author names in comments, replies and other annotations will be replaced with "Author", and their user IDs are removed. Dates of comments and annotations are kept. You can undo this with {0}. The document properties of the PDF (author, title, subject, producer) are not changed, as this editor cannot edit them.',
+        txtRemovePersonalDone: 'Personal information has been removed from comments and annotations.'
     }, PDFE.Views.FileMenuPanels.DocumentInfo || {}));
 
     PDFE.Views.FileMenuPanels.DocumentRights = Common.UI.BaseView.extend(_.extend({
