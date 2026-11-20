@@ -446,12 +446,15 @@ define([
             tipSearchPdfs: 'Search for a text in several PDFs',
             txtCannotRead: 'The file cannot be read.',
             txtTooManyDifferences: 'The files differ too much to list the differences.',
+            txtNoText: 'No text found (maybe a scanned document).',
+            txtNoTextOpen: 'No text found in this PDF (maybe a scanned document), so there is nothing to compare.',
+            txtNoTextOther: 'No text found in {0} (maybe a scanned document), so there is nothing to compare.',
             txtPageN: 'Page {0}',
             txtOtherPageN: 'Other file, page {0}',
-            txtCompareIntro: 'Compared with {0}: {1} sentences only here (\u2212), {2} only in the other file (+). Click a red line to go to its page.',
+            txtCompareIntro: 'Compared with {0}. Only in this file (\u2212): {1}. Only in the other file (+): {2}. Click a red line to go to its page.',
             txtCompareSame: 'No differences in the text compared with {0}.',
             txtSearchFor: 'Search for (then choose the PDF files)',
-            txtSearchIntro: '"{0}": {1} hits in {2} files.'
+            txtSearchIntro: 'Search for "{0}". Hits: {1}. Files: {2}.'
         }
     }()), PDFE.Views.ViewTab || {}));
 });
