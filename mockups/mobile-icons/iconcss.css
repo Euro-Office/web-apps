@@ -1,0 +1,14 @@
+:root{--icon-gray-primary:#383838;--icon-blue-primary:#446eca;--icon-gray-secondary:#f3f3f3;--icon-blue-secondary:#dce7fa;--icon-red:#fca5a5;--icon-success:#78b588}
+svg.icon{color:var(--icon-gray-primary);fill:none}
+.icon-stroke-blue-primary{fill:transparent;stroke:var(--icon-blue-primary)}
+.icon-fill-blue-primary{fill:var(--icon-blue-primary);stroke:transparent}
+.icon-stroke-gray-primary{fill:transparent;stroke:var(--icon-gray-primary)}
+.icon-fill-gray-primary{fill:var(--icon-gray-primary);stroke:transparent}
+.icon-stroke-gray-secondary{fill:transparent;stroke:var(--icon-gray-secondary)}
+.icon-fill-gray-secondary{fill:var(--icon-gray-secondary);stroke:transparent}
+.icon-stroke-blue-secondary{fill:transparent;stroke:var(--icon-blue-secondary)}
+.icon-fill-blue-secondary{fill:var(--icon-blue-secondary);stroke:transparent}
+.icon-stroke-red{fill:transparent;stroke:var(--icon-red)}
+.icon-fill-red{fill:var(--icon-red);stroke:transparent}
+.icon-stroke-success{fill:transparent;stroke:var(--icon-success)}
+.icon-fill-success{fill:var(--icon-success);stroke:transparent}
