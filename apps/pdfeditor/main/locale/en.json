@@ -2488,6 +2488,8 @@
   "PDFE.Views.InsTab.capWatermark": "Watermark",
   "PDFE.Views.InsTab.txtWatermarkTitle": "Watermark",
   "PDFE.Views.InsTab.txtWatermarkApply": "Add to all pages",
+  "PDFE.Views.InsTab.txtWatermarkRemove": "Remove watermark",
+  "PDFE.Views.InsTab.txtWatermarkEmpty": "Enter the watermark text.",
   "PDFE.Views.InsTab.txtWatermarkText": "Text",
   "PDFE.Views.InsTab.txtWatermarkDefault": "DRAFT",
   "PDFE.Views.InsTab.txtWatermarkColor": "Color",

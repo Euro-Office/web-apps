@@ -682,14 +682,21 @@ define([
         onWatermarkClick: function() {
             var me = this, view = this.view, main = this.getApplication().getController('Main');
             var t = function(name, def) { return view[name] || def; };
+            var buttons = [{value: 'ok', caption: t('txtWatermarkApply', 'Add to all pages'), primary: true}];
+            // a watermark added before can be removed; adding a new one replaces it
+            if (me.api && me.api.asc_HasWatermark && me.api.asc_HasWatermark())
+                buttons.push({value: 'remove', caption: t('txtWatermarkRemove', 'Remove watermark')});
+            buttons.push('cancel');
             var win = new Common.UI.Window({
                 title: t('txtWatermarkTitle', 'Watermark'),
                 width: 420,
                 cls: 'modal-dlg',
-                buttons: [{value: 'ok', caption: t('txtWatermarkApply', 'Add to all pages'), primary: true}, 'cancel'],
+                buttons: buttons,
+                onprimary: function() { apply(); return false; },
                 tpl: '<div class="box" style="padding: 10px 15px; line-height: 28px;">' +
                         '<div>' + t('txtWatermarkText', 'Text') + '</div>' +
                         '<input id="wm-text" type="text" class="form-control" style="width:100%;" value="' + _.escape(t('txtWatermarkDefault', 'DRAFT')) + '">' +
+                        '<div id="wm-text-error" style="display:none;color:#d9534f;line-height:20px;">' + t('txtWatermarkEmpty', 'Enter the watermark text.') + '</div>' +
                         '<div style="display:flex;gap:12px;margin-top:8px;">' +
                             '<label style="flex:1;">' + t('txtWatermarkColor', 'Color') + '<br><select id="wm-color" class="form-control" style="width:100%;">' +
                                 '<option value="128,128,128">' + t('txtGrey', 'Gray') + '</option>' +
@@ -724,25 +731,49 @@ define([
                 g.fillText(text, 0, 0);
                 return canvas.toDataURL('image/png');
             };
+            // pictures can only be placed or removed in edit mode
+            var runInEditMode = function(action) {
+                if (!me.mode.isPDFEdit && main && main.appOptions.canSwitchMode && main.appOptions.canPDFEdit)
+                    main.onPdfModeApply('edit', undefined, function() { setTimeout(action, 300); });
+                else
+                    action();
+            };
+            var showEmptyError = function(show) {
+                var $w = win.$window;
+                $w.find('#wm-text').toggleClass('error', show);
+                $w.find('#wm-text-error').toggle(show);
+            };
+            var apply = function() {
+                var $w = win.$window;
+                var text = ($w.find('#wm-text').val() || '').trim();
+                if (!text) {
+                    // keep the dialog open and say why
+                    showEmptyError(true);
+                    $w.find('#wm-text').focus();
+                    return;
+                }
+                var url = render(text, $w.find('#wm-color').val(), parseFloat($w.find('#wm-alpha').val()), parseFloat($w.find('#wm-angle').val()));
+                win.close();
+                runInEditMode(function() { me.api && me.api.asc_AddWatermarkImage(url); });
+            };
             win.on('render:after', function() {
                 var $w = win.$window;
+                $w.find('#wm-text').on('input', function() { showEmptyError(false); });
                 $w.find('.footer .dlg-btn').on('click', function(e) {
                     var result = $(e.currentTarget).attr('result');
                     if (result === 'ok') {
-                        var text = ($w.find('#wm-text').val() || '').trim();
-                        if (!text) return;
-                        var url = render(text, $w.find('#wm-color').val(), parseFloat($w.find('#wm-alpha').val()), parseFloat($w.find('#wm-angle').val()));
+                        apply();
+                    } else if (result === 'remove') {
                         win.close();
-                        var add = function() { me.api && me.api.asc_AddWatermarkImage(url); };
-                        // pictures can only be placed in edit mode
-                        if (!me.mode.isPDFEdit && main && main.appOptions.canSwitchMode && main.appOptions.canPDFEdit)
-                            main.onPdfModeApply('edit', undefined, function() { setTimeout(add, 300); });
-                        else
-                            add();
+                        runInEditMode(function() { me.api && me.api.asc_RemoveWatermark(); });
                     } else {
                         win.close();
                     }
                 });
+            });
+            // the focus goes into the dialog, so Escape and Enter work at once
+            win.on('animate:after', function() {
+                win.$window.find('#wm-text').focus().select();
             });
             win.show();
         },
