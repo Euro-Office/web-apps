@@ -3790,6 +3790,7 @@
   "DE.Views.Spellcheck.txtChecking": "Checking the document: {0}%",
   "DE.Views.Spellcheck.txtClosePanel": "Close spelling",
   "DE.Views.Spellcheck.txtComplete": "Spellcheck has been completed",
+  "DE.Views.Spellcheck.txtDocumentChanged": "The document has changed. Select Next to check it again.",
   "DE.Views.Spellcheck.txtLoadingSuggestions": "Loading suggestions...",
   "DE.Views.Spellcheck.txtMissingLanguages": "No dictionary for: {0}. Words in these languages are not checked.",
   "DE.Views.Spellcheck.txtNextTip": "Go to the next word",

@@ -45,9 +45,15 @@ define([], function () {
                             '<div id="spellcheck-next" style=""></div>',
                         '</div>',
                         '<div id="spellcheck-suggestions-list"></div>',
-                        '<div id="spellcheck-ignore-group">',
-                            '<div id="spellcheck-ignore"></div>',
-                            '<div id="spellcheck-ignore-all"></div>',
+                        '<div id="spellcheck-buttons">',
+                            '<div id="spellcheck-change-group">',
+                                '<div id="spellcheck-change"></div>',
+                                '<div id="spellcheck-change-all"></div>',
+                            '</div>',
+                            '<div id="spellcheck-ignore-group" class="margin-left-6">',
+                                '<div id="spellcheck-ignore"></div>',
+                                '<div id="spellcheck-ignore-all"></div>',
+                            '</div>',
                         '</div>',
                         '<button class="btn btn-text-default auto" id="spellcheck-add-to-dictionary" data-hint="1" data-hint-direction="bottom" data-hint-offset="big"><%= scope.txtAddToDictionary %></button>',
                         '<div id="spellcheck-complete" class="hidden">',
@@ -114,6 +120,8 @@ define([], function () {
                     '</div>'
                 ].join('')),
                 scrollAlwaysVisible: true,
+                // the list is one stop for Tab, the arrow keys move between the suggestions
+                itemTabindex: -1,
                 dataHint: '1',
                 dataHintDirection: 'left',
                 dataHintOffset: 'big'
@@ -131,6 +139,28 @@ define([], function () {
                         value: 1
                     }
                 ]
+            });
+
+            this.btnChange = new Common.UI.Button({
+                parentEl: $('#spellcheck-change', this.$el),
+                cls: 'btn-text-default',
+                caption: this.textChange,
+                width: 110,
+                disabled: true,
+                dataHint: '1',
+                dataHintDirection: 'bottom',
+                dataHintOffset: 'big'
+            });
+
+            this.btnChangeAll = new Common.UI.Button({
+                parentEl: $('#spellcheck-change-all', this.$el),
+                cls: 'btn-text-default',
+                caption: this.textChangeAll,
+                width: 110,
+                disabled: true,
+                dataHint: '1',
+                dataHintDirection: 'bottom',
+                dataHintOffset: 'big'
             });
 
             this.btnIgnore = new Common.UI.Button({
@@ -212,6 +242,21 @@ define([], function () {
             }, 10);
         },
 
+        // Keeps the keyboard in the panel after an action, so that Tab moves on to the next control
+        // instead of into the document
+        focus: function() {
+            var me = this;
+            _.defer(function() {
+                if (!me.rendered || !me.isVisible()) return;
+                if (me.suggestionList.store.length > 0)
+                    me.suggestionList.focus();
+                else if (!me.btnIgnore.isDisabled())
+                    me.btnIgnore.focus();
+                else
+                    me.buttonNext.focus();
+            });
+        },
+
         onClickClosePanel: function() {
             Common.NotificationCenter.trigger('leftmenu:change', 'hide');
         },
@@ -229,6 +274,7 @@ define([], function () {
         txtChecking: 'Checking the document: {0}%',
         txtStillChecking: 'Checking the document: {0}%. The next misspelled word appears as soon as it is found.',
         txtCheckedAll: 'The whole document has been checked',
+        txtDocumentChanged: 'The document has changed. Select Next to check it again.',
         txtSpellcheckOff: 'Spell checking is turned off in the settings',
         txtMissingLanguages: 'No dictionary for: {0}. Words in these languages are not checked.',
         txtSkippedLocked: '{0} occurrences were not changed because they are locked.',

@@ -73,8 +73,10 @@ define([
         onAfterRender: function(panelSpellcheck) {
             panelSpellcheck.buttonNext.on('click', _.bind(this.onClickNext, this));
             panelSpellcheck.btnToDictionary.on('click', _.bind(this.onDictionary, this));
+            // Enter in the list also sends item:click
             panelSpellcheck.suggestionList.on('item:click', _.bind(this.onClickSuggestion, this));
-            panelSpellcheck.suggestionList.on('entervalue', _.bind(this.onClickChange, this, false));
+            panelSpellcheck.btnChange.on('click', _.bind(this.onClickChange, this, false));
+            panelSpellcheck.btnChangeAll.on('click', _.bind(this.onClickChange, this, true));
             panelSpellcheck.btnIgnore.on('click', _.bind(this.onClickIgnore, this, false));
             panelSpellcheck.btnIgnoreAll.on('click', _.bind(this.onClickIgnore, this, true));
             panelSpellcheck.menuMore.on('item:click', _.bind(this.onClickChangeMenu, this));
@@ -92,30 +94,40 @@ define([
             var state = this.api.asc_GetSpellCheckState(true);
             this.updateMissingLanguages(state);
             this.updateProgress(state);
-            this.onClickNext();
+            this.findNext();
+            this.panelSpellcheck.focus();
         },
 
         onHidePanel: function() {
             this._waitingForNext = false;
+            this._finished = false;
+            this._docChanged = false;
             this.api && this.api.asc_setSpellCheckErrorsLimit(true);
         },
 
         onClickNext: function() {
+            this.findNext();
+            this.panelSpellcheck.focus();
+        },
+
+        findNext: function() {
             if (this.api) {
                 this.showSkipped(0);
+                this._docChanged = false;
                 // asc_nextWord sends the suggestions with asc_onSpellCheckVariantsFound, at once if they are known
                 this._nextWordSpell = null;
                 this._waitingVariants = true;
                 var found = this.api.asc_nextWord(),
-                    state = found ? null : this.api.asc_GetSpellCheckState(),
-                    checking = !!state && !state['IsComplete'] && !state['IsStopped'];
+                    state = this.api.asc_GetSpellCheckState(),
+                    checking = !found && !!state && !state['IsComplete'] && !state['IsStopped'];
                 // Nothing found yet while the background check runs: look again when it has finished
                 this._waitingForNext = checking;
                 this._waitingVariants = found && !this._nextWordSpell;
-                this.updatePanel(found ? (this._nextWordSpell || this.getSpellCheckObject()) : null, !found && !checking);
+                // No more words: an edit in the document after this shows that the result is out of date
+                this._finished = !found && !checking;
+                this.updatePanel(found ? (this._nextWordSpell || this.getSpellCheckObject()) : null, this._finished);
                 state && this.updateProgress(state);
             }
-            Common.NotificationCenter.trigger('edit:complete', this, {restorefocus:true});
         },
 
         onSpellCheckProgress: function(checked, total, complete, stopped) {
@@ -126,13 +138,20 @@ define([
             var panel = this.panelSpellcheck;
             if (!this.api || !state || !this.isPanelVisible()) return;
 
+            if (this._finished && !state['IsComplete'] && !state['IsStopped']) {
+                // The document was edited after the panel had found no more words
+                this._finished = false;
+                this._docChanged = true;
+                panel.lblComplete.addClass('hidden');
+            }
+
             var complete = state['IsComplete'],
                 percent = state['Total'] > 0 ? Math.floor(state['Checked'] * 100 / state['Total']) : 100,
                 text;
             if (state['IsStopped'])
                 text = panel.txtSpellcheckOff;
             else if (complete)
-                text = panel.txtCheckedAll;
+                text = this._docChanged ? panel.txtDocumentChanged : panel.txtCheckedAll;
             else
                 text = Common.Utils.String.format(this._waitingForNext ? panel.txtStillChecking : panel.txtChecking, percent);
 
@@ -146,7 +165,7 @@ define([
 
             if (this._waitingForNext && (complete || state['IsStopped'])) {
                 this._waitingForNext = false;
-                this.onClickNext();
+                this.findNext();
             }
         },
 
@@ -172,8 +191,9 @@ define([
         onDictionary: function() {
             if (this.api && this._currentSpellObj) {
                 this.api.asc_spellCheckAddToDictionary(this._currentSpellObj);
-                this.onClickNext();
+                this.findNext();
             }
+            this.panelSpellcheck.focus();
         },
 
         // A click on a suggestion changes the word, a click on its "..." opens the menu with Change all
@@ -194,12 +214,11 @@ define([
             rec = rec && rec.get ? rec : this.panelSpellcheck.suggestionList.getSelectedRec();
             if (this.api && rec && this._currentSpellObj) {
                 var result = this.api.asc_replaceMisspelledWord(rec.get('value'), this._currentSpellObj, all);
-                this.onClickNext();
+                this.findNext();
                 // Words in locked content controls or in paragraphs that someone else edits are skipped
                 all && result && this.showSkipped(result['Skipped']);
-            } else {
-                Common.NotificationCenter.trigger('edit:complete', this, {restorefocus:true});
             }
+            this.panelSpellcheck.focus();
         },
 
         onClickChangeMenu: function(menu, item) {
@@ -209,10 +228,9 @@ define([
         onClickIgnore: function(all) {
             if (this.api && this._currentSpellObj) {
                 this.api.asc_ignoreMisspelledWord(this._currentSpellObj, all);
-                this.onClickNext();
-            } else {
-                Common.NotificationCenter.trigger('edit:complete', this, {restorefocus:true});
+                this.findNext();
             }
+            this.panelSpellcheck.focus();
         },
 
         getSpellCheckObject: function(update) {
@@ -271,6 +289,8 @@ define([
             panel.suggestionList.store.reset(arr);
             (arr.length > 0) && panel.suggestionList.selectByIndex(0);
             panel.currentWord.setDisabled(!word);
+            panel.btnChange.setDisabled(!arr.length);
+            panel.btnChangeAll.setDisabled(!arr.length);
             panel.btnIgnore.setDisabled(!word);
             panel.btnIgnoreAll.setDisabled(!word);
             panel.btnToDictionary.setDisabled(!word);
