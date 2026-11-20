@@ -1368,24 +1368,40 @@ define([], function () {
                                         caption: me.textNone, 
                                         value: 'noneError',
                                         stopPropagation: true, 
+                                        toggleGroup: 'errorBars',
+                                        checkable: true,
                                         disabled: false
                                     },
                                     {
                                         caption: me.textStandardError,
                                         value: 'standardError',
                                         stopPropagation: true, 
+                                        toggleGroup: 'errorBars',
+                                        checkable: true,
                                         disabled: false
                                     },
                                     {
                                         caption: me.txtPercentage,
                                         value: 'percentage',
                                         stopPropagation: true, 
+                                        toggleGroup: 'errorBars',
+                                        checkable: true,
                                         disabled: false
                                     },
                                     {
                                         caption: me.textStandardDeviation,
                                         value: 'standardDeviation',
                                         stopPropagation: true, 
+                                        toggleGroup: 'errorBars',
+                                        checkable: true,
+                                        disabled: false
+                                    },
+                                    {
+                                        caption: me.textCustomErrorBars,
+                                        value: 'customError',
+                                        stopPropagation: true, 
+                                        toggleGroup: 'errorBars',
+                                        checkable: true,
                                         disabled: false
                                     }
                                 ]
