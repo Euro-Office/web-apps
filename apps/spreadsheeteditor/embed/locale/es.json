@@ -51,7 +51,7 @@
   "SSE.ApplicationController.warnLicenseExp": "Su licencia ha expirado. Por favor, renueve su licencia y recargue la página.",
   "SSE.ApplicationView.txtDownload": "Descargar",
   "SSE.ApplicationView.txtEmbed": "Embeber",
-  "SSE.ApplicationView.txtFileLocation": "Abrir ubicación del archivo",
+  "SSE.ApplicationView.txtFileLocation": "Abrir lugar del archivo",
   "SSE.ApplicationView.txtFullScreen": "Pantalla completa",
   "SSE.ApplicationView.txtPrint": "Imprimir",
   "SSE.ApplicationView.txtSearch": "Encontrar",
