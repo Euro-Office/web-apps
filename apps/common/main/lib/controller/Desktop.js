@@ -62,6 +62,24 @@ define([
         var nativevars,
             helpUrl;
 
+        // A tab moved into its own window (singlewindow), or moved back (state false).
+        // On Windows and Linux the editor window draws its own title bar, with the file name,
+        // over the page's title row, so the page's own name and the parts that would show
+        // through underneath (accent strip, user avatar: see .desktop-singlewindow in the styles)
+        // are hidden. The macOS window keeps a native title bar above the page with its title
+        // hidden, so nothing is covered there and the page keeps its name, as before
+        // (the form filler hid it on every platform already).
+        // The form filler has no home button (titlebuttons stays empty in view mode).
+        const _applySingleWindow = function (state) {
+            const covered = !!state && !Common.Utils.isMac,
+                hidename = covered || (!!state && !!config.isFillFormApp);
+            $("#title-doc-name")[hidename ? 'hide' : 'show']();
+            $('body').toggleClass('desktop-singlewindow', covered);
+
+            // $('#box-document-title .hedset')[state ? 'hide' : 'show']();
+            !!titlebuttons && !!titlebuttons.home && titlebuttons.home.btn.setVisible(!!state);
+        };
+
         if ( !!native ) {
             native.features = native.features || {};
             nativevars = window.RendererProcessVariable;
@@ -93,17 +111,7 @@ define([
                     }
 
                     if ( obj.singlewindow !== undefined ) {
-                        // $('#box-document-title .hedset')[obj.singlewindow ? 'hide' : 'show']();
-
-                        // A tab moved into its own window (singlewindow) gets the file name drawn by the window itself;
-                        // the page's own title would show through underneath it (long names), so hide it in all editors.
-                        $("#title-doc-name")[obj.singlewindow ? 'hide' : 'show']();
-                        // The window draws its own title bar over the page's title row; let the styles move
-                        // what would show through underneath it (accent strip, user avatar).
-                        $('body').toggleClass('desktop-singlewindow', !!obj.singlewindow);
-                        if ( !config.isFillFormApp ) {
-                            titlebuttons && titlebuttons.home && titlebuttons.home.btn.setVisible(obj.singlewindow);
-                        }
+                        _applySingleWindow(obj.singlewindow);
 
                         native.features.singlewindow = obj.singlewindow;
                         Common.NotificationCenter.trigger('desktop:window', {"compositetitle": native.features.singlewindow});
@@ -523,11 +531,7 @@ define([
             }
 
             if ( native.features.singlewindow !== undefined ) {
-                $("#title-doc-name")[native.features.singlewindow ? 'hide' : 'show']();
-                $('body').toggleClass('desktop-singlewindow', !!native.features.singlewindow);
-
-                // $('#box-document-title .hedset')[native.features.singlewindow ? 'hide' : 'show']();
-                !!titlebuttons.home && titlebuttons.home.btn.setVisible(native.features.singlewindow);
+                _applySingleWindow(native.features.singlewindow);
             }
         }
 
