@@ -21,6 +21,8 @@ define([
                 'SelectionPane': {
                     'show': function() {
                         me.updateList();
+                        // take the keyboard focus, like the other side panels, so the list works with the arrow keys
+                        me.panel.focusList();
                     }
                 }
             });
@@ -41,6 +43,14 @@ define([
         onAfterRender: function(panel) {
             var me = this;
             panel.objectsList.on('item:click', _.bind(this.onSelectObject, this));
+            panel.objectsList.on('item:select', function(list, view, record, fromKeyDown) {
+                // the arrow keys select the object too, so the list and the page show the same object
+                fromKeyDown && me.onSelectObject(list, view, record);
+            });
+            panel.objectsList.on('item:keydown', function(list, record, e) {
+                if (e.keyCode === Common.UI.Keys.ESC)
+                    Common.NotificationCenter.trigger('edit:complete', panel);
+            });
             panel.orderButtons.forEach(function(button) {
                 button.on('click', _.bind(me.onChangeOrder, me, button.options.level));
             });
@@ -84,6 +94,7 @@ define([
                 page = this.api.getCurrentPage(),
                 items = this.api.asc_GetPageDrawingObjects(page),
                 counts = {},
+                hadFocus = panel.listHasFocus(),
                 selected = null;
 
             var records = _.map(items, function(item) {
@@ -109,12 +120,13 @@ define([
             selected = panel.objectsList.store.findWhere({isSelected: true});
             selected ? panel.objectsList.selectRecord(selected, true) : panel.objectsList.deselectAll(true);
             selected && panel.objectsList.scrollToRecord(selected);
+            // reset redraws the rows, give the focus back so the keyboard keeps working
+            hadFocus && panel.focusList();
 
             // inline objects move with the text and have no stacking order
-            var canOrder = !!selected && selected.get('layer') !== 'inline';
-            panel.orderButtons.forEach(function(button) {
-                button.setDisabled(!canOrder);
-            });
+            var isInline = !!selected && selected.get('layer') === 'inline';
+            panel.setOrderDisabled(!selected || isInline,
+                isInline ? panel.txtInlineNoOrder : (records.length > 0 ? panel.txtSelectToArrange : ''));
         },
 
         onSelectObject: function(list, item, record) {

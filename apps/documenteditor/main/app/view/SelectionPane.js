@@ -13,12 +13,13 @@ define([], function () {
                 '<div class="selectionpane-content">',
                     '<div id="selectionpane-page"></div>',
                     '<div id="selectionpane-list"></div>',
-                    '<div id="selectionpane-order">',
+                    '<div id="selectionpane-order" role="group" aria-describedby="selectionpane-order-hint">',
                         '<div id="selectionpane-front"></div>',
                         '<div id="selectionpane-forward"></div>',
                         '<div id="selectionpane-backward"></div>',
                         '<div id="selectionpane-back"></div>',
                     '</div>',
+                    '<div id="selectionpane-order-hint" class="hidden"></div>',
                 '</div>',
                 '<div id="selectionpane-header">',
                     '<label role="heading"><%= scope.txtTitle %></label>',
@@ -62,6 +63,19 @@ define([], function () {
                 dataHintDirection: 'left',
                 dataHintOffset: 'big'
             });
+            // while the arrow keys move the selection, the row under the mouse should not look highlighted too
+            // (the browser also sends a mousemove when the rows are redrawn, so only count a real move)
+            var listEl = this.objectsList.$el,
+                mouseX, mouseY;
+            // capture phase: the list stops the arrow keys from bubbling
+            listEl[0].addEventListener('keydown', function() { listEl.addClass('keyboard-nav'); }, true);
+            listEl.on('mousemove', function(e) {
+                if (e.clientX !== mouseX || e.clientY !== mouseY) {
+                    mouseX = e.clientX;
+                    mouseY = e.clientY;
+                    listEl.removeClass('keyboard-nav');
+                }
+            });
 
             var me = this;
             function createOrderButton(id, iconCls, hint, level) {
@@ -71,6 +85,9 @@ define([], function () {
                     iconCls: 'toolbar__icon ' + iconCls,
                     hint: hint,
                     disabled: true,
+                    // keep mouse events on the disabled button and create the tooltip now, so it still shows
+                    allowMouseEventsOnDisabled: true,
+                    delayRenderHint: false,
                     dataHint: '1',
                     dataHintDirection: 'top'
                 });
@@ -85,6 +102,8 @@ define([], function () {
             ];
 
             this.lblPage = this.$el.find('#selectionpane-page');
+            this.lblOrderHint = this.$el.find('#selectionpane-order-hint');
+            this.setOrderDisabled(true);
             this.trigger('render:after', this);
 
             this.rendered = true;
@@ -105,6 +124,37 @@ define([], function () {
             Common.NotificationCenter.trigger('leftmenu:change', 'hide');
         },
 
+        /**
+         * Enables or disables the arrange buttons and shows why they are disabled.
+         * @param {boolean} disabled
+         * @param {string} [reason] - text shown below the buttons while they are disabled
+         */
+        setOrderDisabled: function(disabled, reason) {
+            this.orderButtons.forEach(function(button) {
+                button.setDisabled(disabled);
+                button.cmpEl.attr('aria-disabled', disabled);
+                // Button turns the tooltip off while disabled, but it names the action, so keep it
+                var tip = button.btnEl && button.btnEl.data('bs.tooltip');
+                tip && (tip.enabled = true);
+            });
+            reason = disabled && reason || '';
+            this.lblOrderHint.text(reason).toggleClass('hidden', !reason);
+        },
+
+        listHasFocus: function() {
+            return this.rendered && $.contains(this.objectsList.el, document.activeElement);
+        },
+
+        /**
+         * Moves the keyboard focus to the selected row, or to the list when no row is selected.
+         */
+        focusList: function() {
+            var list = this.objectsList,
+                record = list.getSelectedRec(),
+                item = record && _.find(list.dataViewItems, function(view) { return view.model === record; });
+            item ? item.$el.focus() : list.focus();
+        },
+
         txtTitle: 'Selection pane',
         txtClosePanel: 'Close selection pane',
         txtPage: 'Page {0}, from the front to the back',
@@ -120,6 +170,8 @@ define([], function () {
         txtInline: 'In line with text',
         txtBehind: 'Behind text',
         txtHeaderFooter: 'Header or footer',
+        txtSelectToArrange: 'Select an object to change its order.',
+        txtInlineNoOrder: 'Objects in line with text move with the text. Choose another wrapping style to change the order.',
         tipBringToFront: 'Bring to front',
         tipBringForward: 'Bring forward',
         tipSendBackward: 'Send backward',
