@@ -753,6 +753,9 @@ define([], function () {
                 dataHint: '2',
                 dataHintDirection: 'bottom',
                 dataHintOffset: 'big'
+            }).on('selected', function(combo, record) {
+                // spacing is already shown in points when the unit is Point
+                me.chSpacingPt.setDisabled(record.value == Common.Utils.Metric.c_MetricUnits.pt);
             });
 
             this.chSpacingPt = new Common.UI.CheckBox({
@@ -1035,6 +1038,7 @@ define([], function () {
             this._oldUnits = this.cmbUnit.getValue();
             this.chSpacingPt.setValue(!!Common.Utils.InternalSettings.get("de-settings-spacing-pt"));
             this._oldSpacingPt = this.chSpacingPt.isChecked();
+            this.chSpacingPt.setDisabled(this.cmbUnit.getValue() == Common.Utils.Metric.c_MetricUnits.pt);
 
             value = Common.Utils.InternalSettings.get("de-settings-autosave");
             this.chAutosave.setValue(value == 1);
