@@ -1216,6 +1216,12 @@ define([
             var value = state === 'checked';
             Common.Utils.InternalSettings.set("pdfe-settings-livecomment", value);
             (value) ? this.api.asc_showComments(Common.Utils.InternalSettings.get("pdfe-settings-resolvedcomment")) : this.api.asc_hideComments();
+            this.lockCommentNavigation(!value);
+        },
+
+        // Previous / Next only find shown comments, so they are disabled while comments are hidden
+        lockCommentNavigation: function(hidden) {
+            this.toolbar && this.toolbar.lockToolbar(Common.enumLock.hideComments, hidden, {array: [this.toolbar.btnCommentPrev, this.toolbar.btnCommentNext]});
         },
 
         onRotateClick: function(btn, e) {
@@ -1792,6 +1798,7 @@ define([
 
         applySettings: function() {
             this.toolbar && this.toolbar.chShowComments && this.toolbar.chShowComments.setValue(Common.Utils.InternalSettings.get("pdfe-settings-livecomment"), true);
+            this.lockCommentNavigation(!Common.Utils.InternalSettings.get("pdfe-settings-livecomment"));
         },
 
         onApiMathTypes: function(equation) {

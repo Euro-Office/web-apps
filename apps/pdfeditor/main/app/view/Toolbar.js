@@ -100,6 +100,7 @@ define([
         cantRotatePage: 'cant-rotate-page',
         cantDelPage: 'cant-del-page',
         objectWithoutParagraph:  'object-without-paragraph',
+        hideComments:   'hide-comments',
     };
     for (var key in enumLock) {
         if (enumLock.hasOwnProperty(key)) {
@@ -1001,8 +1002,9 @@ define([
                     this.btnCommentPrev = new Common.UI.Button({
                         cls: 'btn-toolbar x-huge icon-top',
                         caption: this.txtCommentPrev,
+                        ariaLabel: this.txtCommentPrev,
                         iconCls: Common.UI.isRTL() ? 'toolbar__icon btn-review-next' : 'toolbar__icon btn-review-prev',
-                        lock: [_set.disableOnStart],
+                        lock: [_set.disableOnStart, _set.hideComments],
                         dataHint: '1',
                         dataHintDirection: 'bottom',
                         dataHintOffset: 'small'
@@ -1012,8 +1014,9 @@ define([
                     this.btnCommentNext = new Common.UI.Button({
                         cls: 'btn-toolbar x-huge icon-top',
                         caption: this.txtCommentNext,
+                        ariaLabel: this.txtCommentNext,
                         iconCls: Common.UI.isRTL() ? 'toolbar__icon btn-review-prev' : 'toolbar__icon btn-review-next',
-                        lock: [_set.disableOnStart],
+                        lock: [_set.disableOnStart, _set.hideComments],
                         dataHint: '1',
                         dataHintDirection: 'bottom',
                         dataHintOffset: 'small'
