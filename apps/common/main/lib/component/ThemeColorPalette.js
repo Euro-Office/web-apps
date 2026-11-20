@@ -59,7 +59,7 @@ define([
             _.template(
                 '<% var me = this; var idx = 0; %>' +
                 '<% if (me.darkDocumentNotice) { %>' +
-                    '<div class="dark-document-notice">' +
+                    '<div class="dark-document-notice" id="<%=me.noticeId%>">' +
                         '<span class="notice-icon"></span>' +
                         '<b><%=me.textDarkDocumentOn%></b> <%=me.textDarkDocumentNotice%>' +
                     '</div>' +
@@ -131,6 +131,8 @@ define([
 
             el.addClass('theme-colorpalette');
             me.options.cls && el.addClass(me.options.cls);
+            if (me.darkDocumentNotice)
+                me.noticeId = Common.UI.getId('dark-document-notice-');
             this.render();
 
             if (this.options.updateColorsArr)
@@ -150,6 +152,23 @@ define([
             el.closest('.btn-group').on('show.bs.dropdown', _.bind(this.updateCustomColors, this));
             el.closest('.dropdown-submenu').on('show.bs.dropdown', _.bind(this.updateCustomColors, this));
             el.on('click', _.bind(this.handleClick, this));
+            if (me.darkDocumentNotice) {
+                el.closest('.btn-group').on('show.bs.dropdown', _.bind(this.updateNoticeDescription, this));
+                el.closest('.dropdown-submenu').on('show.bs.dropdown', _.bind(this.updateNoticeDescription, this));
+                el.on('focus', _.bind(this.updateNoticeDescription, this));
+            }
+        },
+
+        // Screen readers announce the notice with the palette while it is shown. A described-by
+        // element is read even when hidden, so the link exists only while the editor's styles show
+        // the notice. Its own display is checked, since the menu is still closed on show.bs.dropdown.
+        updateNoticeDescription: function () {
+            var el = this.$el || $(this.el),
+                notice = el.find('#' + this.noticeId);
+            if (notice.length && notice.css('display') !== 'none')
+                el.attr('aria-describedby', this.noticeId);
+            else
+                el.removeAttr('aria-describedby');
         },
 
         render: function () {
