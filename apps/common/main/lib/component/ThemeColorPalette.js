@@ -58,10 +58,12 @@ define([
         template    :
             _.template(
                 '<% var me = this; var idx = 0; %>' +
-                '<div class="dark-document-notice">' +
-                    '<span class="notice-icon"></span>' +
-                    '<b><%=me.textDarkDocumentOn%></b> <%=me.textDarkDocumentNotice%>' +
-                '</div>' +
+                '<% if (me.darkDocumentNotice) { %>' +
+                    '<div class="dark-document-notice">' +
+                        '<span class="notice-icon"></span>' +
+                        '<b><%=me.textDarkDocumentOn%></b> <%=me.textDarkDocumentNotice%>' +
+                    '</div>' +
+                '<% } %>' +
                 '<div class="palette-inner">' +
                 '<% $(colors).each(function(num, item) { %>' +
                     '<% if (me.isBlankSeparator(item)) { %> <div class="palette-color-spacer"></div>' +
@@ -100,6 +102,9 @@ define([
         colorRe: /(?:^|\s)color-(.{6})(?:\s|$)/,
         selectedCls: 'selected',
         cls        : '',
+        // Renders the Dark Document notice above the colors. Off by default; an editor whose
+        // Dark Document changes how the chosen colors look on screen turns it on for its palettes.
+        darkDocumentNotice: false,
 
         initialize : function(options) {
             Common.UI.BaseView.prototype.initialize.call(this, options);
