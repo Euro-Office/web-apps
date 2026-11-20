@@ -135,6 +135,28 @@ define([
             assert.equal(api.skins[0]['ColorFiltering'], '#008636', 'light filtered row number color');
         });
 
+        // sdkjs keeps the ColorFiltering sent while the filter was on in its dark skin entry, and
+        // the theme's own skin does not carry it. Switching to a dark theme with the filter off
+        // must send the dark value, even when the filter was already off in the light theme.
+        it('sends the dark filtered row number color on a switch back to a dark theme', function () {
+            var api = fakeApi();
+            createController().setApi(api);
+            assert.equal(_.last(api.skins)['ColorFiltering'], '#008636', 'light value while the filter is on');
+
+            theme.dark = false;
+            Common.NotificationCenter.trigger('uitheme:changed');
+            theme.contentDark = false;
+            Common.NotificationCenter.trigger('contenttheme:dark', false);
+            var count = api.skins.length;
+
+            theme.dark = true;
+            Common.NotificationCenter.trigger('uitheme:changed');
+
+            assert.deepEqual(filterClasses(), []);
+            assert.lengthOf(api.skins, count + 1, 'skin sent on the theme change');
+            assert.equal(_.last(api.skins)['ColorFiltering'], '#6BEC9F', 'dark value');
+        });
+
         // In view mode the toolbar does not lock its controls on a disconnect, so the button
         // relies on its own lostConnect lock. A theme change or a setting changed in another
         // tab updates the inLightTheme lock, which must not release it.

@@ -371,7 +371,9 @@ define([
             if (typeof this.api.asc_setPictureDisplayFilter === 'function')
                 this.api.asc_setPictureDisplayFilter(on && darkFilterDrawingObjects ?
                     getComputedStyle(document.body).getPropertyValue('--dark-filter-pictures').trim() : '');
-            if (on || this._state.lightCanvasChrome)
+            // sdkjs keeps every key sent in one skin entry per theme type, so ColorFiltering sent
+            // while the filter was on stays in the dark entry; a theme change sends it again
+            if (on || this._state.lightCanvasChrome || themeChanged)            
                 this.setLightCanvasChrome(on);
             this.showDarkDocumentInfo();
         },
