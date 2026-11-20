@@ -595,7 +595,7 @@ define([
         // Automatic saving of the file itself (not only the recovery copy): n minutes after the first unsaved change
         // the file is saved where it is, as with Ctrl+S. One setting for all editors. Only formats that are saved without
         // a question (no Save As dialog, no format warning); not for new files without a place, read-only files, or while
-        // a dialog is open or the user is typing.
+        // a dialog is open, the user is typing or a spreadsheet cell is being edited.
         const autosaveFile = {
             key: 'app-settings-autosave-file-minutes',
             formats: ['docx', 'docm', 'dotx', 'dotm', 'xlsx', 'xlsm', 'xltx', 'xltm', 'pptx', 'pptm', 'potx', 'potm', 'ppsx', 'ppsm', 'pdf'],
@@ -637,7 +637,9 @@ define([
                 autosaveFile.modifiedSince = 0;
                 return;
             }
-            if ( !_autosaveFileCanSave() ) return;
+            // The spreadsheet editor's asc_Save closes the cell editor first, which would commit a cell (or a formula)
+            // the user is still writing, or show the formula error dialog. Wait until the cell is left.
+            if ( !_autosaveFileCanSave() || (api.asc_getCellEditMode && api.asc_getCellEditMode()) ) return;
             autosaveFile.lastTry = now;
             api.asc_Save();
         };
