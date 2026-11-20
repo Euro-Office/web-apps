@@ -1,0 +1,256 @@
+/*!
+ * SPDX-FileCopyrightText: 2026 Euro-Office contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
+import assert from 'node:assert/strict';
+import { createCellInfoIntf, getLockState, getSelections, isAddDisabled, isEditDisabled, isObj } from './selectionRules.js';
+import { installAsc, selectElementTypes, selectedObject } from '../../../../../test/unit-tests/mobile/ascStub.js';
+
+// sdkjs common/commonDefines.js c_oAscSelectionType.
+const S = {
+    RangeCells: 1, RangeCol: 2, RangeRow: 3, RangeMax: 4, RangeImage: 5, RangeChart: 6, RangeShape: 7,
+    RangeSlicer: 8, RangeShapeText: 9, RangeChartText: 10, RangeFrozen: 11,
+};
+const T = selectElementTypes;
+
+// asc_CCellInfo, asc_CImgProperty and asc_CShapeProperty, with only the getters used.
+const cellInfo = (selectionType, hyperlink = null) => ({
+    asc_getSelectionType: () => selectionType,
+    asc_getHyperlink: () => hyperlink,
+});
+const drawing = ({ shape = null, chart = null } = {}) => ({
+    get_ShapeProperties: () => shape,
+    get_ChartProperties: () => chart,
+});
+const shapeProps = (fromChart = false) => ({ asc_getFromChart: () => fromChart });
+const image = value => selectedObject(T.Image, value);
+
+describe('SSE selectionRules', () => {
+    let uninstall;
+    before(() => { uninstall = installAsc({ c_oAscSelectionType: S, c_oAscTypeSelectElement: T }); });
+    after(() => uninstall());
+
+    // Rule: which selection types put the focus on a drawing.
+    describe('SSE isObj', () => {
+        it('is true for image, shape, chart, shape text, chart text and slicer selections', () => {
+            for (const t of [S.RangeImage, S.RangeShape, S.RangeChart, S.RangeShapeText, S.RangeChartText, S.RangeSlicer]) {
+                assert.equal(isObj(t), true, t);
+            }
+        });
+
+        it('is false for cell, row, column, whole-sheet and frozen selections', () => {
+            for (const t of [S.RangeCells, S.RangeCol, S.RangeRow, S.RangeMax, S.RangeFrozen]) {
+                assert.equal(isObj(t), false, t);
+            }
+        });
+    });
+
+    // Rule: drawings are classified only for image, shape and chart selections.
+    describe('SSE getSelections', () => {
+        it('returns [] (not null) before any selection', () => {
+            assert.deepEqual(getSelections(undefined, []), []);
+        });
+
+        it('a cell selection gives cell, plus hyperlink when the cell has one', () => {
+            assert.deepEqual(getSelections(cellInfo(S.RangeCells), []), ['cell']);
+            assert.deepEqual(getSelections(cellInfo(S.RangeCells, {}), []), ['cell', 'hyperlink']);
+            assert.deepEqual(getSelections(cellInfo(S.RangeRow), []), ['cell']);
+        });
+
+        it('a drawing with neither shape nor chart properties gives image', () => {
+            assert.deepEqual(getSelections(cellInfo(S.RangeImage), [image(drawing())]), ['image']);
+        });
+
+        it('a drawing with shape properties gives shape, or chart when the shape is a chart\'s', () => {
+            assert.deepEqual(getSelections(cellInfo(S.RangeShape), [image(drawing({ shape: shapeProps() }))]), ['shape']);
+            assert.deepEqual(getSelections(cellInfo(S.RangeChart), [image(drawing({ shape: shapeProps(true) }))]), ['chart']);
+        });
+
+        it('a drawing with chart properties gives chart', () => {
+            assert.deepEqual(getSelections(cellInfo(S.RangeChart), [image(drawing({ chart: {} }))]), ['chart']);
+        });
+
+        it('chart wins over shape, shape over image', () => {
+            const objects = [image(drawing()), image(drawing({ shape: shapeProps() })), image(drawing({ chart: {} }))];
+            assert.deepEqual(getSelections(cellInfo(S.RangeShape), objects), ['chart']);
+            assert.deepEqual(getSelections(cellInfo(S.RangeImage), objects.slice(0, 2)), ['shape']);
+        });
+
+        it('text inside a chart or shape adds text', () => {
+            assert.deepEqual(getSelections(cellInfo(S.RangeChartText), []), ['chart', 'text']);
+            assert.deepEqual(getSelections(cellInfo(S.RangeShapeText), []), ['shape', 'text']);
+        });
+
+        it('classifies objects only for image, shape and chart selections', () => {
+            const chartObjects = [image(drawing({ chart: {} }))];
+            assert.deepEqual(getSelections(cellInfo(S.RangeCells), chartObjects), ['cell']);
+            assert.deepEqual(getSelections(cellInfo(S.RangeShapeText), chartObjects), ['shape', 'text']);
+        });
+
+        it('ignores non-Image focus objects', () => {
+            assert.deepEqual(getSelections(cellInfo(S.RangeImage), [selectedObject(T.Paragraph, {})]), ['cell']);
+        });
+    });
+
+    // Rules: one getter per object kind; the last match wins.
+    describe('SSE focus-object getters', () => {
+        const intfOver = (objects, info) => createCellInfoIntf({ _focusObjects: objects, _cellInfo: info });
+
+        it('return undefined with no focus objects', () => {
+            const intf = intfOver([]);
+            for (const g of ['getShapeObject', 'getChartObject', 'getImageObject', 'getParagraphObject']) {
+                assert.equal(intf[g](), undefined, g);
+            }
+        });
+
+        it('shape: last Image with shape properties, chart-backed ones included', () => {
+            const first = drawing({ shape: shapeProps() }), last = drawing({ shape: shapeProps(true), chart: {} });
+            assert.equal(intfOver([image(first), image(drawing()), image(last)]).getShapeObject(), last);
+        });
+
+        it('chart: last Image with chart properties', () => {
+            const value = drawing({ chart: {} });
+            assert.equal(intfOver([image(value), image(drawing({ shape: shapeProps() }))]).getChartObject(), value);
+        });
+
+        it('image: last Image of any kind', () => {
+            const first = drawing(), last = drawing({ chart: {} });
+            assert.equal(intfOver([image(first), image(last)]).getImageObject(), last);
+        });
+
+        it('paragraph: last Paragraph', () => {
+            const first = {}, last = {};
+            const objects = [selectedObject(T.Paragraph, first), image(drawing()), selectedObject(T.Paragraph, last)];
+            assert.equal(intfOver(objects).getParagraphObject(), last);
+        });
+
+        it('read the store at call time, not when created', () => {
+            const store = { _focusObjects: [], _cellInfo: undefined };
+            const intf = createCellInfoIntf(store);
+            assert.deepEqual(intf.getSelections(), []);
+            const value = drawing();
+            store._cellInfo = cellInfo(S.RangeImage);
+            store._focusObjects = [image(value)];
+            assert.deepEqual(intf.getSelections(), ['image']);
+            assert.equal(intf.getImageObject(), value);
+        });
+    });
+
+    // Rules: worksheet protection gates both Edit and Add.
+    describe('SSE toolbar protection gates', () => {
+        // A protection-locked drawing on a sheet with Objects protected.
+        const locked = { focusOn: 'obj', wsProps: { Objects: true }, isShapeLocked: true };
+
+        it('Edit follows disabled', () => {
+            assert.equal(isEditDisabled({ disabled: true }), true);
+            assert.equal(isEditDisabled({ disabled: false }), false);
+        });
+
+        // Rule: on a locked drawing, Edit stays enabled only for selected text
+        // whose lock is not truthy; null and undefined read as unlocked.
+        it('Edit is disabled for a locked picture, chart or slicer without text, whatever the text lock', () => {
+            for (const isTextLocked of [null, undefined, false, true]) {
+                assert.equal(isEditDisabled({ ...locked, hasText: false, isTextLocked }), true, String(isTextLocked));
+            }
+        });
+
+        it('Edit stays enabled for a locked group with text and a null text lock', () => {
+            assert.equal(isEditDisabled({ ...locked, hasText: true, isTextLocked: null }), false);
+        });
+
+        it('Edit follows the text lock for a locked shape with text', () => {
+            assert.equal(isEditDisabled({ ...locked, hasText: true, isTextLocked: false }), false);
+            assert.equal(isEditDisabled({ ...locked, hasText: true, isTextLocked: true }), true);
+        });
+
+        it('Edit is disabled for a locked shape with unlocked text that is not selected', () => {
+            assert.equal(isEditDisabled({ ...locked, hasText: false, isTextLocked: false }), true);
+        });
+
+        it('Edit stays enabled off a drawing, without Objects protection, or for an unlocked drawing', () => {
+            const noText = { ...locked, hasText: false, isTextLocked: true };
+            assert.equal(isEditDisabled({ ...noText, focusOn: 'cell' }), false);
+            assert.equal(isEditDisabled({ ...noText, wsProps: { Objects: false } }), false);
+            assert.equal(isEditDisabled({ ...noText, wsProps: undefined }), false);
+            assert.equal(isEditDisabled({ ...noText, isShapeLocked: false }), false);
+        });
+
+        it('Add follows disabled', () => {
+            assert.equal(isAddDisabled({ disabled: true }), true);
+            assert.equal(isAddDisabled({ disabled: false }), false);
+        });
+
+        it('Add is disabled when Objects, InsertHyperlinks and Sort are all protected', () => {
+            assert.equal(isAddDisabled({ wsProps: { Objects: true, InsertHyperlinks: true, Sort: true } }), true);
+        });
+
+        it('Add stays enabled when any one of them is not, or protection is unknown', () => {
+            assert.equal(isAddDisabled({ wsProps: { Objects: false, InsertHyperlinks: true, Sort: true } }), false);
+            assert.equal(isAddDisabled({ wsProps: { Objects: true, InsertHyperlinks: false, Sort: true } }), false);
+            assert.equal(isAddDisabled({ wsProps: { Objects: true, InsertHyperlinks: true, Sort: false } }), false);
+            assert.equal(isAddDisabled({ wsProps: undefined }), false);
+        });
+    });
+
+    describe('SSE getLockState', () => {
+        // asc_CCellInfo with its lock. Drawing selections use cellInfo(), which has no
+        // asc_getLocked, so reading the cell lock there throws.
+        const lockedCell = (selectionType, locked) => ({ ...cellInfo(selectionType), asc_getLocked: () => locked });
+        // asc_CImgProperty with only the lock getters.
+        const lockValue = ({ locked = false, shape = false, text = false } = {}) => ({
+            asc_getLocked: () => locked,
+            asc_getProtectionLocked: () => shape,
+            asc_getProtectionLockText: () => text,
+        });
+        const objectsOf = objects => () => objects;
+        const noObjects = () => { throw new Error('graphic objects read for a cell selection'); };
+        const drawingTypes = [S.RangeImage, S.RangeShape, S.RangeChart, S.RangeShapeText, S.RangeChartText, S.RangeSlicer];
+        const unlocked = { isLocked: false, isLockedShape: false, isLockedText: false };
+
+        // Rule: a cell selection takes the cell's lock.
+        it('a locked cell selection gives isLocked', () => {
+            for (const t of [S.RangeCells, S.RangeCol, S.RangeRow, S.RangeMax]) {
+                assert.deepEqual(getLockState(lockedCell(t, true), noObjects),
+                    { isLocked: true, isLockedShape: false, isLockedText: false }, t);
+            }
+        });
+
+        // Rule: an unlocked cell is unlocked, and graphic objects are only fetched for drawing selections.
+        it('an unlocked cell gives all false without reading graphic objects', () => {
+            assert.deepEqual(getLockState(lockedCell(S.RangeCells, false), noObjects), unlocked);
+        });
+
+        // Rule: a drawing selection, slicers included, takes its locks from the first Image-type object.
+        it('every drawing selection reads the first Image object\'s locks', () => {
+            const first = lockValue({ locked: true, shape: false, text: true });
+            const later = lockValue({ locked: false, shape: true, text: false });
+            const objects = [selectedObject(T.Paragraph, lockValue({ locked: true, shape: true, text: true })),
+                image(first), image(later)];
+            for (const t of drawingTypes) {
+                assert.deepEqual(getLockState(cellInfo(t), objectsOf(objects)),
+                    { isLocked: true, isLockedShape: false, isLockedText: true }, t);
+            }
+        });
+
+        // Rule: a protection-locked slicer locks its shape.
+        it('a protection-locked slicer sets isLockedShape', () => {
+            const objects = [image(lockValue({ shape: true }))];
+            assert.deepEqual(getLockState(cellInfo(S.RangeSlicer), objectsOf(objects)),
+                { isLocked: false, isLockedShape: true, isLockedText: false });
+        });
+
+        // Rule: a drawing selection with no Image-type object is unlocked.
+        it('a drawing selection with no Image object gives all false', () => {
+            for (const t of drawingTypes) {
+                assert.deepEqual(getLockState(cellInfo(t), objectsOf([])), unlocked, t);
+                assert.deepEqual(getLockState(cellInfo(t), objectsOf([selectedObject(T.Paragraph, lockValue({ locked: true }))])), unlocked, t);
+            }
+        });
+
+        // Rule: the SDK may return null for the graphic objects; that reads as no objects.
+        it('a drawing selection whose graphic objects are null gives all false', () => {
+            assert.deepEqual(getLockState(cellInfo(S.RangeShape), objectsOf(null)), unlocked);
+        });
+    });
+});
