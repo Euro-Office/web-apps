@@ -1687,8 +1687,19 @@ define([], function () {
                     if (me.api) {
                         me.mnuTableMerge.setDisabled(disabled || !me.api.CheckBeforeMergeCells());
                         me.mnuTableSplit.setDisabled(disabled || !me.api.CheckBeforeSplitCells());
-                        me.mnuTableSplitTable.setDisabled(disabled || !(me.api.asc_CanSplitTable && me.api.asc_CanSplitTable()));
-                        me.mnuTableFitMargins.setDisabled(disabled || !(me.api.asc_CanFitTableToMargins && me.api.asc_CanFitTableToMargins()));
+                        // When the table is not the reason (e.g. nested), say why the item is greyed out
+                        var setReason = function(item, hint) {
+                            hint = hint || '';
+                            if ((item.options.hint || '') !== hint)
+                                item.updateHint(hint);
+                        };
+                        var canSplitTable = !!(me.api.asc_CanSplitTable && me.api.asc_CanSplitTable()),
+                            canFitTable = !!(me.api.asc_CanFitTableToMargins && me.api.asc_CanFitTableToMargins()),
+                            tableFitted = canFitTable && !!(me.api.asc_IsTableFittedToMargins && me.api.asc_IsTableFittedToMargins());
+                        me.mnuTableSplitTable.setDisabled(disabled || !canSplitTable);
+                        me.mnuTableFitMargins.setDisabled(disabled || !canFitTable || tableFitted);
+                        setReason(me.mnuTableSplitTable, (!disabled && !canSplitTable) ? me.textSplitTableHint : '');
+                        setReason(me.mnuTableFitMargins, disabled ? '' : (!canFitTable ? me.textFitTableHint : (tableFitted ? me.textTableFitsMargins : '')));
                     }
 
                     me.menuTableDistRows.setDisabled(disabled);
