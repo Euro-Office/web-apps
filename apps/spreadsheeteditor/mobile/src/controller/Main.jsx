@@ -7,9 +7,8 @@ import CollaborationController from '../../../../common/mobile/lib/controller/co
 import { onAdvancedOptions } from './settings/Download.jsx';
 import EditorUIController from '../lib/patch';
 import {
-    AddCommentController,
     CommentsController,
-    EditCommentController,
+    EditCommentControllers,
     ViewCommentsSheetsController
 } from "../../../../common/mobile/lib/controller/collaboration/Comments";
 import {LocalStorage} from "../../../../common/mobile/utils/LocalStorage.mjs";
@@ -1391,8 +1390,7 @@ class MainController extends Component {
                 <StatusbarController />
                 <CollaborationController />
                 <CommentsController />
-                <AddCommentController />
-                <EditCommentController />
+                <EditCommentControllers />
                 <ViewCommentsSheetsController />
                 <PluginsController />
                 <EncodingController />
