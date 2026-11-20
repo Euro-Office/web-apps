@@ -64,6 +64,32 @@ function copyDir(src, dest) {
     }
 }
 
+// terser takes the sources as { name: code } and concatenates them in key
+// order. Key by the repo-relative path: several embed sources share a file
+// name (view/SearchBar.js and <editor>/embed/js/SearchBar.js, view/modals.js
+// and controller/modals.js), and keying by file name silently dropped one of
+// each pair from app-all.js.
+function readEmbedSources(srcList) {
+    const sources = {};
+    for (const src of srcList) {
+        const absPath = fromRepoRoot(src);
+        const key = path.relative(REPO_ROOT, absPath).split(path.sep).join('/');
+        if (Object.prototype.hasOwnProperty.call(sources, key)) {
+            throw new Error(`embed source listed twice: ${key}`);
+        }
+        sources[key] = fs.readFileSync(absPath, 'utf8');
+    }
+    return sources;
+}
+
+function minifyEmbedSources(srcList) {
+    return minify(readEmbedSources(srcList), {
+        compress: true,
+        mangle:   true,
+        format:   { comments: false },
+    });
+}
+
 async function buildEditor(editorName) {
     const cfg = JSON.parse(
         fs.readFileSync(path.join(CFG_DIR, `${editorName}.json`), 'utf8')
@@ -79,16 +105,7 @@ async function buildEditor(editorName) {
     fs.rmSync(embedOut, { recursive: true, force: true });
 
     // 2. terser — concat all JS sources, then minify
-    const sources = {};
-    for (const src of emb.js.src) {
-        const absPath = fromRepoRoot(src);
-        sources[path.basename(absPath)] = fs.readFileSync(absPath, 'utf8');
-    }
-    const minified = await minify(sources, {
-        compress: true,
-        mangle:   true,
-        format:   { comments: false },
-    });
+    const minified = await minifyEmbedSources(emb.js.src);
     fs.mkdirSync(embedOut, { recursive: true });
     fs.writeFileSync(jsDist, minified.code, 'utf8');
 
@@ -161,7 +178,9 @@ async function buildEditor(editorName) {
     console.log(`deploy-embed: ${editorName} done`);
 }
 
-(async () => {
+module.exports = { EDITORS, CFG_DIR, readEmbedSources, minifyEmbedSources };
+
+if (require.main === module) (async () => {
     const { themeVal } = await import('../theme.config.mjs');
     PUBLISHER_URL = themeVal(process.env.PUBLISHER_URL, 'publisher_url', 'https://github.com/euro-office');
 
