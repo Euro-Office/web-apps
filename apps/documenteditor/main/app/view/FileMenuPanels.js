@@ -1810,6 +1810,11 @@ define([], function () {
 
             this.coreProps = props;
             if (props) {
+                // read again here, removing personal information also removes the created date
+                value = props.asc_getCreated();
+                this.lblDate.text(this.dateToString(value));
+                this._ShowHideInfoItem(this.lblDate, !!value);
+
                 var visible = false;
                 value = props.asc_getModified();
                 this.lblModifyDate.text(this.dateToString(value));
@@ -2164,6 +2169,7 @@ define([], function () {
                     if (btn == 'ok') {
                         me.api.asc_RemovePersonalInformation('Author');
                         me.updateFileInfo();
+                        Common.NotificationCenter.trigger('showmessage', {msg: me.txtRemovePersonalDone}, {timeout: 5000, hideCloseTip: true});
                     }
                 }
             });
@@ -2228,7 +2234,12 @@ define([], function () {
         txtPropertyTitleConflictError: 'Property with this title already exists',
         txtAddProperty: 'Add property',
         txtRemovePersonal: 'Remove personal information',
-        txtRemovePersonalWarning: 'All author names in comments, replies and tracked changes will be replaced with "Author". All document properties are removed: author, last modified by, title, subject, tags, comments, custom properties, company and manager. Dates of comments and changes are kept. You can undo this with Ctrl+Z, except for company and manager.'
+        txtRemovePersonalWarning: 'This removes personal information from the document:<br>' +
+            '\u2022 Author names in comments, replies and tracked changes become "Author"<br>' +
+            '\u2022 Document properties: author, last modified by, created, title, subject, tags, comments and custom properties<br>' +
+            '\u2022 Company, manager and hyperlink base<br><br>' +
+            'Dates of comments and changes are kept. Ctrl+Z undoes this only while the document is open, the saved file no longer has this information.',
+        txtRemovePersonalDone: 'Personal information removed'
 
     }, DE.Views.FileMenuPanels.DocumentInfo || {}));
 
