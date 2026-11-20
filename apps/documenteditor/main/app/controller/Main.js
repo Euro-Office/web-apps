@@ -1312,6 +1312,7 @@ define([
                 value = Common.localStorage.getBool("de-settings-resolvedcomment");
                 Common.Utils.InternalSettings.set("de-settings-resolvedcomment", value);
                 this.isLiveCommenting ? this.api.asc_showComments(value) : this.api.asc_hideComments();
+                Common.Utils.InternalSettings.set("de-settings-comments-display", Common.localStorage.getItem("de-settings-comments-display") === 'list' ? 'list' : 'contextual');
                 /** coauthoring end **/
 
                 value = Common.localStorage.getItem("de-settings-zoom");
@@ -1461,6 +1462,9 @@ define([
                 statusbarController.createDelayedElements();
 
                 leftmenuController.getView('LeftMenu').disableMenu('all',false);
+                // comments shown as a list: open the list again after a reload
+                if (Common.Utils.InternalSettings.get("de-settings-comments-display") === 'list')
+                    leftmenuController.onCommentsShowList();
 
                 if (me.appOptions.canBranding)
                     me.getApplication().getController('LeftMenu').leftMenu.getMenu('about').setLicInfo(me.editorConfig.customization);
