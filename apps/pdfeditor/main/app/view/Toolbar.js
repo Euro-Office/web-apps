@@ -902,7 +902,10 @@ define([
                     menu: new Common.UI.Menu({
                         items: [
                             {caption: this.txtRotateRight, iconCls: 'menu__icon btn-rotate-90', value: 90},
-                            {caption: this.txtRotateLeft, iconCls: 'menu__icon btn-rotate-270', value: -90}
+                            {caption: this.txtRotateLeft, iconCls: 'menu__icon btn-rotate-270', value: -90},
+                            {caption: '--'},
+                            {caption: this.txtRotateAllRight, iconCls: 'menu__icon btn-rotate-90', value: 90, allPages: true},
+                            {caption: this.txtRotateAllLeft, iconCls: 'menu__icon btn-rotate-270', value: -90, allPages: true}
                         ]
                     }),
                     action: 'rotate-page',
@@ -2192,7 +2195,9 @@ define([
             tipNumNumbersPoint: '1. 2. 3.',
             tipNumNumbersParentheses: '1) 2) 3)',
             tipNumRoman: 'I. II. III.',
-            tipNumRomanSmall: 'i. ii. iii.'
+            tipNumRomanSmall: 'i. ii. iii.',
+            txtRotateAllRight: 'Rotate all pages right',
+            txtRotateAllLeft: 'Rotate all pages left'
         }
     })(), PDFE.Views.Toolbar || {}));
 });
