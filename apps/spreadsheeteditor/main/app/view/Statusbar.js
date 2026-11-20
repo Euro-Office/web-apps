@@ -192,7 +192,8 @@ define([
                 this.tabbar = new Common.UI.TabBar({
                     el: '#status-sheets-bar',
                     placement: 'bottom',
-                    draggable: false
+                    draggable: false,
+                    smoothScroll: true
                 }).render();
 
                 this.tabbar.on({
