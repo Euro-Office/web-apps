@@ -569,6 +569,35 @@ define([], function () {
         me.currentMetric = me.c_MetricUnits.pt;
         me.metricName = ['Cm', 'Pt', 'Inch'];
         me.defaultMetric = me.c_MetricUnits.cm;
+        me.spacingMetric = null; // null: paragraph spacing uses the current metric
+
+        function recalcToMM(value, metric) {
+            // value in pt/cm/inch. need to convert to mm
+            if (value !== null && value !== undefined) {
+                switch (metric) {
+                    case me.c_MetricUnits.cm:
+                        return value * 10;
+                    case me.c_MetricUnits.pt:
+                        return value * 25.4 / 72.0;
+                    case me.c_MetricUnits.inch:
+                        return value * 25.4;
+                }
+            }
+            return value;
+        }
+
+        function recalcFromMM(value, metric) {
+            // value in mm. need to convert to pt/cm/inch
+            switch (metric) {
+                case me.c_MetricUnits.cm:
+                    return parseFloat((value / 10.).toFixed(4));
+                case me.c_MetricUnits.pt:
+                    return parseFloat((value * 72.0 / 25.4).toFixed(3));
+                case me.c_MetricUnits.inch:
+                    return parseFloat((value / 25.4).toFixed(3));
+            }
+            return value;
+        }
 
         return {
             c_MetricUnits: me.c_MetricUnits,
@@ -601,31 +630,32 @@ define([], function () {
             },
 
             fnRecalcToMM: function (value) {
-                // value in pt/cm/inch. need to convert to mm
-                if (value !== null && value !== undefined) {
-                    switch (me.currentMetric) {
-                        case me.c_MetricUnits.cm:
-                            return value * 10;
-                        case me.c_MetricUnits.pt:
-                            return value * 25.4 / 72.0;
-                        case me.c_MetricUnits.inch:
-                            return value * 25.4;
-                    }
-                }
-                return value;
+                return recalcToMM(value, me.currentMetric);
             },
 
             fnRecalcFromMM: function (value) {
-                // value in mm. need to convert to pt/cm/inch
-                switch (me.currentMetric) {
-                    case me.c_MetricUnits.cm:
-                        return parseFloat((value / 10.).toFixed(4));
-                    case me.c_MetricUnits.pt:
-                        return parseFloat((value * 72.0 / 25.4).toFixed(3));
-                    case me.c_MetricUnits.inch:
-                        return parseFloat((value / 25.4).toFixed(3));
-                }
-                return value;
+                return recalcFromMM(value, me.currentMetric);
+            },
+
+            // paragraph spacing before and after can have its own unit, e.g. pt while the rest is in cm
+            setSpacingMetric: function (value) {
+                me.spacingMetric = (value === undefined) ? null : value;
+            },
+
+            getSpacingMetric: function () {
+                return (me.spacingMetric !== null) ? me.spacingMetric : me.currentMetric;
+            },
+
+            getSpacingMetricName: function () {
+                return this.getMetricName(this.getSpacingMetric());
+            },
+
+            fnRecalcSpacingToMM: function (value) {
+                return recalcToMM(value, this.getSpacingMetric());
+            },
+
+            fnRecalcSpacingFromMM: function (value) {
+                return recalcFromMM(value, this.getSpacingMetric());
             }
         }
     })();

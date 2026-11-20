@@ -200,7 +200,7 @@ define([
                     this.Spacing = properties.get_Spacing();
                 }
                 var value = field.getNumberValue();
-                this.Spacing.put_Before(value<0 ? -1 : Common.Utils.Metric.fnRecalcToMM(value));
+                this.Spacing.put_Before(value<0 ? -1 : Common.Utils.Metric.fnRecalcSpacingToMM(value));
             }, this));
             this.spinners.push(this.numSpacingBefore);
 
@@ -221,7 +221,7 @@ define([
                     this.Spacing = properties.get_Spacing();
                 }
                 var value = field.getNumberValue();
-                this.Spacing.put_After(value<0 ? -1 : Common.Utils.Metric.fnRecalcToMM(value));
+                this.Spacing.put_After(value<0 ? -1 : Common.Utils.Metric.fnRecalcSpacingToMM(value));
             }, this));
             this.spinners.push(this.numSpacingAfter);
 
@@ -866,9 +866,9 @@ define([
                 this.numIndentsRight.setValue((props.get_Ind() !== null && props.get_Ind().get_Right() !== null) ? Common.Utils.Metric.fnRecalcFromMM(props.get_Ind().get_Right()) : '', true);
 
                 var value = props.get_Spacing() ? props.get_Spacing().get_Before() : null;
-                this.numSpacingBefore.setValue((value !== null) ? (value<0 ? value : Common.Utils.Metric.fnRecalcFromMM(value)) : '', true);
+                this.numSpacingBefore.setValue((value !== null) ? (value<0 ? value : Common.Utils.Metric.fnRecalcSpacingFromMM(value)) : '', true);
                 value = props.get_Spacing() ? props.get_Spacing().get_After() : null;
-                this.numSpacingAfter.setValue((value !== null) ? (value<0 ? value : Common.Utils.Metric.fnRecalcFromMM(value)) : '', true);
+                this.numSpacingAfter.setValue((value !== null) ? (value<0 ? value : Common.Utils.Metric.fnRecalcSpacingFromMM(value)) : '', true);
 
                 var linerule = props.get_Spacing().get_LineRule();
                 this.cmbLineRule.setValue((linerule !== null) ? linerule : '');
@@ -995,12 +995,14 @@ define([
         updateMetricUnit: function() {
             if (this.spinners) {
                 for (var i=0; i<this.spinners.length; i++) {
-                    var spinner = this.spinners[i];
-                    spinner.setDefaultUnit(Common.Utils.Metric.getCurrentMetricName());
-                    if (spinner.el.id == 'paragraphadv-spin-spacing' || spinner.el.id == 'paragraphadv-spin-position' || spinner.el.id == 'paragraphadv-spin-spacing-before' || spinner.el.id == 'paragraphadv-spin-spacing-after')
-                        spinner.setStep(Common.Utils.Metric.getCurrentMetric()==Common.Utils.Metric.c_MetricUnits.pt ? 1 : 0.01);
+                    var spinner = this.spinners[i],
+                        isSpacing = spinner.el.id == 'paragraphadv-spin-spacing-before' || spinner.el.id == 'paragraphadv-spin-spacing-after',
+                        metric = isSpacing ? Common.Utils.Metric.getSpacingMetric() : Common.Utils.Metric.getCurrentMetric();
+                    spinner.setDefaultUnit(Common.Utils.Metric.getMetricName(metric));
+                    if (spinner.el.id == 'paragraphadv-spin-spacing' || spinner.el.id == 'paragraphadv-spin-position' || isSpacing)
+                        spinner.setStep(metric==Common.Utils.Metric.c_MetricUnits.pt ? 1 : 0.01);
                     else
-                        spinner.setStep(Common.Utils.Metric.getCurrentMetric()==Common.Utils.Metric.c_MetricUnits.pt ? 1 : 0.1);
+                        spinner.setStep(metric==Common.Utils.Metric.c_MetricUnits.pt ? 1 : 0.1);
                 }
             }
             this._arrLineRule[2].defaultUnit =  this._arrLineRule[0].defaultUnit = Common.Utils.Metric.getCurrentMetricName();

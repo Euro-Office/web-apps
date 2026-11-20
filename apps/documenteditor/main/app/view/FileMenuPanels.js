@@ -427,6 +427,10 @@ define([], function () {
                     '<td><label><%= scope.strUnit %></label></td>',
                     '<td><span id="fms-cmb-unit"></span></td>',
                 '</tr>',
+                '<tr class="edit">',
+                    '<td></td>',
+                    '<td><div id="fms-chb-spacing-pt"></div></td>',
+                '</tr>',
                 '<tr>',
                     '<td><label><%= scope.strZoom %></label></td>',
                     '<td><div id="fms-cmb-zoom" class="input-group-nr"></div></td>',
@@ -749,6 +753,17 @@ define([], function () {
                 dataHint: '2',
                 dataHintDirection: 'bottom',
                 dataHintOffset: 'big'
+            }).on('selected', function(combo, record) {
+                // spacing is already shown in points when the unit is Point
+                me.chSpacingPt.setDisabled(record.value == Common.Utils.Metric.c_MetricUnits.pt);
+            });
+
+            this.chSpacingPt = new Common.UI.CheckBox({
+                el: $markup.findById('#fms-chb-spacing-pt'),
+                labelText: this.txtSpacingInPt,
+                dataHint: '2',
+                dataHintDirection: 'left',
+                dataHintOffset: 'small'
             });
 
             this.cmbMacros = new Common.UI.ComboBox({
@@ -1021,6 +1036,9 @@ define([], function () {
             item = this.cmbUnit.store.findWhere({value: value});
             this.cmbUnit.setValue(item ? parseInt(item.get('value')) : Common.Utils.Metric.getDefaultMetric());
             this._oldUnits = this.cmbUnit.getValue();
+            this.chSpacingPt.setValue(!!Common.Utils.InternalSettings.get("de-settings-spacing-pt"));
+            this._oldSpacingPt = this.chSpacingPt.isChecked();
+            this.chSpacingPt.setDisabled(this.cmbUnit.getValue() == Common.Utils.Metric.c_MetricUnits.pt);
 
             value = Common.Utils.InternalSettings.get("de-settings-autosave");
             this.chAutosave.setValue(value == 1);
@@ -1102,6 +1120,7 @@ define([], function () {
             var item = this.cmbFontRender.store.findWhere({value: 'custom'});
             Common.localStorage.setItem("de-settings-cachemode", item && !item.get('checked') ? 0 : 1);
             Common.localStorage.setItem("de-settings-unit", this.cmbUnit.getValue());
+            Common.localStorage.setItem("de-settings-spacing-pt", this.chSpacingPt.isChecked() ? 1 : 0);
             if (this.mode.isEdit && (this.mode.canChangeCoAuthoring || !Common.Utils.InternalSettings.get("de-settings-coauthmode")))
                 Common.localStorage.setItem("de-settings-autosave", this.chAutosave.isChecked() ? 1 : 0);
             if (this.mode.canForcesave)
@@ -1152,7 +1171,7 @@ define([], function () {
             if (this.menu) {
                 this.menu.fireEvent('settings:apply', [this.menu]);
 
-                if (this._oldUnits !== this.cmbUnit.getValue())
+                if (this._oldUnits !== this.cmbUnit.getValue() || this._oldSpacingPt !== this.chSpacingPt.isChecked())
                     Common.NotificationCenter.trigger('settings:unitschanged', this);
             }
         },
@@ -1227,6 +1246,7 @@ define([], function () {
         txtNative: 'Native',
         strFontRender: 'Font Hinting',
         strUnit: 'Unit of Measurement',
+        txtSpacingInPt: 'Show paragraph spacing before and after in points',
         txtCm: 'Centimeter',
         txtPt: 'Point',
         textAutoSave: 'Autosave',
