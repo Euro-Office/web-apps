@@ -36,7 +36,8 @@ define([
 ], function () {
     'use strict';
 
-    // Theme tokens sdkjs uses to draw the row/column headers, the corner box and the outline area.
+    // Theme tokens sdkjs uses to draw the row/column headers (also in a Sheet View), the corner box
+    // and the outline area.
     // Source of truth: colorMap in sdkjs/common/skin.js, read by WorksheetViewSettings in
     // sdkjs/cell/view/WorkbookView.js. 'border-toolbar' is an interface token that sdkjs also
     // uses for the outline area separators.
@@ -49,6 +50,11 @@ define([
         'canvas-cell-title-border-selected',
         'canvas-cell-title-text',
         'canvas-select-all-icon',
+        'canvas-sheet-view-cell-background',
+        'canvas-sheet-view-cell-background-hover',
+        'canvas-sheet-view-cell-background-pressed',
+        'canvas-sheet-view-cell-title-label',
+        'canvas-sheet-view-select-all-icon',
         'canvas-high-contrast',
         'border-toolbar'
     ];
