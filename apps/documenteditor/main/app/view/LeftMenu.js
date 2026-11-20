@@ -171,6 +171,17 @@ define([
             this.btnThumbnails.hide();
             this.btnThumbnails.on('click', this.onBtnMenuClick.bind(this));
 
+            this.btnSpellcheck = new Common.UI.Button({
+                el: $markup.elementById('#left-btn-spellcheck'),
+                hint: this.tipSpellcheck,
+                enableToggle: true,
+                disabled: true,
+                iconCls: 'btn-ic-docspell',
+                toggleGroup: 'leftMenuGroup'
+            });
+            this.btnSpellcheck.hide();
+            this.btnSpellcheck.on('click', this.onBtnMenuClick.bind(this));
+
             this.$el.html($markup);
             return this;
         },
@@ -247,6 +258,13 @@ define([
                     this.panelThumbnails.hide();
                 }
             }
+            if (this.panelSpellcheck) {
+                if (this.btnSpellcheck.pressed) {
+                    this.panelSpellcheck.show();
+                } else {
+                    this.panelSpellcheck.hide();
+                }
+            }
             if (this.panelSearch) {
                 if (this.btnSearchBar.pressed) {
                     this.panelSearch.show();
@@ -283,6 +301,9 @@ define([
             } else
             if (name == 'thumbnails') {
                 this.panelThumbnails = panel.render('#left-panel-thumbnails');
+            } else
+            if (name == 'spellcheck' && !this.panelSpellcheck) {
+                this.panelSpellcheck = panel.render('#left-panel-spellcheck');
             } else
             if (name == 'advancedsearch') {
                 this.panelSearch = panel.render('#left-panel-search');
@@ -335,6 +356,10 @@ define([
                     this.panelThumbnails['hide']();
                     this.btnThumbnails.toggle(false, true);
                 }
+                if (this.panelSpellcheck) {
+                    this.panelSpellcheck['hide']();
+                    this.btnSpellcheck.toggle(false, true);
+                }
                 this.toggleActivePluginButton(false);
             }
         },
@@ -357,6 +382,7 @@ define([
             /** coauthoring end **/
             this.btnNavigation.setDisabled(false);
             this.btnThumbnails.setDisabled(false);
+            this.btnSpellcheck.setDisabled(false);
             this.setDisabledAllMoreMenuItems(false);
         },
 
@@ -504,7 +530,7 @@ define([
         },
 
         setButtons: function () {
-            var allButtons = [this.btnSearchBar, this.btnComments, this.btnChat, this.btnNavigation, this.btnThumbnails, this.btnSupport, this.btnAbout];
+            var allButtons = [this.btnSearchBar, this.btnComments, this.btnChat, this.btnNavigation, this.btnThumbnails, this.btnSpellcheck, this.btnSupport, this.btnAbout];
             Common.UI.SideMenu.prototype.setButtons.apply(this, [allButtons]);
         },
 
@@ -517,6 +543,7 @@ define([
         tipSearch   : 'Search',
         tipPlugins  : 'Plugins',
         tipPageThumbnails: 'Page Thumbnails',
+        tipSpellcheck: 'Spell checking',
         txtDeveloper: 'DEVELOPER MODE',
         txtTrial: 'TRIAL MODE',
         txtTrialDev: 'Trial Developer Mode',
