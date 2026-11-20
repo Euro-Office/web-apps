@@ -1235,7 +1235,11 @@ define([
             Common.localStorage.setItem('pdfe-signatures', JSON.stringify(list.slice(0, 3)));
         },
 
-        fillSignatureMenu: function(menu) {
+        fillSignatureMenu: function(menu, e) {
+            // hovering "Delete signature" fires show.bs.dropdown on its <li>, and the event bubbles up to this menu;
+            // rebuilding here would remove the item under the mouse, so its submenu could never open
+            if (!(e && e.target === e.currentTarget))
+                return;
             var me = this, toolbar = this.toolbar, list = this.getSignatures(), items = [], deleteItems = [];
             menu.removeAll();
             list.forEach(function(url, index) {
