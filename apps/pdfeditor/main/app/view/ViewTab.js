@@ -163,6 +163,9 @@ define([
                         iconCls: 'toolbar__icon btn-menu-thumbs',
                         lock: [_set.lostConnect, _set.disableOnStart],
                         caption: this.capPageOverview || 'Page Overview',
+                        // tooltip and accessible name from the start, also when a narrow window hides the caption
+                        hint: this.tipPageOverview || 'Show all pages side by side',
+                        ariaLabel: this.capPageOverview || 'Page Overview',
                         enableToggle: true,
                         dataHint: '1',
                         dataHintDirection: 'bottom',

@@ -370,7 +370,8 @@ define([
                 }
                 leftMenu.$el.width(Math.max(600, window.innerWidth - 120));
                 Common.NotificationCenter.trigger('layout:changed', 'leftmenu');
-                setTimeout(function() { me.api.asc_setViewerThumbnailsZoom(0.2); }, 200);
+                // small pages, so that most documents fit on one screen; the size slider makes them bigger
+                setTimeout(function() { me.api.asc_setViewerThumbnailsZoom(0.05); }, 200);
                 // closing the page panel ends the overview too
                 if (!this._overviewListener) {
                     this._overviewListener = true;
