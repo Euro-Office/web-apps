@@ -114,6 +114,18 @@
             .font-size-small();
             text-decoration: underline;
             cursor: pointer;
+            // a real button for keyboard and screen readers, but looking like the link it was
+            padding: 0;
+            border: 0;
+            background: none;
+            color: inherit;
+            font-family: inherit;
+
+            &:focus-visible {
+                outline: @scaled-one-px-value-ie solid @border-control-focus-ie;
+                outline: @scaled-one-px-value solid @border-control-focus;
+                outline-offset: 1px;
+            }
         }
     }
 

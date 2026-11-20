@@ -3260,6 +3260,8 @@
   "DE.Views.ChangesPane.txtCountOf": "{0} of {1} changes",
   "DE.Views.ChangesPane.txtAccept": "Accept",
   "DE.Views.ChangesPane.txtReject": "Reject",
+  "DE.Views.ChangesPane.txtAcceptChange": "Accept change by {0}",
+  "DE.Views.ChangesPane.txtRejectChange": "Reject change by {0}",
   "DE.Views.ChangesPane.txtAcceptAll": "Accept all shown",
   "DE.Views.ChangesPane.txtRejectAll": "Reject all shown",
   "DE.Views.ChangesPane.txtConfirmAll": "Accept all {0} changes shown?",

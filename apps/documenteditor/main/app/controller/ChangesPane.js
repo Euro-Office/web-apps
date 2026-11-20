@@ -49,6 +49,14 @@ define([
         onAfterRender: function(panel) {
             var me = this;
             panel.changesList.on('item:click', _.bind(this.onItemClick, this));
+            // Enter / Space on an Accept or Reject button: keep the key away from the list, which would use Enter
+            // for the highlighted change instead. The browser then clicks the focused button and the click reaches
+            // onItemClick with the right change. Capture phase on the list element, because the list redraws its
+            // inner element on every update.
+            panel.changesList.el.addEventListener('keydown', function(e) {
+                if ((e.keyCode === Common.UI.Keys.RETURN || e.keyCode === Common.UI.Keys.SPACE) && $(e.target).is('.changespane-action'))
+                    e.stopPropagation();
+            }, true);
             panel.cmbAuthor.on('selected', function(combo, record) {
                 me._author = record.value;
                 me.updateList(true);
@@ -87,9 +95,11 @@ define([
                 var name = c.get_UserName();
                 authors[name] = (authors[name] || 0) + 1;
             });
-            var names = _.keys(authors).sort(function(a, b) { return a.localeCompare(b); });
+            // the chosen author stays chosen (with 0 changes) when all their changes are gone, e.g. after "Accept all
+            // shown"; the entry goes away when another author is picked
             if (this._author && !authors[this._author])
-                this._author = '';
+                authors[this._author] = 0;
+            var names = _.keys(authors).sort(function(a, b) { return a.localeCompare(b); });
             panel.cmbAuthor.setData([{value: '', displayValue: panel.txtAllAuthors + ' (' + changes.length + ')'}].concat(_.map(names, function(name) {
                 return {value: name, displayValue: (name || '?') + ' (' + authors[name] + ')'};
             })));
@@ -134,7 +144,19 @@ define([
             else
                 this.api.asc_SelectRevisionChange(change);
 
-            action && this.updateList(true);
+            if (action) {
+                // with the keyboard (the button had focus) focus stays in the list after the redraw: on the next
+                // change, or on the last one when the list got shorter
+                var list = this.panel.changesList,
+                    hadFocus = $(e.target).closest('.changespane-action').is(':focus'),
+                    index = list.store.indexOf(record);
+                this.updateList(true);
+                if (hadFocus) {
+                    var items = list.dataViewItems,
+                        item = items.length ? items[Math.min(index, items.length - 1)] : null;
+                    item && item.$el ? item.$el.focus() : list.focus();
+                }
+            }
         },
 
         onAllShown: function(isAccept) {
