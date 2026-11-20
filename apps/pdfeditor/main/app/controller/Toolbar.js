@@ -261,6 +261,8 @@ define([
             toolbar.btnShapeComment.menu.on('show:after',               _.bind(this.onMenuShapeCommentShowAfter, this));
             toolbar.btnShapeComment.on('color:select',                  _.bind(this.onSelectShapeCommentColor, this));
             toolbar.btnStamp.on('click',                                _.bind(this.onBtnStampClick, this));
+            toolbar.btnCommentPrev && toolbar.btnCommentPrev.on('click', _.bind(this.onGotoComment, this, false));
+            toolbar.btnCommentNext && toolbar.btnCommentNext.on('click', _.bind(this.onGotoComment, this, true));
             toolbar.btnStamp.menu.on('item:click',                      _.bind(this.onMenuStampClick, this));
             toolbar.btnStamp.menu.on('show:after',                      _.bind(this.onStampShowAfter, this));
             // toolbar.btnRotate.on('click',                               _.bind(this.onRotateClick, this));
@@ -1202,10 +1204,24 @@ define([
             this.toolbar.btnTextHighlightColor && this.toolbar.btnTextHighlightColor.toggle(false, true);
         },
 
+        onGotoComment: function(isNext) {
+            if (this.api && this.api.asc_GotoComment) {
+                var id = this.api.asc_GotoComment(isNext);
+                id && this.api.asc_showComment(id);
+            }
+            Common.NotificationCenter.trigger('edit:complete', this.toolbar);
+        },
+
         onShowCommentsChange: function(checkbox, state) {
             var value = state === 'checked';
             Common.Utils.InternalSettings.set("pdfe-settings-livecomment", value);
             (value) ? this.api.asc_showComments(Common.Utils.InternalSettings.get("pdfe-settings-resolvedcomment")) : this.api.asc_hideComments();
+            this.lockCommentNavigation(!value);
+        },
+
+        // Previous / Next only find shown comments, so they are disabled while comments are hidden
+        lockCommentNavigation: function(hidden) {
+            this.toolbar && this.toolbar.lockToolbar(Common.enumLock.hideComments, hidden, {array: [this.toolbar.btnCommentPrev, this.toolbar.btnCommentNext]});
         },
 
         onRotateClick: function(btn, e) {
@@ -1782,6 +1798,7 @@ define([
 
         applySettings: function() {
             this.toolbar && this.toolbar.chShowComments && this.toolbar.chShowComments.setValue(Common.Utils.InternalSettings.get("pdfe-settings-livecomment"), true);
+            this.lockCommentNavigation(!Common.Utils.InternalSettings.get("pdfe-settings-livecomment"));
         },
 
         onApiMathTypes: function(equation) {
