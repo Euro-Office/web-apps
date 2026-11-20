@@ -63,6 +63,10 @@ define([
                     '<span class="btn-slot text x-huge" id="slot-btn-insertlink"></span>' +
                 '</div>' +
                 '<div class="separator long"></div>' +
+                '<div class="group">' +
+                    '<span class="btn-slot text x-huge" id="slot-btn-watermark"></span>' +
+                '</div>' +
+                '<div class="separator long"></div>' +
                 // '<div class="group">' +
                 //     '<span class="btn-slot text x-huge" id="slot-btn-editheader"></span>' +
                 //     '<span class="btn-slot text x-huge" id="slot-btn-datetime"></span>' +
@@ -90,6 +94,9 @@ define([
                 // me.btnInsSlideNum.on('click', _.bind(function () {
                 //     me.fireEvent('insert:header', ['slidenum']);
                 // }, me));
+                me.btnWatermark.on('click', _.bind(function () {
+                    me.fireEvent('insert:watermark');
+                }, me));
                 me.btnInsertHyperlink.on('click', _.bind(function () {
                     Common.UI.TooltipManager.closeTip('createLink');
                     me.fireEvent('insert:hyperlink');
@@ -220,6 +227,19 @@ define([
                 });
                 me.lockedControls.push(me.btnInsertHyperlink);
 
+                // a text watermark on every page
+                me.btnWatermark = new Common.UI.Button({
+                    id: 'tlbtn-watermark',
+                    cls: 'btn-toolbar x-huge icon-top',
+                    iconCls: 'toolbar__icon btn-watermark',
+                    caption: me.capWatermark || 'Watermark',
+                    lock: [_set.lostConnect],
+                    dataHint: '1',
+                    dataHintDirection: 'bottom',
+                    dataHintOffset: 'small'
+                });
+                me.lockedControls.push(me.btnWatermark);
+
                 me.btnInsertTextArt = new Common.UI.Button({
                     id: 'tlbtn-inserttextart',
                     cls: 'btn-toolbar x-huge icon-top',
@@ -309,6 +329,7 @@ define([
                 _injectComponent('#slot-btn-insertequation', this.btnInsertEquation);
                 _injectComponent('#slot-btn-inssymbol', this.btnInsertSymbol);
                 _injectComponent('#slot-btn-insertlink', this.btnInsertHyperlink);
+                _injectComponent('#slot-btn-watermark', this.btnWatermark);
                 _injectComponent('#slot-btn-inserttable', this.btnInsertTable);
                 _injectComponent('#slot-btn-insertchart', this.btnInsertChart);
                 _injectComponent('#slot-btn-instextart', this.btnInsertTextArt);

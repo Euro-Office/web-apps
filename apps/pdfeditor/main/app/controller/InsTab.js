@@ -107,6 +107,7 @@ define([
                     'insert:chart'      : this.onSelectChart,
                     // 'insert:header'     : this.onEditHeaderClick,
                     'insert:hyperlink'  : this.onHyperlinkClick,
+                    'insert:watermark'  : this.onWatermarkClick.bind(this),
                     'insert:table'      : this.onInsertTableClick,
                     'insert:equation'   : this.onInsertEquationClick,
                     'insert:symbol'     : this.onInsertSymbolClick,
@@ -675,6 +676,106 @@ define([
                     }
                 })).show();
             }
+        },
+
+        // a text watermark on every page: the text is rendered into a picture
+        onWatermarkClick: function() {
+            var me = this, view = this.view, main = this.getApplication().getController('Main');
+            var t = function(name, def) { return view[name] || def; };
+            var buttons = [{value: 'ok', caption: t('txtWatermarkApply', 'Add to all pages'), primary: true}];
+            // a watermark added before can be removed; adding a new one replaces it
+            if (me.api && me.api.asc_HasWatermark && me.api.asc_HasWatermark())
+                buttons.push({value: 'remove', caption: t('txtWatermarkRemove', 'Remove watermark')});
+            buttons.push('cancel');
+            var win = new Common.UI.Window({
+                title: t('txtWatermarkTitle', 'Watermark'),
+                width: 420,
+                cls: 'modal-dlg',
+                buttons: buttons,
+                onprimary: function() { apply(); return false; },
+                tpl: '<div class="box" style="padding: 10px 15px; line-height: 28px;">' +
+                        '<div>' + t('txtWatermarkText', 'Text') + '</div>' +
+                        '<input id="wm-text" type="text" class="form-control" style="width:100%;" value="' + _.escape(t('txtWatermarkDefault', 'DRAFT')) + '">' +
+                        '<div id="wm-text-error" style="display:none;color:#d9534f;line-height:20px;">' + t('txtWatermarkEmpty', 'Enter the watermark text.') + '</div>' +
+                        '<div style="display:flex;gap:12px;margin-top:8px;">' +
+                            '<label style="flex:1;">' + t('txtWatermarkColor', 'Color') + '<br><select id="wm-color" class="form-control" style="width:100%;">' +
+                                '<option value="128,128,128">' + t('txtGrey', 'Gray') + '</option>' +
+                                '<option value="200,30,30">' + t('txtRed', 'Red') + '</option>' +
+                                '<option value="30,60,160">' + t('txtBlue', 'Blue') + '</option></select></label>' +
+                            '<label style="flex:1;">' + t('txtWatermarkStrength', 'Strength') + '<br><select id="wm-alpha" class="form-control" style="width:100%;">' +
+                                '<option value="0.15">' + t('txtLight', 'Light') + '</option>' +
+                                '<option value="0.3" selected>' + t('txtMedium', 'Medium') + '</option>' +
+                                '<option value="0.5">' + t('txtStrong', 'Strong') + '</option></select></label>' +
+                            '<label style="flex:1;">' + t('txtWatermarkLayout', 'Layout') + '<br><select id="wm-angle" class="form-control" style="width:100%;">' +
+                                '<option value="-45">' + t('txtDiagonal', 'Diagonal') + '</option>' +
+                                '<option value="0">' + t('txtHorizontal', 'Horizontal') + '</option></select></label>' +
+                        '</div>' +
+                     '</div>'
+            });
+            var render = function(text, rgb, alpha, degrees) {
+                var size = 200, angle = degrees * Math.PI / 180, font = 'bold ' + size + 'px Arial';
+                var measure = document.createElement('canvas').getContext('2d');
+                measure.font = font;
+                var tw = measure.measureText(text).width, th = size * 1.2;
+                var w = Math.ceil(Math.abs(tw * Math.cos(angle)) + Math.abs(th * Math.sin(angle))) + 20,
+                    h = Math.ceil(Math.abs(tw * Math.sin(angle)) + Math.abs(th * Math.cos(angle))) + 20;
+                var canvas = document.createElement('canvas');
+                canvas.width = w; canvas.height = h;
+                var g = canvas.getContext('2d');
+                g.translate(w / 2, h / 2);
+                g.rotate(angle);
+                g.font = font;
+                g.fillStyle = 'rgba(' + rgb + ',' + alpha + ')';
+                g.textAlign = 'center';
+                g.textBaseline = 'middle';
+                g.fillText(text, 0, 0);
+                return canvas.toDataURL('image/png');
+            };
+            // pictures can only be placed or removed in edit mode
+            var runInEditMode = function(action) {
+                if (!me.mode.isPDFEdit && main && main.appOptions.canSwitchMode && main.appOptions.canPDFEdit)
+                    main.onPdfModeApply('edit', undefined, function() { setTimeout(action, 300); });
+                else
+                    action();
+            };
+            var showEmptyError = function(show) {
+                var $w = win.$window;
+                $w.find('#wm-text').toggleClass('error', show);
+                $w.find('#wm-text-error').toggle(show);
+            };
+            var apply = function() {
+                var $w = win.$window;
+                var text = ($w.find('#wm-text').val() || '').trim();
+                if (!text) {
+                    // keep the dialog open and say why
+                    showEmptyError(true);
+                    $w.find('#wm-text').focus();
+                    return;
+                }
+                var url = render(text, $w.find('#wm-color').val(), parseFloat($w.find('#wm-alpha').val()), parseFloat($w.find('#wm-angle').val()));
+                win.close();
+                runInEditMode(function() { me.api && me.api.asc_AddWatermarkImage(url); });
+            };
+            win.on('render:after', function() {
+                var $w = win.$window;
+                $w.find('#wm-text').on('input', function() { showEmptyError(false); });
+                $w.find('.footer .dlg-btn').on('click', function(e) {
+                    var result = $(e.currentTarget).attr('result');
+                    if (result === 'ok') {
+                        apply();
+                    } else if (result === 'remove') {
+                        win.close();
+                        runInEditMode(function() { me.api && me.api.asc_RemoveWatermark(); });
+                    } else {
+                        win.close();
+                    }
+                });
+            });
+            // the focus goes into the dialog, so Escape and Enter work at once
+            win.on('animate:after', function() {
+                win.$window.find('#wm-text').focus().select();
+            });
+            win.show();
         },
 
         onAddPage: function(before) {

@@ -777,6 +777,9 @@
     <path d="M19.502 16a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Zm2.317 3.115a.5.5 0 0 0-.631-.007l-.073.07-2.095 2.512-1.119-1.492-.4.301-.4.3 1.31 1.746.058.068a.75.75 0 0 0 1.118-.038l2.297-2.756a.5.5 0 0 0-.065-.704Zm-3.918 1.083a.5.5 0 0 0-.8.6l.8-.6Z" fill="currentColor" stroke="none" class="icon-fill-success"/>
 </symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-text-field">
     <path d="M8.5 10.5v7m0-7h1m-1 0h-1m1 7h1m-1 0h-1m16-8.75v10.5c0 .69-.56 1.25-1.25 1.25H5.75c-.69 0-1.25-.56-1.25-1.25V8.75c0-.69.56-1.25 1.25-1.25h16.5c.69 0 1.25.56 1.25 1.25Z" class="icon-stroke-gray-primary"/>
+</symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-watermark">
+    <path d="M15.5 4.5h-8a1 1 0 0 0-1 1v16.996a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5m-5-5 5 5m-5-5v4a1 1 0 0 0 1 1h4" class="icon-stroke-gray-primary"/>
+    <path d="m10.5 19.5.75-2m0 0 2.25-6 2.25 6m-4.5 0h4.5m0 0 .75 2" class="icon-stroke-blue-primary"/>
 </symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" id="btn-zip-code">
     <path d="M7.5 12.5h3.813a.1.1 0 0 1 .083.156l-3.792 5.689a.1.1 0 0 0 .083.155H11.5m2-6v6m3-3v-2.9a.1.1 0 0 1 .1-.1H19a1.5 1.5 0 0 1 0 3h-2.5Zm0 0v3M13.534 4.745l-8.5 4.474a1 1 0 0 0-.534.885V20.5a1 1 0 0 0 1 1h17a1 1 0 0 0 1-1V10.104a1 1 0 0 0-.534-.885l-8.5-4.474a1 1 0 0 0-.932 0Z" class="icon-stroke-gray-primary"/>
 </symbol></svg>
