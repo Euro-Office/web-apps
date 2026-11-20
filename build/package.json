@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "test": "npx -y mocha-headless-chrome@5.1.0 -a allow-file-access-from-files -a no-sandbox -f ../test/unit-tests/common/index.html",
-    "test:scripts": "node --test scripts/tests/*.test.mjs"
+    "test:scripts": "node --test scripts/tests/*.test.mjs",
+    "test:mobile": "mocha '../apps/common/mobile/lib/**/*.test.js' '../apps/*/mobile/src/**/*.test.js'"
   },
   "dependencies": {
     "copy-webpack-plugin": "^14.0.0",
