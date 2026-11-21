@@ -19,13 +19,15 @@
 @nc-primary-dark: #006aa3;
 @nc-primary-light: #00a2f5;
 
-// Desktop editor identity colors for the narrow application accent strip.
-@eo-app-accent-height: 6px;
-@eo-app-accent-document: #446995;
-@eo-app-accent-spreadsheet: #3a8056;
-@eo-app-accent-presentation: #b75b44;
-@eo-app-accent-pdf: #aa5252;
-@eo-app-accent-drawing: #444796;
+// Per-editor identity colours, the same as the file type icons in
+// img/header. Set as --eo-app-color, the base for the accent strip and the
+// accent tokens (eo-tokens.less).
+@eo-app-accent-height: 4px;
+@eo-app-color-document: #185abd;
+@eo-app-color-spreadsheet: #107c41;
+@eo-app-color-presentation: #c43e1c;
+@eo-app-color-pdf: #b00020;
+@eo-app-color-drawing: #8e7310;
 
 // Logo paths (used by overrides.less)
 @theme-logo-light-url: '@{common-image-const-path}/header/eo_logo_light.svg';
