@@ -9,7 +9,7 @@ jobs:
         name: "Build web-apps"
         runs-on: self-hosted
         env:
-            NODE_VERSION: 20
+            NODE_VERSION: 26
             PRODUCT_VERSION: 9.2.1
         steps:
 
