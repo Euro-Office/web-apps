@@ -948,6 +948,7 @@ define([
                 documentHolderController.getView().on('editcomplete', _.bind(me.onEditComplete, me));
 
                 // VE.getController('Common.Controllers.Shortcuts').setApi(me.api);
+                me.getApplication().getController('Common.Controllers.ZenMode').setApi(me.api);
 
                 if (me.appOptions.isEdit) {
                     if (me.needToUpdateVersion)

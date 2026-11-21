@@ -1040,6 +1040,7 @@ define([
                 application.getController('Viewport').getView('DocumentPreview').setApi(me.api).setMode(me.appOptions).on('editcomplete', _.bind(me.onEditComplete, me));
 
                 PE.getController('Common.Controllers.Shortcuts').setApi(me.api);
+                PE.getController('Common.Controllers.ZenMode').setApi(me.api);
 
                 if (me.appOptions.isEdit) {
                     if (me.appOptions.canForcesave) {// use asc_setIsForceSaveOnUserSave only when customization->forcesave = true
