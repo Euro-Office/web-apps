@@ -25,7 +25,7 @@ define([
     'underscore',
     'backbone',
     'common/main/lib/component/ZenModeOverlay',
-    'common/main/lib/component/Toast',
+    'common/main/lib/component/SynchronizeTip',
     'common/main/lib/util/ScreenReaderHelper'
 ], function (core, $, _, Backbone) {
     'use strict';
@@ -38,9 +38,11 @@ define([
         initialize: function() {
             this.isZenMode = false;
             this.overlay = null;
-            this._toast = null;
             this.api = null;
             this._rulers = undefined;
+            this._exitHint = null;
+            // same localStorage pattern as the sync tip in Toolbar.js ('de-hide-synch')
+            this.showExitHint = !Common.localStorage.getBool('zenmode-exit-hint');
 
             // Listen for Zen mode requests
             Common.NotificationCenter.on('zenmode:request', _.bind(this._onZenModeRequest, this));
@@ -107,15 +109,30 @@ define([
                 this.overlay.show();
             }
 
-            // Transient hint how to get out again; fades out after a few seconds
-            // (immediately when Zen mode is left before that)
-            this._toast = Common.UI.Toast.show(
-                Common.Locale.get('textZenModeEntered', {name: 'Common.Translation', default: 'Zen Mode entered. Exit via Esc.'}),
-                {
-                  position: 'top-center',
-                  announce: false,
-                }
-            );
+            // Show the exit hint unless the user picked "Don't show this message again";
+            // same localStorage pattern as the sync tip in Toolbar.js ('de-hide-synch')
+            if (this.overlay && this.showExitHint) {
+                this._exitHint = new Common.UI.SynchronizeTip({
+                    target: $('#zen-mode-exit-btn'),
+                    placement: 'top-left', // above the button, arrow pointing at it
+                    text: Common.Locale.get('textZenModeExitHint', {name: 'Common.Translation', default: 'Press Esc or click this button to exit Zen Mode.'}),
+                    showLink: true, // "Don't show this message again"
+                    showButton: false,
+                    closable: true,
+                    extCls: 'colored',
+                    style: 'min-width:200px;max-width:250px;',
+                    automove: true
+                });
+                this._exitHint.on('dontshowclick', function () {
+                    this.showExitHint = false;
+                    Common.localStorage.setItem('zenmode-exit-hint', 1);
+                    this._exitHint.hide();
+                }, this);
+                this._exitHint.on('closeclick', function () {
+                    this._exitHint.hide();
+                }, this);
+                this._exitHint.show();
+            }
 
             // Trigger window resize event to ensure all UI components update their layout
             $(window).trigger('resize');
@@ -143,10 +160,10 @@ define([
                 this.overlay.hide();
             }
 
-            // Dismiss the enter-hint toast if it is still visible
-            if (this._toast) {
-                this._toast.hide();
-                this._toast = null;
+            // Close the exit-hint if it is still visible
+            if (this._exitHint) {
+                this._exitHint.close();
+                this._exitHint = null;
             }
 
             // Remove Zen mode class from body
@@ -174,7 +191,7 @@ define([
          */
         _announceScreenReader: function(active) {
             var text = active
-                ? Common.Locale.get('textZenModeEntered', {name: 'Common.Translation', default: 'Zen Mode entered. Exit via Esc.'})
+                ? Common.Locale.get('textZenModeEntered', {name: 'Common.Translation', default: 'Press Esc to exit Zen Mode.'})
                 : Common.Locale.get('textZenModeExited', {name: 'Common.Translation', default: 'Zen Mode exited'});
             Common.Utils.ScreenReaderHelper && Common.Utils.ScreenReaderHelper.speech(text);
         },
