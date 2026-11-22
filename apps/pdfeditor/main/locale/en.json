@@ -787,6 +787,7 @@
   "Common.Views.ImageFromUrlDialog.textUrl": "Paste an image URL:",
   "Common.Views.ImageFromUrlDialog.txtEmpty": "This field is required",
   "Common.Views.ImageFromUrlDialog.txtNotUrl": "This field should be a URL in the \"http://www.example.com\" format",
+  "Common.Views.MacrosDialog.tipMacrosDelete": "Delete macros",
   "Common.Views.OpenDialog.closeButtonText": "Close file",
   "Common.Views.OpenDialog.txtEncoding": "Encoding ",
   "Common.Views.OpenDialog.txtIncorrectPwd": "Password is incorrect.",
