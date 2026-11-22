@@ -31,7 +31,10 @@ const helper = function() {
         if ( enabled ) {
             if ( !$elem ) {
                 if ( ($elem = $('div[aria-live]')).length == 0 ) {
-                    const tmpl = '<div aria-live="assertive" class="sr-only" style=""></div>'
+                    // role="status" implies aria-live="polite" + aria-atomic="true"; the explicit
+                    // aria-live attribute stays because set_enabled finds the region via div[aria-live].
+                    // Polite, so status messages (e.g. "Press Esc to exit Zen Mode.") don't interrupt speech.
+                    const tmpl = '<div role="status" aria-live="polite" class="sr-only" style=""></div>'
                     $elem = $(tmpl).appendTo($('body'));
                 }
             }

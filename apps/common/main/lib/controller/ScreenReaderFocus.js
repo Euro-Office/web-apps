@@ -37,7 +37,6 @@ if (Common.UI === undefined) {
 }
 
 define([
-  'common/main/lib/util/ScreenReaderHelper'
 ], function() {
 
     Common.UI.ScreenReaderFocusManager = new(function() {
@@ -267,8 +266,6 @@ define([
 
             var filter = Common.localStorage.getKeysFilter();
             _appPrefix = (filter && filter.length) ? filter.split(',')[0] : '';
-
-            Common.Utils.ScreenReaderHelper && Common.Utils.ScreenReaderHelper.setEnabled(true);
 
             $('#editor_sdk').on('click', function () {
                 _exitFocusMode();
