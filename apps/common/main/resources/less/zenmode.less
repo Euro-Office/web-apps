@@ -38,25 +38,9 @@
     background: @background-contrast-popover;
     border: @scaled-one-px-value solid @border-contrast-popover;
     color: @text-normal;
-    padding: 8px 12px;
+    padding: 4px;
     border-radius: 4px;
     box-shadow: 0 2px 8px @shadow-contrast-popover;
-  }
-
-  .zen-mode-exit-btn {
-    // padding must stay 0 vertically: box-sizing is border-box, so padding would eat into
-    // the fixed 28px height; horizontal padding gives the caption breathing room.
-    // Color, font-size and the icon-to-caption spacing come from the base
-    // .btn/.btn-toolbar styles (.btn-toolbar:not(.icon-top) .caption gets padding: 0 4px).
-    padding: 0 10px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-
-    &:hover {
-      background: @highlight-button-hover;
-      border-radius: 4px;
-    }
   }
 }
 
