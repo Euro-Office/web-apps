@@ -755,7 +755,7 @@ define([
             textInterfaceTheme: 'Interface theme',
             textShowFrozenPanesShadow: 'Show frozen panes shadow',
             tipInterfaceTheme: 'Interface theme',
-            textDarkDocument: 'Dark document',
+            textDarkDocument: 'Dark Document',
             tipDarkDocument: 'Dark document',
             textDarkDocumentInfo: 'Dark Document has been enabled. It reduces brightness by transforming colors on your screen only; printing, export and other users see the original colors. For accurate color edits, turn it off in the View tab.',
             textLeftMenu: 'Left panel',
