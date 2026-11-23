@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import {observer, inject} from "mobx-react";
 import {f7, Page, Navbar, NavRight, List, ListItem, Link, Icon, Range, Tab, Tabs, ListButton} from 'framework7-react';
 import { ThemeColorPalette, CustomColorPicker } from '../../../../../common/mobile/lib/component/ThemeColorPalette.jsx';
@@ -70,6 +70,7 @@ const PaletteFill = inject("storeFocusObjects", "storeShapeSettings", "storePale
     const { t } = useTranslation();
     const _t = t('View.Edit', {returnObjects: true});
     const storeShapeSettings = props.storeShapeSettings;
+    if (!props.storeFocusObjects.shapeObject) return null;
     const shapeObject = props.storeFocusObjects.shapeObject.get_ShapeProperties();
     const curFillColor = storeShapeSettings.fillColor ? storeShapeSettings.fillColor : storeShapeSettings.getFillColor(shapeObject);
     const customColors = props.storePalette.customColors;
@@ -469,8 +470,28 @@ const PageCustomBorderColor = props => {
 };
 
 const EditShapeContainer = inject("storeShapeSettings", "storeFocusObjects")(observer(EditShape));
-const PageShapeStyle = inject("storeFocusObjects", "storeShapeSettings")(observer(PageStyle));
-const PageShapeStyleNoFill = inject("storeFocusObjects", "storeShapeSettings")(observer(PageStyleNoFill));
+// A shape page can stay open after the selection moves to a cell, which clears
+// the selected shape. The style pages read the shape before their hooks, so the
+// check sits in a wrapper rather than in the page. The panel closes, because a
+// routed page that renders nothing leaves the tablet popover stuck on its navbar.
+const withShape = PageComponent => {
+    const ObservedPage = observer(PageComponent);
+    return inject("storeFocusObjects", "storeShapeSettings")(observer(props => {
+        const hasShape = !!props.storeFocusObjects.shapeObject;
+        useEffect(() => {
+            if (hasShape) return;
+            if (Device.phone) {
+                $$('.sheet-modal.modal-in').length > 0 && f7.sheet.close();
+            } else {
+                f7.popover.close('#edit-popover', false);
+            }
+        }, [hasShape]);
+        return hasShape ? <ObservedPage {...props}/> : null;
+    }));
+};
+
+const PageShapeStyle = withShape(PageStyle);
+const PageShapeStyleNoFill = withShape(PageStyleNoFill);
 const PageShapeCustomFillColor = inject("storeFocusObjects", "storeShapeSettings", "storePalette")(observer(PageCustomFillColor));
 const PageReplaceContainer = inject("storeShapeSettings","storeFocusObjects")(observer(PageReplace));
 const PageReorderContainer = inject("storeFocusObjects")(observer(PageReorder));

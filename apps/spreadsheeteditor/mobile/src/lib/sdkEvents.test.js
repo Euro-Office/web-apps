@@ -5,10 +5,10 @@
 
 import assert from 'node:assert/strict';
 import { initThemeColors, initEditorStyles, initFonts, initCellInfo } from './sdkEvents.js';
-import { createApi, installAsc, installCommon, selectElementTypes } from '../../../../../test/unit-tests/mobile/ascStub.js';
+import { createApi, installAsc, installCommon, selectElementTypes, selectedObject } from '../../../../../test/unit-tests/mobile/ascStub.js';
 
 // sdkjs common/commonDefines.js c_oAscSelectionType (the values used here).
-const S = { RangeCells: 1, RangeImage: 5, RangeSlicer: 8 };
+const S = { RangeCells: 1, RangeImage: 5, RangeShape: 7, RangeSlicer: 8 };
 
 describe('SSE sdkEvents', () => {
     let api, uninstallCommon, uninstallAsc;
@@ -117,6 +117,30 @@ describe('SSE sdkEvents', () => {
             initCellInfo(props, runInAction);
             api.emit('asc_onSelectionChanged', info(S.RangeCells));
             assert.deepEqual(log[0], ['focus.resetFocusObjects', true, []]);
+        });
+
+        // Rule: leaving a shape for a cell clears the selected shape, so the
+        // shape panels must cope with having none.
+        it('clears the selected shape when the selection moves from a shape to a cell', () => {
+            const focus = {
+                _focusObjects: [], _cellInfo: undefined,
+                resetFocusObjects(objects) { this._focusObjects = objects; },
+                resetCellInfo(cellInfo) { this._cellInfo = cellInfo; },
+                changeFocus() {}, setIsLocked() {},
+            };
+            props.storeFocusObjects = focus;
+            const shape = { get_ShapeProperties: () => ({ asc_getFromChart: () => false }), get_ChartProperties: () => null };
+            initCellInfo(props, runInAction);
+
+            api.asc_getGraphicObjectProps = () => [selectedObject(selectElementTypes.Image, shape)];
+            api.emit('asc_onSelectionChanged', info(S.RangeShape));
+            assert.equal(focus.intf.getShapeObject(), shape);
+            assert.deepEqual(focus.intf.getSelections(), ['shape']);
+
+            api.asc_getGraphicObjectProps = () => null;
+            api.emit('asc_onSelectionChanged', info(S.RangeCells));
+            assert.equal(focus.intf.getShapeObject(), undefined);
+            assert.deepEqual(focus.intf.getSelections(), ['cell']);
         });
 
         it('H1 does nothing while disconnected', () => {
