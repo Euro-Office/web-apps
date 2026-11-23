@@ -60,8 +60,9 @@ define([
     ];
 
     // Whether the dark filter also covers drawing objects (charts, shapes, text boxes,
-    // equations, images). Pictures then display as negatives, unless sdkjs supports
-    // asc_setPictureDisplayFilter (see applyDarkFilter).
+    // equations, images). It applies only when sdkjs draws pictures with the inverse filter
+    // (asc_setPictureDisplayFilter, see applyDarkFilter); otherwise drawing objects keep
+    // their original colors.
     var darkFilterDrawingObjects = true;
 
     SSE.Controllers.ViewTab = Backbone.Controller.extend(_.extend({
@@ -372,11 +373,15 @@ define([
             if (on === this._state.darkFilter && !themeChanged) return;
             this._state.darkFilter = on;
             document.body.classList.toggle('canvas-dark-filter', on);
-            document.body.classList.toggle('canvas-dark-filter-objects', on && darkFilterDrawingObjects);
-            // sdkjs draws pictures with the inverse filter, so the objects filter shows them close to their real colors
+            // sdkjs draws pictures with the inverse filter, so the objects filter shows them close to their real colors.
+            // It returns false when the browser has no canvas filter (Safari): the objects then stay unfiltered,
+            // so pictures never display as negatives
+            var objects = on && darkFilterDrawingObjects,
+                objectsFiltered = false;
             if (typeof this.api.asc_setPictureDisplayFilter === 'function')
-                this.api.asc_setPictureDisplayFilter(on && darkFilterDrawingObjects ?
-                    getComputedStyle(document.body).getPropertyValue('--dark-filter-pictures').trim() : '');
+                objectsFiltered = this.api.asc_setPictureDisplayFilter(objects ?
+                    getComputedStyle(document.body).getPropertyValue('--dark-filter-pictures').trim() : '') === true && objects;
+            document.body.classList.toggle('canvas-dark-filter-objects', objectsFiltered);
             // sdkjs keeps every key sent in one skin entry per theme type, so ColorFiltering sent
             // while the filter was on stays in the dark entry; a theme change sends it again
             if (on || this._state.lightCanvasChrome || themeChanged)            

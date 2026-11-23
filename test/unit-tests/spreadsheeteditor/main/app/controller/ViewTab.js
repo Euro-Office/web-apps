@@ -107,6 +107,7 @@ define([
             Common.enumLock = savedEnumLock;
             document.body.classList.remove('canvas-dark-filter', 'canvas-dark-filter-objects');
             document.documentElement.style.removeProperty('--canvas-cell-title-background');
+            document.documentElement.style.removeProperty('--dark-filter-pictures');
         });
 
         // The embedded editors (chart data, OLE, mail merge) launch this controller but never
@@ -128,11 +129,55 @@ define([
             var api = fakeApi();
             createController().setApi(api);
 
-            assert.deepEqual(filterClasses(), ['canvas-dark-filter', 'canvas-dark-filter-objects']);
+            assert.deepEqual(filterClasses(), ['canvas-dark-filter']);
             assert.lengthOf(api.skins, 1);
             assert.equal(api.skins[0]['canvas-cell-title-background'], '#f7f7f7', 'light token sent');
             assert.notProperty(api.skins[0], 'canvas-cell-title-text', 'missing token keeps the current color');
             assert.equal(api.skins[0]['ColorFiltering'], '#008636', 'light filtered row number color');
+        });
+
+        // An api with asc_setPictureDisplayFilter, returning the given result and recording each value
+        function fakeApiWithPictureFilter(result) {
+            var api = fakeApi();
+            api.pictureFilters = [];
+            api.asc_setPictureDisplayFilter = function (filter) {
+                this.pictureFilters.push(filter);
+                return result;
+            };
+            return api;
+        }
+
+        // Drawing objects are filtered only when sdkjs draws pictures with the inverse filter,
+        // so a picture never displays as a negative
+        it('without asc_setPictureDisplayFilter, leaves drawing objects unfiltered', function () {
+            createController().setApi(fakeApi());
+
+            assert.deepEqual(filterClasses(), ['canvas-dark-filter']);
+        });
+
+        // sdkjs returns false when the browser has no canvas filter (Safari)
+        it('leaves drawing objects unfiltered when the picture filter is not supported', function () {
+            document.documentElement.style.setProperty('--dark-filter-pictures', 'invert(1)');
+            var api = fakeApiWithPictureFilter(false);
+            createController().setApi(api);
+
+            assert.deepEqual(api.pictureFilters, ['invert(1)']);
+            assert.deepEqual(filterClasses(), ['canvas-dark-filter']);
+        });
+
+        it('filters drawing objects when sdkjs applies the picture filter, and resets it when off', function () {
+            document.documentElement.style.setProperty('--dark-filter-pictures', 'invert(1)');
+            var api = fakeApiWithPictureFilter(true);
+            createController().setApi(api);
+
+            assert.deepEqual(api.pictureFilters, ['invert(1)'], 'filter value passed');
+            assert.deepEqual(filterClasses(), ['canvas-dark-filter', 'canvas-dark-filter-objects']);
+
+            theme.contentDark = false;
+            Common.NotificationCenter.trigger('contenttheme:dark', false);
+
+            assert.deepEqual(api.pictureFilters, ['invert(1)', ''], 'picture filter reset');
+            assert.deepEqual(filterClasses(), []);
         });
 
         // sdkjs keeps the ColorFiltering sent while the filter was on in its dark skin entry, and
