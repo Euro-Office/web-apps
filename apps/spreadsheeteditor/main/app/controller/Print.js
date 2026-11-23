@@ -309,7 +309,7 @@ define([
             }
         },
 
-        getPageOptions: function(panel, sheet) {
+        getPageOptions: function(panel, sheet, firstPageChanged) {
             var props = this._changedProps[sheet] ? this._changedProps[sheet] : new Asc.asc_CPageOptions();
             props.asc_setGridLines(panel.chPrintGrid.getValue()==='checked');
             props.asc_setHeadings(panel.chPrintRows.getValue()==='checked');
@@ -344,7 +344,11 @@ define([
                 opt.asc_setScale(this.fitScale);
             }
 
-            if (panel.spnFirstPage) {
+            // A sheet without a first page number keeps none until the spinner is edited: the 1 the panel
+            // shows is only a default. Setting it would start the page numbers of the sheet again at 1, where
+            // a workbook from ODS numbers its pages on from the sheet before.
+            var firstPageSet = this._originalPageSettings && this._originalPageSettings.asc_getFirstPageNumber() !== null;
+            if (panel.spnFirstPage && (firstPageChanged || firstPageSet || opt.asc_getFirstPageNumber() !== null)) {
                 opt.asc_setFirstPageNumber(panel.spnFirstPage.getNumberValue());
             }
 
@@ -597,7 +601,7 @@ define([
             panel.btnPresetsTop.menu.on('item:click', _.bind(this.onPresetSelect, this, panel, 'top'));
             panel.btnPresetsLeft.menu.on('item:click', _.bind(this.onPresetSelect, this, panel, 'left'));
             if (panel.spnFirstPage) {
-                panel.spnFirstPage.on('change', _.bind(this.propertyChange, this, panel));
+                panel.spnFirstPage.on('change', _.bind(this.propertyChange, this, panel, 'firstpage'));
             }
         },
 
@@ -606,7 +610,7 @@ define([
             var setChanges = function () {
                 if (me._changedProps) {
                     var currentSheet = panel.cmbSheet.getValue();
-                    me._changedProps[currentSheet] = me.getPageOptions(panel, currentSheet);
+                    me._changedProps[currentSheet] = me.getPageOptions(panel, currentSheet, property === 'firstpage');
                     me.updatePreview();
                 }
             };
