@@ -89,7 +89,7 @@ describe('SSE sdkEvents', () => {
             assert.equal(api.callbacks('asc_onFocusObject').length, 0);
         });
 
-        it('H1 runs steps b-g in order, all inside one action', () => {
+        it('the selection handler updates focus objects, cell info, focus, locks, then cell and text settings, all inside one action', () => {
             const objects = [];
             api.asc_getGraphicObjectProps = () => objects;
             const sel = info(S.RangeImage);
@@ -105,14 +105,14 @@ describe('SSE sdkEvents', () => {
             ]);
         });
 
-        it('H1 counts a slicer selection as an object and a cell selection as not', () => {
+        it('the selection handler counts a slicer selection as an object and a cell selection as not', () => {
             initCellInfo(props, runInAction);
             api.emit('asc_onSelectionChanged', info(S.RangeSlicer));
             api.emit('asc_onSelectionChanged', info(S.RangeCells));
             assert.deepEqual(log.filter(([name]) => name === 'focus.changeFocus').map(([, , arg]) => arg), [true, false]);
         });
 
-        it('H1 stores [] when the SDK has no graphic object props', () => {
+        it('the selection handler stores [] when the SDK has no graphic object props', () => {
             api.asc_getGraphicObjectProps = () => null;
             initCellInfo(props, runInAction);
             api.emit('asc_onSelectionChanged', info(S.RangeCells));
@@ -143,14 +143,14 @@ describe('SSE sdkEvents', () => {
             assert.deepEqual(focus.intf.getSelections(), ['cell']);
         });
 
-        it('H1 does nothing while disconnected', () => {
+        it('the selection handler does nothing while disconnected', () => {
             props.users.isDisconnected = true;
             initCellInfo(props, runInAction);
             api.emit('asc_onSelectionChanged', info(S.RangeCells));
             assert.deepEqual(log, []);
         });
 
-        it('H1 skips steps f-g outside edit mode, reading isEdit when the event fires', () => {
+        it('the selection handler skips the cell and text settings outside edit mode, reading isEdit when the event fires', () => {
             props.storeAppOptions.isEdit = false;
             initCellInfo(props, runInAction);
             api.emit('asc_onSelectionChanged', info(S.RangeCells));
@@ -162,7 +162,7 @@ describe('SSE sdkEvents', () => {
             assert.equal(log.length, 6);
         });
 
-        it('H2 feeds xfs to the cell then the text store, in edit mode only', () => {
+        it('the xfs handler feeds xfs to the cell then the text store, in edit mode only', () => {
             const xfs = {};
             initCellInfo(props, runInAction);
             props.storeAppOptions.isEdit = false;
