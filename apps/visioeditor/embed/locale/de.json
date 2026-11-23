@@ -56,5 +56,7 @@
   "VE.ApplicationView.txtFullScreen": "Vollbild-Modus",
   "VE.ApplicationView.txtPrint": "Drucken",
   "VE.ApplicationView.txtSearch": "Suchen",
-  "VE.ApplicationView.txtShare": "Freigeben"
+  "VE.ApplicationView.txtShare": "Freigeben",
+  "VE.ApplicationController.errorFileNotAssembled": "Diese Datei wurde aus einer Sicherungskopie auf dem Server geöffnet und ist nicht im Speicher abgelegt.<br>Verwenden Sie die Option \"Speichern als...\", um sie auf einem Laufwerk zu speichern.",
+  "VE.ApplicationController.errorForcedViewMode": "Diese Datei ist im Ansichtsmodus geöffnet.<br>Die Datei ist für die Bearbeitung gesperrt oder Ihre Zugriffsrechte erlauben keine Bearbeitung."
 }

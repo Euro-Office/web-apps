@@ -2585,8 +2585,8 @@
   "PE.Views.FileMenuPanels.Settings.txtRunMacrosDesc": "Aktivér alle makroer uden meddelelse",
   "PE.Views.FileMenuPanels.Settings.txtScreenReader": "Slå understøttelse af skærmlæser til",
   "PE.Views.FileMenuPanels.Settings.txtSpellCheck": "Stavekontrol",
-  "PE.Views.FileMenuPanels.Settings.txtStopMacros": "Deaktiver Alle",
-  "PE.Views.FileMenuPanels.Settings.txtStopMacrosDesc": "Deaktivér alle makroer uden besked",
+  "PE.Views.FileMenuPanels.Settings.txtStopMacros": "Deaktiver alle",
+  "PE.Views.FileMenuPanels.Settings.txtStopMacrosDesc": "Deaktiver alle makroer uden besked",
   "PE.Views.FileMenuPanels.Settings.txtStrictTip": "Brug knappen \"Gem\" til at synkronisere de ændringer, du og andre foretager",
   "PE.Views.FileMenuPanels.Settings.txtTabBack": "Brug værktøjslinjens farve som baggrund for faner",
   "PE.Views.FileMenuPanels.Settings.txtUseAltKey": "Brug Alt-tasten til at navigere i brugergrænsefladen med tastaturet",
@@ -3443,5 +3443,10 @@
   "PE.Views.ViewTab.tipResumeMacro": "Genoptag optagelse",
   "PE.Views.ViewTab.tipSelectTool": "Markeringsværktøj",
   "PE.Views.ViewTab.tipSlideMaster": "Slidemaster",
-  "PE.Views.ViewTab.tipStopMacro": "Stop optagelse"
+  "PE.Views.ViewTab.tipStopMacro": "Stop optagelse",
+  "Common.Utils.AssistantInsert.txtInsertFailed": "Editoren er optaget, så resultatet fra Assistant kunne ikke indsættes. Prøv at indsætte det igen.",
+  "Common.Views.SmartPickerMenu.txtAnyLink": "Ethvert link",
+  "Common.Views.SmartPickerMenu.txtNoResults": "Intet forslag fundet",
+  "Common.Views.SmartPickerMenu.txtOpenFailed": "Smart Picker kunne ikke åbnes.",
+  "PE.Views.Toolbar.tipSmartPicker": "Smart Picker"
 }

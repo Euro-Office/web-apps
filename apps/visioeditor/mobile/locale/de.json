@@ -121,7 +121,9 @@
     "unknownErrorText": "Unbekannter Fehler.",
     "uploadImageExtMessage": "Unbekanntes Bildformat.",
     "uploadImageFileCountMessage": "Keine Bilder hochgeladen.",
-    "uploadImageSizeMessage": "Das Bild ist zu groß. Die maximale Größe beträgt 25 MB."
+    "uploadImageSizeMessage": "Das Bild ist zu groß. Die maximale Größe beträgt 25 MB.",
+    "errorFileNotAssembled": "Diese Datei wurde aus einer Sicherungskopie auf dem Server geöffnet und ist nicht im Speicher abgelegt.<br>Verwenden Sie die Option \"Speichern als...\", um sie auf einem Laufwerk zu speichern.",
+    "errorForcedViewMode": "Diese Datei ist im Ansichtsmodus geöffnet.<br>Die Datei ist für die Bearbeitung gesperrt oder Ihre Zugriffsrechte erlauben keine Bearbeitung."
   },
   "LongActions": {
     "applyChangesTextText": "Daten werden geladen...",
