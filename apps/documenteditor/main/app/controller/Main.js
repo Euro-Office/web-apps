@@ -2035,6 +2035,13 @@ define([
                 (value===undefined) && (value = Common.Utils.Metric.getDefaultMetric());
                 Common.Utils.Metric.setCurrentMetric(value);
                 Common.Utils.InternalSettings.set("de-settings-unit", value);
+                this.applySpacingMetric();
+            },
+
+            applySpacingMetric: function() {
+                var value = Common.localStorage.getBool("de-settings-spacing-pt");
+                Common.Utils.InternalSettings.set("de-settings-spacing-pt", value);
+                Common.Utils.Metric.setSpacingMetric(value ? Common.Utils.Metric.c_MetricUnits.pt : null);
             },
 
             applyModeEditorElements: function() {
@@ -2937,6 +2944,7 @@ define([
                 value = (value!==null) ? parseInt(value) : Common.Utils.Metric.getDefaultMetric();
                 Common.Utils.Metric.setCurrentMetric(value);
                 Common.Utils.InternalSettings.set("de-settings-unit", value);
+                this.applySpacingMetric();
                 this.api.asc_SetDocumentUnits((value==Common.Utils.Metric.c_MetricUnits.inch) ? Asc.c_oAscDocumentUnits.Inch : ((value==Common.Utils.Metric.c_MetricUnits.pt) ? Asc.c_oAscDocumentUnits.Point : Asc.c_oAscDocumentUnits.Millimeter));
                 this.getApplication().getController('RightMenu').updateMetricUnit();
                 this.getApplication().getController('Toolbar').getView().updateMetricUnit();

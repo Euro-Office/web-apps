@@ -287,7 +287,7 @@ define([
             onNumSpacingBeforeChange: function(field, newValue, oldValue, eOpts){
                 if (this.api)  {
                     var num = field.getNumberValue();
-                    this._state.LineSpacingBefore = (num<0) ? -1 : Common.Utils.Metric.fnRecalcToMM(num);
+                    this._state.LineSpacingBefore = (num<0) ? -1 : Common.Utils.Metric.fnRecalcSpacingToMM(num);
                     this.api.put_LineSpacingBeforeAfter(0, this._state.LineSpacingBefore);
                 }
             },
@@ -295,7 +295,7 @@ define([
             onNumSpacingAfterChange: function(field, newValue, oldValue, eOpts){
                 if (this.api){
                     var num = field.getNumberValue();
-                    this._state.LineSpacingAfter = (num<0) ? -1 : Common.Utils.Metric.fnRecalcToMM(num);
+                    this._state.LineSpacingAfter = (num<0) ? -1 : Common.Utils.Metric.fnRecalcSpacingToMM(num);
                     this.api.put_LineSpacingBeforeAfter(1, this._state.LineSpacingAfter);
                 }
             },
@@ -350,14 +350,14 @@ define([
                 if ( Math.abs(this._state.LineSpacingBefore-before)>0.001 ||
                     (this._state.LineSpacingBefore===null || before===null)&&(this._state.LineSpacingBefore!==before)) {
 
-                    this.toolbar.numSpacingBefore.setValue((before !== null) ? ((before<0) ? before : Common.Utils.Metric.fnRecalcFromMM(before) ) : '', true);
+                    this.toolbar.numSpacingBefore.setValue((before !== null) ? ((before<0) ? before : Common.Utils.Metric.fnRecalcSpacingFromMM(before) ) : '', true);
                     this._state.LineSpacingBefore=before;
                 }
 
                 if ( Math.abs(this._state.LineSpacingAfter-after)>0.001 ||
                     (this._state.LineSpacingAfter===null || after===null)&&(this._state.LineSpacingAfter!==after)) {
 
-                    this.toolbar.numSpacingAfter.setValue((after !== null) ? ((after<0) ? after : Common.Utils.Metric.fnRecalcFromMM(after) ) : '', true);
+                    this.toolbar.numSpacingAfter.setValue((after !== null) ? ((after<0) ? after : Common.Utils.Metric.fnRecalcSpacingFromMM(after) ) : '', true);
                     this._state.LineSpacingAfter=after;
                 }
             }

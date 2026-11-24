@@ -2827,6 +2827,7 @@
   "DE.Views.FileMenuPanels.Settings.txtRunMacrosDesc": "Enable all macros without a notification",
   "DE.Views.FileMenuPanels.Settings.txtScreenReader": "Turn on screen reader support",
   "DE.Views.FileMenuPanels.Settings.txtShowTrackChanges": "Show track changes",
+  "DE.Views.FileMenuPanels.Settings.txtSpacingInPt": "Show paragraph spacing before and after in points",
   "DE.Views.FileMenuPanels.Settings.txtSpellCheck": "Spell checking",
   "DE.Views.FileMenuPanels.Settings.txtStopMacros": "Disable All",
   "DE.Views.FileMenuPanels.Settings.txtStopMacrosDesc": "Disable all macros without a notification",

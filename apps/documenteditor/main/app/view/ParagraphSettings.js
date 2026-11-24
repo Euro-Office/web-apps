@@ -316,7 +316,7 @@ define([
         onNumSpacingBeforeChange: function(field, newValue, oldValue, eOpts){
             if (this.api)  {
                 var num = field.getNumberValue();
-                this._state.LineSpacingBefore = (num<0) ? -1 : Common.Utils.Metric.fnRecalcToMM(num);
+                this._state.LineSpacingBefore = (num<0) ? -1 : Common.Utils.Metric.fnRecalcSpacingToMM(num);
                 this.api.put_LineSpacingBeforeAfter(0, this._state.LineSpacingBefore);
             }
         },
@@ -324,7 +324,7 @@ define([
         onNumSpacingAfterChange: function(field, newValue, oldValue, eOpts){
             if (this.api){
                 var num = field.getNumberValue();
-                this._state.LineSpacingAfter = (num<0) ? -1 : Common.Utils.Metric.fnRecalcToMM(num);
+                this._state.LineSpacingAfter = (num<0) ? -1 : Common.Utils.Metric.fnRecalcSpacingToMM(num);
                 this.api.put_LineSpacingBeforeAfter(1, this._state.LineSpacingAfter);
             }
         },
@@ -496,14 +496,14 @@ define([
                 if ( Math.abs(this._state.LineSpacingBefore-Spacing.Before)>0.001 ||
                     (this._state.LineSpacingBefore===null || Spacing.Before===null)&&(this._state.LineSpacingBefore!==Spacing.Before)) {
 
-                    this.numSpacingBefore.setValue((Spacing.Before !== null) ? ((Spacing.Before<0) ? Spacing.Before : Common.Utils.Metric.fnRecalcFromMM(Spacing.Before) ) : '', true);
+                    this.numSpacingBefore.setValue((Spacing.Before !== null) ? ((Spacing.Before<0) ? Spacing.Before : Common.Utils.Metric.fnRecalcSpacingFromMM(Spacing.Before) ) : '', true);
                     this._state.LineSpacingBefore=Spacing.Before;
                 }
 
                 if ( Math.abs(this._state.LineSpacingAfter-Spacing.After)>0.001 ||
                     (this._state.LineSpacingAfter===null || Spacing.After===null)&&(this._state.LineSpacingAfter!==Spacing.After)) {
 
-                    this.numSpacingAfter.setValue((Spacing.After !== null) ? ((Spacing.After<0) ? Spacing.After : Common.Utils.Metric.fnRecalcFromMM(Spacing.After) ) : '', true);
+                    this.numSpacingAfter.setValue((Spacing.After !== null) ? ((Spacing.After<0) ? Spacing.After : Common.Utils.Metric.fnRecalcSpacingFromMM(Spacing.After) ) : '', true);
                     this._state.LineSpacingAfter=Spacing.After;
                 }
 
@@ -580,12 +580,14 @@ define([
         updateMetricUnit: function() {
             if (this.spinners) {
                 for (var i=0; i<this.spinners.length; i++) {
-                    var spinner = this.spinners[i];
-                    spinner.setDefaultUnit(Common.Utils.Metric.getCurrentMetricName());
-                    if (spinner.el.id == 'paragraphadv-spin-position' || spinner.el.id == 'paragraph-spin-spacing-before' || spinner.el.id == 'paragraph-spin-spacing-after')
-                        spinner.setStep(Common.Utils.Metric.getCurrentMetric()==Common.Utils.Metric.c_MetricUnits.pt ? 1 : 0.01);
+                    var spinner = this.spinners[i],
+                        isSpacing = spinner.el.id == 'paragraph-spin-spacing-before' || spinner.el.id == 'paragraph-spin-spacing-after',
+                        metric = isSpacing ? Common.Utils.Metric.getSpacingMetric() : Common.Utils.Metric.getCurrentMetric();
+                    spinner.setDefaultUnit(Common.Utils.Metric.getMetricName(metric));
+                    if (spinner.el.id == 'paragraphadv-spin-position' || isSpacing)
+                        spinner.setStep(metric==Common.Utils.Metric.c_MetricUnits.pt ? 1 : 0.01);
                     else
-                        spinner.setStep(Common.Utils.Metric.getCurrentMetric()==Common.Utils.Metric.c_MetricUnits.pt ? 1 : 0.1);
+                        spinner.setStep(metric==Common.Utils.Metric.c_MetricUnits.pt ? 1 : 0.1);
                 }
             }
             this._arrLineRule[2].defaultUnit =  this._arrLineRule[0].defaultUnit = Common.Utils.Metric.getCurrentMetricName();
@@ -604,9 +606,9 @@ define([
             }
 
             var val = this._state.LineSpacingBefore;
-            this.numSpacingBefore && this.numSpacingBefore.setValue((val !== null) ? ((val<0) ? val : Common.Utils.Metric.fnRecalcFromMM(val) ) : '', true);
+            this.numSpacingBefore && this.numSpacingBefore.setValue((val !== null) ? ((val<0) ? val : Common.Utils.Metric.fnRecalcSpacingFromMM(val) ) : '', true);
             val = this._state.LineSpacingAfter;
-            this.numSpacingAfter && this.numSpacingAfter.setValue((val !== null) ? ((val<0) ? val : Common.Utils.Metric.fnRecalcFromMM(val) ) : '', true);
+            this.numSpacingAfter && this.numSpacingAfter.setValue((val !== null) ? ((val<0) ? val : Common.Utils.Metric.fnRecalcSpacingFromMM(val) ) : '', true);
         },
 
         createDelayedElements: function() {
