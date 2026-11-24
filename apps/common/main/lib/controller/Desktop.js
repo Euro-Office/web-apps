@@ -380,6 +380,7 @@ define([
         }
 
         const _onDocumentReady = function () {
+            _autosaveFileStart();
             if ( config.isEdit ) {
                 function get_locked_message (t) {
                     switch (t) {
@@ -591,6 +592,75 @@ define([
             return Common.Locale.get(id, {name:"Common.Controllers.Desktop", default: defvalue});
         }
 
+        // Automatic saving of the file itself (not only the recovery copy): n minutes after the first unsaved change
+        // the file is saved where it is, as with Ctrl+S. One setting for all editors. Only formats that are saved without
+        // a question (no Save As dialog, no format warning); not for new files without a place, read-only files, or while
+        // a dialog is open, the user is typing or a spreadsheet cell is being edited.
+        const autosaveFile = {
+            key: 'app-settings-autosave-file-minutes',
+            formats: ['docx', 'docm', 'dotx', 'dotm', 'xlsx', 'xlsm', 'xltx', 'xltm', 'pptx', 'pptm', 'potx', 'potm', 'ppsx', 'ppsm', 'pdf'],
+            intervals: [1, 2, 5, 10, 15, 30],
+            modifiedSince: 0,
+            lastTry: 0,
+            lastInput: 0,
+            timer: null
+        };
+
+        const _autosaveFileMinutes = function () {
+            var value = parseInt(Common.localStorage.getItem(autosaveFile.key));
+            return isNaN(value) || value < 0 ? 0 : value;
+        };
+
+        const _autosaveFileCanSave = function () {
+            var main = webapp.getController('Main'),
+                options = (main && main.appOptions) || {};
+            if ( !native || !options.isOffline || !(options.isEdit || options.isRestrictedEdit) || features.readonly ) return false;
+            if ( !native.LocalFileGetSaved || !native.LocalFileGetSaved() ) return false;
+            var path = native.LocalFileGetSourcePath ? native.LocalFileGetSourcePath() : '',
+                ext = /\.([^.\\\/]+)$/.exec(path || '');
+            return !!ext && autosaveFile.formats.indexOf(ext[1].toLowerCase()) > -1;
+        };
+
+        const _autosaveFileIsModified = function (api) {
+            return api.isDocumentModified ? api.isDocumentModified() : api.asc_isDocumentModified();
+        };
+
+        const _autosaveFileTick = function () {
+            var minutes = _autosaveFileMinutes(),
+                now = Date.now(),
+                main = webapp.getController('Main'),
+                api = main && main.api;
+            if ( !minutes || !api || !autosaveFile.modifiedSince ) return;
+            if ( now - autosaveFile.modifiedSince < minutes * 60000 || now - autosaveFile.lastTry < minutes * 60000 ) return;
+            if ( now - autosaveFile.lastInput < 3000 || $('.asc-window.modal:visible').length ) return;
+            if ( !_autosaveFileIsModified(api) ) {
+                autosaveFile.modifiedSince = 0;
+                return;
+            }
+            // The spreadsheet editor's asc_Save closes the cell editor first, which would commit a cell (or a formula)
+            // the user is still writing, or show the formula error dialog. Wait until the cell is left.
+            if ( !_autosaveFileCanSave() || (api.asc_getCellEditMode && api.asc_getCellEditMode()) ) return;
+            autosaveFile.lastTry = now;
+            api.asc_Save();
+        };
+
+        const _autosaveFileStart = function () {
+            var main = webapp.getController('Main'),
+                api = main && main.api;
+            if ( !api || autosaveFile.timer || !main.appOptions || !main.appOptions.isOffline ) return;
+            api.asc_registerCallback('asc_onDocumentModifiedChanged', function () {
+                if ( !_autosaveFileIsModified(api) )
+                    autosaveFile.modifiedSince = 0;
+                else if ( !autosaveFile.modifiedSince )
+                    autosaveFile.modifiedSince = Date.now();
+            });
+            var onInput = function () { autosaveFile.lastInput = Date.now(); };
+            document.addEventListener('keydown', onInput, true);
+            document.addEventListener('mousedown', onInput, true);
+            _autosaveFileIsModified(api) && (autosaveFile.modifiedSince = Date.now());
+            autosaveFile.timer = setInterval(_autosaveFileTick, 10000);
+        };
+
         return {
             init: function (opts) {
                 _.extend(config, opts);
@@ -696,6 +766,52 @@ define([
                 if ( config.isFillFormApp )
                     return webapp.getController('ApplicationController').appOptions.isOffline;
                 return webapp.getController('Main').appOptions.isOffline;
+            },
+            // the settings row "Save the file automatically every ... minutes", shared by the advanced settings of all editors
+            renderAutoSaveFile: function (panel, $markup) {
+                if ( !config.isDesktopApp ) return;
+                var $row = $markup.find('#fms-chb-autosave').closest('tr');
+                if ( !$row.length ) return;
+                var $new = $('<tr class="autosave-file"><td colspan="2"><div style="display: flex; align-items: center;">' +
+                                '<span id="fms-chb-autosave-file"></span><div id="fms-cmb-autosave-file" style="width: 60px; margin: 0 6px;"></div>' +
+                                '<label>' + Common.Utils.String.htmlEncode(_tr('txtAutoSaveFileMinutes', 'minutes')) + '</label></div></td></tr>');
+                $new.insertAfter($row);
+                panel.chAutoSaveFile = new Common.UI.CheckBox({
+                    el: $new.find('#fms-chb-autosave-file'),
+                    labelText: _tr('txtAutoSaveFile', 'Save the file automatically every'),
+                    dataHint: '2',
+                    dataHintDirection: 'left',
+                    dataHintOffset: 'small'
+                }).on('change', function (field) {
+                    panel.cmbAutoSaveFile.setDisabled(field.getValue() !== 'checked');
+                });
+                $new.find('#fms-chb-autosave-file').attr('title', _tr('tipAutoSaveFile',
+                    'Saves the file where it is, as with Ctrl+S. Only for Office files (docx, xlsx, pptx) and PDF; a new file has to be saved once first.'));
+                panel.cmbAutoSaveFile = new Common.UI.ComboBox({
+                    el: $new.find('#fms-cmb-autosave-file'),
+                    style: 'width: 60px;',
+                    editable: false,
+                    menuStyle: 'min-width: 60px;',
+                    data: autosaveFile.intervals.map(function (n) { return {value: n, displayValue: '' + n}; }),
+                    dataHint: '2',
+                    dataHintDirection: 'bottom',
+                    dataHintOffset: 'big'
+                });
+            },
+            updateAutoSaveFile: function (panel) {
+                if ( !panel.chAutoSaveFile ) return;
+                var minutes = _autosaveFileMinutes();
+                var main = webapp.getController('Main'),
+                    options = (main && main.appOptions) || {};
+                panel.chAutoSaveFile.$el.closest('tr')[options.isOffline ? 'show' : 'hide']();
+                panel.chAutoSaveFile.setValue(minutes > 0, true);
+                panel.cmbAutoSaveFile.setValue(minutes > 0 ? minutes : 5);
+                panel.cmbAutoSaveFile.setDisabled(!(minutes > 0));
+            },
+            applyAutoSaveFile: function (panel) {
+                if ( !panel.chAutoSaveFile ) return;
+                Common.localStorage.setItem(autosaveFile.key, panel.chAutoSaveFile.isChecked() ? panel.cmbAutoSaveFile.getValue() : 0);
+                autosaveFile.lastTry = 0;
             },
             isFeatureAvailable: function (feature) {
                 return !!native && !!native[feature];
