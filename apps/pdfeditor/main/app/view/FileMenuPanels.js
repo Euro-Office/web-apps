@@ -1680,7 +1680,10 @@ define([], function () {
 
         setMode: function(mode) {
             this.mode = mode;
-            this.btnRemovePersonal.setVisible(!!(mode.isEdit || mode.canComments));
+            // isEdit is always true in this editor: only in the comment or edit mode annotations can be changed.
+            // The button renames the annotations of everybody, so it needs full editing rights: comment-only users
+            // and users who may only edit their own comments don't get it.
+            this.btnRemovePersonal.setVisible(!!((mode.isPDFAnnotate || mode.isPDFEdit) && mode.canPDFEdit && mode.canEditComments !== false));
             var isEdit = false; // isPDFEdit?
             this.inputAuthor.setVisible(isEdit);
             this.pnlApply.toggleClass('hidden', !isEdit);
