@@ -2477,11 +2477,16 @@ define([], function () {
         // the desktop app asks where to save it). The open document is not changed.
         dh.onExtractPages = function() {
             var view = this.documentHolder, api = this.api;
-            if (!api) return;
+            if (!api || !(this.mode && this.mode.canDownload)) return;
             var pages = api.getSelectedPages().slice().sort(function(a, b) { return a - b; });
             if (!pages.length) return;
-            if (!api.asc_CanGetPagesAsPdf(pages)) {
-                Common.UI.warning({title: view.txtExtractPagesTitle, msg: view.txtExtractNeedReopen, maxwidth: 600});
+            var block = api.asc_GetPagesAsPdfBlock(pages),
+                blocks = Asc.c_oAscPdfPagesAsPdfBlock;
+            if (block !== blocks.None) {
+                var msg = block === blocks.Permissions ? view.txtExtractNotPermitted :
+                          block === blocks.Password ? view.txtExtractPasswordProtected :
+                          block === blocks.Changes ? view.txtExtractNeedReopen : view.txtExtractError;
+                Common.UI.warning({title: view.txtExtractPagesTitle, msg: msg, maxwidth: 600});
                 return;
             }
             // page numbers like "2-4, 7"

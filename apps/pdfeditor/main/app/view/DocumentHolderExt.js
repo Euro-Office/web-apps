@@ -1734,7 +1734,8 @@ define([], function () {
                         me.mnuRotatePageRight.setVisible(value.isPageSelect===true);
                         me.mnuRotatePageLeft.setVisible(value.isPageSelect===true);
                         me.mnuDeletePage.setVisible(value.isPageSelect===true);
-                        me.mnuExtractPages.setVisible(value.isPageSelect===true);
+                        // the new file is a download: not for users without permissions.download
+                        me.mnuExtractPages.setVisible(value.isPageSelect===true && !!(me.mode && me.mode.canDownload));
                         me.mnuCopyPage.setVisible(value.isPageSelect===true);
                         me.mnuCutPage.setVisible(value.isPageSelect===true);
                         menuPageNewSeparator.setVisible(value.isPageSelect===true);
