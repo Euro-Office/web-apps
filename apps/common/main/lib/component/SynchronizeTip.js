@@ -139,22 +139,30 @@ define([
             },
 
             applyPlacement: function (repeatOnce) {
-                var target = this.target && this.target.length>0 ? this.target : $(document.body);
+                var target = this.target && this.target.length>0 ? this.target : $(document.body),
+                    position = this.position;
 
-                if (!target.is(':visible') && !repeatOnce) {
-                    var me = this;
-                    setTimeout(function(){ me.applyPlacement(true); }, 100);
-                    return;
+                if (!target.is(':visible')) {
+                    if (!repeatOnce) {
+                        var me = this;
+                        setTimeout(function(){ me.applyPlacement(true); }, 100);
+                        return;
+                    }
+                    // The anchor is hidden (e.g. #toolbar in zen mode): after the retry,
+                    // place relative to the viewport instead of the hidden element's 0,0
+                    // offset, which would clamp the tip to the top-left corner.
+                    target = $(document.body);
+                    position = position || {top: 20};
                 }
                 var showxy = Common.Utils.getOffset(target),
                     offset = this.offset || {x: 0, y: 0};
-                if (this.placement=='target' && !this.position) {
+                if (this.placement=='target' && !position) {
                     this.cmpEl.css({top : showxy.top + 5  + offset.y + 'px', left: showxy.left + 5  + offset.x + 'px'});
                     return;
                 }
 
-                if (this.position && typeof this.position == 'object') {
-                    var top = this.position.top, left = this.position.left, bottom = this.position.bottom, right = this.position.right;
+                if (position && typeof position == 'object') {
+                    var top = position.top, left = position.left, bottom = position.bottom, right = position.right;
                     if (bottom!==undefined || top!==undefined)
                         left = showxy.left + (target.width() - this.cmpEl.width())/2;
                     else
@@ -334,14 +342,13 @@ define([
                 if (props.tip && props.tip.isVisible())
                     return true;
 
-                if (!(targetEl && targetEl.length && targetEl.is(':visible')))
-                    return false;
+                var targetVisible = !!(targetEl && targetEl.length && targetEl.is(':visible'));
 
                 var placement = props.placement || 'bottom';
                 if (Common.UI.isRTL()) {
                     placement = placement.indexOf('right')>-1 ? placement.replace('right', 'left') : placement.replace('left', 'right');
                 }
-                !props.noHighlight && targetEl.addClass('highlight-tip');
+                !props.noHighlight && targetVisible && targetEl.addClass('highlight-tip');
 
                 if (props.isNewFeature) {
                     props.header = '<span>' + (Common.UI.SynchronizeTip.prototype.textNew || 'New') + '</span>' + props.header;

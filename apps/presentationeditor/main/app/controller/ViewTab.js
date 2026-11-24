@@ -114,7 +114,8 @@ define([
                     'macros:record':  _.bind(this.onClickMacrosRec, this),
                     'macros:pause':  _.bind(this.onClickMacrosPause, this),
                     'pointer:select': _.bind(this.onPointerType, this, 'select'),
-                    'pointer:hand': _.bind(this.onPointerType, this, 'hand')
+                    'pointer:hand': _.bind(this.onPointerType, this, 'hand'),
+                    'zenmode:request': _.bind(this.onChangeZenMode, this)
                 },
                 'Toolbar': {
                     'view:compact': _.bind(function (toolbar, state) {
@@ -470,6 +471,12 @@ define([
                 this.api.asc_setViewerTargetType(type);
                 Common.NotificationCenter.trigger('edit:complete', this.view);
             }
+        },
+
+        onChangeZenMode: function () {
+            Common.NotificationCenter.trigger('zenmode:request', true);
+            // return the focus to the document: the Zen Mode button keeps it and is then hidden
+            Common.NotificationCenter.trigger('edit:complete', this.view);
         },
 
         onTabStyleChange: function () {

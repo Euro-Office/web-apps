@@ -31,7 +31,10 @@ const helper = function() {
         if ( enabled ) {
             if ( !$elem ) {
                 if ( ($elem = $('div[aria-live]')).length == 0 ) {
-                    const tmpl = '<div aria-live="assertive" class="sr-only" style=""></div>'
+                    // role="status" implies aria-live="polite" + aria-atomic="true"; the explicit
+                    // aria-live attribute stays because set_enabled finds the region via div[aria-live].
+                    // Polite, so status messages (e.g. "Press Esc to exit Zen Mode.") don't interrupt speech.
+                    const tmpl = '<div role="status" aria-live="polite" class="sr-only" style=""></div>'
                     $elem = $(tmpl).appendTo($('body'));
                 }
             }
@@ -64,4 +67,16 @@ const helper = function() {
 !window.Common && (window.Common = {});
 !Common.Utils && (Common.Utils = {});
 
-Common.Utils.ScreeenReaderHelper = new helper();
+Common.Utils.ScreenReaderHelper = new helper();
+
+// Create the aria-live region up front (on DOM ready). If it were only created
+// lazily by the first speech() call, that first text set would be treated as the
+// region's initial content and not announced (Chromium/WebKit); with the region
+// already in the DOM, the first speech is a real change and gets announced.
+var enableOnReady = function() { Common.Utils.ScreenReaderHelper.setEnabled(true); };
+if (document.readyState === 'loading') {
+    // once: the listener removes itself after firing — it is only needed until DOM ready
+    document.addEventListener('DOMContentLoaded', enableOnReady, { once: true });
+} else {
+    enableOnReady();
+}

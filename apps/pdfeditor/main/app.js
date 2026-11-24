@@ -151,7 +151,8 @@ require([
             // 'Common.Controllers.ExternalOleEditor',
             'Common.Controllers.Protection',
             'Common.Controllers.Shortcuts',
-            'Common.Controllers.ReviewChanges'
+            'Common.Controllers.ReviewChanges',
+            'Common.Controllers.ZenMode'
         ]
     });
 
@@ -195,6 +196,7 @@ require([
                 'common/main/lib/controller/Protection',
                 'common/main/lib/controller/Shortcuts',
                 'common/main/lib/controller/ReviewChanges'
+                ,'common/main/lib/controller/ZenMode'
             ], function() {
                 const code_path = 'pdfeditor/main/code';
                 app.postLaunchScripts = [

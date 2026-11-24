@@ -1468,6 +1468,7 @@ define([
                 documentHolderController.getView().on('editcomplete', _.bind(me.onEditComplete, me));
 
                 DE.getController('Common.Controllers.Shortcuts').setApi(me.api);
+                DE.getController('Common.Controllers.ZenMode').setApi(me.api);
                 
                 if (me.appOptions.isEdit) {
                     if (me.appOptions.canForcesave) {// use asc_setIsForceSaveOnUserSave only when customization->forcesave = true
