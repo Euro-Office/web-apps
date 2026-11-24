@@ -1125,6 +1125,16 @@ define([], function () {
                 caption     : me.splitCellsText
             });
 
+            // Split the whole table above the current row, like Word's Layout > Split Table (also Ctrl+Shift+Enter)
+            me.mnuTableSplitTable = new Common.UI.MenuItem({
+                caption     : me.textSplitTable
+            });
+
+            // Put a table that sticks out of the page between the margins, like Word's AutoFit Window
+            me.mnuTableFitMargins = new Common.UI.MenuItem({
+                caption     : me.textFitTableToMargins
+            });
+
             me.menuTableCellAlign = new Common.UI.MenuItem({
                 caption     : me.AlignText,
                 menu        : new Common.UI.Menu({
@@ -1677,6 +1687,19 @@ define([], function () {
                     if (me.api) {
                         me.mnuTableMerge.setDisabled(disabled || !me.api.CheckBeforeMergeCells());
                         me.mnuTableSplit.setDisabled(disabled || !me.api.CheckBeforeSplitCells());
+                        // When the table is not the reason (e.g. nested), say why the item is greyed out
+                        var setReason = function(item, hint) {
+                            hint = hint || '';
+                            if ((item.options.hint || '') !== hint)
+                                item.updateHint(hint);
+                        };
+                        var canSplitTable = !!(me.api.asc_CanSplitTable && me.api.asc_CanSplitTable()),
+                            canFitTable = !!(me.api.asc_CanFitTableToMargins && me.api.asc_CanFitTableToMargins()),
+                            tableFitted = canFitTable && !!(me.api.asc_IsTableFittedToMargins && me.api.asc_IsTableFittedToMargins());
+                        me.mnuTableSplitTable.setDisabled(disabled || !canSplitTable);
+                        me.mnuTableFitMargins.setDisabled(disabled || !canFitTable || tableFitted);
+                        setReason(me.mnuTableSplitTable, (!disabled && !canSplitTable) ? me.textSplitTableHint : '');
+                        setReason(me.mnuTableFitMargins, disabled ? '' : (!canFitTable ? me.textFitTableHint : (tableFitted ? me.textTableFitsMargins : '')));
                     }
 
                     me.menuTableDistRows.setDisabled(disabled);
@@ -1868,9 +1891,11 @@ define([], function () {
                     { caption: '--' },
                     me.mnuTableMerge,
                     me.mnuTableSplit,
+                    me.mnuTableSplitTable,
                     { caption: '--' },
                     me.menuTableDistRows,
                     me.menuTableDistCols,
+                    me.mnuTableFitMargins,
                     { caption: '--' },
                     me.menuTableCellAlign,
                     me.menuTableDirection,

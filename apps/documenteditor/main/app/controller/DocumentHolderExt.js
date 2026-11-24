@@ -280,6 +280,8 @@ define([], function () {
             view.menuImgEditPoints.on('click', _.bind(me.onImgEditPoints, me));
             view.mnuTableMerge.on('click', _.bind(me.onTableMerge, me));
             view.mnuTableSplit.on('click', _.bind(me.onTableSplit, me));
+            view.mnuTableSplitTable.on('click', _.bind(me.onTableSplitTable, me));
+            view.mnuTableFitMargins.on('click', _.bind(me.onTableFitMargins, me));
             view.menuIgnoreSpellTable.on('click', _.bind(me.onIgnoreSpell, me));
             view.menuIgnoreSpellPara.on('click', _.bind(me.onIgnoreSpell, me));
             view.menuIgnoreAllSpellTable.on('click', _.bind(me.onIgnoreSpell, me));
@@ -2628,6 +2630,16 @@ define([], function () {
 
         dh.onTableMerge = function(item) {
             this.api && this.api.MergeCells();
+        };
+
+        dh.onTableFitMargins = function(item) {
+            this.api && this.api.asc_FitTableToMargins && this.api.asc_FitTableToMargins();
+            this.editComplete();
+        };
+
+        dh.onTableSplitTable = function(item) {
+            this.api && this.api.asc_SplitTable && this.api.asc_SplitTable();
+            this.editComplete();
         };
 
         dh.onTableSplit = function(item) {
