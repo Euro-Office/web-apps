@@ -249,6 +249,7 @@
                     reviewDisplay: 'original', // must be deprecated. use customization.review.reviewDisplay instead
                     spellcheck: true, // must be deprecated. use customization.features.spellcheck instead
                     compatibleFeatures: false,
+                    authorOverride: false, // true - the user may choose the author name of comments and tracked changes, e.g. a role name such as 'Reviewer 1' ("Your name" in File > Info, "Change author" in comments); false - the author is always the logged-in user
                     unit: 'cm' // cm, pt, inch,
                     mentionShare : true // customize tooltip for mention,
                     macros: true // can run macros in document

@@ -203,7 +203,9 @@ define([
                 commentId = record.get('uid');
                 replyId =  btn.attr('data-value');
 
-                if (btn.hasClass('btn-edit-common')) {
+                if (btn.hasClass('change-author')) {
+                    me.fireEvent('comment:changeauthor', [commentId]);
+                } else if (btn.hasClass('btn-edit-common')) {
                     me.fireEvent('comment:show', [commentId, false]);
                     if (!_.isUndefined(replyId)) {
                         me.fireEvent('comment:closeEditing', [commentId]);
@@ -448,6 +450,11 @@ define([
                                     items: []
                                 })
                             }),
+                            this.mnuChangeAllAuthors = new Common.UI.MenuItem({
+                                caption: this.textChangeAllAuthors,
+                                checkable: false,
+                                visible: false
+                            }),
                             {
                                 caption: '--'
                             },
@@ -482,6 +489,7 @@ define([
                 this.menuFilterGroups.menu.on('item:toggle', _.bind(this.onFilterGroupsClick, this));
                 this.menuFilterComments.menu.on('item:toggle', _.bind(this.onFilterCommentsClick, this));
                 this.mnuAddCommentToDoc.on('click', _.bind(this.onClickShowBoxDocumentComment, this));
+                this.mnuChangeAllAuthors.on('click', _.bind(function() { this.fireEvent('comment:changeallauthors'); }, this));
                 this.buttonAddNew.on('click', _.bind(this.onClickAddNewComment, this));
 
                 this.txtComment = $('#comment-msg-new', this.el);
@@ -519,6 +527,7 @@ define([
                         textReply: me.textReply,
                         textClose: me.textClose,
                         textComment: me.textComment,
+                        textChangeAuthor: me.textChangeAuthor,
                         maxCommLength: Asc.c_oAscMaxCellOrCommentLength
                     })),
                     emptyText: me.txtEmpty
@@ -743,6 +752,7 @@ define([
                 var menu = this.buttonSort.menu;
                 menu.items[menu.items.length-1].setVisible(mode.canComments && !mode.compatibleFeatures);
                 menu.items[menu.items.length-2].setVisible(mode.canComments && !mode.compatibleFeatures);
+                this.mnuChangeAllAuthors && this.mnuChangeAllAuthors.setVisible(!!mode.canAuthorOverride && mode.canComments && !mode.compatibleFeatures);
                 this.buttonSort.updateHint(mode.canComments && !mode.compatibleFeatures ? (this.hasFilters ? this.textSortFilterMore : this.textSortMore) : (this.hasFilters ? this.textSortFilter : this.textSort));
             }
             if (!mode.canComments || mode.compatibleFeatures) {
@@ -944,6 +954,9 @@ define([
 
         onShowBeforeSortButtonMenu: function(menu, item, state) {
             Common.UI.TooltipManager.closeTip('commentFilter');
+            // the menu can be built after changeLayout, so the item gets its state here
+            var mode = this.mode;
+            this.mnuChangeAllAuthors && this.mnuChangeAllAuthors.setVisible(!!(mode && mode.canAuthorOverride && mode.canComments && !mode.compatibleFeatures));
         },
 
         onFilterGroupsClick: function(menu, item, state) {
@@ -990,7 +1003,9 @@ define([
         txtEmpty: 'There are no comments in the document.',
         textSortFilter: 'Sort and filter comments',
         textSortMore: 'Sort and more',
-        textSortFilterMore: 'Sort, filter and more'
+        textSortFilterMore: 'Sort, filter and more',
+        textChangeAuthor: 'Change author…',
+        textChangeAllAuthors: 'Change all comment authors…'
 
     }, Common.Views.Comments || {}))
 });

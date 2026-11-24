@@ -1482,6 +1482,15 @@ define([], function () {
                     //     '<td class="left"><label>' + this.txtEditTime + '</label></td>',
                     //     '<td class="right"><label id="id-info-edittime"></label></td>',
                     // '</tr>',
+                    '<tbody class="local-user-info">',
+                        '<tr>',
+                            '<td class="title"><label>' + this.txtYourName + '</label></td>',
+                        '</tr>',
+                        '<tr>',
+                            '<td class="left"><label>' + this.txtNameInComments + '</label></td>',
+                            '<td class="right"><div id="id-info-local-username"></div></td>',
+                        '</tr>',
+                    '</tbody>',
                     '<tbody class="properties-tab">',
                         '<tr>',
                             '<td class="title"><label>' + this.txtProperties + '</label></td>',
@@ -1699,6 +1708,22 @@ define([], function () {
                 el: $markup.findById('#fminfo-btn-add-property')
             });
             this.btnAddProperty.on('click', _.bind(this.onAddPropertyClick, this));
+
+            this.inputLocalUserName = new Common.UI.InputField({
+                el          : $markup.findById('#id-info-local-username'),
+                style       : 'width: 200px;',
+                validateOnBlur: false,
+                dataHint: '2',
+                dataHintDirection: 'left',
+                dataHintOffset: 'small',
+                ariaLabel: this.txtNameInComments
+            }).on('changed:after', function(input, newValue, oldValue) {
+                if (newValue.trim() !== oldValue.trim())
+                    Common.NotificationCenter.trigger('user:localrename', newValue.trim());
+            }).on('keydown:before', keyDownBefore);
+            Common.NotificationCenter.on('user:localname', function(name) {
+                me.inputLocalUserName.setValue(name);
+            });
 
             this.rendered = true;
 
@@ -1952,6 +1977,8 @@ define([], function () {
             this.mode = mode;
             this.inputAuthor.setVisible(mode.isEdit);
             this.btnAddProperty.setVisible(mode.isEdit);
+            $('tbody.local-user-info', this.el)[mode.canAuthorOverride ? 'show' : 'hide']();
+            mode.canAuthorOverride && this.inputLocalUserName.setValue(AscCommon.UserInfoParser.getCurrentName() || '');
             this.tblAuthor.find('.close').toggleClass('hidden', !mode.isEdit);
             this.inputTitle._input.attr('placeholder', mode.isEdit ? this.txtAddText : '');
             this.inputTags._input.attr('placeholder', mode.isEdit ? this.txtAddText : '');
@@ -2196,7 +2223,9 @@ define([], function () {
         txtDocumentInfo: 'Document Info',
         txtDocumentPropertyUpdateTitle: "Document Property",
         txtPropertyTitleConflictError: 'Property with this title already exists',
-        txtAddProperty: 'Add property'
+        txtAddProperty: 'Add property',
+        txtYourName: 'Your name',
+        txtNameInComments: 'Name in comments and changes'
 
     }, DE.Views.FileMenuPanels.DocumentInfo || {}));
 

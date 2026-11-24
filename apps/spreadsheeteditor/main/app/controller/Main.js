@@ -1474,6 +1474,9 @@ define([
                     this.appOptions.canUseReviewPermissions && AscCommon.UserInfoParser.setReviewPermissions(this.permissions.reviewGroups, this.editorConfig.customization.reviewPermissions);
                     this.appOptions.canUseCommentPermissions && AscCommon.UserInfoParser.setCommentPermissions(this.permissions.commentGroups);
                     this.appOptions.canUseUserInfoPermissions && AscCommon.UserInfoParser.setUserInfoPermissions(this.permissions.userInfoGroups);
+                    // opt-in by the host: the user may set the author name of comments and changes, e.g. a role name
+                    this.appOptions.canAuthorOverride = !this.appOptions.user.guest && (typeof this.editorConfig.customization == 'object') && this.editorConfig.customization.authorOverride === true;
+                    this.api.asc_setAuthorOverride && this.api.asc_setAuthorOverride(this.appOptions.canAuthorOverride);
                     this.headerView.setUserName(AscCommon.UserInfoParser.getParsedName(AscCommon.UserInfoParser.getCurrentName()));
                     this.headerView.setUserId(this.appOptions.user.id);
                     this.headerView.setUserAvatar(this.appOptions.user.image);

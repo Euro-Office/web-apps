@@ -100,7 +100,9 @@ define([
                     'comment:closeEditing':     _.bind(this.closeEditing, this),
                     'comment:sort':             _.bind(this.setComparator, this),
                     'comment:filtergroups':     _.bind(this.setFilterGroups, this),
-                    'comment:filtercomments':     _.bind(this.setFilterComments, this)
+                    'comment:filtercomments':     _.bind(this.setFilterComments, this),
+                    'comment:changeauthor':     _.bind(this.onChangeCommentAuthor, this),
+                    'comment:changeallauthors': _.bind(this.onChangeAllCommentAuthors, this)
                 },
 
                 'Common.Views.ReviewPopover': {
@@ -111,6 +113,7 @@ define([
                     'comment:remove':           _.bind(this.onRemoveComment, this),
                     'comment:resolve':          _.bind(this.onResolveComment, this),
                     'comment:show':             _.bind(this.onShowComment, this),
+                    'comment:changeauthor':     _.bind(this.onChangeCommentAuthor, this),
 
                     // reply handlers
 
@@ -214,6 +217,7 @@ define([
             this.mode = mode;
             this.isModeChanged = true; // change show-comment mode from/to hint mode using canComments flag
             this.view.viewmode = !this.mode.canComments;
+            Common.Utils.InternalSettings.set('comments-author-override', !!this.mode.canAuthorOverride);
             this.view.changeLayout(mode);
             return this;
         },
@@ -1809,6 +1813,39 @@ define([
             });
         },
 
+        // only with editorConfig.customization.authorOverride: the author of one comment or of all comments and replies
+        askCommentAuthor: function (value, callback) {
+            var me = this;
+            (new Common.Views.TextInputDialog({
+                title: me.textChangeAuthorTitle,
+                label: me.textNewAuthor,
+                value: value || '',
+                inputConfig: {allowBlank: false, maxLength: 128},
+                handler: function (result, name) {
+                    name = (name || '').trim();
+                    if (result == 'ok' && name)
+                        callback(name);
+                    Common.NotificationCenter.trigger('edit:complete', me.view);
+                }
+            })).show();
+        },
+
+        onChangeCommentAuthor: function (uid) {
+            var me = this, comment = this.findComment(uid);
+            if (!comment || !this.api || !this.mode || !this.mode.canAuthorOverride) return;
+            this.askCommentAuthor(comment.get('username'), function (name) {
+                me.api.asc_ChangeCommentAuthor(name, [uid]);
+            });
+        },
+
+        onChangeAllCommentAuthors: function () {
+            var me = this;
+            if (!this.api || !this.mode || !this.mode.canAuthorOverride) return;
+            this.askCommentAuthor(AscCommon.UserInfoParser.getCurrentName(), function (name) {
+                me.api.asc_ChangeCommentAuthor(name);
+            });
+        },
+
         onChangeProtectDocument: function(props) {
             if (!props) {
                 var docprotect = this.getApplication().getController('DocProtection');
@@ -1818,7 +1855,10 @@ define([
                 this._state.docProtection = props;
                 this.updatePreviewMode();
             }
-        }
+        },
+
+        textChangeAuthorTitle: 'Change comment author',
+        textNewAuthor: 'New author name'
 
     }, Common.Controllers.Comments || {}));
 });
