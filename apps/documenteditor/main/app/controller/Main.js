@@ -1817,6 +1817,15 @@ define([
                 this.appOptions.canUseReviewPermissions && AscCommon.UserInfoParser.setReviewPermissions(this.permissions.reviewGroups, this.editorConfig.customization.reviewPermissions);
                 this.appOptions.canUseCommentPermissions && AscCommon.UserInfoParser.setCommentPermissions(this.permissions.commentGroups);
                 this.appOptions.canUseUserInfoPermissions && AscCommon.UserInfoParser.setUserInfoPermissions(this.permissions.userInfoGroups);
+                // opt-in by the host: the user may set the author name of comments and changes, e.g. a role name
+                this.appOptions.canAuthorOverride = !this.appOptions.user.guest && (typeof this.editorConfig.customization == 'object') && this.editorConfig.customization.authorOverride === true;
+                this.api.asc_setAuthorOverride && this.api.asc_setAuthorOverride(this.appOptions.canAuthorOverride);
+                if (this.appOptions.canAuthorOverride) {
+                    this._state.appUserName = this.appOptions.user.fullname;
+                    this.applyLocalUserName(this.getLocalUserName());
+                    Common.NotificationCenter.on('user:localrename', _.bind(this.onLocalUserRename, this));
+                    $(window).on('storage', _.bind(this.onLocalUserNameStorage, this));
+                }
                 appHeader.setUserName(AscCommon.UserInfoParser.getParsedName(AscCommon.UserInfoParser.getCurrentName()));
                 appHeader.setUserId(this.appOptions.user.id);
                 appHeader.setUserAvatar(this.appOptions.user.image);
@@ -3360,6 +3369,39 @@ define([
                 value = Common.localStorage.getBool("de-settings-autoformat-double-space", Common.Utils.isMac); // add period with double-space in MacOs by default
                 Common.Utils.InternalSettings.set("de-settings-autoformat-double-space", value);
                 me.api.asc_SetAutoCorrectDoubleSpaceWithPeriod(value);
+            },
+
+            // "Your name" in File > Info, only with editorConfig.customization.authorOverride.
+            // The saved name only applies while the host still passes the name it replaced,
+            // so a new name from the host wins.
+            getLocalUserName: function() {
+                var value = Common.localStorage.getItem('de-settings-local-username');
+                try {
+                    value = value ? JSON.parse(value) : null;
+                } catch (e) {
+                    value = null;
+                }
+                return (value && value.from === this._state.appUserName && typeof value.to === 'string') ? value.to : null;
+            },
+
+            applyLocalUserName: function(name) {
+                if (!name || name === AscCommon.UserInfoParser.getCurrentName()) return;
+
+                this.appOptions.user.fullname = name;
+                this.api.asc_setLocalUserName(name);
+                appHeader && appHeader.setUserName(AscCommon.UserInfoParser.getParsedName(name));
+                Common.NotificationCenter.trigger('user:localname', name);
+            },
+
+            onLocalUserRename: function(name) {
+                name = name || this._state.appUserName;
+                Common.localStorage.setItem('de-settings-local-username', JSON.stringify({from: this._state.appUserName, to: name}));
+                this.applyLocalUserName(name);
+            },
+
+            onLocalUserNameStorage: function(e) {
+                if (e.originalEvent && e.originalEvent.key === 'de-settings-local-username')
+                    this.applyLocalUserName(this.getLocalUserName() || this._state.appUserName);
             },
 
             showRenameUserDialog: function() {

@@ -12,7 +12,7 @@
             <% } %>
         ><% if (!avatar) { %><%-initials%><% } %></div>
         <div class="user-info-text">
-            <div class="user-name"><%= scope.getEncodedName(parsedName) %></div>
+            <div class="user-name<% if (editable && !scope.viewmode && Common.Utils.InternalSettings.get("comments-author-override")) { %> change-author" style="cursor: pointer;" title="textChangeAuthor<% } %>"><%= scope.getEncodedName(parsedName) %></div>
             <div class="user-date"><%=date%></div>
         </div>
     </div>

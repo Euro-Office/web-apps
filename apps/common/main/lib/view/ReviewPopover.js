@@ -257,6 +257,7 @@ define([
                                 textReply: me.textReply,
                                 textClose: me.textClose,
                                 textComment: me.textComment,
+                                textChangeAuthor: me.textChangeAuthor,
                                 maxCommLength: Asc.c_oAscMaxCellOrCommentLength,
                                 textMentionComment: me.canRequestSendNotify ? (me.mentionShare ? me.textMention : me.textMentionNotify) : me.textEnterComment
                             })
@@ -338,7 +339,9 @@ define([
                                     return;
                             }
 
-                            if (btn.hasClass('btn-edit-common')) {
+                            if (btn.hasClass('change-author')) {
+                                me.fireEvent('comment:changeauthor', [commentId]);
+                            } else if (btn.hasClass('btn-edit-common')) {
                                 var tip = btn.data('bs.tooltip');
                                 if (tip) tip.dontShow = true;
 
@@ -1392,6 +1395,7 @@ define([
         txtReject: 'Reject',
         txtEditTip: 'Edit',
         txtDeleteTip: 'Delete',
-        textComment: 'Comment'
+        textComment: 'Comment',
+        textChangeAuthor: 'Change author…'
     }, Common.Views.ReviewPopover || {}))
 });
