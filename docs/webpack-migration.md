@@ -100,7 +100,7 @@ These took significant debugging to find. Read before touching the build.
 
 ### 1. `PRODUCT_VERSION` must be ≥ 6
 
-EuroOffice rejects editors reporting a version below 6. The fallback in `common.json` is `4.3.0`. Always set `PRODUCT_VERSION` explicitly. The pipeline will fail fast if it's missing or too low.
+EuroOffice rejects editors reporting a version below 6. The fallback in `common.json` (`version`) is stale. Always set `PRODUCT_VERSION` explicitly. The pipeline will fail fast if it's missing or too low.
 
 ### 2. `mangle: false` is not optional
 
