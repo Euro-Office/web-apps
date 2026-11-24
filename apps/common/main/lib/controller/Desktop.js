@@ -102,6 +102,7 @@ define([
                         }
 
                         native.features.singlewindow = obj.singlewindow;
+                        _toggleTitleUser(native.features.singlewindow);
                         Common.NotificationCenter.trigger('desktop:window', {"compositetitle": native.features.singlewindow});
                     }
                 } else
@@ -237,6 +238,18 @@ define([
             style.appendChild(document.createTextNode('.modals-mask{opacity:0 !important;}'));
             document.getElementsByTagName('head')[0].appendChild(style);
         }
+
+        // In a separate editor window the native title bar draws its own user
+        // avatar next to the window buttons, over the right end of the
+        // document title row. Hide the web one there instead of relying on the
+        // native bar to cover it: it doesn't fully, and a slice of a second
+        // avatar shows below the close button. Fill-form and view-mode
+        // windows get the simple native title without an avatar, so keep the
+        // web one in those.
+        var _toggleTitleUser = function (singlewindow) {
+            var hide = !!singlewindow && !config.isFillFormApp && !features.viewmode;
+            $('#box-document-title [data-layout-name=header-user]').toggleClass('hidden', hide);
+        };
 
         var _serializeHeaderButton = function(action, config) {
             return {
@@ -524,6 +537,7 @@ define([
 
                 // $('#box-document-title .hedset')[native.features.singlewindow ? 'hide' : 'show']();
                 !!titlebuttons.home && titlebuttons.home.btn.setVisible(native.features.singlewindow);
+                _toggleTitleUser(native.features.singlewindow);
             }
         }
 
