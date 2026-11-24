@@ -1,0 +1,44 @@
+// SPDX-FileCopyrightText: 2026 Euro-Office contributors
+// SPDX-License-Identifier: AGPL-3.0-only
+
+// Mini toolbar above text selected with the mouse
+#mini-toolbar {
+    position: absolute;
+    z-index: @zindex-dropdown - 20;
+    padding: 3px 4px;
+    background-color: @background-toolbar-ie;
+    background-color: @background-toolbar;
+    border: @scaled-one-px-value-ie solid @border-regular-control-ie;
+    border: @scaled-one-px-value solid @border-regular-control;
+    border-radius: @border-radius-form-control-ie;
+    border-radius: @border-radius-form-control;
+    box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.15s;
+
+    &.has-open-menu {
+        z-index: @zindex-navbar + 3;
+        opacity: 1 !important;
+    }
+
+    .mini-toolbar-row {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+
+        & + .mini-toolbar-row {
+            margin-top: 3px;
+        }
+    }
+
+    .mini-toolbar-cell {
+        display: inline-block;
+
+        & + .mini-toolbar-cell {
+            margin-left: 2px;
+            .rtl & {
+                margin-left: 0;
+                margin-right: 2px;
+            }
+        }
+    }
+}

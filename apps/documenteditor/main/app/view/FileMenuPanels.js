@@ -306,6 +306,9 @@ define([], function () {
                     '<td colspan="2"><div id="fms-chb-smart-selection"></div></td>',
                 '</tr>',
                 '<tr class="edit">',
+                    '<td colspan="2"><div id="fms-chb-mini-toolbar"></div></td>',
+                '</tr>',
+                '<tr class="edit">',
                     '<td colspan="2"><span id="fms-chb-compatible"></span></td>',
                 '</tr>',
                 '<tr class ="editsave divider-group"></tr>',
@@ -559,6 +562,15 @@ define([], function () {
             this.chSmartSelection = new Common.UI.CheckBox({
                 el: $markup.findById('#fms-chb-smart-selection'),
                 labelText: this.textSmartSelection,
+                dataHint: '2',
+                dataHintDirection: 'left',
+                dataHintOffset: 'small'
+            });
+
+            // Mini toolbar above text selected with the mouse (on by default)
+            this.chMiniToolbar = new Common.UI.CheckBox({
+                el: $markup.findById('#fms-chb-mini-toolbar'),
+                labelText: this.strMiniToolbar,
                 dataHint: '2',
                 dataHintDirection: 'left',
                 dataHintOffset: 'small'
@@ -1042,6 +1054,7 @@ define([], function () {
             this.chPaste.setValue(Common.Utils.InternalSettings.get("de-settings-paste-button"));
             //this.chQuickPrint.setValue(Common.Utils.InternalSettings.get("de-settings-quick-print-button"));
             this.chSmartSelection.setValue(Common.Utils.InternalSettings.get("de-settings-smart-selection"));
+            this.chMiniToolbar.setValue(Common.localStorage.getBool("de-settings-mini-toolbar", true));
 
             var data = [];
             for (var t in Common.UI.Themes.map()) {
@@ -1127,6 +1140,7 @@ define([], function () {
 
             Common.localStorage.setItem("de-settings-paste-button", this.chPaste.isChecked() ? 1 : 0);
             Common.localStorage.setItem("de-settings-smart-selection", this.chSmartSelection.isChecked() ? 1 : 0);
+            Common.localStorage.setBool("de-settings-mini-toolbar", this.chMiniToolbar.isChecked());
             //Common.localStorage.setBool("de-settings-quick-print-button", this.chQuickPrint.isChecked());
 
             if (!Common.Utils.isIE && Common.UI.FeaturesManager.canChange('tabBackground', true)) {
@@ -1252,6 +1266,7 @@ define([], function () {
         txtRunMacrosDesc: 'Enable all macros without notification',
         txtStopMacrosDesc: 'Disable all macros without notification',
         strPasteButton: 'Show Paste Options button when content is pasted',
+        strMiniToolbar: 'Show mini toolbar on selection',
         txtProofing: 'Proofing',
         strTheme: 'Theme',
         txtAutoCorrect: 'AutoCorrect options...',
