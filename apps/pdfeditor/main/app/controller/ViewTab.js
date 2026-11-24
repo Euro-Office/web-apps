@@ -333,22 +333,27 @@ define([
             return dark ? {removed: '#ff8a80', added: '#69f0ae'} : {removed: '#c62828', added: '#2e7d32'};
         },
 
+        // true (and a message) if a comparison or search is still running
+        isPdfTextReadingBusy: function() {
+            if (this.api.asc_IsPdfTextReading && this.api.asc_IsPdfTextReading()) {
+                Common.UI.warning({msg: this.view.txtBusy});
+                return true;
+            }
+            return false;
+        },
+
         onComparePdf: function() {
             var me = this, view = this.view;
-            if (!this.api || !this.api.asc_PickPdfFiles) return;
+            if (!this.api || !this.api.asc_PickPdfFiles || this.isPdfTextReadingBusy()) return;
             this.api.asc_PickPdfFiles(false, function(files) {
                 if (!files.length) return;
-                me.api.asc_ComparePdfText(files[0].bytes, function(result) {
+                var started = me.api.asc_ComparePdfText(files[0].bytes, function(result) {
                     if (!result) {
                         Common.UI.warning({msg: view.txtCannotRead});
                         return;
                     }
                     if (!result.openHasText || !result.otherHasText) {
                         Common.UI.warning({msg: result.openHasText ? Common.Utils.String.format(view.txtNoTextOther, files[0].name) : view.txtNoTextOpen});
-                        return;
-                    }
-                    if (result.tooMany) {
-                        Common.UI.warning({msg: view.txtTooManyDifferences});
                         return;
                     }
                     var colors = me.getDiffColors();
@@ -361,17 +366,20 @@ define([
                     });
                     var intro = rows.length ? Common.Utils.String.format(view.txtCompareIntro, files[0].name, result.removed.length, result.added.length)
                                             : Common.Utils.String.format(view.txtCompareSame, files[0].name);
+                    if (result.coarse)
+                        intro += ' ' + view.txtCompareCoarse;
                     me.showResultList(view.capComparePdf, Common.Utils.String.htmlEncode(intro), rows, function(row) {
                         // row.page is the 0-based page of the open file
                         row.page !== undefined && me.api.goToPage(row.page);
                     });
                 });
+                started === false && Common.UI.warning({msg: view.txtBusy});
             });
         },
 
         onSearchPdfs: function() {
             var me = this, view = this.view;
-            if (!this.api || !this.api.asc_PickPdfFiles) return;
+            if (!this.api || !this.api.asc_PickPdfFiles || this.isPdfTextReadingBusy()) return;
             (new Common.Views.TextInputDialog({
                 title: view.capSearchPdfs,
                 label: view.txtSearchFor,
@@ -380,9 +388,10 @@ define([
                 handler: function(result, text) {
                     text = (text || '').trim();
                     if (result != 'ok' || !text) return;
+                    // the files are read one at a time during the search (isLazy), not all before it
                     me.api.asc_PickPdfFiles(true, function(files) {
                         if (!files.length) return;
-                        me.api.asc_SearchInPdfFiles(text, files, function(found) {
+                        var started = me.api.asc_SearchInPdfFiles(text, files, function(found, info) {
                             // page -1: the file can't be read, -2: it has no text (scanned)
                             var rows = found.map(function(r) {
                                 return {label: r.name + (r.page < 0 ? '' : ', ' + Common.Utils.String.format(view.txtPageN, r.page + 1)) + ':',
@@ -390,9 +399,12 @@ define([
                             });
                             var hits = found.filter(function(r) { return r.page >= 0; }).length;
                             var intro = Common.Utils.String.format(view.txtSearchIntro, text, hits, files.length);
+                            if (info && info.capped)
+                                intro += ' ' + Common.Utils.String.format(view.txtSearchCapped, info.maxResults, info.searchedFiles, files.length);
                             me.showResultList(view.capSearchPdfs, Common.Utils.String.htmlEncode(intro), rows);
                         });
-                    });
+                        started === false && Common.UI.warning({msg: view.txtBusy});
+                    }, true);
                 }
             })).show();
         },

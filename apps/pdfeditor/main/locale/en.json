@@ -3083,7 +3083,9 @@
   "PDFE.Views.ViewTab.tipInterfaceTheme": "Interface theme",
   "PDFE.Views.ViewTab.tipRecognize": "Edit text",
   "PDFE.Views.ViewTab.tipSearchPdfs": "Search for a text in several PDFs",
+  "PDFE.Views.ViewTab.txtBusy": "A comparison or search is still running. Please wait until it is finished.",
   "PDFE.Views.ViewTab.txtCannotRead": "The file cannot be read.",
+  "PDFE.Views.ViewTab.txtCompareCoarse": "The files differ a lot, so this list is less exact: it shows the sentences that are only in one of the files, but not sentences that were only moved.",
   "PDFE.Views.ViewTab.txtCompareIntro": "Compared with {0}. Only in this file (−): {1}. Only in the other file (+): {2}. Click a red line to go to its page.",
   "PDFE.Views.ViewTab.txtCompareSame": "No differences in the text compared with {0}.",
   "PDFE.Views.ViewTab.txtNoText": "No text found (maybe a scanned document).",
@@ -3091,7 +3093,7 @@
   "PDFE.Views.ViewTab.txtNoTextOther": "No text found in {0} (maybe a scanned document), so there is nothing to compare.",
   "PDFE.Views.ViewTab.txtOtherPageN": "Other file, page {0}",
   "PDFE.Views.ViewTab.txtPageN": "Page {0}",
+  "PDFE.Views.ViewTab.txtSearchCapped": "The search stopped after {0} hits ({1} of {2} files searched). Please search for a more specific text.",
   "PDFE.Views.ViewTab.txtSearchFor": "Search for (then choose the PDF files)",
-  "PDFE.Views.ViewTab.txtSearchIntro": "Search for \"{0}\". Hits: {1}. Files: {2}.",
-  "PDFE.Views.ViewTab.txtTooManyDifferences": "The files differ too much to list the differences."
+  "PDFE.Views.ViewTab.txtSearchIntro": "Search for \"{0}\". Hits: {1}. Files: {2}."
 }
