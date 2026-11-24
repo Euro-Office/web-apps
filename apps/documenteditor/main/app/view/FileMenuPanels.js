@@ -1968,7 +1968,7 @@ define([], function () {
             this.mode = mode;
             this.inputAuthor.setVisible(mode.isEdit);
             this.btnAddProperty.setVisible(mode.isEdit);
-            this.btnRemovePersonal.setVisible(mode.isEdit);
+            this.btnRemovePersonal.setVisible(this.canRemovePersonal());
             this.tblAuthor.find('.close').toggleClass('hidden', !mode.isEdit);
             this.inputTitle._input.attr('placeholder', mode.isEdit ? this.txtAddText : '');
             this.inputTags._input.attr('placeholder', mode.isEdit ? this.txtAddText : '');
@@ -2153,23 +2153,40 @@ define([], function () {
             this.tblAuthor.find('.close').toggleClass('disabled', this._state._locked);
             this.tblAuthor.toggleClass('disabled', disable);
             this.btnAddProperty.setDisabled(disable);
-            this.btnRemovePersonal.setDisabled(disable);
+            this.btnRemovePersonal.setDisabled(disable || this._state.docProtection.isReviewOnly);
             this.setDisabledCustomProperties(disable);
+        },
+
+        // the button changes the authors of all users, so not for users who may only change their own
+        // tracked changes or comments
+        canRemovePersonal: function() {
+            var mode = this.mode;
+            return !!mode && mode.isEdit && !mode.isReviewOnly && mode.canEditComments !== false &&
+                !mode.canUseReviewPermissions && !mode.canUseCommentPermissions;
         },
 
         onRemovePersonalClick: function() {
             var me = this;
+            if (!me.canRemovePersonal()) return;
+
             Common.UI.warning({
                 title: this.txtRemovePersonal,
-                msg: this.txtRemovePersonalWarning,
+                msg: Common.Utils.String.platformKey('Ctrl+Z', this.txtRemovePersonalWarning),
                 maxwidth: 600,
                 buttons: ['ok', 'cancel'],
                 primary: 'ok',
                 callback: function(btn) {
                     if (btn == 'ok') {
-                        me.api.asc_RemovePersonalInformation('Author');
-                        me.updateFileInfo();
-                        Common.NotificationCenter.trigger('showmessage', {msg: me.txtRemovePersonalDone}, {timeout: 5000, hideCloseTip: true});
+                        if (me.api.asc_RemovePersonalInformation(me.txtRemovePersonalAuthor)) {
+                            me.updateFileInfo();
+                            Common.NotificationCenter.trigger('showmessage', {msg: me.txtRemovePersonalDone}, {timeout: 5000, hideCloseTip: true});
+                        } else {
+                            Common.UI.warning({
+                                title: me.txtRemovePersonal,
+                                msg: me.txtRemovePersonalNotDone,
+                                maxwidth: 600
+                            });
+                        }
                     }
                 }
             });
@@ -2238,8 +2255,10 @@ define([], function () {
             '\u2022 Author names in comments, replies and tracked changes become "Author"<br>' +
             '\u2022 Document properties: author, last modified by, created, title, subject, tags, comments and custom properties<br>' +
             '\u2022 Company, manager and hyperlink base<br><br>' +
-            'Dates of comments and changes are kept. Ctrl+Z undoes this only while the document is open, the saved file no longer has this information.',
-        txtRemovePersonalDone: 'Personal information removed'
+            'Dates of comments and changes are kept. {0} undoes this only while the document is open, the saved file no longer has this information.',
+        txtRemovePersonalDone: 'Personal information removed',
+        txtRemovePersonalNotDone: 'Personal information was not removed because another user is editing a part of the document or the document is protected. Please try again later.',
+        txtRemovePersonalAuthor: 'Author'
 
     }, DE.Views.FileMenuPanels.DocumentInfo || {}));
 
