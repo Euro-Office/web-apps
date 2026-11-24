@@ -1,0 +1,77 @@
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
+
+# Approves Weblate's PRs (https://hosted.weblate.org/projects/euro-office/) and enables auto-merge
+# when they change translations only, so the required checks still gate the merge.
+# Anything else, e.g. the English source, or a push by someone other than Weblate takes the
+# approval and auto-merge back, so the PR waits for a human review.
+name: Auto approve Weblate PRs
+
+on:
+  pull_request_target: # zizmor: ignore[dangerous-triggers] runs no PR code, checks out the base branch only
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: weblate-approve-merge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  approve-merge:
+    if: >-
+      startsWith(github.head_ref, 'weblate-euro-office-') &&
+      github.event.pull_request.user.login == 'hosted-weblate[bot]' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    env:
+      PR_URL: ${{ github.event.pull_request.html_url }}
+      FILES_URL: repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files
+      REVIEWS_URL: repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews
+    steps:
+      - name: Checkout the base branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/scripts
+
+      - name: Check that Weblate pushed and only translations change
+        env:
+          GH_TOKEN: ${{ github.token }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+          SENDER: ${{ github.event.sender.login }}
+        # removed files and old names of renamed files fail the check too
+        run: |
+          set -o pipefail
+          if [[ $SENDER != "$AUTHOR" ]]; then
+            echo "$SENDER pushed to the PR, a human reviews it"
+            exit 1
+          fi
+          gh api --paginate "$FILES_URL" \
+            --jq '.[] | if .status == "removed" then "removed: \(.filename)" else .filename, (.previous_filename // empty) end' |
+            .github/scripts/check-translations.sh --only-translations
+
+      - name: Approve and enable auto-merge
+        env:
+          GH_TOKEN: ${{ secrets.EO_ROBOT_GITHUB_TOKEN }}
+        run: |
+          gh pr review --approve "$PR_URL"
+          gh pr merge --auto --rebase "$PR_URL"
+
+      - name: Take back the approval and auto-merge
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.EO_ROBOT_GITHUB_TOKEN }}
+        run: |
+          gh pr merge --disable-auto "$PR_URL" || true
+          robot=$(gh api user --jq .login)
+          gh api --paginate "$REVIEWS_URL" --jq ".[] | select(.state == \"APPROVED\" and .user.login == \"$robot\") | .id" |
+            while read -r id; do
+              gh api -X PUT "$REVIEWS_URL/$id/dismissals" -f message="Changes need a human review" -f event=DISMISS
+            done
