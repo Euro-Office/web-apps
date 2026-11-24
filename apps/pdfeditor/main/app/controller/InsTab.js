@@ -687,10 +687,28 @@ define([
 
         insertPagesFromPdf: function(pos) {
             var me = this;
-            me.api && me.api.asc_InsertPagesFromFile && me.api.asc_InsertPagesFromFile(pos, function(success) {
-                !success && Common.UI.warning({
-                    msg: me.txtInsertPdfError || 'The pages could not be inserted. The file may be damaged or protected with a password.'
-                });
+            me.api && me.api.asc_InsertPagesFromFile && me.api.asc_InsertPagesFromFile(pos, function(success, result) {
+                if (success) return;
+                var results = Asc.c_oAscPdfInsertPagesResult || {},
+                    msg;
+                switch (result) {
+                    case results.Locked:
+                        msg = me.txtInsertPdfLocked || 'Another user is inserting pages right now. Please try again in a moment.';
+                        break;
+                    case results.TooLarge:
+                        msg = Common.Utils.String.format(me.txtInsertPdfTooLarge || 'The file is too large. Pages can be inserted from files up to {0} MB.',
+                                Math.floor(me.api.asc_GetInsertPagesMaxSize() / (1024 * 1024)));
+                        break;
+                    case results.Password:
+                        msg = me.txtInsertPdfPassword || 'The pages could not be inserted because the file is protected with a password.';
+                        break;
+                    case results.NoFile:
+                        msg = me.txtInsertPdfNoFile || 'The file could not be read.';
+                        break;
+                    default:
+                        msg = me.txtInsertPdfError || 'The pages could not be inserted. The file may be damaged or not a PDF file.';
+                }
+                Common.UI.warning({msg: msg});
             });
         },
 
