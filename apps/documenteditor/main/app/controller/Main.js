@@ -2015,6 +2015,8 @@ define([
                 toolbarController.setMode(this.appOptions);
                 documentHolder.setMode(this.appOptions);
                 leftMenu.setMode(this.appOptions);
+                // mini toolbar above text selected with the mouse
+                app.getController('MiniToolbar').setApi(this.api).setMode(this.appOptions);
 
                 viewport.applyCommonMode();
 
