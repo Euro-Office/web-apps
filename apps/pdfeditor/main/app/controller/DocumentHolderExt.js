@@ -200,6 +200,7 @@ define([], function () {
                 view.mnuNewPageBefore.on('click', _.bind(me.onNewPage, me));
                 view.mnuNewPageAfter.on('click', _.bind(me.onNewPage, me));
                 view.mnuDeletePage.on('click', _.bind(me.onDeletePage, me));
+                view.mnuExtractPages.on('click', _.bind(me.onExtractPages, me));
                 view.mnuRotatePageRight.on('click', _.bind(me.onRotatePage, me, 90));
                 view.mnuRotatePageLeft.on('click', _.bind(me.onRotatePage, me, -90));
                 view.mnuCopyPage.on('click', _.bind(me.onCutCopyPaste, me));
@@ -2470,6 +2471,38 @@ define([], function () {
             this.api && this.api.asc_RemovePage();
 
             Common.NotificationCenter.trigger('edit:complete', this.documentHolder);
+        };
+
+        // Writes the selected pages into a new PDF file and saves it under a new name (the browser downloads it,
+        // the desktop app asks where to save it). The open document is not changed.
+        dh.onExtractPages = function() {
+            var view = this.documentHolder, api = this.api;
+            if (!api || !(this.mode && this.mode.canDownload)) return;
+            var pages = api.getSelectedPages().slice().sort(function(a, b) { return a - b; });
+            if (!pages.length) return;
+            var block = api.asc_GetPagesAsPdfBlock(pages),
+                blocks = Asc.c_oAscPdfPagesAsPdfBlock;
+            if (block !== blocks.None) {
+                var msg = block === blocks.Permissions ? view.txtExtractNotPermitted :
+                          block === blocks.Password ? view.txtExtractPasswordProtected :
+                          block === blocks.Changes ? view.txtExtractNeedReopen : view.txtExtractError;
+                Common.UI.warning({title: view.txtExtractPagesTitle, msg: msg, maxwidth: 600});
+                return;
+            }
+            // page numbers like "2-4, 7"
+            var ranges = [];
+            for (var i = 0; i < pages.length; i++) {
+                var start = pages[i];
+                while (i + 1 < pages.length && pages[i + 1] === pages[i] + 1) i++;
+                ranges.push(start === pages[i] ? '' + (start + 1) : (start + 1) + '-' + (pages[i] + 1));
+            }
+            var doc = this.getApplication().getController('Main').document,
+                title = ((doc && doc.title) || '').replace(/\.[^.]*$/, '') || 'PDF',
+                name = Common.Utils.String.format(view.txtExtractFileName, title, ranges.join(', ')) + '.pdf';
+            if (!api.asc_SavePagesAsPdf(pages, name))
+                Common.UI.warning({title: view.txtExtractPagesTitle, msg: view.txtExtractError});
+
+            Common.NotificationCenter.trigger('edit:complete', view);
         };
 
         dh.onRotatePage = function(angle, item) {
