@@ -108,7 +108,7 @@
                     ...
                 ],
                 customization: {
-                    logo: {
+                    logo: { // needs the server's customization: true
                         image: url,
                         imageDark: url, // logo for dark theme
                         imageLight: url, // logo for light header
@@ -116,15 +116,16 @@
                         url: http://...,
                         visible: true // hide logo if visible=false
                     },
-                    customer: {
-                        name: 'SuperPuper',
-                        address: 'New-York, 125f-25',
-                        mail: 'support@gmail.com',
-                        www: 'www.superpuper.com',
+                    customer: { // provider block of the About dialog, used when at least one value is set; each line is hidden when its value is empty. Needs the server's customization: true
+                        name: 'Example Hosting',
+                        address: 'Example Street 1, Berlin',
+                        mail: 'support@example.com', // plain address, the line is hidden when it is not valid
+                        salesMail: 'sales@example.com', // plain address, the line is hidden when it is not valid
+                        www: 'www.example.com',
                         phone: '1234567890',
                         info: 'Some info',
-                        logo: '',
-                        logoDark: '', // logo for dark theme
+                        logo: '', // used for both themes when logoDark is not set
+                        logoDark: '', // optional, logo for dark theme, logo is used when it is not set
                     },
                     about: true,
                     feedback: {

@@ -34,6 +34,26 @@ define([
     'common/main/lib/component/Scroller'
 ], function () { 'use strict';
 
+    // a customer value is set when it is a non-empty string once trimmed
+    var customerValue = function (value) {
+        return typeof value === 'string' ? value.trim() : '';
+    };
+
+    // a plain name@domain address, so the mailto: link cannot carry extra recipients or headers.
+    // A leading mailto: is dropped; any other rejected value is reported with console.warn
+    var customerEmail = function (value) {
+        var address = customerValue(value).replace(/^mailto:/i, '');
+        if (/^[^\s@<>"'?,;:]+@[^\s@<>"'?,;:]+$/.test(address)) return address;
+        address && console.warn('Customer e-mail fields accept only a plain address. Ignored value:', value);
+        return '';
+    };
+
+    // the logo for the current theme, or the other variant when that one is not set
+    var customerLogo = function (customer) {
+        var isDark = Common.UI.Themes.isDarkTheme();
+        return customerValue(isDark ? customer.logoDark : customer.logo) || customerValue(isDark ? customer.logo : customer.logoDark);
+    };
+
     Common.Views.About = Common.UI.BaseView.extend(_.extend({
         menu: undefined,
         rendered: false,
@@ -74,6 +94,7 @@ define([
 
             !(/\s$/.test(this.txtAddress)) && (this.txtAddress += " ");
             !(/\s$/.test(this.txtMail)) && (this.txtMail += " ");
+            !(/\s$/.test(this.txtSales)) && (this.txtSales += " ");
             !(/\s$/.test(this.txtTel)) && (this.txtTel += " ");
             !(/\s$/.test(this.txtVersion)) && (this.txtVersion += " ");
 
@@ -128,6 +149,12 @@ define([
                     '</tr>',
                     '<tr>',
                         '<td align="center" class="padding-small">',
+                            '<label class="asc-about-desc-name">' + this.txtSales + '</label>',
+                            '<a href="mailto:" id="id-about-company-sales"></a>',
+                        '</td>',
+                    '</tr>',
+                    '<tr>',
+                        '<td align="center" class="padding-small">',
                             '<label class="asc-about-desc-name">' + this.txtTel + '</label>',
                             '<label class="asc-about-desc" id="id-about-company-tel"></label>',
                         '</td>',
@@ -176,6 +203,7 @@ define([
                 this.lblCompanyName = _$l.findById('#id-about-company-name');
                 this.lblCompanyAddress = _$l.findById('#id-about-company-address');
                 this.lblCompanyMail = _$l.findById('#id-about-company-mail');
+                this.lblCompanySales = _$l.findById('#id-about-company-sales');
                 this.lblCompanyUrl = _$l.findById('#id-about-company-url');
                 this.lblCompanyLic = _$l.findById('#id-about-company-lic');
                 this.lblCompanyTel = _$l.findById('#id-about-company-tel');
@@ -201,9 +229,21 @@ define([
             if ( !this.rendered ) {
                 this.licData = data || true;
             } else {
-                if (data && typeof data == 'object' && data.customer && typeof(data.customer)=='object') {
+                var customer = data && typeof data == 'object' && data.customer && typeof(data.customer)=='object' ? data.customer : null,
+                    values = customer ? {
+                        name: customerValue(customer.name),
+                        address: customerValue(customer.address),
+                        mail: customerEmail(customer.mail),
+                        salesMail: customerEmail(customer.salesMail),
+                        phone: customerValue(customer.phone),
+                        www: customerValue(customer.www),
+                        info: customerValue(customer.info),
+                        logo: customerLogo(customer)
+                    } : {};
+
+                // the provider layout replaces the publisher block, so it is used only when it has something to show
+                if (_.some(values)) {
                     this.licData = data;
-                    var customer = data.customer;
 
                     $('#id-about-licensor-logo').addClass('hidden');
                     $('#id-about-licensor-short').removeClass('hidden');
@@ -212,40 +252,44 @@ define([
                     this.cntLicenseeInfo.removeClass('hidden');
                     this.cntLicensorInfo.removeClass('margin-bottom');
 
-                    var value = customer.name;
-                    value && value.length ?
+                    var value = values.name;
+                    value ?
                         this.lblCompanyName.text(value) :
                         this.lblCompanyName.parents('tr').addClass('hidden');
 
-                    value = customer.address;
-                    value && value.length ?
+                    value = values.address;
+                    value ?
                         this.lblCompanyAddress.text(value) :
                         this.lblCompanyAddress.parents('tr').addClass('hidden');
 
-                    (value = customer.mail) && value.length ?
+                    (value = values.mail) ?
                         this.lblCompanyMail.attr('href', "mailto:"+value).text(value) :
                         this.lblCompanyMail.parents('tr').addClass('hidden');
 
-                    value = customer.phone;
-                    value && value.length ?
+                    (value = values.salesMail) ?
+                        this.lblCompanySales.attr('href', "mailto:"+value).text(value) :
+                        this.lblCompanySales.parents('tr').addClass('hidden');
+
+                    value = values.phone;
+                    value ?
                         this.lblCompanyTel.text(value) :
                         this.lblCompanyTel.parents('tr').addClass('hidden');
 
-                    if ((value = customer.www) && value.length) {
+                    if (value = values.www) {
                         var http = !/^https?:\/{2}/i.test(value) ? "http:\/\/" : '';
                         this.lblCompanyUrl.attr('href', http+value).text(value);
                     } else
                         this.lblCompanyUrl.parents('tr').addClass('hidden');
 
-                    (value = customer.info) && value.length ?
+                    (value = values.info) ?
                         this.lblCompanyLic.text(value) :
                         this.lblCompanyLic.parents('tr').addClass('hidden');
 
-                    value = Common.UI.Themes.isDarkTheme() ? (customer.logoDark || customer.logo) : (customer.logo || customer.logoDark);
-                    value && value.length ?
-                        this.divCompanyLogo.html('<img src="'+value+'" style="max-width:216px; max-height: 35px;" />') :
+                    value = values.logo;
+                    value ?
+                        this.divCompanyLogo.empty().append($('<img style="max-width:216px; max-height: 35px;" />').attr('src', value)) :
                         this.divCompanyLogo.parents('tr').addClass('hidden');
-                    value && value.length && Common.NotificationCenter.on('uitheme:changed', this.changeLogo.bind(this));
+                    value && Common.NotificationCenter.on('uitheme:changed', this.changeLogo.bind(this));
                 } else {
                     this.cntLicenseeInfo.addClass('hidden');
                     this.cntLicensorInfo.addClass('margin-bottom');
@@ -256,9 +300,10 @@ define([
         changeLogo: function () {
             if (!this.licData) return;
 
-            var customer = this.licData.customer;
-            if ( customer.logo && customer.logoDark && customer.logo !== customer.logoDark) {
-                this.divCompanyLogo.find('img').attr('src', Common.UI.Themes.isDarkTheme() ? (customer.logoDark || customer.logo) : (customer.logo || customer.logoDark));
+            var img = this.divCompanyLogo.find('img'),
+                value = customerLogo(this.licData.customer);
+            if (value && value !== img.attr('src')) {
+                img.attr('src', value);
             }
         },
 
@@ -287,6 +332,7 @@ define([
         txtLicensee: 'LICENSEE',
         txtAddress: 'address: ',
         txtMail: 'email: ',
+        txtSales: 'sales: ',
         txtTel: 'tel.: ',
         txtEdition: 'Integration Edition '
 
