@@ -405,13 +405,14 @@ define([
         it('Accepts mailto urls with an address', function(){
             assert.deepEqual({ visible: true, url: 'mailto:support@example.com' }, resolve({ url: 'mailto:support@example.com' }, theme));
             assert.deepEqual({ visible: true, url: 'mailto:support@example.com' }, resolve(true, 'mailto:support@example.com'));
-            assert.deepEqual({ visible: true, url: theme }, resolve({ url: 'mailto:' }, theme));
+            assert.deepEqual({ visible: false, url: '' }, resolve({ url: 'mailto:' }, theme));
         });
 
-        it('Ignores other schemes', function(){
-            assert.deepEqual({ visible: true, url: theme }, resolve({ url: 'javascript:alert(1)' }, theme));
-            assert.deepEqual({ visible: true, url: theme }, resolve({ url: 'java\nscript:alert(1)' }, theme));
-            assert.deepEqual({ visible: true, url: theme }, resolve({ url: 'data:text/html,x' }, theme));
+        it('Hides the entry for a url with another scheme', function(){
+            assert.deepEqual({ visible: false, url: '' }, resolve({ url: 'javascript:alert(1)' }, theme));
+            assert.deepEqual({ visible: false, url: '' }, resolve({ url: 'java\nscript:alert(1)' }, theme));
+            assert.deepEqual({ visible: false, url: '' }, resolve({ url: 'data:text/html,x' }, theme));
+            assert.deepEqual({ visible: false, url: '' }, resolve({ url: 123 }, theme));
             assert.deepEqual({ visible: false, url: '' }, resolve(true, 'javascript:alert(1)'));
         });
 
@@ -423,12 +424,12 @@ define([
                 assert.deepEqual({ visible: true, url: 'https://editor.example.com/support' }, resolve({ url: '/support' }, theme));
                 assert.deepEqual({ visible: true, url: 'https://editor.example.com/support' }, resolve({ url: ' /support\n' }, theme));
                 assert.deepEqual({ visible: true, url: 'https://other.example.com/help' }, resolve({ url: '//other.example.com/help' }, theme));
-                assert.deepEqual({ visible: true, url: theme }, resolve({ url: 'help.html' }, theme));
-                assert.deepEqual({ visible: true, url: theme }, resolve({ url: '../help.html' }, theme));
-                assert.deepEqual({ visible: true, url: theme }, resolve({ url: 'www.example.com/support' }, theme));
-                assert.deepEqual({ visible: true, url: theme }, resolve({ url: 'not a url' }, theme));
+                assert.deepEqual({ visible: false, url: '' }, resolve({ url: 'help.html' }, theme));
+                assert.deepEqual({ visible: false, url: '' }, resolve({ url: '../help.html' }, theme));
+                assert.deepEqual({ visible: false, url: '' }, resolve({ url: 'www.example.com/support' }, theme));
+                assert.deepEqual({ visible: false, url: '' }, resolve({ url: 'not a url' }, theme));
                 assert.deepEqual({ visible: true, url: theme }, resolve({ url: '   ' }, theme));
-                assert.deepEqual({ visible: true, url: theme }, resolve({ url: 'javascript:alert(1)' }, theme));
+                assert.deepEqual({ visible: false, url: '' }, resolve({ url: 'javascript:alert(1)' }, theme));
                 assert.deepEqual({ visible: false, url: '' }, resolve(true, '{{SUPPORT_URL}}'));
             } finally {
                 document.head.removeChild(base);
@@ -454,6 +455,7 @@ define([
                 calls = [];
                 resolve({ url: 'https://x.example.com/' }, theme);
                 resolve({ url: '' }, theme);
+                resolve({ url: '   ' }, theme);
                 resolve(true, theme);
                 resolve(undefined, '{{SUPPORT_URL}}');
                 resolve(false, theme);
