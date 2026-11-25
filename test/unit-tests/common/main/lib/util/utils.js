@@ -412,8 +412,27 @@ define([
             assert.deepEqual({ visible: true, url: theme }, resolve({ url: 'javascript:alert(1)' }, theme));
             assert.deepEqual({ visible: true, url: theme }, resolve({ url: 'java\nscript:alert(1)' }, theme));
             assert.deepEqual({ visible: true, url: theme }, resolve({ url: 'data:text/html,x' }, theme));
-            assert.deepEqual({ visible: true, url: theme }, resolve({ url: 'not a url' }, theme));
             assert.deepEqual({ visible: false, url: '' }, resolve(true, 'javascript:alert(1)'));
+        });
+
+        it('Resolves a runtime url starting with / against the editor page', function(){
+            var base = document.createElement('base');
+            base.href = 'https://editor.example.com/web-apps/apps/main/index.html';
+            document.head.appendChild(base);
+            try {
+                assert.deepEqual({ visible: true, url: 'https://editor.example.com/support' }, resolve({ url: '/support' }, theme));
+                assert.deepEqual({ visible: true, url: 'https://editor.example.com/support' }, resolve({ url: ' /support\n' }, theme));
+                assert.deepEqual({ visible: true, url: 'https://other.example.com/help' }, resolve({ url: '//other.example.com/help' }, theme));
+                assert.deepEqual({ visible: true, url: theme }, resolve({ url: 'help.html' }, theme));
+                assert.deepEqual({ visible: true, url: theme }, resolve({ url: '../help.html' }, theme));
+                assert.deepEqual({ visible: true, url: theme }, resolve({ url: 'www.example.com/support' }, theme));
+                assert.deepEqual({ visible: true, url: theme }, resolve({ url: 'not a url' }, theme));
+                assert.deepEqual({ visible: true, url: theme }, resolve({ url: '   ' }, theme));
+                assert.deepEqual({ visible: true, url: theme }, resolve({ url: 'javascript:alert(1)' }, theme));
+                assert.deepEqual({ visible: false, url: '' }, resolve(true, '{{SUPPORT_URL}}'));
+            } finally {
+                document.head.removeChild(base);
+            }
         });
 
         it('Hides when no url resolves', function(){

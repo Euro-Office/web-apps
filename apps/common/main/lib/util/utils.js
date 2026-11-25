@@ -961,12 +961,14 @@ define([], function () {
     // value:    false, true, undefined or { visible, url }
     // themeUrl: the build-time theme value used when value has no valid url
     // Returns { visible, url }. Only http(s) and mailto urls are accepted, and the entry is hidden when no url resolves.
+    // An integrator url without a scheme must start with '/' and is resolved against the editor page, as window.open does,
+    // so a bare host such as 'www.example.com' is rejected. The theme value must be absolute.
     // A rejected integrator url is reported with console.warn; the theme value never is.
     Common.Utils.resolveCustomizationExternalLink = function (value, themeUrl) {
-        var parseUrl = function (url) {
-            if (typeof url !== 'string') return '';
+        var parseUrl = function (url, base) {
+            if (typeof url !== 'string' || !url.trim()) return '';
             try {
-                var parsed = new URL(url);
+                var parsed = base && url.trim().charAt(0) === '/' ? new URL(url, base) : new URL(url);
                 if (parsed.protocol === 'http:' || parsed.protocol === 'https:') return parsed.href;
                 if (parsed.protocol === 'mailto:' && parsed.pathname) return parsed.href;
                 return '';
@@ -978,7 +980,7 @@ define([], function () {
         if (value === false || value && value.visible === false)
             return { visible: false, url: '' };
 
-        var url = value && parseUrl(value.url);
+        var url = value && parseUrl(value.url, document.baseURI);
         if (!url && value && value.url)
             console.warn('Customization links accept only http(s) and mailto urls. Ignored url:', value.url);
         url = url || parseUrl(themeUrl);
