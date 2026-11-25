@@ -968,7 +968,8 @@ define([], function () {
         var parseUrl = function (url, base) {
             if (typeof url !== 'string' || !url.trim()) return '';
             try {
-                var parsed = base && url.trim().charAt(0) === '/' ? new URL(url, base) : new URL(url);
+                // leading control characters and spaces are skipped as the URL parser does, so the '/' check matches what it parses
+                var parsed = base && /^[\u0000-\u0020]*\//.test(url) ? new URL(url, base) : new URL(url);
                 if (parsed.protocol === 'http:' || parsed.protocol === 'https:') return parsed.href;
                 if (parsed.protocol === 'mailto:' && parsed.pathname) return parsed.href;
                 return '';

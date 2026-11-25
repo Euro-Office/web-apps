@@ -129,7 +129,7 @@
                     about: true,
                     feedback: {
                         visible: false, // hide the button, hidden by default
-                        url: http://... // opened in a new tab: http(s), mailto, or a path starting with / on the editor's host. If empty, the theme support url is used; if invalid, the entry is hidden
+                        url: http://... // opened in a new tab: http(s), mailto, or a url starting with / (resolved against the editor page). If empty, the theme support url is used; if invalid, the entry is hidden
                     },
                     goback: {
                         url: 'http://...',
@@ -279,7 +279,7 @@
                     },
                     suggestFeature: {
                         visible: false, // hide "Suggest a Feature", also its link in the Solver dialog of the spreadsheet editor
-                        url: http://... // opened in a new tab: http(s), mailto, or a path starting with / on the editor's host. If empty, the theme suggest url is used; if invalid, the entry is hidden
+                        url: http://... // opened in a new tab: http(s), mailto, or a url starting with / (resolved against the editor page). If empty, the theme suggest url is used; if invalid, the entry is hidden
                     },
                     suggestFeature: true/false // shorthand for { visible: true/false }
                 },

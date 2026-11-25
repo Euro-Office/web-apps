@@ -423,6 +423,8 @@ define([
             try {
                 assert.deepEqual({ visible: true, url: 'https://editor.example.com/support' }, resolve({ url: '/support' }, theme));
                 assert.deepEqual({ visible: true, url: 'https://editor.example.com/support' }, resolve({ url: ' /support\n' }, theme));
+                assert.deepEqual({ visible: true, url: 'https://editor.example.com/support' }, resolve({ url: '\t/support' }, theme));
+                assert.deepEqual({ visible: false, url: '' }, resolve({ url: '\u00A0/support' }, theme));
                 assert.deepEqual({ visible: true, url: 'https://other.example.com/help' }, resolve({ url: '//other.example.com/help' }, theme));
                 assert.deepEqual({ visible: false, url: '' }, resolve({ url: 'help.html' }, theme));
                 assert.deepEqual({ visible: false, url: '' }, resolve({ url: '../help.html' }, theme));
