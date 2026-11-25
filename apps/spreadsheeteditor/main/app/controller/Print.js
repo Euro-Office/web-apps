@@ -346,9 +346,10 @@ define([
 
             // A sheet without a first page number keeps none until the spinner is edited: the 1 the panel
             // shows is only a default. Setting it would start the page numbers of the sheet again at 1, where
-            // a workbook from ODS numbers its pages on from the sheet before.
-            var firstPageSet = this._originalPageSettings && this._originalPageSettings.asc_getFirstPageNumber() !== null;
-            if (panel.spnFirstPage && (firstPageChanged || firstPageSet || opt.asc_getFirstPageNumber() !== null)) {
+            // a workbook from ODS numbers its pages on from the sheet before. A first page number of 0 counts
+            // as none, as in sdkjs (the panel shows it as 1 too).
+            var firstPageSet = !!(this._originalPageSettings && this._originalPageSettings.asc_getFirstPageNumber());
+            if (panel.spnFirstPage && (firstPageChanged || firstPageSet || !!opt.asc_getFirstPageNumber())) {
                 opt.asc_setFirstPageNumber(panel.spnFirstPage.getNumberValue());
             }
 
