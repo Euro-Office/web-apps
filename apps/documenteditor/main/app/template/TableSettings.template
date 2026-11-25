@@ -71,6 +71,8 @@
             <div id="table-button-border-none" style="display: inline-block;"></div>
             <div id="table-button-border-inner" style="display: inline-block;"></div>
             <div id="table-button-border-outer" style="display: inline-block;"></div>
+            <div id="table-button-border-diagdown" style="display: inline-block;"></div>
+            <div id="table-button-border-diagup" style="display: inline-block;"></div>
         </td>
     </tr>
     <tr>

@@ -988,6 +988,24 @@ define([
             this.AlignContainer = $('#tableadv-panel-align');
             this.DistanceContainer = $('#tableadv-panel-distance');
 
+            // diagonals of the selected cells (w:tl2br, w:tr2bl), pressed = the cells have it
+            this.btnDiagDown = new Common.UI.Button({
+                parentEl: $('#tableadv-button-diag-down'),
+                cls: 'btn-toolbar borders--small',
+                iconCls: 'toolbar__icon btn-border-diagdown',
+                hint: this.tipDiagDown,
+                enableToggle: true
+            });
+            this.btnDiagDown.on('toggle', _.bind(function() { this._diagChanged = true; }, this));
+            this.btnDiagUp = new Common.UI.Button({
+                parentEl: $('#tableadv-button-diag-up'),
+                cls: 'btn-toolbar borders--small',
+                iconCls: 'toolbar__icon btn-border-diagup',
+                hint: this.tipDiagUp,
+                enableToggle: true
+            });
+            this.btnDiagUp.on('toggle', _.bind(function() { this._diagChanged = true; }, this));
+
             this.BordersContainer = $('#tableadv-panel-borders');
             this.BordersSpacingContainer = $('#tableadv-panel-borders-spacing');
             this.CellBackContainer = $('#tableadv-panel-cell-back');
@@ -1000,7 +1018,7 @@ define([
             return this.btnsCategory.concat([
                 this.chWidth, this.nfWidth, this.cmbUnit, this.chAutofit, this.spnTableMarginTop, this.spnTableMarginLeft, this.spnTableMarginBottom, this.spnTableMarginRight, this.chAllowSpacing, this.nfSpacing, // 0 tab
                 this.chPrefWidth, this.nfPrefWidth, this.cmbPrefWidthUnit, this.chCellMargins, this.spnMarginTop, this.spnMarginLeft, this.spnMarginBottom, this.spnMarginRight, this.chWrapText, // 1 tab
-                this.cmbBorderSize, this.btnBorderColor]).concat(this._btnsBorderPosition).concat(this._btnsTableBorderPosition).concat([this.btnBackColor, this.btnTableBackColor,
+                this.cmbBorderSize, this.btnBorderColor]).concat(this._btnsBorderPosition).concat(this._btnsTableBorderPosition).concat([this.btnDiagDown, this.btnDiagUp, this.btnBackColor, this.btnTableBackColor,
                 this.radioHAlign, this.cmbHAlign , this.radioHPosition, this.cmbHRelative, this.spnX, this.cmbHPosition,
                 this.radioVAlign, this.cmbVAlign , this.radioVPosition, this.cmbVRelative, this.spnY, this.cmbVPosition, this.chMove, this.chOverlap, // 3 tab
                 this.btnWrapNone, this.btnWrapParallel, this.btnAlignLeft, this.btnAlignCenter, this.btnAlignRight, this.spnIndentLeft, this.spnDistanceTop, this.spnDistanceLeft, this.spnDistanceBottom, this.spnDistanceRight, // 4 tab
@@ -1154,6 +1172,21 @@ define([
                 this._changedProps.put_CellBorders(this.CellBorders);
             } else if (this.ChangedCellBorders !== undefined) {
                 this._changedProps.put_CellBorders(this.ChangedCellBorders);
+            }
+
+            if (this._diagChanged) {
+                // the diagonals get the chosen width and colour; they apply to the selected cells or the current cell
+                var cellBorders = this._changedProps.get_CellBorders();
+                if (!cellBorders) {
+                    cellBorders = new Asc.CBorders();
+                    this._changedProps.put_CellBorders(cellBorders);
+                }
+                var diagDown = new Asc.asc_CTextBorder(),
+                    diagUp = new Asc.asc_CTextBorder();
+                this._UpdateBorderStyle(diagDown, this.btnDiagDown.pressed);
+                this._UpdateBorderStyle(diagUp, this.btnDiagUp.pressed);
+                cellBorders.put_DiagonalDown(diagDown);
+                cellBorders.put_DiagonalUp(diagUp);
             }
 
             if (this.isAltTitleChanged)
@@ -1356,6 +1389,12 @@ define([
                 this.TableBorders = new Asc.CBorders(props.get_TableBorders());
 
                 this.CellBorders = new Asc.CBorders(props.get_CellBorders());
+
+                var diagDown = this.CellBorders.get_DiagonalDown ? this.CellBorders.get_DiagonalDown() : null,
+                    diagUp = this.CellBorders.get_DiagonalUp ? this.CellBorders.get_DiagonalUp() : null;
+                this.btnDiagDown.toggle(!!(diagDown && diagDown.get_Value() === 1), true);
+                this.btnDiagUp.toggle(!!(diagUp && diagUp.get_Value() === 1), true);
+                this._diagChanged = false;
 
                 this._UpdateBordersNoSpacing_();
                 this._UpdateBordersSpacing_();
@@ -2139,6 +2178,9 @@ define([
         textCellProps: 'Cell',
         tipAll:             'Set Outer Border and All Inner Lines',
         tipNone:            'Set No Borders',
+        textDiagonals:      'Diagonals (selected cells)',
+        tipDiagDown:        'Diagonal from top left to bottom right',
+        tipDiagUp:          'Diagonal from bottom left to top right',
         tipInner:           'Set Inner Lines Only',
         tipOuter:           'Set Outer Border Only',
         tipCellAll: 'Set Borders for Inner Cells Only',

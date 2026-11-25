@@ -325,7 +325,10 @@ define([
                 ['cm', 'toolbar__icon btn-border-inside', 'table-button-border-inner',          this.tipInner,      'top'],
                 ['lrtb', 'toolbar__icon btn-border-out', 'table-button-border-outer',           this.tipOuter,      'top'],
                 ['lrtbcm', 'toolbar__icon btn-border-all', 'table-button-border-all',           this.tipAll,        'top'],
-                ['', 'toolbar__icon btn-border-no', 'table-button-border-none',                 this.tipNone,       'top']
+                ['', 'toolbar__icon btn-border-no', 'table-button-border-none',                 this.tipNone,       'top'],
+                // diagonals of the cells (w:tl2br, w:tr2bl): a click sets the diagonal, or removes it if the cells have it
+                ['d', 'toolbar__icon btn-border-diagdown', 'table-button-border-diagdown',      this.tipDiagDown,   'top'],
+                ['u', 'toolbar__icon btn-border-diagup', 'table-button-border-diagup',          this.tipDiagUp,     'top']
             ];
 
             this._btnsBorderPosition = [];
@@ -528,6 +531,12 @@ define([
                 this._originalProps = new Asc.CTableProp(props);
                 this._originalProps.put_CellSelect(true);
 
+                var cellBorders = props.get_CellBorders(),
+                    diagDown = cellBorders && cellBorders.get_DiagonalDown ? cellBorders.get_DiagonalDown() : null,
+                    diagUp = cellBorders && cellBorders.get_DiagonalUp ? cellBorders.get_DiagonalUp() : null;
+                this._state.DiagDown = !!(diagDown && diagDown.get_Value() === 1);
+                this._state.DiagUp = !!(diagUp && diagUp.get_Value() === 1);
+
                 var value = props.get_ColumnWidth();
                 if ((this._state.Width === undefined || value === undefined)&&(this._state.Width!==value) ||
 					Math.abs(this._state.Width-value)>0.001) {
@@ -657,7 +666,24 @@ define([
             this.CellBorders = new Asc.CBorders();
             var updateBorders = this.CellBorders;
 
+            if (border === 'd' || border === 'u') {
+                // a diagonal: set it, or remove it if all the selected cells have it
+                var isDown = (border === 'd'),
+                    diagonal = new Asc.asc_CTextBorder();
+                this._UpdateBorderStyle(diagonal, !(isDown ? this._state.DiagDown : this._state.DiagUp));
+                isDown ? updateBorders.put_DiagonalDown(diagonal) : updateBorders.put_DiagonalUp(diagonal);
+                return;
+            }
+
             var visible = (border != '');
+            if (!visible) {
+                // "no borders" also removes the diagonals
+                var noDown = new Asc.asc_CTextBorder(), noUp = new Asc.asc_CTextBorder();
+                this._UpdateBorderStyle(noDown, false);
+                this._UpdateBorderStyle(noUp, false);
+                updateBorders.put_DiagonalDown(noDown);
+                updateBorders.put_DiagonalUp(noUp);
+            }
 
             if (border.indexOf('l') > -1 || !visible) {
                 if (updateBorders.get_Left()===null || updateBorders.get_Left()===undefined)
