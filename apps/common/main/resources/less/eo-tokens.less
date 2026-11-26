@@ -1,0 +1,66 @@
+// SPDX-FileCopyrightText: 2026 Euro-Office contributors
+// SPDX-License-Identifier: AGPL-3.0-only
+//
+// Euro-Office design tokens. Frame components (header, tabs, side panels,
+// status bar) style themselves from these, not from literal values.
+
+// Accent tokens derive from the per-editor --eo-app-color and its variants
+// (the file type icon colour, set on body by the theme). Declared on body, where the app colour
+// is set: on :root they would resolve before it exists.
+body {
+    --eo-accent: var(--eo-app-color, #3b6fd4);
+    --eo-accent-soft: var(--eo-app-color-soft, rgba(59, 111, 212, .12));
+    // filled backgrounds behind white text, at least 4.5:1 for every app colour
+    --eo-accent-strong: var(--eo-accent);
+}
+
+:root {
+    --eo-focus-ring-color: #3b6fd4;
+    --eo-focus-ring: 0 0 0 2px var(--eo-focus-ring-color);
+
+    --eo-surface: #ffffff;
+    --eo-surface-raised: #ffffff;
+    --eo-surface-sunken: #f3f3f3;
+    --eo-border-subtle: rgba(0, 0, 0, .08);
+    --eo-text-secondary: rgba(0, 0, 0, .62);
+    --eo-hover: rgba(0, 0, 0, .06);
+    --eo-active: rgba(0, 0, 0, .10);
+    --eo-shadow-raised: 0 1px 2px rgba(0, 0, 0, .06), 0 2px 8px rgba(0, 0, 0, .06);
+
+    --eo-target-min: 24px;
+    --eo-radius-sm: 4px;
+    --eo-radius-md: 8px;
+    --eo-radius-lg: 12px;
+    --eo-radius-pill: 999px;
+
+    --eo-space-1: 4px;
+    --eo-space-2: 8px;
+    --eo-space-3: 12px;
+    --eo-space-4: 16px;
+    --eo-space-5: 24px;
+
+    // native UI font stack, like Nextcloud; customization.font still overrides it
+    // same stack as Nextcloud's --font-face (apps/theming DefaultTheme.php)
+    --eo-font-family: system-ui, -apple-system, "Segoe UI", Roboto, Oxygen-Sans, Cantarell, Ubuntu, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+    --eo-font-size-sm: 11px;
+    --eo-font-size-md: 12px;
+    --eo-font-size-lg: 14px;
+
+    .theme-type-dark {
+        // lighter app colour, readable on dark surfaces
+        --eo-accent: var(--eo-app-color-light, #6b9bf2);
+        --eo-accent-soft: var(--eo-app-color-soft-dark, rgba(107, 155, 242, .18));
+        --eo-accent-strong: var(--eo-app-color, #3b6fd4);
+        --eo-focus-ring-color: #8ab4ff;
+
+        --eo-surface: #2a2a2a;
+        --eo-surface-raised: #333333;
+        --eo-surface-sunken: #222222;
+        --eo-border-subtle: rgba(255, 255, 255, .10);
+        --eo-text-secondary: rgba(255, 255, 255, .70);
+        --eo-hover: rgba(255, 255, 255, .08);
+        --eo-active: rgba(255, 255, 255, .14);
+        --eo-shadow-raised: 0 1px 2px rgba(0, 0, 0, .4), 0 2px 8px rgba(0, 0, 0, .3);
+    }
+}
