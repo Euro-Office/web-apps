@@ -315,6 +315,7 @@ define([
                 this.btnDocInfo = new Common.UI.Button({
                     cls         : 'btn-toolbar no-caret',
                     caption     : this.txtWordCount,
+                    hint        : this.tipWordCount,
                     iconCls: 'toolbar__icon btn-word-count',
                     hintAnchor  : 'top-left',
                     dataHint    : '0',
@@ -550,6 +551,7 @@ define([
             tipSelectTool       : 'Select tool',
             tipHandTool         : 'Hand tool',
             txtWordCount: 'Word count',
+            tipWordCount: 'Number of pages, paragraphs, words and characters',
             txtPages: 'Pages',
             txtWords: 'Words',
             txtParagraphs: 'Paragraphs',

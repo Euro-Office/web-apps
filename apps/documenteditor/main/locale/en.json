@@ -3796,6 +3796,7 @@
   "DE.Views.Statusbar.txtSpaces": "Symbols with spaces",
   "DE.Views.Statusbar.txtSymbols": "Symbols",
   "DE.Views.Statusbar.txtWordCount": "Word count",
+  "DE.Views.Statusbar.tipWordCount": "Number of pages, paragraphs, words and characters",
   "DE.Views.Statusbar.txtWords": "Words",
   "DE.Views.StyleTitleDialog.textHeader": "Create new style",
   "DE.Views.StyleTitleDialog.textNextStyle": "Next paragraph style",
