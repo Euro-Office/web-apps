@@ -2562,7 +2562,7 @@
   "PE.Views.DocumentHolder.txtTop": "Sus",
   "PE.Views.DocumentHolder.txtUnderbar": "Bară dedesubt textului",
   "PE.Views.DocumentHolder.txtUngroup": "Anularea grupării",
-  "PE.Views.DocumentHolder.txtWarnUrl": "Accesarea acestui link poate dăuna dispozitivului sau datelor dvs. Pentru a vă proteja calculatorul, evitați să dați click pe linkuri de la surse necunoscute. Această locație poate fi nesigură:<br><br>{0}<br><br>Sigur doriti sa continuati? ",
+  "PE.Views.DocumentHolder.txtWarnUrl": "Accesarea acestui link poate dăuna dispozitivului sau datelor dvs. Pentru a vă proteja calculatorul, evitați să dați click pe linkuri de la surse necunoscute. Această locație poate fi nesigură:<br><br>{0}<br><br>Sigur doriti sa continuati?",
   "PE.Views.DocumentHolder.unicodeText": "Unicode",
   "PE.Views.DocumentHolder.vertAlignText": "Aliniere verticală",
   "PE.Views.DocumentPreview.goToSlideText": "Salt la dispozitivul",
@@ -3565,5 +3565,16 @@
   "PE.Views.ViewTab.tipResumeMacro": "Reluare înregistrare",
   "PE.Views.ViewTab.tipSelectTool": "Instrumentul Selectare",
   "PE.Views.ViewTab.tipSlideMaster": "Coordonator de diapozitive",
-  "PE.Views.ViewTab.tipStopMacro": "Oprire înregistrare"
+  "PE.Views.ViewTab.tipStopMacro": "Oprire înregistrare",
+  "Common.Utils.AssistantInsert.txtInsertFailed": "Editorul este ocupat, astfel încât rezultatul Asistentului nu a putut fi inserat. Încercați să îl inserați din nou.",
+  "Common.Views.SmartPickerMenu.txtAnyLink": "Orice legătură",
+  "Common.Views.SmartPickerMenu.txtNoResults": "Nu s-a găsit nicio sugestie",
+  "Common.Views.SmartPickerMenu.txtOpenFailed": "Selectorul inteligent nu s-a putut deschide.",
+  "PE.Controllers.Main.errorFileNotAssembled": "Acest fișier este deschis dintr-o copie de rezervă de pe server și nu este salvat în spațiul de stocare.<br>Folosiți opțiunea 'Salvare ca...' pentru a-l salva pe o unitate.",
+  "PE.Controllers.Main.errorForcedViewMode": "Acest fișier este deschis în modul de vizualizare.<br>Fișierul este blocat pentru editare sau drepturile dumneavoastră de acces nu permit editarea.",
+  "PE.Controllers.Toolbar.helpGifPlayback": "Dați viață slide-urilor redând animații GIF în modul prezentare.",
+  "PE.Controllers.Toolbar.helpGifPlaybackHeader": "Redarea GIF-urilor în modul prezentare",
+  "PE.Views.DocumentHolder.txtNcAssistant": "Întreabă Asistentul Nextcloud",
+  "PE.Views.Toolbar.capSmartPicker": "Selector inteligent",
+  "PE.Views.Toolbar.tipSmartPicker": "Selector inteligent"
 }

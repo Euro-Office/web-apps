@@ -41,7 +41,7 @@
   "PE.ApplicationController.titleLicenseNotActive": "Licența nu este activă",
   "PE.ApplicationController.txtClose": "Închidere",
   "PE.ApplicationController.txtNo": "Nu",
-  "PE.ApplicationController.txtOpenWarning": "Accesarea acestui link poate dăuna dispozitivului sau datelor dvs. Pentru a vă proteja calculatorul, evitați să dați click pe linkuri de la surse necunoscute. Această locație poate fi nesigură:<br>%1<br>Sigur doriti sa continuati? ",
+  "PE.ApplicationController.txtOpenWarning": "Accesarea acestui link poate dăuna dispozitivului sau datelor dvs. Pentru a vă proteja calculatorul, evitați să dați click pe linkuri de la surse necunoscute. Această locație poate fi nesigură:<br>%1<br>Sigur doriti sa continuati?",
   "PE.ApplicationController.txtPressLink": "Faceți clic pe link pentru a-l deschide",
   "PE.ApplicationController.txtYes": "Da",
   "PE.ApplicationController.unknownErrorText": "Eroare necunoscută.",
@@ -55,5 +55,7 @@
   "PE.ApplicationView.txtFullScreen": "Ecran complet",
   "PE.ApplicationView.txtPrint": "Imprimare",
   "PE.ApplicationView.txtSearch": "Căutare",
-  "PE.ApplicationView.txtShare": "Partajează"
+  "PE.ApplicationView.txtShare": "Partajează",
+  "PE.ApplicationController.errorFileNotAssembled": "Acest fișier este deschis dintr-o copie de rezervă de pe server și nu este salvat în spațiul de stocare.<br>Folosiți opțiunea 'Salvare ca...' pentru a-l salva pe o unitate.",
+  "PE.ApplicationController.errorForcedViewMode": "Acest fișier este deschis în modul de vizualizare.<br>Fișierul este blocat pentru editare sau drepturile dumneavoastră de acces nu permit editarea."
 }

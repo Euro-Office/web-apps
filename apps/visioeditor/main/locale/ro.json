@@ -337,7 +337,7 @@
   "VE.Views.DocumentHolder.guestText": "Invitat",
   "VE.Views.DocumentHolder.textCopy": "Copiere",
   "VE.Views.DocumentHolder.txtPressLink": "Apăsați {0} și faceți clic pe link",
-  "VE.Views.DocumentHolder.txtWarnUrl": "Accesarea acestui link poate dăuna dispozitivului sau datelor dvs. Pentru a vă proteja calculatorul, evitați să dați click pe linkuri de la surse necunoscute. Această locație poate fi nesigură:<br><br>{0}<br><br>Sigur doriti sa continuati? ",
+  "VE.Views.DocumentHolder.txtWarnUrl": "Accesarea acestui link poate dăuna dispozitivului și datelor dumneavoastră. Pentru a vă proteja computerul, accesați doar linkuri din surse de încredere. Această locație poate fi nesigură:<br><br>{0}<br><br>Sigur doriți să continuați?",
   "VE.Views.FileMenu.ariaFileMenu": "Meniul Fișier",
   "VE.Views.FileMenu.btnBackCaption": "Deschidere locație fișier",
   "VE.Views.FileMenu.btnCloseEditor": "Închidere fișier",
@@ -477,5 +477,7 @@
   "VE.Views.ViewTab.textZoom": "Zoom",
   "VE.Views.ViewTab.tipFitPage": "Portivire la pagina",
   "VE.Views.ViewTab.tipFitWidth": "Potrivire lățime",
-  "VE.Views.ViewTab.tipInterfaceTheme": "Tema de interfață"
+  "VE.Views.ViewTab.tipInterfaceTheme": "Tema de interfață",
+  "VE.Controllers.Main.errorFileNotAssembled": "Acest fișier este deschis dintr-o copie de rezervă de pe server și nu este salvat în spațiul de stocare.<br>Folosiți opțiunea 'Salvare ca...' pentru a-l salva pe o unitate.",
+  "VE.Controllers.Main.errorForcedViewMode": "Acest fișier este deschis în modul de vizualizare.<br>Fișierul este blocat pentru editare sau drepturile dumneavoastră de acces nu permit editarea."
 }
