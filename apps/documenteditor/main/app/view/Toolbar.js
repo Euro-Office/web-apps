@@ -1735,8 +1735,19 @@ define([
                         dataHintOffset: 'small'
                     });
 
+                    me.btnSelectionPane = new Common.UI.Button({
+                        cls: 'btn-toolbar x-huge icon-top',
+                        iconCls: 'toolbar__icon btn-select',
+                        lock: [_set.lostConnect, _set.previewReviewMode, _set.viewFormMode, _set.disableOnStart, _set.docLockView, _set.docLockForms, _set.viewMode],
+                        caption: me.capSelectionPane,
+                        action: 'selection-pane',
+                        dataHint: '1',
+                        dataHintDirection: 'bottom',
+                        dataHintOffset: 'small'
+                    });
+
                     me.toolbarControls.push(me.btnImgAlign,
-                        me.btnImgGroup, me.btnImgForward, me.btnImgBackward, me.btnImgWrapping, me.btnWatermark, me.btnPageColor, me.btnShapesMerge);
+                        me.btnImgGroup, me.btnImgForward, me.btnImgBackward, me.btnImgWrapping, me.btnWatermark, me.btnPageColor, me.btnShapesMerge, me.btnSelectionPane);
 
                     //
                     // Menus
@@ -2243,6 +2254,7 @@ define([
                 _injectComponent('#slot-img-movebkwd', this.btnImgBackward);
                 _injectComponent('#slot-img-wrapping', this.btnImgWrapping);
                 _injectComponent('#slot-shapes-merge', this.btnShapesMerge);
+                _injectComponent('#slot-img-selection-pane', this.btnSelectionPane);
                 _injectComponent('#slot-btn-watermark', this.btnWatermark);
                 _injectComponent('#slot-btn-hyphenation', this.btnHyphenation);
                 _injectComponent('#slot-spin-ind-left', this.numIndentsLeft);
@@ -2412,6 +2424,7 @@ define([
                     );
 
                     me.btnImgBackward.updateHint(me.tipSendBackward);
+                    me.btnSelectionPane.updateHint(me.tipSelectionPane);
                     me.btnImgBackward.setMenu(new Common.UI.Menu({
                         items: [{
                                 caption : _holder_view.textArrangeBack,

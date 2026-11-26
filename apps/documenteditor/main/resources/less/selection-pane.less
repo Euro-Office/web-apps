@@ -1,0 +1,94 @@
+// SPDX-FileCopyrightText: 2026 Euro-Office contributors
+// SPDX-License-Identifier: AGPL-3.0-only
+
+#selectionpane-box {
+    display: table;
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    #selectionpane-header {
+        position: absolute;
+        height: 45px;
+        left: 0;
+        top: 0;
+        right: 0;
+        padding: 12px;
+        overflow: hidden;
+        border-bottom: @scaled-one-px-value-ie solid @border-toolbar-ie;
+        border-bottom: @scaled-one-px-value solid @border-toolbar;
+
+        label {
+            .font-size-medium();
+            .font-weight-bold();
+            margin-top: 2px;
+        }
+    }
+
+    .selectionpane-content {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 100%;
+        padding: 45px 15px 12px 15px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #selectionpane-page {
+        .font-size-normal();
+        color: @text-secondary-ie;
+        color: @text-secondary;
+        padding: 12px 0 8px 0;
+    }
+
+    #selectionpane-list {
+        flex: 1 1 auto;
+        min-height: 0;
+        position: relative;
+
+        .selectionpane-item {
+            padding: 4px 8px;
+        }
+
+        .selectionpane-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .selectionpane-info {
+            .font-size-small();
+            color: @text-secondary-ie;
+            color: @text-secondary;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .item.selected .selectionpane-info {
+            color: inherit;
+        }
+
+        &.keyboard-nav .listview > .item:hover:not(.selected) {
+            background-color: @background-normal-ie;
+            background-color: @background-normal;
+            border-color: @border-regular-control-ie;
+            border-color: @border-regular-control;
+            border-top-color: transparent;
+        }
+    }
+
+    #selectionpane-order {
+        display: flex;
+        gap: 4px;
+        padding-top: 8px;
+    }
+
+    #selectionpane-order-hint {
+        .font-size-small();
+        color: @text-secondary-ie;
+        color: @text-secondary;
+        padding-top: 4px;
+    }
+}

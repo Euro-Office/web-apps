@@ -71,6 +71,7 @@ define([
 
                 toolbar.btnImgForward.on('click', me.onClickMenuForward.bind(me, 'forward'));
                 toolbar.btnImgBackward.on('click', me.onClickMenuForward.bind(me, 'backward'));
+                toolbar.btnSelectionPane.on('click', me.onClickSelectionPane.bind(me));
 
                 toolbar.btnShapesMerge.menu.on('item:click', me.onClickMenuShapesMerge.bind(me));
                 toolbar.btnShapesMerge.menu.on('show:before', me.onBeforeShapesMerge.bind(me));
@@ -282,6 +283,14 @@ define([
 
                 this.api.ImgApply(props);
                 this.toolbar.fireEvent('editcomplete', this.toolbar);
+            },
+
+            onClickSelectionPane: function () {
+                var leftMenu = DE.getController('LeftMenu').leftMenu;
+                if (leftMenu.btnSelectionPane.pressed)
+                    Common.NotificationCenter.trigger('leftmenu:change', 'hide');
+                else
+                    leftMenu.showMenu('selectionpane');
             },
 
             onNumSpacingBeforeChange: function(field, newValue, oldValue, eOpts){

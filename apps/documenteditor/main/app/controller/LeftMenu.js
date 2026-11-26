@@ -178,6 +178,7 @@ define([
             if (this.mode.canUseHistory)
                 this.getApplication().getController('Common.Controllers.History').setApi(this.api).setMode(this.mode);
             this.getApplication().getController('PageThumbnails').setApi(this.api).setMode(this.mode);
+            this.getApplication().getController('SelectionPane').setApi(this.api);
             this.getApplication().getController('Search').setApi(this.api).setMode(this.mode);
             this.leftMenu.setOptionsPanel('advancedsearch', this.getApplication().getController('Search').getView('Common.Views.SearchPanel'));
             return this;
@@ -215,6 +216,11 @@ define([
                 this.leftMenu.setOptionsPanel('thumbnails', this.getApplication().getController('PageThumbnails').getView('PageThumbnails'));
             } else {
                 this.leftMenu.btnThumbnails.hide();
+            }
+
+            if (this.mode.isEdit) {
+                Common.UI.LayoutManager.isElementVisible('leftMenu-selectionpane') && this.leftMenu.btnSelectionPane.show();
+                this.leftMenu.setOptionsPanel('selectionpane', this.getApplication().getController('SelectionPane').getView('SelectionPane'));
             }
 
             (this.mode.trialMode || this.mode.isBeta) && this.leftMenu.setDeveloperMode(this.mode.trialMode, this.mode.isBeta, this.mode.buildVersion);
@@ -715,6 +721,8 @@ define([
                 this.leftMenu.btnChat.setDisabled(disable);
             if (!options || options.navigation && options.navigation.disable)
                 this.leftMenu.btnNavigation.setDisabled(disable);
+            if (!options)
+                this.leftMenu.btnSelectionPane.setDisabled(disable);
 
             this.leftMenu.setDisabledPluginButtons(disable);
         },
@@ -815,6 +823,9 @@ define([
                         this.leftMenu.btnThumbnails.toggle(false);
                         this.leftMenu.panelThumbnails.hide();
                         this.leftMenu.onBtnMenuClick(this.leftMenu.btnThumbnails);
+                    } else if (this.leftMenu.btnSelectionPane.isActive()) {
+                        this.leftMenu.btnSelectionPane.toggle(false);
+                        this.leftMenu.onBtnMenuClick(this.leftMenu.btnSelectionPane);
                     } else if (this.leftMenu.btnSearchBar.isActive()) {
                         this.leftMenu.btnSearchBar.toggle(false);
                         this.leftMenu.onBtnMenuClick(this.leftMenu.btnSearchBar);

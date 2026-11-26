@@ -171,6 +171,18 @@ define([
             this.btnThumbnails.hide();
             this.btnThumbnails.on('click', this.onBtnMenuClick.bind(this));
 
+            this.btnSelectionPane = new Common.UI.Button({
+                el: $markup.elementById('#left-btn-selectionpane'),
+                hint: this.tipSelectionPane,
+                enableToggle: true,
+                disabled: true,
+                iconCls: 'btn-select-all',
+                toggleGroup: 'leftMenuGroup'
+            });
+            this.btnSelectionPane.hide();
+            this.btnSelectionPane.on('click', this.onBtnMenuClick.bind(this));
+
+
             this.$el.html($markup);
             return this;
         },
@@ -247,6 +259,13 @@ define([
                     this.panelThumbnails.hide();
                 }
             }
+            if (this.panelSelectionPane) {
+                if (this.btnSelectionPane.pressed) {
+                    this.panelSelectionPane.show();
+                } else {
+                    this.panelSelectionPane.hide();
+                }
+            }
             if (this.panelSearch) {
                 if (this.btnSearchBar.pressed) {
                     this.panelSearch.show();
@@ -283,6 +302,9 @@ define([
             } else
             if (name == 'thumbnails') {
                 this.panelThumbnails = panel.render('#left-panel-thumbnails');
+            } else
+            if (name == 'selectionpane' && !this.panelSelectionPane) {
+                this.panelSelectionPane = panel.render('#left-panel-selectionpane');
             } else
             if (name == 'advancedsearch') {
                 this.panelSearch = panel.render('#left-panel-search');
@@ -335,6 +357,10 @@ define([
                     this.panelThumbnails['hide']();
                     this.btnThumbnails.toggle(false, true);
                 }
+                if (this.panelSelectionPane) {
+                    this.panelSelectionPane['hide']();
+                    this.btnSelectionPane.toggle(false, true);
+                }
                 this.toggleActivePluginButton(false);
             }
         },
@@ -357,6 +383,7 @@ define([
             /** coauthoring end **/
             this.btnNavigation.setDisabled(false);
             this.btnThumbnails.setDisabled(false);
+            this.btnSelectionPane.setDisabled(false);
             this.setDisabledAllMoreMenuItems(false);
         },
 
@@ -389,6 +416,12 @@ define([
                         !this.btnNavigation.isDisabled() && !this.btnNavigation.pressed) {
                         this.btnNavigation.toggle(true);
                         this.onBtnMenuClick(this.btnNavigation);
+                    }
+                } else if (menu == 'selectionpane') {
+                    if ((this.btnSelectionPane.isVisible() || this.isButtonInMoreMenu(this.btnSelectionPane)) &&
+                        !this.btnSelectionPane.isDisabled() && !this.btnSelectionPane.pressed) {
+                        this.btnSelectionPane.toggle(true);
+                        this.onBtnMenuClick(this.btnSelectionPane);
                     }
                 } else if (menu == 'advancedsearch') {
                     if ((this.btnSearchBar.isVisible() || this.isButtonInMoreMenu(this.btnSearchBar)) &&
@@ -517,6 +550,7 @@ define([
         tipSearch   : 'Search',
         tipPlugins  : 'Plugins',
         tipPageThumbnails: 'Page Thumbnails',
+        tipSelectionPane: 'Selection pane',
         txtDeveloper: 'DEVELOPER MODE',
         txtTrial: 'TRIAL MODE',
         txtTrialDev: 'Trial Developer Mode',
