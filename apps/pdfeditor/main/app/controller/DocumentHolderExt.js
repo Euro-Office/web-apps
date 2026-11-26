@@ -202,6 +202,8 @@ define([], function () {
                 view.mnuDeletePage.on('click', _.bind(me.onDeletePage, me));
                 view.mnuRotatePageRight.on('click', _.bind(me.onRotatePage, me, 90));
                 view.mnuRotatePageLeft.on('click', _.bind(me.onRotatePage, me, -90));
+                view.mnuRotateAllRight.on('click', _.bind(me.onRotateAllPages, me, 90));
+                view.mnuRotateAllLeft.on('click', _.bind(me.onRotateAllPages, me, -90));
                 view.mnuCopyPage.on('click', _.bind(me.onCutCopyPaste, me));
                 view.mnuCutPage.on('click', _.bind(me.onCutCopyPaste, me));
                 view.mnuPastePageBefore.on('click', _.bind(me.onCutCopyPaste, me));
@@ -2469,6 +2471,15 @@ define([], function () {
         dh.onDeletePage = function() {
             this.api && this.api.asc_RemovePage();
 
+            Common.NotificationCenter.trigger('edit:complete', this.documentHolder);
+        };
+
+        dh.onRotateAllPages = function(angle) {
+            if (this.api) {
+                var pages = [];
+                for (var i = 0, count = this.api.getCountPages(); i < count; i++) pages.push(i);
+                this.api.asc_RotatePage(angle, pages);
+            }
             Common.NotificationCenter.trigger('edit:complete', this.documentHolder);
         };
 

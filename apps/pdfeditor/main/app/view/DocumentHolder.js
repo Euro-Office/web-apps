@@ -165,7 +165,10 @@ define([
 
         clearCustomItems: function() {},
 
-        parseIcons: function() {}
+        parseIcons: function() {},
+
+        txtRotateAllRight: 'Rotate all pages right',
+        txtRotateAllLeft: 'Rotate all pages left'
 
     }, PDFE.Views.DocumentHolder || {}));
 });
