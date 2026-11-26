@@ -1,6 +1,6 @@
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {Fragment, useState} from 'react';
 import {observer, inject} from "mobx-react";
-import {f7, Page, Navbar, NavRight, List, ListItem, Link, Icon, Range, Tab, Tabs, ListButton} from 'framework7-react';
+import {Page, Navbar, NavRight, List, ListItem, Link, Icon, Range, Tab, Tabs, ListButton} from 'framework7-react';
 import { ThemeColorPalette, CustomColorPicker } from '../../../../../common/mobile/lib/component/ThemeColorPalette.jsx';
 import { useTranslation } from 'react-i18next';
 import {Device} from '../../../../../common/mobile/utils/device';
@@ -11,6 +11,8 @@ import IconMoveForeground from '@common-icons/icon-move-foreground.svg';
 import IconMoveBackground from '@common-icons/icon-move-background.svg';
 import IconMoveForward from '@common-icons/icon-move-forward.svg';
 import IconMoveBackward from '@common-icons/icon-move-backward.svg';
+import withEditTarget from './withEditTarget';
+import {hasShape} from '../../lib/editTarget.js';
 
 const EditShape = props => {
     const { t } = useTranslation();
@@ -133,11 +135,6 @@ const PageStyle = props => {
     const opacity = transparent !== null && transparent !== undefined ? transparent / 2.55 : 100;
     const [stateOpacity, setOpacity] = useState(Math.round(opacity));
 
-    if ((!shapeObject || storeFocusObjects.chartObject || storeFocusObjects.focusOn === 'cell') && Device.phone) {
-        $$('.sheet-modal.modal-in').length > 0 && f7.sheet.close();
-        return null;
-    }
-   
     return (
         <Page>
             <Navbar backLink={_t.textBack}>
@@ -311,12 +308,6 @@ const PageReplace = props => {
     let shapes = storeShapeSettings.getStyleGroups();
     shapes.splice(0, 1); // Remove line shapes
 
-    const storeFocusObjects = props.storeFocusObjects;
-    if ((!storeFocusObjects.shapeObject || storeFocusObjects.chartObject || storeFocusObjects.focusOn === 'cell') && Device.phone) {
-        $$('.sheet-modal.modal-in').length > 0 && f7.sheet.close();
-        return null;
-    }
-
     return (
         <Page className="shapes dataview">
             <Navbar title={_t.textReplace} backLink={_t.textBack}>
@@ -353,12 +344,6 @@ const PageReplace = props => {
 const PageReorder = props => {
     const { t } = useTranslation();
     const _t = t('View.Edit', {returnObjects: true});
-
-    const storeFocusObjects = props.storeFocusObjects;
-    if ((!storeFocusObjects.shapeObject || storeFocusObjects.chartObject || storeFocusObjects.focusOn === 'cell') && Device.phone) {
-        $$('.sheet-modal.modal-in').length > 0 && f7.sheet.close();
-        return null;
-    }
 
     return (
         <Page>
@@ -470,33 +455,13 @@ const PageCustomBorderColor = props => {
 };
 
 const EditShapeContainer = inject("storeShapeSettings", "storeFocusObjects")(observer(EditShape));
-// A shape page can stay open after the selection moves to a cell, which clears
-// the selected shape. The style pages read the shape before their hooks, so the
-// check sits in a wrapper rather than in the page. The panel closes, because a
-// routed page that renders nothing leaves the tablet popover stuck on its navbar.
-const withShape = PageComponent => {
-    const ObservedPage = observer(PageComponent);
-    return inject("storeFocusObjects", "storeShapeSettings")(observer(props => {
-        const hasShape = !!props.storeFocusObjects.shapeObject;
-        useEffect(() => {
-            if (hasShape) return;
-            if (Device.phone) {
-                $$('.sheet-modal.modal-in').length > 0 && f7.sheet.close();
-            } else {
-                f7.popover.close('#edit-popover', false);
-            }
-        }, [hasShape]);
-        return hasShape ? <ObservedPage {...props}/> : null;
-    }));
-};
-
-const PageShapeStyle = withShape(PageStyle);
-const PageShapeStyleNoFill = withShape(PageStyleNoFill);
-const PageShapeCustomFillColor = inject("storeFocusObjects", "storeShapeSettings", "storePalette")(observer(PageCustomFillColor));
-const PageReplaceContainer = inject("storeShapeSettings","storeFocusObjects")(observer(PageReplace));
-const PageReorderContainer = inject("storeFocusObjects")(observer(PageReorder));
-const PageShapeBorderColor = inject("storeShapeSettings", "storePalette")(observer(PageBorderColor));
-const PageShapeCustomBorderColor = inject("storeShapeSettings", "storePalette")(observer(PageCustomBorderColor));
+const PageShapeStyle = withEditTarget(hasShape, inject("storeFocusObjects", "storeShapeSettings")(observer(PageStyle)));
+const PageShapeStyleNoFill = withEditTarget(hasShape, inject("storeFocusObjects", "storeShapeSettings")(observer(PageStyleNoFill)));
+const PageShapeCustomFillColor = withEditTarget(hasShape, inject("storeFocusObjects", "storeShapeSettings", "storePalette")(observer(PageCustomFillColor)));
+const PageReplaceContainer = withEditTarget(hasShape, inject("storeShapeSettings","storeFocusObjects")(observer(PageReplace)));
+const PageReorderContainer = withEditTarget(hasShape, inject("storeFocusObjects")(observer(PageReorder)));
+const PageShapeBorderColor = withEditTarget(hasShape, inject("storeShapeSettings", "storePalette")(observer(PageBorderColor)));
+const PageShapeCustomBorderColor = withEditTarget(hasShape, inject("storeShapeSettings", "storePalette")(observer(PageCustomBorderColor)));
 
 export {
     EditShapeContainer as EditShape,
