@@ -464,10 +464,7 @@ define([
                     var isopen = this.isMenuOpen();
                     $(e.target).click();
                     if (this.rendered) {
-                        if (Common.Utils.isIE)
-                            this._input.trigger('change', { onkeydown: true });
-                        else
-                            this._input.blur();
+                        this._input.blur();
                     }
                     return !isopen;
                 }

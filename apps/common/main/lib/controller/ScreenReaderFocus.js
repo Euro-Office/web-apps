@@ -256,7 +256,7 @@ Common.UI.ScreenReaderFocusManager = new(function() {
     };
 
     var _init = function(api) {
-        if (Common.Utils.isIE || Common.UI.isMac && Common.Utils.isGecko) // turn off hints on IE and FireFox (shortcut F6 selects link in address bar)
+        if (Common.UI.isMac && Common.Utils.isGecko) // turn off hints on FireFox (shortcut F6 selects link in address bar)
             return;
         _api = api;
         _app = window.DE || window.PE || window.SSE || window.PDFE || window.VE;

@@ -86,7 +86,7 @@ define([
             this.rendered    = false;
             this.needFillComboView = false;
             this.minWidth    = this.options.minWidth;
-            this.autoWidth   = this.initAutoWidth = (Common.Utils.isIE10 || Common.Utils.isIE11) ? false : this.options.autoWidth;
+            this.autoWidth   = this.initAutoWidth = this.options.autoWidth;
             this.delayRenderTips = this.options.delayRenderTips || false;
             this.fillOnChangeVisibility = this.options.fillOnChangeVisibility || false;
             this.itemTemplate   = this.options.itemTemplate || _.template([
