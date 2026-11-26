@@ -73,6 +73,7 @@ define([
                     'reviewchange:combine':     _.bind(this.onCombineClick, this),
                     'lang:document':            _.bind(this.onDocLanguage, this),
                     'collaboration:coauthmode': _.bind(this.onCoAuthMode, this),
+                    'comments:display':         _.bind(this.onCommentsDisplay, this),
                     'protect:update':           _.bind(this.onChangeProtectDocument, this)
                 },
                 'Common.Views.ReviewChangesDialog': {
@@ -866,6 +867,13 @@ define([
 
         isPreviewChangesMode: function() {
             return this._state.previewMode;
+        },
+
+        onCommentsDisplay: function(value) {
+            Common.localStorage.setItem(this.appPrefix + "settings-comments-display", value);
+            Common.Utils.InternalSettings.set(this.appPrefix + "settings-comments-display", value);
+            Common.NotificationCenter.trigger('comments:display', value);
+            Common.NotificationCenter.trigger('edit:complete', this.view);
         },
 
         onCoAuthMode: function(menu, item, e) {

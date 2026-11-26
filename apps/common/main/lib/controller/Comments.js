@@ -127,11 +127,13 @@ define([
                 },
                 'Common.Views.ReviewChanges': {
                     'comment:removeComments':           _.bind(this.onRemoveComments, this),
-                    'comment:resolveComments':          _.bind(this.onResolveComments, this)
+                    'comment:resolveComments':          _.bind(this.onResolveComments, this),
+                    'comment:navigate':                 _.bind(this.onNavigateComment, this)
                 }
             });
 
             Common.NotificationCenter.on('comments:updatefilter',   _.bind(this.onUpdateFilter, this));
+            Common.NotificationCenter.on('comments:display',        _.bind(this.onCommentsDisplay, this));
             Common.NotificationCenter.on('app:comment:add',         _.bind(this.onAppAddComment, this));
             Common.NotificationCenter.on('layout:changed', function(area){
                 Common.Utils.asyncCall(function(e) {
@@ -299,6 +301,13 @@ define([
         onResolveComments: function (type) {
             if (this.api) {
                 this.api.asc_ResolveAllComments(type=='my' || !this.mode.canEditComments, type=='current');// 1 param = true if resolve only my comments, 2 param - resolve current comments
+            }
+        },
+
+        onNavigateComment: function (isNext) {
+            if (this.api && this.api.asc_GotoComment) {
+                var id = this.api.asc_GotoComment(isNext);
+                id && this.api.asc_showComment(id, false);
             }
         },
 
@@ -862,6 +871,13 @@ define([
             }
         },
         onApiShowComment: function (uids, posX, posY, leftX, opts, hint) {
+            if (this.isCommentsListMode()) {
+                // in list mode the comment is shown in the side panel instead of a popover
+                !hint && this.showCommentInList(uids);
+                this._dontScrollToComment = false;
+                return;
+            }
+
             var apihint = hint;
             var same_uids = (0 === _.difference(this.uids, uids).length) && (0 === _.difference(uids, this.uids).length);
             
@@ -958,6 +974,7 @@ define([
             var t = this;
 
             this.view && this.view.commentsView && this.view.commentsView.clearActive();
+            !hint && (this.listActiveUid = undefined);
 
             if (this.getPopover()) {
                 if (this.isSelectedComment && hint) {
@@ -995,6 +1012,8 @@ define([
                 text = undefined,
                 saveTxtId = '',
                 saveTxtReplyId = '';
+
+            if (this.isCommentsListMode()) return;
 
             if (this.getPopover()) {
                 this.getPopover().saveText();
@@ -1131,8 +1150,61 @@ define([
             }
 
             this.view.update();
+            this.isCommentsListMode() && this.highlightInList();
 
             loadText && this.view.loadText();
+        },
+
+        isCommentsListMode: function () {
+            return Common.Utils.InternalSettings.get('de-settings-comments-display') === 'list';
+        },
+
+        onCommentsDisplay: function (value) {
+            if (value === 'list') {
+                this.onApiHideComment();
+                this.sortListByPosition();
+            } else {
+                this.listActiveUid = undefined;
+                this.view && this.view.commentsView && this.view.commentsView.clearActive();
+            }
+        },
+
+        // Previous / Next go by position in the document, so the list follows the same order.
+        // Only done when the list is chosen; a sort picked later in the panel menu is kept.
+        sortListByPosition: function () {
+            var type = this.getComparator();
+            if (type === 'position-asc' || type === 'position-desc') return;
+
+            this.setComparator('position-asc');
+            var menu = this.view && this.view.buttonSort && this.view.buttonSort.menu;
+            menu && _.each(menu.items, function (item) {
+                item.toggleGroup === 'sortcomments' && item.setChecked(item.value === 'position-asc', true);
+            });
+        },
+
+        showCommentInList: function (uids) {
+            var comment = null;
+            for (var i = 0; i < uids.length && !comment; ++i) {
+                comment = this.findComment(uids[i]);
+            }
+            if (!comment || comment.get('hide')) return;
+
+            this.listActiveUid = comment.get('uid');
+            Common.NotificationCenter.trigger('comments:showlist');
+            this.highlightInList();
+        },
+
+        highlightInList: function () {
+            var view = this.view && this.view.commentsView,
+                comment = this.listActiveUid ? this.findComment(this.listActiveUid) : null;
+            if (!view || !comment) return;
+
+            var idx = _.indexOf(view.store.models, comment);
+            view.clearActive();
+            if (idx >= 0 && idx < view.dataViewItems.length) {
+                $(view.dataViewItems[idx].el).addClass('active');
+                view.scrollToRecord(comment);
+            }
         },
         findComment: function (uid) {
             return this.collection.findWhere({uid: uid});

@@ -112,6 +112,8 @@ define([
 
             Common.NotificationCenter.on('leftmenu:change', _.bind(this.onMenuChange, this));
             Common.NotificationCenter.on('app:comment:add', _.bind(this.onAppAddComment, this));
+            Common.NotificationCenter.on('comments:display', _.bind(this.onCommentsDisplay, this));
+            Common.NotificationCenter.on('comments:showlist', _.bind(this.onCommentsShowList, this));
             Common.NotificationCenter.on('collaboration:history', _.bind(function () {
                 if ( !this.leftMenu.panelHistory.isVisible() )
                     this.clickMenuFileItem(null, 'history');
@@ -754,6 +756,17 @@ define([
                     ctrl.onAfterShow();
                 });
             }
+        },
+
+        onCommentsDisplay: function(value) {
+            if (value === 'list')
+                this.leftMenu.showMenu('comments');
+            else if (this.leftMenu.btnComments.isActive())
+                this.onMenuChange('hide');
+        },
+
+        onCommentsShowList: function() {
+            this.leftMenu.showMenu('comments');
         },
 
         commentsShowHide: function(mode) {
