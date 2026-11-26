@@ -70,7 +70,7 @@
   "Common.Views.EmbedDialog.warnCopy": "Webbläsarfel! Använd kortkommandot [CTRL] + [C]",
   "Common.Views.ImageFromUrlDialog.textUrl": "Klistra in en bilds URL:",
   "Common.Views.ImageFromUrlDialog.txtEmpty": "Detta fält är obligatoriskt",
-  "Common.Views.ImageFromUrlDialog.txtNotUrl": "Detta fält bör vara en URL i formatet \"http://www.example.com\"",
+  "Common.Views.ImageFromUrlDialog.txtNotUrl": "Detta fält bör vara en URL i formatet \"http://www.exempel.se\"",
   "Common.Views.OpenDialog.closeButtonText": "Stäng dokument",
   "Common.Views.OpenDialog.txtEncoding": "Kodning",
   "Common.Views.OpenDialog.txtIncorrectPwd": "Felaktigt lösenord.",
