@@ -41,6 +41,7 @@ define([
         '<section class="panel" data-tab="view" role="tabpanel" aria-labelledby="view">' +
             '<div class="group" data-layout-name="toolbar-view-navigation">' +
                 '<span class="btn-slot text x-huge" id="slot-btn-navigation"></span>' +
+                '<span class="btn-slot text x-huge" id="slot-btn-page-overview"></span>' +
             '</div>' +
             '<div class="separator long separator-navigation" data-layout-name="toolbar-view-navigation"></div>' +
             '<div class="group small">' +
@@ -92,6 +93,9 @@ define([
 
             setEvents: function () {
                 var me = this;
+                me.btnPageOverview && me.btnPageOverview.on('click', function (btn) {
+                    me.fireEvent('viewtab:pageoverview', [btn.pressed]);
+                });
                 me.btnNavigation && me.btnNavigation.on('click', function (btn, e) {
                     me.fireEvent('viewtab:navigation', [btn.pressed]);
                 });
@@ -152,6 +156,22 @@ define([
                         dataHintOffset: 'small'
                     });
                     this.lockedControls.push(this.btnNavigation);
+
+                    // all pages side by side in a wide page panel, to select, move and arrange them
+                    this.btnPageOverview = new Common.UI.Button({
+                        cls: 'btn-toolbar x-huge icon-top',
+                        iconCls: 'toolbar__icon btn-menu-thumbs',
+                        lock: [_set.lostConnect, _set.disableOnStart],
+                        caption: this.capPageOverview || 'Page Overview',
+                        // tooltip and accessible name from the start, also when a narrow window hides the caption
+                        hint: this.tipPageOverview || 'Show all pages side by side',
+                        ariaLabel: this.capPageOverview || 'Page Overview',
+                        enableToggle: true,
+                        dataHint: '1',
+                        dataHintDirection: 'bottom',
+                        dataHintOffset: 'small'
+                    });
+                    this.lockedControls.push(this.btnPageOverview);
                 }
 
                 this.cmbsZoom = [this.getZoomCombo()];
@@ -302,6 +322,7 @@ define([
                 var $host = this.$el;
 
                 this.btnNavigation && this.btnNavigation.render($host.find('#slot-btn-navigation'));
+                this.btnPageOverview && this.btnPageOverview.render($host.find('#slot-btn-page-overview'));
                 this.cmbsZoom[0].render($host.find('.slot-field-zoom'));
                 $host.find('.slot-lbl-zoom').text(this.textZoom);
                 this.btnsFitToPage[0].render($host.find('.slot-btn-ftp'));
@@ -334,6 +355,7 @@ define([
             onAppReady: function () {
                 var me = this;
                 this.btnNavigation && this.btnNavigation.updateHint(this.tipHeadings);
+                this.btnPageOverview && this.btnPageOverview.updateHint(this.tipPageOverview || 'Show all pages side by side');
                 this.btnInterfaceTheme.updateHint(this.tipInterfaceTheme);
                 this.btnDarkDocument.updateHint(this.tipDarkDocument);
                 this.btnsFitToPage.forEach(function (btn) {

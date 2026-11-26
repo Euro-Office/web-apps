@@ -3057,6 +3057,7 @@
   "PDFE.Views.Toolbar.txtSize": "Size",
   "PDFE.Views.Toolbar.txtUngroup": "Ungroup",
   "PDFE.Views.ViewTab.capBtnRecognize": "Edit Text",
+  "PDFE.Views.ViewTab.capPageOverview": "Page Overview",
   "PDFE.Views.ViewTab.textAlwaysShowToolbar": "Always Show Toolbar",
   "PDFE.Views.ViewTab.textDarkDocument": "Dark Document",
   "PDFE.Views.ViewTab.textEditMode": "Edit PDF",
@@ -3078,5 +3079,6 @@
   "PDFE.Views.ViewTab.tipFitToWidth": "Fit to width",
   "PDFE.Views.ViewTab.tipHeadings": "Headings",
   "PDFE.Views.ViewTab.tipInterfaceTheme": "Interface theme",
+  "PDFE.Views.ViewTab.tipPageOverview": "Show all pages side by side",
   "PDFE.Views.ViewTab.tipRecognize": "Edit text"
 }
