@@ -199,6 +199,8 @@ define([], function () {
                 view.menuParagraphEquation.menu.on('item:click', _.bind(me.convertEquation, me));
                 view.mnuNewPageBefore.on('click', _.bind(me.onNewPage, me));
                 view.mnuNewPageAfter.on('click', _.bind(me.onNewPage, me));
+                view.mnuInsertFromPdfBefore.on('click', _.bind(me.onInsertPagesFromPdf, me));
+                view.mnuInsertFromPdfAfter.on('click', _.bind(me.onInsertPagesFromPdf, me));
                 view.mnuDeletePage.on('click', _.bind(me.onDeletePage, me));
                 view.mnuRotatePageRight.on('click', _.bind(me.onRotatePage, me, 90));
                 view.mnuRotatePageLeft.on('click', _.bind(me.onRotatePage, me, -90));
@@ -2464,6 +2466,12 @@ define([], function () {
             this.api && this.api.asc_AddPage(item.value ? Math.min.apply(null, this.api.getSelectedPages()) : Math.max.apply(null, this.api.getSelectedPages())+1);
 
             Common.NotificationCenter.trigger('edit:complete', this.documentHolder);
+        };
+
+        dh.onInsertPagesFromPdf = function(item) {
+            if (!this.api) return;
+            var pages = this.api.getSelectedPages();
+            this.getApplication().getController('InsTab').insertPagesFromPdf(item.value ? Math.min.apply(null, pages) : Math.max.apply(null, pages) + 1);
         };
 
         dh.onDeletePage = function() {
