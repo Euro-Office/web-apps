@@ -52,7 +52,7 @@
   "VE.ApplicationController.warnLicenseExp": "Su licencia ha expirado. Por favor, renueve su licencia y recargue la página.",
   "VE.ApplicationView.txtDownload": "Descargar",
   "VE.ApplicationView.txtEmbed": "Embeber",
-  "VE.ApplicationView.txtFileLocation": "Abrir ubicación del archivo",
+  "VE.ApplicationView.txtFileLocation": "Abrir lugar del archivo",
   "VE.ApplicationView.txtFullScreen": "Pantalla Completa",
   "VE.ApplicationView.txtPrint": "Imprimir",
   "VE.ApplicationView.txtSearch": "Encontrar",
