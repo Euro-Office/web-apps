@@ -79,7 +79,9 @@ define([
                     'zoom:topage': _.bind(this.onBtnZoomTo, this, 'topage'),
                     'zoom:towidth': _.bind(this.onBtnZoomTo, this, 'towidth'),
                     'darkmode:change': _.bind(this.onChangeDarkMode, this),
-                    'macros:click':  _.bind(this.onClickMacros, this)
+                    'macros:click':  _.bind(this.onClickMacros, this),
+                    'viewtab:comparepdf': _.bind(this.onComparePdf, this),
+                    'viewtab:searchpdfs': _.bind(this.onSearchPdfs, this)
                 },
                 'Toolbar': {
                     'view:compact': _.bind(function (toolbar, state) {
@@ -299,6 +301,112 @@ define([
             this.view && this.view.cmbsZoom && this.view.cmbsZoom.forEach(function (cmb) {
                 cmb.setValue(value, value + '%');
             });
+        },
+
+        // compare with another PDF, search in several PDFs
+        showResultList: function(title, intro, rows, onClick) {
+            var html = '<div class="box" style="padding: 10px 15px;">' +
+                '<div style="margin-bottom:8px;">' + intro + '</div>' +
+                '<div style="max-height:380px;overflow:auto;border:1px solid var(--border-regular-control);">';
+            rows.forEach(function(row, index) {
+                html += '<div class="pdf-result-row" data-index="' + index + '" style="padding:4px 8px;border-bottom:1px solid var(--border-divider);' + (onClick && row.page !== undefined ? 'cursor:pointer;' : '') + '">' +
+                    '<span style="font-weight:bold;color:' + (row.color || 'inherit') + ';">' + Common.Utils.String.htmlEncode(row.label) + '</span> ' +
+                    Common.Utils.String.htmlEncode(row.text) + '</div>';
+            });
+            html += '</div></div>';
+            var win = new Common.UI.Window({title: title, width: 640, cls: 'modal-dlg', buttons: ['close'], tpl: html});
+            // the dialog takes the focus (Close button), so Enter and Escape close it
+            win.getFocusedComponents = function() { return win.getFooterButtons(); };
+            win.getDefaultFocusableComponent = function() { return win.getFooterButtons()[0]; };
+            win.on('render:after', function() {
+                win.$window.find('.footer .dlg-btn').on('click', function() { win.close(); });
+                onClick && win.$window.find('.pdf-result-row').on('click', function(e) {
+                    onClick(rows[parseInt($(e.currentTarget).attr('data-index'), 10)]);
+                });
+            });
+            win.show();
+        },
+
+        // red and green labels that are easy to read in light and dark themes
+        getDiffColors: function() {
+            var dark = Common.UI.Themes && Common.UI.Themes.isDarkTheme && Common.UI.Themes.isDarkTheme();
+            return dark ? {removed: '#ff8a80', added: '#69f0ae'} : {removed: '#c62828', added: '#2e7d32'};
+        },
+
+        // true (and a message) if a comparison or search is still running
+        isPdfTextReadingBusy: function() {
+            if (this.api.asc_IsPdfTextReading && this.api.asc_IsPdfTextReading()) {
+                Common.UI.warning({msg: this.view.txtBusy});
+                return true;
+            }
+            return false;
+        },
+
+        onComparePdf: function() {
+            var me = this, view = this.view;
+            if (!this.api || !this.api.asc_PickPdfFiles || this.isPdfTextReadingBusy()) return;
+            this.api.asc_PickPdfFiles(false, function(files) {
+                if (!files.length) return;
+                var started = me.api.asc_ComparePdfText(files[0].bytes, function(result) {
+                    if (!result) {
+                        Common.UI.warning({msg: view.txtCannotRead});
+                        return;
+                    }
+                    if (!result.openHasText || !result.otherHasText) {
+                        Common.UI.warning({msg: result.openHasText ? Common.Utils.String.format(view.txtNoTextOther, files[0].name) : view.txtNoTextOpen});
+                        return;
+                    }
+                    var colors = me.getDiffColors();
+                    var rows = [];
+                    result.removed.forEach(function(s) {
+                        rows.push({label: '− ' + Common.Utils.String.format(view.txtPageN, s.page + 1) + ':', text: s.text, color: colors.removed, page: s.page});
+                    });
+                    result.added.forEach(function(s) {
+                        rows.push({label: '+ ' + Common.Utils.String.format(view.txtOtherPageN, s.page + 1) + ':', text: s.text, color: colors.added});
+                    });
+                    var intro = rows.length ? Common.Utils.String.format(view.txtCompareIntro, files[0].name, result.removed.length, result.added.length)
+                                            : Common.Utils.String.format(view.txtCompareSame, files[0].name);
+                    if (result.coarse)
+                        intro += ' ' + view.txtCompareCoarse;
+                    me.showResultList(view.capComparePdf, Common.Utils.String.htmlEncode(intro), rows, function(row) {
+                        // row.page is the 0-based page of the open file
+                        row.page !== undefined && me.api.goToPage(row.page);
+                    });
+                });
+                started === false && Common.UI.warning({msg: view.txtBusy});
+            });
+        },
+
+        onSearchPdfs: function() {
+            var me = this, view = this.view;
+            if (!this.api || !this.api.asc_PickPdfFiles || this.isPdfTextReadingBusy()) return;
+            (new Common.Views.TextInputDialog({
+                title: view.capSearchPdfs,
+                label: view.txtSearchFor,
+                value: '',
+                inputConfig: {allowBlank: false},
+                handler: function(result, text) {
+                    text = (text || '').trim();
+                    if (result != 'ok' || !text) return;
+                    // the files are read one at a time during the search (isLazy), not all before it
+                    me.api.asc_PickPdfFiles(true, function(files) {
+                        if (!files.length) return;
+                        var started = me.api.asc_SearchInPdfFiles(text, files, function(found, info) {
+                            // page -1: the file can't be read, -2: it has no text (scanned)
+                            var rows = found.map(function(r) {
+                                return {label: r.name + (r.page < 0 ? '' : ', ' + Common.Utils.String.format(view.txtPageN, r.page + 1)) + ':',
+                                        text: r.page === -1 ? view.txtCannotRead : (r.page === -2 ? view.txtNoText : r.text)};
+                            });
+                            var hits = found.filter(function(r) { return r.page >= 0; }).length;
+                            var intro = Common.Utils.String.format(view.txtSearchIntro, text, hits, files.length);
+                            if (info && info.capped)
+                                intro += ' ' + Common.Utils.String.format(view.txtSearchCapped, info.maxResults, info.searchedFiles, files.length);
+                            me.showResultList(view.capSearchPdfs, Common.Utils.String.htmlEncode(intro), rows);
+                        });
+                        started === false && Common.UI.warning({msg: view.txtBusy});
+                    }, true);
+                }
+            })).show();
         },
 
         onBtnZoomTo: function(type, btn) {

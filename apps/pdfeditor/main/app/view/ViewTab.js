@@ -43,6 +43,11 @@ define([
                 '<span class="btn-slot text x-huge" id="slot-btn-navigation"></span>' +
             '</div>' +
             '<div class="separator long separator-navigation" data-layout-name="toolbar-view-navigation"></div>' +
+            '<div class="group">' +
+                '<span class="btn-slot text x-huge" id="slot-btn-compare-pdf"></span>' +
+                '<span class="btn-slot text x-huge" id="slot-btn-search-pdfs"></span>' +
+            '</div>' +
+            '<div class="separator long"></div>' +
             '<div class="group small">' +
                 '<div class="elset" style="display: flex;">' +
                     '<span class="btn-slot slot-field-zoom" style="flex-grow: 1;"></span>' +
@@ -92,6 +97,8 @@ define([
 
             setEvents: function () {
                 var me = this;
+                me.btnComparePdf.on('click', function () { me.fireEvent('viewtab:comparepdf'); });
+                me.btnSearchPdfs.on('click', function () { me.fireEvent('viewtab:searchpdfs'); });
                 me.btnNavigation && me.btnNavigation.on('click', function (btn, e) {
                     me.fireEvent('viewtab:navigation', [btn.pressed]);
                 });
@@ -153,6 +160,28 @@ define([
                     });
                     this.lockedControls.push(this.btnNavigation);
                 }
+
+                // compare with another PDF, search in several PDFs
+                this.btnComparePdf = new Common.UI.Button({
+                    cls: 'btn-toolbar x-huge icon-top',
+                    iconCls: 'toolbar__icon btn-compare',
+                    lock: [_set.lostConnect, _set.disableOnStart],
+                    caption: this.capComparePdf,
+                    dataHint: '1',
+                    dataHintDirection: 'bottom',
+                    dataHintOffset: 'small'
+                });
+                this.lockedControls.push(this.btnComparePdf);
+                this.btnSearchPdfs = new Common.UI.Button({
+                    cls: 'btn-toolbar x-huge icon-top',
+                    iconCls: 'toolbar__icon btn-menu-search',
+                    lock: [_set.lostConnect, _set.disableOnStart],
+                    caption: this.capSearchPdfs,
+                    dataHint: '1',
+                    dataHintDirection: 'bottom',
+                    dataHintOffset: 'small'
+                });
+                this.lockedControls.push(this.btnSearchPdfs);
 
                 this.cmbsZoom = [this.getZoomCombo()];
 
@@ -302,6 +331,8 @@ define([
                 var $host = this.$el;
 
                 this.btnNavigation && this.btnNavigation.render($host.find('#slot-btn-navigation'));
+                this.btnComparePdf.render($host.find('#slot-btn-compare-pdf'));
+                this.btnSearchPdfs.render($host.find('#slot-btn-search-pdfs'));
                 this.cmbsZoom[0].render($host.find('.slot-field-zoom'));
                 $host.find('.slot-lbl-zoom').text(this.textZoom);
                 this.btnsFitToPage[0].render($host.find('.slot-btn-ftp'));
@@ -336,6 +367,8 @@ define([
                 this.btnNavigation && this.btnNavigation.updateHint(this.tipHeadings);
                 this.btnInterfaceTheme.updateHint(this.tipInterfaceTheme);
                 this.btnDarkDocument.updateHint(this.tipDarkDocument);
+                this.btnComparePdf.updateHint(this.tipComparePdf);
+                this.btnSearchPdfs.updateHint(this.tipSearchPdfs);
                 this.btnsFitToPage.forEach(function (btn) {
                     btn.updateHint(me.tipFitToPage);
                 });
@@ -406,7 +439,24 @@ define([
             textFill: 'Fill',
             textLine: 'Line',
             textMacros: 'Macros',
-            tipMacros: 'Macros'
+            tipMacros: 'Macros',
+            capComparePdf: 'Compare PDF',
+            capSearchPdfs: 'Search in PDFs',
+            tipComparePdf: 'Compare the text with another PDF',
+            tipSearchPdfs: 'Search for a text in several PDFs',
+            txtCannotRead: 'The file cannot be read.',
+            txtBusy: 'A comparison or search is still running. Please wait until it is finished.',
+            txtCompareCoarse: 'The files differ a lot, so this list is less exact: it shows the sentences that are only in one of the files, but not sentences that were only moved.',
+            txtSearchCapped: 'The search stopped after {0} hits ({1} of {2} files searched). Please search for a more specific text.',
+            txtNoText: 'No text found (maybe a scanned document).',
+            txtNoTextOpen: 'No text found in this PDF (maybe a scanned document), so there is nothing to compare.',
+            txtNoTextOther: 'No text found in {0} (maybe a scanned document), so there is nothing to compare.',
+            txtPageN: 'Page {0}',
+            txtOtherPageN: 'Other file, page {0}',
+            txtCompareIntro: 'Compared with {0}. Only in this file (\u2212): {1}. Only in the other file (+): {2}. Click a red line to go to its page.',
+            txtCompareSame: 'No differences in the text compared with {0}.',
+            txtSearchFor: 'Search for (then choose the PDF files)',
+            txtSearchIntro: 'Search for "{0}". Hits: {1}. Files: {2}.'
         }
     }()), PDFE.Views.ViewTab || {}));
 });
