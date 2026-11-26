@@ -92,6 +92,11 @@ define([
             views: [],
 
             initialize: function() {
+                // Dark Document changes how cell colors look on screen, so the color palettes say so
+                // while it is on (shown by the canvas-dark-filter styles in layout.less). Set before
+                // any palette is created.
+                Common.UI.ThemeColorPalette.prototype.darkDocumentNotice = true;
+
                 this.addListeners({
                     'FileMenu': {
                         'settings:apply': _.bind(this.applySettings, this)

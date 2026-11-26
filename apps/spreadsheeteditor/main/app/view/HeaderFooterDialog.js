@@ -557,6 +557,7 @@ define([], function () { 'use strict';
                 hint        : this.textColor,
                 split       : true,
                 additionalAlign: this.menuAddAlign,
+                paletteCls  : 'no-dark-document-notice',
                 menu        : true
             }));
             this.btnTextColor[0].on('click', _.bind(this.onTextColor, this));
@@ -572,6 +573,7 @@ define([], function () { 'use strict';
                 hint        : this.textColor,
                 split       : true,
                 additionalAlign: this.menuAddAlign,
+                paletteCls  : 'no-dark-document-notice',
                 menu        : true
             }));
             this.btnTextColor[1].on('click', _.bind(this.onTextColor, this));

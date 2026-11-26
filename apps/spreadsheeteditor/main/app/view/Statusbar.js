@@ -267,6 +267,7 @@ define([
                 }).on('render:after', function(btn) {
                         me.mnuTabColor = new Common.UI.ThemeColorPalette({
                             el: $('#id-tab-menu-color'),
+                            cls: 'no-dark-document-notice',
                             outerMenu: {menu: menuColorItems, index: 0, focusOnShow: true},
                             transparent: true
                         });
