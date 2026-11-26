@@ -881,7 +881,7 @@
       "txtNl": "Hollandsk",
       "txtOk": "OK",
       "txtPl": "Polsk",
-      "txtProtected": "Når du indtaster adgangskoden og åbner filen, vil det nuværende adgangskode til filen blive nulstillet.",
+      "txtProtected": "Når du indtaster adgangskoden og åbner filen, nulstilles den aktuelle adgangskode til filen.",
       "txtPtbr": "Portugisisk (Brasilien)",
       "txtPtlang": "Portugisisk (Portugal)",
       "txtRo": "Rumænsk",
