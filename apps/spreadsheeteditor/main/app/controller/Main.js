@@ -723,7 +723,8 @@ define([
             },
 
             onSuggest: function() {
-                window.open('{{SUGGEST_URL}}', "_blank");
+                // url resolved by Common.Utils.resolveCustomizationExternalLink into externalLinks; the menu item is hidden when no url resolves
+                window.open(this.appOptions.externalLinks.suggest.url, "_blank", "noopener");
             },
 
             closeEditor: function() {
@@ -1506,7 +1507,11 @@ define([
                 this.appOptions.isRestrictedEdit = !this.appOptions.isEdit && this.appOptions.canComments;
                 this.appOptions.canSaveToFile = this.appOptions.isEdit || this.appOptions.isRestrictedEdit;
                 this.appOptions.showSaveButton = this.appOptions.isEdit;
-                this.appOptions.canSuggest     = !((typeof (this.editorConfig.customization) == 'object') && this.editorConfig.customization.suggestFeature===false);
+                this.appOptions.externalLinks = {
+                    feedback: Common.Utils.resolveCustomizationExternalLink(this.editorConfig.customization && this.editorConfig.customization.feedback, '{{SUPPORT_URL}}'),
+                    suggest:  Common.Utils.resolveCustomizationExternalLink(this.editorConfig.customization && this.editorConfig.customization.suggestFeature, '{{SUGGEST_URL}}')
+                };
+                this.appOptions.canSuggest     = this.appOptions.externalLinks.suggest.visible;
                 this.appOptions.canCopy        = this.permissions.copy !== false;
 
                 this.appOptions.compactHeader = this.appOptions.customization && (typeof (this.appOptions.customization) == 'object') && !!this.appOptions.customization.compactHeader;
@@ -2519,6 +2524,8 @@ define([
                             this.appOptions.customization.about = true;
                     }
                     Common.Utils.applyCustomization(this.appOptions.customization, mapCustomizationElements);
+                    // externalLinks is not set yet when an error is reported before the editor permissions arrive
+                    this.appOptions.externalLinks && !this.appOptions.externalLinks.feedback.visible && $(mapCustomizationElements.feedback).hide();
                     if (this.appOptions.canBrandingExt) {
                         Common.Utils.applyCustomization(this.appOptions.customization, mapCustomizationExtElements);
                         Common.UI.LayoutManager.applyCustomization();

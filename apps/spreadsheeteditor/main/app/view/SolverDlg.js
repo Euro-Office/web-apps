@@ -133,6 +133,7 @@ define([
 
             this.api = this.options.api;
             this.lang = this.options.lang;
+            this.suggestLink = this.options.suggestLink || { visible: false, url: '' };
             this.props = this.options.props;
             this._constraintOperator = {};
             this._maxConstraintIndex = 0;
@@ -269,11 +270,15 @@ define([
                 me.showHelp();
             });
 
+            // "tell us about it" is a link only when the Suggest link resolves; otherwise it stays as plain text
             var lblNotSupported = $window.find('#solver-dlg-not-supported');
-            lblNotSupported.html(this.textNotSupported.replace(/%1/g, '<span class="link">' + this.textTellUs + '</span>'));
-            lblNotSupported.find('span').on('click', function (e) {
-                window.open('{{SUGGEST_URL}}', "_blank");
-            });
+            if (this.suggestLink.visible) {
+                lblNotSupported.html(this.textNotSupported.replace(/%1/g, '<span class="link">' + this.textTellUs + '</span>'));
+                lblNotSupported.find('span').on('click', function (e) {
+                    window.open(me.suggestLink.url, "_blank", "noopener");
+                });
+            } else
+                lblNotSupported.text(this.textNotSupported.replace(/%1/g, this.textTellUs));
 
             this.btnOk = _.find(this.getFooterButtons(), function (item) {
                 return (item.$el && item.$el.find('.primary').addBack().filter('.primary').length>0);

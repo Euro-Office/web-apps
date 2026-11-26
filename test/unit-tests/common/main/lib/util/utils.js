@@ -378,4 +378,99 @@ define([
             assert.isFalse(new Common.Utils.RGBColor('#ffff00').isDark());
         });
     });
+
+    describe('Common.Utils.resolveCustomizationExternalLink', function(){
+        var resolve = function (value, themeUrl) { return Common.Utils.resolveCustomizationExternalLink(value, themeUrl); },
+            theme = 'https://theme.example.com/';
+
+        it('Hides when disabled', function(){
+            assert.deepEqual({ visible: false, url: '' }, resolve(false, theme));
+            assert.deepEqual({ visible: false, url: '' }, resolve({ visible: false, url: 'https://x.example.com/' }, theme));
+        });
+
+        it('Uses the theme url when no url is given', function(){
+            assert.deepEqual({ visible: true, url: theme }, resolve(true, theme));
+            assert.deepEqual({ visible: true, url: theme }, resolve(undefined, theme));
+            assert.deepEqual({ visible: true, url: theme }, resolve(null, theme));
+            assert.deepEqual({ visible: true, url: theme }, resolve({}, theme));
+            assert.deepEqual({ visible: true, url: theme }, resolve({ visible: true }, theme));
+            assert.deepEqual({ visible: true, url: theme }, resolve('https://x.example.com/', theme));
+        });
+
+        it('Prefers a valid runtime url', function(){
+            assert.deepEqual({ visible: true, url: 'https://x.example.com/help' }, resolve({ url: 'https://x.example.com/help' }, theme));
+            assert.deepEqual({ visible: true, url: 'http://intranet.local/help' }, resolve({ url: 'http://intranet.local/help' }, theme));
+        });
+
+        it('Accepts mailto urls with an address', function(){
+            assert.deepEqual({ visible: true, url: 'mailto:support@example.com' }, resolve({ url: 'mailto:support@example.com' }, theme));
+            assert.deepEqual({ visible: true, url: 'mailto:support@example.com' }, resolve(true, 'mailto:support@example.com'));
+            assert.deepEqual({ visible: false, url: '' }, resolve({ url: 'mailto:' }, theme));
+        });
+
+        it('Hides the entry for a url with another scheme', function(){
+            assert.deepEqual({ visible: false, url: '' }, resolve({ url: 'javascript:alert(1)' }, theme));
+            assert.deepEqual({ visible: false, url: '' }, resolve({ url: 'java\nscript:alert(1)' }, theme));
+            assert.deepEqual({ visible: false, url: '' }, resolve({ url: 'data:text/html,x' }, theme));
+            assert.deepEqual({ visible: false, url: '' }, resolve({ url: 123 }, theme));
+            assert.deepEqual({ visible: false, url: '' }, resolve(true, 'javascript:alert(1)'));
+        });
+
+        it('Resolves a runtime url starting with / against the editor page', function(){
+            var base = document.createElement('base');
+            base.href = 'https://editor.example.com/web-apps/apps/main/index.html';
+            document.head.appendChild(base);
+            try {
+                assert.deepEqual({ visible: true, url: 'https://editor.example.com/support' }, resolve({ url: '/support' }, theme));
+                assert.deepEqual({ visible: true, url: 'https://editor.example.com/support' }, resolve({ url: ' /support\n' }, theme));
+                assert.deepEqual({ visible: true, url: 'https://editor.example.com/support' }, resolve({ url: '\t/support' }, theme));
+                assert.deepEqual({ visible: false, url: '' }, resolve({ url: '\u00A0/support' }, theme));
+                assert.deepEqual({ visible: true, url: 'https://other.example.com/help' }, resolve({ url: '//other.example.com/help' }, theme));
+                assert.deepEqual({ visible: false, url: '' }, resolve({ url: 'help.html' }, theme));
+                assert.deepEqual({ visible: false, url: '' }, resolve({ url: '../help.html' }, theme));
+                assert.deepEqual({ visible: false, url: '' }, resolve({ url: 'www.example.com/support' }, theme));
+                assert.deepEqual({ visible: false, url: '' }, resolve({ url: 'not a url' }, theme));
+                assert.deepEqual({ visible: true, url: theme }, resolve({ url: '   ' }, theme));
+                assert.deepEqual({ visible: false, url: '' }, resolve({ url: 'javascript:alert(1)' }, theme));
+                assert.deepEqual({ visible: false, url: '' }, resolve(true, '{{SUPPORT_URL}}'));
+            } finally {
+                document.head.removeChild(base);
+            }
+        });
+
+        it('Hides when no url resolves', function(){
+            assert.deepEqual({ visible: false, url: '' }, resolve(true, ''));
+            assert.deepEqual({ visible: false, url: '' }, resolve({ url: '' }, ''));
+            assert.deepEqual({ visible: false, url: '' }, resolve(undefined, '{{SUPPORT_URL}}'));
+        });
+
+        it('Warns only when a given integrator url is rejected', function(){
+            var warn = console.warn, calls = [];
+            console.warn = function () { calls.push(arguments); };
+            try {
+                resolve({ url: 'javascript:alert(1)' }, theme);
+                resolve({ url: 123 }, theme);
+                resolve({ url: Object.create(null) }, theme);
+                assert.equal(3, calls.length);
+                assert.equal('javascript:alert(1)', calls[0][1]);
+
+                calls = [];
+                resolve({ url: 'https://x.example.com/' }, theme);
+                resolve({ url: '' }, theme);
+                resolve({ url: '   ' }, theme);
+                resolve(true, theme);
+                resolve(undefined, '{{SUPPORT_URL}}');
+                resolve(false, theme);
+                resolve({ visible: false, url: 'javascript:alert(1)' }, theme);
+                assert.equal(0, calls.length);
+            } finally {
+                console.warn = warn;
+            }
+        });
+
+        it('Returns the normalized url', function(){
+            assert.deepEqual({ visible: true, url: 'https://x.example.com/' }, resolve({ url: ' https://x.example.com\n' }, theme));
+            assert.deepEqual({ visible: true, url: 'https://x.example.com/my%20page' }, resolve({ url: 'https://x.example.com/my page' }, theme));
+        });
+    });
 });

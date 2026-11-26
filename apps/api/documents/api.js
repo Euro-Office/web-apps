@@ -128,8 +128,8 @@
                     },
                     about: true,
                     feedback: {
-                        visible: false,
-                        url: http://...
+                        visible: false, // hide the button, hidden by default
+                        url: http://... // opened in a new tab: http(s), mailto, or a url starting with / (resolved against the editor page). If empty, the theme support url is used; if invalid, the entry is hidden
                     },
                     goback: {
                         url: 'http://...',
@@ -277,7 +277,11 @@
                     startFillingForm: {
                         text: 'Share & collect' // caption of the start filling button, used for pdf-forms
                     },
-                    suggestFeature: true/false
+                    suggestFeature: {
+                        visible: false, // hide "Suggest a Feature", also its link in the Solver dialog of the spreadsheet editor
+                        url: http://... // opened in a new tab: http(s), mailto, or a url starting with / (resolved against the editor page). If empty, the theme suggest url is used; if invalid, the entry is hidden
+                    },
+                    suggestFeature: true/false // shorthand for { visible: true/false }
                 },
                  coEditing: {
                      mode: 'fast', // <coauthoring mode>, 'fast' or 'strict'. if 'fast' and 'customization.autosave'=false -> set 'customization.autosave'=true. 'fast' - default for editor

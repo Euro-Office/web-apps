@@ -495,6 +495,7 @@ define([
             (new SSE.Views.SolverDlg({
                 api: me.api,
                 lang: me.toolbar.mode.lang,
+                suggestLink: me.toolbar.mode.externalLinks.suggest,
                 props: me.api.asc_GetSolverParams(),
                 handler: function(result, settings) {
                     res = result;
