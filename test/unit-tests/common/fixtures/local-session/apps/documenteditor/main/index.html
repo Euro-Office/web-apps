@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!--
+  Stand-in for the editor frame used by the api.js unit tests: it reports every
+  command it receives back to the harness page instead of running the editor.
+-->
+<html>
+<head><meta charset="utf-8"><title>api.js test frame</title></head>
+<body>
+<script>
+    window.addEventListener('message', function (e) {
+        var data = e.data, summary;
+        if (typeof data === 'string') {
+            try { data = JSON.parse(data); } catch (err) { data = {raw: data}; }
+            summary = {command: data.command, raw: false, data: data.data};
+        } else {
+            var payload = data && data.data || {};
+            summary = {
+                command: data && data.command,
+                raw: true,
+                isArrayBuffer: payload.buffer instanceof ArrayBuffer,
+                byteLength: payload.buffer ? payload.buffer.byteLength : null,
+                bytes: payload.buffer ? Array.prototype.slice.call(new Uint8Array(payload.buffer), 0, 8) : null,
+                name: payload.name,
+                fileType: payload.fileType,
+                mediaNames: payload.media ? Object.keys(payload.media) : null,
+                mediaAreBlobs: payload.media ? Object.keys(payload.media).every(function (k) { return payload.media[k] instanceof Blob; }) : null,
+                format: payload.format,
+                changes: payload.changes || null
+            };
+            if (data && data.command === 'sessionMessage')
+                summary.message = data.data;
+            if (data && data.command === 'addSessionMedia') {
+                summary.mediaNames = Object.keys(data.data);
+                summary.mediaAreBlobs = summary.mediaNames.every(function (k) { return data.data[k] instanceof Blob; });
+            }
+        }
+        window.parent.postMessage({apiTestFrame: true, summary: summary}, '*');
+    });
+    window.parent.postMessage({apiTestFrame: true, ready: true}, '*');
+</script>
+</body>
+</html>

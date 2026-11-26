@@ -319,6 +319,14 @@ define([
             setMode: function(mode) {
                 this.mode = mode;
                 this.$el.find('.el-edit')[this.mode.isEdit?'show':'hide']();
+                // presenter view opens a second editor page that needs the DocService
+                mode.isLocalSession && this.hidePresenterView();
+            },
+
+            hidePresenterView: function() {
+                var menu = this.btnPreview && this.btnPreview.menu;
+                var item = menu && _.find(menu.items, function(item) { return (item.value === 2) || (item.options && item.options.value === 2); });
+                item && item.setVisible(false);
             },
 
             setVisible: function(visible) {
