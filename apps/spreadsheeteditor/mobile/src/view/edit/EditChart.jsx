@@ -1,6 +1,6 @@
 import React, {Fragment, useState, useEffect} from 'react';
 import {observer, inject} from "mobx-react";
-import {f7, List, ListItem, ListButton, ListInput, Icon, Page, Navbar, NavRight, BlockTitle, Toggle, Range, Link} from 'framework7-react';
+import {List, ListItem, ListButton, ListInput, Icon, Page, Navbar, NavRight, BlockTitle, Toggle, Range, Link} from 'framework7-react';
 import { useTranslation } from 'react-i18next';
 import {Device} from '../../../../../common/mobile/utils/device';
 import {CustomColorPicker, ThemeColorPalette} from "../../../../../common/mobile/lib/component/ThemeColorPalette.jsx";
@@ -12,6 +12,8 @@ import IconMoveForeground from '@common-icons/icon-move-foreground.svg';
 import IconMoveBackground from '@common-icons/icon-move-background.svg';
 import IconMoveForward from '@common-icons/icon-move-forward.svg';
 import IconMoveBackward from '@common-icons/icon-move-backward.svg';
+import withEditTarget from './withEditTarget';
+import {hasChart, hasChartShape} from '../../lib/editTarget.js';
 
 const PageCustomFillColor = props => {
     const { t } = useTranslation();
@@ -325,16 +327,9 @@ const PageChartBorder = props => {
 
 const PageDesign = props => {
     const { t } = useTranslation();
-    const storeFocusObjects = props.storeFocusObjects;
-    const chartProperties = storeFocusObjects.chartObject && storeFocusObjects.chartObject.get_ChartProperties();
 
     // console.log(chartStyles, curType);
     // console.log(Asc.c_oAscChartTypeSettings.comboBarLine, Asc.c_oAscChartTypeSettings.comboBarLineSecondary, Asc.c_oAscChartTypeSettings.comboAreaBar, Asc.c_oAscChartTypeSettings.comboCustom);
-
-    if ((!chartProperties || storeFocusObjects.focusOn === 'cell') && Device.phone) {
-        $$('.sheet-modal.modal-in').length > 0 && f7.sheet.close();
-        return null;
-    }
 
     return (
         <Page>
@@ -368,10 +363,6 @@ const PageDesign = props => {
 const PageReorder = props => {
     const { t } = useTranslation();
     const _t = t('View.Edit', {returnObjects: true});
-    if ((!props.storeFocusObjects.chartObject || props.storeFocusObjects.focusOn === 'cell') && Device.phone) {
-        $$('.sheet-modal.modal-in').length > 0 && f7.sheet.close();
-        return null;
-    }
     return (
         <Page>
             <Navbar title={t('View.Edit.textArrange')} backLink={_t.textBack}>
@@ -521,11 +512,6 @@ const PageLayout = props => {
         5: `${_t.textInnerTop}`,
         7: `${_t.textOuterTop}`
     };
-
-    if ((!chartObject || storeFocusObjects.focusOn === 'cell') && Device.phone) {
-        $$('.sheet-modal.modal-in').length > 0 && f7.sheet.close();
-        return null;
-    }
 
     return (
         <Page>
@@ -930,11 +916,6 @@ const PageVerticalAxis = props => {
     const currentCrossesValue = axisProps.getCrosses();
     const [crossesValue, setCrossesValue] = useState(!currentCrossesValue ? '' : currentCrossesValue);
 
-    if ((!props.storeFocusObjects.chartObject || props.storeFocusObjects.focusOn === 'cell') && Device.phone) {
-        $$('.sheet-modal.modal-in').length > 0 && f7.sheet.close();
-        return null;
-    }
-
     return (
         <Page>
             <Navbar title={_t.textAxisOptions} backLink={_t.textBack}>
@@ -1287,11 +1268,6 @@ const PageHorizontalAxis = props => {
     const currentCrossesValue = axisProps.getCrosses();
     const [crossesValue, setCrossesValue] = useState(!currentCrossesValue ? '' : currentCrossesValue);
     const isRadar = axisProps.isRadarAxis();
-
-    if ((!props.storeFocusObjects.chartObject || props.storeFocusObjects.focusOn === 'cell') && Device.phone) {
-        $$('.sheet-modal.modal-in').length > 0 && f7.sheet.close();
-        return null;
-    }
 
     return (
         <Page>
@@ -1668,47 +1644,65 @@ const EditChart = props => {
 };
 
 const PageEditChart = inject("storeFocusObjects")(observer(EditChart));
-const PageChartDesign = inject("storeChartSettings", "storeFocusObjects")(observer(PageDesign));
-const PageChartDesignType = inject("storeChartSettings", "storeFocusObjects")(observer(PageChartType));
-const PageChartDesignStyle = inject("storeChartSettings")(observer(PageChartStyle));
-const PageChartDesignBorder = inject("storeChartSettings", "storeFocusObjects")(observer(PageChartBorder));
-const PageChartCustomFillColor = inject("storeChartSettings", "storePalette")(observer(PageCustomFillColor));
-const PageChartBorderColor = inject("storeChartSettings", "storePalette")(observer(PageBorderColor));
-const PageChartCustomBorderColor = inject("storeChartSettings", "storePalette")(observer(PageCustomBorderColor));
-const PageChartLayout = inject("storeFocusObjects")(observer(PageLayout));
-const PageChartVerticalAxis = inject("storeFocusObjects")(observer(PageVerticalAxis));
-const PageChartHorizontalAxis = inject("storeFocusObjects")(observer(PageHorizontalAxis));
-const PageChartReorder = inject("storeFocusObjects")(observer(PageReorder));
+const PageChartDesign = withEditTarget(hasChart, inject("storeChartSettings", "storeFocusObjects")(observer(PageDesign)));
+const PageChartDesignType = withEditTarget(hasChart, inject("storeChartSettings", "storeFocusObjects")(observer(PageChartType)));
+const PageChartDesignStyle = withEditTarget(hasChart, inject("storeChartSettings")(observer(PageChartStyle)));
+const PageChartDesignFillContainer = withEditTarget(hasChartShape, PageChartDesignFill);
+const PageChartDesignBorder = withEditTarget(hasChart, inject("storeChartSettings", "storeFocusObjects")(observer(PageChartBorder)));
+const PageChartCustomFillColor = withEditTarget(hasChart, inject("storeChartSettings", "storePalette")(observer(PageCustomFillColor)));
+const PageChartBorderColor = withEditTarget(hasChart, inject("storeChartSettings", "storePalette")(observer(PageBorderColor)));
+const PageChartCustomBorderColor = withEditTarget(hasChart, inject("storeChartSettings", "storePalette")(observer(PageCustomBorderColor)));
+const PageChartLayout = withEditTarget(hasChart, inject("storeFocusObjects")(observer(PageLayout)));
+const PageChartVerticalAxis = withEditTarget(hasChart, inject("storeFocusObjects")(observer(PageVerticalAxis)));
+const PageChartHorizontalAxis = withEditTarget(hasChart, inject("storeFocusObjects")(observer(PageHorizontalAxis)));
+const PageChartReorder = withEditTarget(hasChart, inject("storeFocusObjects")(observer(PageReorder)));
+const PageLegendContainer = withEditTarget(hasChart, PageLegend);
+const PageChartTitleContainer = withEditTarget(hasChart, PageChartTitle);
+const PageHorizontalAxisTitleContainer = withEditTarget(hasChart, PageHorizontalAxisTitle);
+const PageVerticalAxisTitleContainer = withEditTarget(hasChart, PageVerticalAxisTitle);
+const PageHorizontalGridlinesContainer = withEditTarget(hasChart, PageHorizontalGridlines);
+const PageVerticalGridlinesContainer = withEditTarget(hasChart, PageVerticalGridlines);
+const PageDataLabelsContainer = withEditTarget(hasChart, PageDataLabels);
+const PageVertAxisCrossesContainer = withEditTarget(hasChart, PageVertAxisCrosses);
+const PageDisplayUnitsContainer = withEditTarget(hasChart, PageDisplayUnits);
+const PageVertMajorTypeContainer = withEditTarget(hasChart, PageVertMajorType);
+const PageVertMinorTypeContainer = withEditTarget(hasChart, PageVertMinorType);
+const PageVertLabelPositionContainer = withEditTarget(hasChart, PageVertLabelPosition);
+const PageHorAxisCrossesContainer = withEditTarget(hasChart, PageHorAxisCrosses);
+const PageHorAxisPositionContainer = withEditTarget(hasChart, PageHorAxisPosition);
+const PageHorMajorTypeContainer = withEditTarget(hasChart, PageHorMajorType);
+const PageHorMinorTypeContainer = withEditTarget(hasChart, PageHorMinorType);
+const PageHorLabelPositionContainer = withEditTarget(hasChart, PageHorLabelPosition);
 
 export {
     PageEditChart as EditChart,
     PageChartDesign,
     PageChartDesignType,
     PageChartDesignStyle,
-    PageChartDesignFill,
+    PageChartDesignFillContainer as PageChartDesignFill,
     PageChartDesignBorder,
     PageChartCustomFillColor,
     PageChartBorderColor,
     PageChartCustomBorderColor,
     PageChartReorder,
     PageChartLayout,
-    PageLegend,
-    PageChartTitle,
-    PageHorizontalAxisTitle,
-    PageVerticalAxisTitle,
-    PageHorizontalGridlines,
-    PageVerticalGridlines,
-    PageDataLabels,
+    PageLegendContainer as PageLegend,
+    PageChartTitleContainer as PageChartTitle,
+    PageHorizontalAxisTitleContainer as PageHorizontalAxisTitle,
+    PageVerticalAxisTitleContainer as PageVerticalAxisTitle,
+    PageHorizontalGridlinesContainer as PageHorizontalGridlines,
+    PageVerticalGridlinesContainer as PageVerticalGridlines,
+    PageDataLabelsContainer as PageDataLabels,
     PageChartVerticalAxis,
-    PageVertAxisCrosses,
-    PageDisplayUnits,
-    PageVertMajorType,
-    PageVertMinorType,
-    PageVertLabelPosition, 
+    PageVertAxisCrossesContainer as PageVertAxisCrosses,
+    PageDisplayUnitsContainer as PageDisplayUnits,
+    PageVertMajorTypeContainer as PageVertMajorType,
+    PageVertMinorTypeContainer as PageVertMinorType,
+    PageVertLabelPositionContainer as PageVertLabelPosition, 
     PageChartHorizontalAxis,
-    PageHorAxisCrosses,
-    PageHorAxisPosition, 
-    PageHorMajorType,
-    PageHorMinorType,
-    PageHorLabelPosition
+    PageHorAxisCrossesContainer as PageHorAxisCrosses,
+    PageHorAxisPositionContainer as PageHorAxisPosition, 
+    PageHorMajorTypeContainer as PageHorMajorType,
+    PageHorMinorTypeContainer as PageHorMinorType,
+    PageHorLabelPositionContainer as PageHorLabelPosition
 }
