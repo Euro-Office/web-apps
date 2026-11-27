@@ -924,7 +924,8 @@ define([
                     bordersColor = btnBorders.options.borderscolor;
 
                 if ( btnBorders.rendered ) {
-                    btnBorders.$icon.removeClass(btnBorders.options.icls).addClass(item.options.icls);
+                    // the icon is an SVG <use>, so changing the class alone does not change the picture
+                    btnBorders.changeIcon({curr: btnBorders.options.icls, next: item.options.icls});
                     btnBorders.options.icls = item.options.icls;
                 }
 
