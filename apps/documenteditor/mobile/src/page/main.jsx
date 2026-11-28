@@ -1,5 +1,4 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { CSSTransition } from '../../../../common/mobile/lib/component/CSSTransition'
 import { f7, Icon, Page, View, Navbar, Subnavbar } from 'framework7-react';
 import { observer, inject } from "mobx-react";
 import { useTranslation } from 'react-i18next';
@@ -36,7 +35,6 @@ const MainPage = inject('storeDocumentInfo', 'users', 'storeAppOptions', 'storeV
         addLinkSettingsVisible: false,
         editLinkSettingsVisible: false,
         snackbarVisible: false,
-        fabVisible: true,
         isOpenModal: false
     });
     const appOptions = props.storeAppOptions;
@@ -158,11 +156,6 @@ const MainPage = inject('storeDocumentInfo', 'users', 'storeAppOptions', 'storeV
                     ...prevState,
                     snackbarVisible: true
                 }
-            } else if(opts === 'fab') {
-                return {
-                    ...prevState,
-                    fabVisible: true
-                }
             } else if(opts === 'history') {
                 return {
                     ...prevState,
@@ -222,11 +215,6 @@ const MainPage = inject('storeDocumentInfo', 'users', 'storeAppOptions', 'storeV
                 return {
                     ...prevState, 
                     snackbarVisible: false
-                }
-            } else if(opts === 'fab') {
-                return {
-                    ...prevState, 
-                    fabVisible: false
                 }
             } else if(opts === 'history') {
                 return {
@@ -345,19 +333,11 @@ const MainPage = inject('storeDocumentInfo', 'users', 'storeAppOptions', 'storeV
                         <VersionHistoryController onclosed={() => handleOptionsViewClosed('history')} />
                     }
                     {(isFabShow && !isVersionHistoryMode) &&
-                        <CSSTransition
-                            in={state.fabVisible}
-                            timeout={500}
-                            classNames="fab"
-                            mountOnEnter
-                            unmountOnExit
-                        >
-                            <div className="fab fab-right-bottom" onClick={() => turnOffViewerMode()}>
-                                <a href="#">
-                                    <SvgIcon symbolId={IconEditMode.id} className="icon icon-svg" />
-                                </a>
-                            </div>
-                        </CSSTransition>
+                        <div className="fab fab-right-bottom" onClick={() => turnOffViewerMode()}>
+                            <a href="#">
+                                <SvgIcon symbolId={IconEditMode.id} className="icon icon-svg" />
+                            </a>
+                        </div>
                     }
                     {appOptions.isDocReady &&
                         <ContextMenu openOptions={handleClickToOpenOptions} />
