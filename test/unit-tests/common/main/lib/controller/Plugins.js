@@ -9,15 +9,17 @@ define([
     'common/main/lib/component/Menu'
 ], function () {
     describe('Common.Controllers.Plugins toolbar reset', function () {
-        var controller, view, panel, previousLocks, previousThemes;
+        var controller, view, panel, previousLocks, previousThemes, previousLaunch;
 
         beforeEach(function () {
             // The application installs the Backbone view show/hide helpers.
             new Backbone.Application({nameSpace: 'PluginsUnitTests', autoCreate: false});
             previousLocks = Common.enumLock;
             previousThemes = Common.UI.Themes;
+            previousLaunch = Common.Controllers.LaunchController;
             Common.enumLock = {};
             Common.UI.Themes = {getThemeProps: function () {}};
+            Common.Controllers.LaunchController = {isScriptLoaded: function () { return true; }};
             panel = $('<div></div>').appendTo('body');
             view = new Common.Views.Plugins({});
             controller = Object.create(Common.Controllers.Plugins.prototype);
@@ -38,6 +40,7 @@ define([
             panel.remove();
             Common.enumLock = previousLocks;
             Common.UI.Themes = previousThemes;
+            Common.Controllers.LaunchController = previousLaunch;
             delete window.PluginsUnitTests;
         });
 
@@ -94,6 +97,54 @@ define([
 
             assert.lengthOf(panel.find('[id="id-toolbar-btn-background-plugin"]'), 0);
             assert.isFalse(controller.appOptions.canPlugins);
+        });
+    });
+
+    describe('Common.Controllers.Plugins autostart on reset', function () {
+        var AUTOSTART_GUID = 'asc.{11111111-2222-4333-8444-555555555555}';
+        var controller, started, scriptsLoaded, previousLaunch;
+
+        beforeEach(function () {
+            previousLaunch = Common.Controllers.LaunchController;
+            scriptsLoaded = false;
+            Common.Controllers.LaunchController = {isScriptLoaded: function () { return scriptsLoaded; }};
+            started = [];
+            controller = Object.create(Common.Controllers.Plugins.prototype);
+            _.extend(controller, {
+                customButtonsArr: [],
+                appOptions: {},
+                autostart: [AUTOSTART_GUID],
+                pluginsWinToShow: [],
+                api: {asc_pluginRun: function (guid) { started.push(guid); }},
+                // Registering the plugins with the SDK does not start them.
+                refreshPluginsList: function () {}
+            });
+        });
+
+        afterEach(function () {
+            Common.Controllers.LaunchController = previousLaunch;
+        });
+
+        function reset() {
+            controller.onResetPlugins(new Backbone.Collection([new Backbone.Model({isBackgroundPlugin: true, groupRank: 0})]));
+        }
+
+        it('waits for the editor scripts before starting an autostart plugin', function () {
+            reset();
+            assert.deepEqual(started, [], 'no plugin runs before the scripts are loaded');
+
+            scriptsLoaded = true;
+            controller.onPostLoadComplete();
+
+            assert.deepEqual(started, [AUTOSTART_GUID]);
+        });
+
+        it('starts an autostart plugin at once when the editor scripts are loaded', function () {
+            scriptsLoaded = true;
+
+            reset();
+
+            assert.deepEqual(started, [AUTOSTART_GUID]);
         });
     });
 });

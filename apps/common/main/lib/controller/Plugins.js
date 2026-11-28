@@ -412,7 +412,11 @@ define([
             // nowhere (pluginsMap empty) and could never be autostarted
             if (me.appOptions.canPlugins) {
                 me.refreshPluginsList();
-                me.runAutoStartPlugins();
+                // A plugin run before the editor scripts are loaded may not start, and
+                // runAutoStartPlugins() takes it off the list all the same: wait for
+                // them, as parsePlugins() does.
+                me.startOnPostLoad = !Common.Controllers.LaunchController.isScriptLoaded();
+                !me.startOnPostLoad && me.runAutoStartPlugins();
             }
             if ( me.$toolbarPanelPlugins ) {
                 me.backgroundPlugins = [];
