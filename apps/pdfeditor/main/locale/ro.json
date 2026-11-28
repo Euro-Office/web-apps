@@ -2037,7 +2037,7 @@
   "PDFE.Views.DocumentHolder.txtTop": "Sus",
   "PDFE.Views.DocumentHolder.txtUnderbar": "Bară dedesubt textului",
   "PDFE.Views.DocumentHolder.txtUngroup": "Anularea grupării",
-  "PDFE.Views.DocumentHolder.txtWarnUrl": "Accesarea acestui link poate dăuna dispozitivului sau datelor dvs. Pentru a vă proteja calculatorul, evitați să dați click pe linkuri de la surse necunoscute. Această locație poate fi nesigură:<br><br>{0}<br><br>Sigur doriti sa continuati? ",
+  "PDFE.Views.DocumentHolder.txtWarnUrl": "Accesarea acestui link poate dăuna dispozitivului sau datelor dvs. Pentru a vă proteja calculatorul, evitați să dați click pe linkuri de la surse necunoscute. Această locație poate fi nesigură:<br><br>{0}<br><br>Sigur doriti sa continuati?",
   "PDFE.Views.DocumentHolder.unicodeText": "Unicode",
   "PDFE.Views.DocumentHolder.vertAlignText": "Aliniere verticală",
   "PDFE.Views.FileMenu.ariaFileMenu": "Meniul Fișier",
@@ -2109,7 +2109,7 @@
   "PDFE.Views.FileMenuPanels.ProtectDoc.txtAddedSignature": "Semnături valide au fost adăugate la documentul.<br>Documentul este protejat împotriva editării.",
   "PDFE.Views.FileMenuPanels.ProtectDoc.txtAddSignature": "Asigurați integritatea documentului prin adăugarea unei<br>semnături digitale invizibile",
   "PDFE.Views.FileMenuPanels.ProtectDoc.txtEdit": "Editare document",
-  "PDFE.Views.FileMenuPanels.ProtectDoc.txtEditWarning": "În rezultatul editării toate semnăturile din document vor fi șterse.<br>Sunteți sigur că doriți să continuați? ",
+  "PDFE.Views.FileMenuPanels.ProtectDoc.txtEditWarning": "Editarea va elimina semnăturile din document.<br>Continuați?",
   "PDFE.Views.FileMenuPanels.ProtectDoc.txtEncrypted": "Documentul este ptotejat cu parolă",
   "PDFE.Views.FileMenuPanels.ProtectDoc.txtProtectDocument": "Criptare document cu o parolă",
   "PDFE.Views.FileMenuPanels.ProtectDoc.txtRequestedSignatures": "Acest document trebuie să fie semnat.",
@@ -3074,5 +3074,9 @@
   "PDFE.Views.ViewTab.tipFitToWidth": "Potrivire lățime",
   "PDFE.Views.ViewTab.tipHeadings": "Titluri",
   "PDFE.Views.ViewTab.tipInterfaceTheme": "Tema de interfață",
-  "PDFE.Views.ViewTab.tipRecognize": "Editare text"
+  "PDFE.Views.ViewTab.tipRecognize": "Editare text",
+  "PDFE.Controllers.Main.errorFileNotAssembled": "Acest fișier este deschis dintr-o copie de rezervă de pe server și nu este salvat în spațiul de stocare.<br>Folosiți opțiunea 'Salvare ca...' pentru a-l salva pe o unitate.",
+  "PDFE.Controllers.Main.errorForcedViewMode": "Acest fișier este deschis în modul de vizualizare.<br>Fișierul este blocat pentru editare sau drepturile dumneavoastră de acces nu permit editarea.",
+  "PDFE.Controllers.Toolbar.helpCreateLink": "Adăugați cu ușurință linkuri către o resursă externă sau către o pagină din fișierul curent.",
+  "PDFE.Controllers.Toolbar.helpCreateLinkHeader": "Creează și editează linkuri"
 }

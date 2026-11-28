@@ -84,7 +84,7 @@
     "textDoNotShowAgain": "Nu mai afișa",
     "textOk": "OK",
     "textRows": "Rânduri",
-    "txtWarnUrl": "Accesarea acestui link poate dăuna dispozitivului sau datelor dvs. Această locație poate fi nesigură:<br>{0}<br>Sigur doriti sa continuati? "
+    "txtWarnUrl": "Accesarea acestui link poate dăuna dispozitivului și datelor dumneavoastră. Această locație poate fi nesigură:<br>{0}<br>Sigur doriți să continuați?"
   },
   "Controller": {
     "Main": {
@@ -242,7 +242,9 @@
     "unknownErrorText": "Eroare necunoscută.",
     "uploadImageExtMessage": "Format de imagine nerecunoscut.",
     "uploadImageFileCountMessage": "Nicio imagine nu a fost încărcată.",
-    "uploadImageSizeMessage": "Imaginea este prea mare. Limita de dimensiune este de 25 MB."
+    "uploadImageSizeMessage": "Imaginea este prea mare. Limita de dimensiune este de 25 MB.",
+    "errorFileNotAssembled": "Acest fișier este deschis dintr-o copie de rezervă de pe server și nu este salvat în spațiul de stocare.<br>Folosiți opțiunea 'Salvare ca...' pentru a-l salva pe o unitate.",
+    "errorForcedViewMode": "Acest fișier este deschis în modul de vizualizare.<br>Fișierul este blocat pentru editare sau drepturile dumneavoastră de acces nu permit editarea."
   },
   "LongActions": {
     "applyChangesTextText": "Încărcarea datelor...",
@@ -332,7 +334,8 @@
       "textSlideNumber": "Număr diapozitiv",
       "textTable": "Tabel",
       "textTableSize": "Dimensiune tabel",
-      "txtNotUrl": "Câmpul trebuie să conțină adresa URL in format \"http://www.example.com\""
+      "txtNotUrl": "Câmpul trebuie să conțină adresa URL in format \"http://www.example.com\"",
+      "textPictureFromStorage": "Imagine din spațiul de stocare"
     },
     "Edit": {
       "notcriticalErrorTitle": "Avertisment",
@@ -507,7 +510,8 @@
       "textZoomOut": "Micșorare",
       "textZoomRotate": "Zoom și rotire",
       "txtHeight": "Înălțime",
-      "txtWidth": "Lățime"
+      "txtWidth": "Lățime",
+      "textPictureFromStorage": "Imagine din spațiul de stocare"
     },
     "Settings": {
       "mniSlideStandard": "Standard (4:3)",

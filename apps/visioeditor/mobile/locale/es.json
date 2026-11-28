@@ -6,7 +6,7 @@
     "textEditor": "Visor de diagramas",
     "textEmail": "Correo electrónico",
     "textPoweredBy": "Impulsado por",
-    "textTel": "Tel.",
+    "textTel": "Tel",
     "textVersion": "Versión"
   },
   "Common": {
@@ -190,7 +190,7 @@
       "textDone": "Hecho",
       "textDownload": "Descargar",
       "textDownloadAs": "Descargar como...",
-      "textEmail": "correo electrónico:",
+      "textEmail": "correo-e:",
       "textFeedback": "Sugerencias y ayuda",
       "textHelp": "Ayuda",
       "textLastModified": "Fecha de última modificación",

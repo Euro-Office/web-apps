@@ -802,5 +802,7 @@
   "PDFE.Views.ViewTab.tipFitToPage": "Doitu orrira",
   "PDFE.Views.ViewTab.tipFitToWidth": "Doitu zabalerara",
   "PDFE.Views.ViewTab.tipHeadings": "Izenburuak",
-  "PDFE.Views.ViewTab.tipInterfaceTheme": "Interfazearen gaia"
+  "PDFE.Views.ViewTab.tipInterfaceTheme": "Interfazearen gaia",
+  "Common.Controllers.ExternalLinks.textAddExternalData": "Kanpoko iturri baterako esteka gehitu da. \"Datuak\" fitxan egunera ditzakezu estekak.",
+  "Common.Controllers.ExternalLinks.textDontUpdate": "Ez eguneratu"
 }

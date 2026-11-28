@@ -54,7 +54,7 @@
   "DE.ApplicationController.txtClose": "Închidere",
   "DE.ApplicationController.txtEmpty": "(Gol)",
   "DE.ApplicationController.txtNo": "Nu",
-  "DE.ApplicationController.txtOpenWarning": "Accesarea acestui link poate dăuna dispozitivului sau datelor dvs. Pentru a vă proteja calculatorul, evitați să dați click pe linkuri de la surse necunoscute. Această locație poate fi nesigură:<br>%1<br>Sigur doriti sa continuati? ",
+  "DE.ApplicationController.txtOpenWarning": "Accesarea acestui link poate dăuna dispozitivului sau datelor dvs. Pentru a vă proteja calculatorul, evitați să dați click pe linkuri de la surse necunoscute. Această locație poate fi nesigură:<br>%1<br>Sigur doriti sa continuati?",
   "DE.ApplicationController.txtPressLink": "Apăsați %1 și faceți clic pe link",
   "DE.ApplicationController.txtSecurityWarningLink": "Acest document încearcă să se conecteze la %1.<br>Dacă aveți încredere în acest site, faceți clic pe OK și țineți apăsată tasta Ctrl.",
   "DE.ApplicationController.txtSecurityWarningLinkOk": "Acest document încearcă să se conecteze la %1.<br>Dacă este un site de încredere, apăsați OK.",
@@ -73,5 +73,7 @@
   "DE.ApplicationView.txtFullScreen": "Ecran complet",
   "DE.ApplicationView.txtPrint": "Imprimare",
   "DE.ApplicationView.txtSearch": "Căutare",
-  "DE.ApplicationView.txtShare": "Partajează"
+  "DE.ApplicationView.txtShare": "Partajează",
+  "DE.ApplicationController.errorFileNotAssembled": "Acest fișier este deschis dintr-o copie de rezervă de pe server și nu este salvat în spațiul de stocare.<br>Folosiți opțiunea 'Salvare ca...' pentru a-l salva pe o unitate.",
+  "DE.ApplicationController.errorForcedViewMode": "Acest fișier este deschis în modul de vizualizare.<br>Fișierul este blocat pentru editare sau drepturile dumneavoastră de acces nu permit editarea."
 }

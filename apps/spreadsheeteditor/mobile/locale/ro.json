@@ -87,7 +87,7 @@
     "textCopyCutPasteActions": "Comenzile de copiere, decupare și lipire",
     "textDoNotShowAgain": "Nu mai afișa",
     "textOk": "OK",
-    "txtWarnUrl": "Accesarea acestui link poate dăuna dispozitivului sau datelor dvs. Această locație poate fi nesigură:<br>{0}<br>Sigur doriti sa continuati? ",
+    "txtWarnUrl": "Accesarea acestui link poate dăuna dispozitivului și datelor dumneavoastră. Această locație poate fi nesigură:<br>{0}<br>Sigur doriți să continuați?",
     "warnMergeLostData": "În celula îmbinată se afișează numai conținutul celulei din stânga sus.<br>Sunteți sigur că doriți să continuați?"
   },
   "Controller": {
@@ -380,7 +380,9 @@
     "uploadDocSizeMessage": "Dimensiunea documentului depășește limita permisă.",
     "uploadImageExtMessage": "Format de imagine nerecunoscut.",
     "uploadImageFileCountMessage": "Nicio imagine nu a fost încărcată.",
-    "uploadImageSizeMessage": "Imaginea este prea mare. Limita de dimensiune este de 25 MB."
+    "uploadImageSizeMessage": "Imaginea este prea mare. Limita de dimensiune este de 25 MB.",
+    "errorFileNotAssembled": "Acest fișier este deschis dintr-o copie de rezervă de pe server și nu este salvat în spațiul de stocare.<br>Folosiți opțiunea 'Salvare ca...' pentru a-l salva pe o unitate.",
+    "errorForcedViewMode": "Acest fișier este deschis în modul de vizualizare.<br>Fișierul este blocat pentru editare sau drepturile dumneavoastră de acces nu permit editarea."
   },
   "LongActions": {
     "advDRMPassword": "Parola",
@@ -529,7 +531,8 @@
       "txtNotUrl": "Câmpul trebuie să conțină adresa URL in format \"http://www.example.com\"",
       "txtSorting": "Sortare",
       "txtSortSelected": "Sortarea selecției",
-      "txtYes": "Da"
+      "txtYes": "Da",
+      "textPictureFromStorage": "Imagine din spațiul de stocare"
     },
     "Edit": {
       "notcriticalErrorTitle": "Avertisment",
@@ -737,7 +740,8 @@
       "textYen": "Yen",
       "txtNotUrl": "Câmpul trebuie să conțină adresa URL in format \"http://www.example.com\"",
       "txtSortHigh2Low": "Sortare de la cea mai mare la cea mai mică valoare",
-      "txtSortLow2High": "Sortare de la cea mai mică la cea mai mare valoare"
+      "txtSortLow2High": "Sortare de la cea mai mică la cea mai mare valoare",
+      "textPictureFromStorage": "Imagine din spațiul de stocare"
     },
     "Settings": {
       "advCSVOptions": "Alegerea opțiunilor CSV",

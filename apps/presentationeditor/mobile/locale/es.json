@@ -7,7 +7,7 @@
     "textEmail": "Correo",
     "textPoweredBy": "Con tecnología de",
     "textTel": "Tel",
-    "textVersion": "Versión "
+    "textVersion": "Versión"
   },
   "Common": {
     "Collaboration": {
@@ -28,7 +28,7 @@
       "textMessageDeleteComment": "¿Realmente quiere eliminar este comentario?",
       "textMessageDeleteReply": "¿Realmente quiere eliminar esta respuesta?",
       "textNoComments": "No hay comentarios",
-      "textOk": "OK",
+      "textOk": "Aceptar",
       "textReopen": "Volver a abrir",
       "textResolve": "Resolver",
       "textSharingSettings": "Ajustes de uso compartido",
@@ -55,9 +55,9 @@
       "textBack": "Atrás",
       "textCancel": "Cancelar",
       "textCurrent": "Actual",
-      "textOk": "OK",
+      "textOk": "Aceptar",
       "textRestore": "Restaurar",
-      "textVersion": "Versión ",
+      "textVersion": "Versión",
       "textVersionHistory": "Historial de versiones",
       "textWarningRestoreVersion": "El archivo actual se guardará en el historial de versiones.",
       "titleWarningRestoreVersion": "¿Restaurar esta versión?",
@@ -67,7 +67,7 @@
   "ContextMenu": {
     "errorCopyCutPaste": "Las acciones de copiar, cortar y pegar utilizando el menú contextual se realizarán sólo dentro del archivo actual.",
     "menuAddComment": "Añadir comentario",
-    "menuAddLink": "Añadir enlace ",
+    "menuAddLink": "Añadir enlace",
     "menuCancel": "Cancelar",
     "menuDelete": "Eliminar",
     "menuDeleteTable": "Eliminar tabla",
@@ -128,7 +128,7 @@
         "Orange": "Naranja",
         "Orange Red": "Rojo naranja",
         "Paper": "Papel",
-        "Picture": "Imagen",
+        "Picture": "Cuadro",
         "Red": "Rojo",
         "Red Orange": "Naranja rojo",
         "Red Violet": "Violeta rojo",
@@ -157,7 +157,7 @@
       "textNo": "No",
       "textNoLicenseTitle": "Se ha alcanzado el límite de licencia",
       "textNoMatches": "No hay coincidencias",
-      "textOk": "OK",
+      "textOk": "Aceptar",
       "textOpenFile": "Introduzca la contraseña para abrir el archivo",
       "textPaidFeature": "Característica de pago",
       "textRemember": "Recordar mi elección",
@@ -188,7 +188,7 @@
     "textColor": "Color",
     "textCustomColor": "Color personalizado",
     "textLineSize": "Tamaño de línea",
-    "textOpacity": "Opacidad "
+    "textOpacity": "Opacidad"
   },
   "Error": {
     "convertationTimeoutText": "Tiempo de conversión está superado.",
@@ -232,8 +232,8 @@
     "errorUsersExceed": "Se superó la cantidad de usuarios permitidos por el plan de precios",
     "errorViewerDisconnect": "Se ha perdido la conexión. Todavía puede ver el documento,<br>pero no podrá descargarlo ni imprimirlo hasta que se restablezca la conexión y se recargue la página.",
     "notcriticalErrorTitle": "Advertencia",
-    "openErrorText": "Se ha producido un error al abrir el archivo ",
-    "saveErrorText": "Se ha producido un error al guardar el archivo ",
+    "openErrorText": "Se ha producido un error al abrir el archivo",
+    "saveErrorText": "Se ha producido un error al guardar el archivo",
     "scriptLoadError": "La conexión es demasiado lenta, algunos de los componentes no se han podido cargar. Por favor, vuelva a cargar la página.",
     "splitDividerErrorText": "El número de filas debe ser un divisor de %1",
     "splitMaxColsErrorText": "El número de columnas debe ser menor que %1",
@@ -242,7 +242,9 @@
     "unknownErrorText": "Error desconocido.",
     "uploadImageExtMessage": "Formato de imagen desconocido.",
     "uploadImageFileCountMessage": "No hay imágenes subidas.",
-    "uploadImageSizeMessage": "La imagen es demasiado grande. El tamaño máximo es de 25 MB."
+    "uploadImageSizeMessage": "La imagen es demasiado grande. El tamaño máximo es de 25 MB.",
+    "errorFileNotAssembled": "Este archivo está abierto desde una copia de respaldo del servidor y no está guardado para almacenaje.<br>Utilice la opción 'Guardar como...' para guardarla en una unidad.",
+    "errorForcedViewMode": "Este archivo está abierto en modo de vista.<br>El archivo está bloqueado para editar o sus derechos de acceso no conceden editar."
   },
   "LongActions": {
     "applyChangesTextText": "Cargando datos...",
@@ -293,7 +295,7 @@
   "View": {
     "Add": {
       "notcriticalErrorTitle": "Advertencia",
-      "textAddLink": "Agregar enlace ",
+      "textAddLink": "Agregar enlace",
       "textAddress": "Dirección",
       "textBack": "Atrás",
       "textCancel": "Cancelar",
@@ -332,7 +334,8 @@
       "textSlideNumber": "Número de diapositiva",
       "textTable": "Tabla",
       "textTableSize": "Tamaño de tabla",
-      "txtNotUrl": "Este campo debe ser una dirección URL en el formato \"http://www.example.com\""
+      "txtNotUrl": "Este campo debe ser una dirección URL en el formato \"http://www.example.com\"",
+      "textPictureFromStorage": "Imagen del Almacén"
     },
     "Edit": {
       "notcriticalErrorTitle": "Advertencia",
@@ -362,7 +365,7 @@
       "textBefore": "Antes",
       "textBlack": "En negro",
       "textBorder": "Borde",
-      "textBottom": "Abajo ",
+      "textBottom": "Inferior",
       "textBottomLeft": "Abajo a la izquierda",
       "textBottomRight": "Abajo a la derecha",
       "textBringToForeground": "Traer al primer plano",
@@ -394,7 +397,7 @@
       "textDone": "Listo",
       "textDoubleStrikethrough": "Doble tachado",
       "textDuplicateSlide": "Duplicar diapositiva",
-      "textDuration": "Duración ",
+      "textDuration": "Duración",
       "textEditLink": "Editar enlace",
       "textEffect": "Efecto",
       "textEffects": "Efectos",
@@ -422,7 +425,7 @@
       "textImage": "Imagen",
       "textImageURL": "URL de imagen",
       "textInsertImage": "Insertar imagen",
-      "textInvalidName": "El nombre del archivo no puede contener ninguno de los siguientes símbolos:",
+      "textInvalidName": "El nombre del archivo no puede contener ninguno de los siguientes símbolos: ",
       "textLastColumn": "Última columna",
       "textLastSlide": "Última diapositiva",
       "textLayout": "Diseño",
@@ -447,7 +450,7 @@
       "textNotUrl": "Este campo debe ser una dirección URL en el formato \"http://www.example.com\"",
       "textNumbers": "Números",
       "textOk": "Aceptar",
-      "textOpacity": "Opacidad ",
+      "textOpacity": "Opacidad",
       "textOptions": "Opciones",
       "textPictureFromLibrary": "Imagen desde biblioteca",
       "textPictureFromURL": "Imagen desde URL",
@@ -507,14 +510,15 @@
       "textZoomOut": "Alejar",
       "textZoomRotate": "Zoom y giro",
       "txtHeight": "Altura",
-      "txtWidth": "Ancho"
+      "txtWidth": "Ancho",
+      "textPictureFromStorage": "Imagen del Almacén"
     },
     "Settings": {
       "mniSlideStandard": "Estándar (4:3)",
       "mniSlideWide": "Panorámico (16:9)",
       "notcriticalErrorTitle": "Advertencia",
       "textAbout": "Acerca de",
-      "textAddress": "dirección: ",
+      "textAddress": "dirección:",
       "textApplication": "Aplicación",
       "textApplicationSettings": "Ajustes de aplicación",
       "textAuthor": "Autor",
@@ -534,7 +538,7 @@
       "textDone": "Listo",
       "textDownload": "Descargar",
       "textDownloadAs": "Descargar como...",
-      "textEmail": "correo: ",
+      "textEmail": "correo-e:",
       "textEnableAll": "Habilitar todo",
       "textEnableAllMacrosWithoutNotification": "Habilitar todas las macros sin notificación",
       "textFeedback": "Comentarios y asistencia",
@@ -575,7 +579,7 @@
       "textTitle": "Título",
       "textUnitOfMeasurement": "Unidad de medida",
       "textUploaded": "Cargado",
-      "textVersion": "Versión ",
+      "textVersion": "Versión",
       "textVersionHistory": "Historial de versiones"
     }
   }
