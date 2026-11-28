@@ -18,6 +18,7 @@ import LongActionsController from "./LongActions";
 import PluginsController from '../../../../common/mobile/lib/controller/Plugins.jsx';
 import EncodingController from "./Encoding";
 import DropdownListController from "./DropdownList";
+import { patchIosCaretReveal } from '../lib/iosCaretReveal';
 import AddFormImageController from './add/AddFormImage.jsx';
 import { Device } from '../../../../common/mobile/utils/device';
 import { processArrayScripts } from '../../../../common/mobile/utils/processArrayScripts.js';
@@ -479,6 +480,7 @@ class MainController extends Component {
                     let hcolor = (/(?:&|^)headingsColor=([^&]+)&?/i).exec(window.location.search.substring(1));
                     hcolor && (config['headings-color'] = '#' + hcolor[1]);
                     this.api = isPDF ? new Asc.PDFEditorApi(config) : new Asc.asc_docs_api(config);
+                    if (!isPDF && Device.phone) Common.Notifications.on('document:ready', patchIosCaretReveal);
 
                     Common.Notifications.trigger('engineCreated', this.api);
                     // Common.EditorApi = {get: () => this.api};
