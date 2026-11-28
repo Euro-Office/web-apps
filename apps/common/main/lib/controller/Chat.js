@@ -96,6 +96,8 @@ define([
 
                 if ( !this.mode.isEditDiagram && !this.mode.isEditMailMerge && !this.mode.isEditOle ) {
                     Common.NotificationCenter.on('mentions:setusers', _.bind(this.avatarsUpdate, this));
+                    Common.NotificationCenter.on('user:canmovetocursor', _.bind(this.onCanMoveToUserCursor, this));
+                    Common.NotificationCenter.on('user:movetocursor', _.bind(this.onMoveToUserCursor, this));
                     this.api.asc_registerCallback('asc_onAuthParticipantsChanged', _.bind(this.onUsersChanged, this));
                     this.api.asc_registerCallback('asc_onConnectionStateChanged', _.bind(this.onUserConnection, this));
                     this.api.asc_coAuthoringGetUsers();
@@ -111,6 +113,22 @@ define([
             this.api = api;
 
             return this;
+        },
+
+        onCanMoveToUserCursor: function(state) {
+            state.result = !!this.api.asc_moveToUserCursor;
+        },
+
+        onMoveToUserCursor: function(idOriginal) {
+            if (!this.api.asc_moveToUserCursor) return;
+
+            // one user can have several connections: try them from the end of the list, where the connections
+            // that came later are (the own current connection is first)
+            var users = this.getApplication().getCollection('Common.Collections.Users').where({idOriginal: idOriginal, online: true});
+            for (var i = users.length - 1; i >= 0; i--) {
+                if (this.api.asc_moveToUserCursor(users[i].get('id'))) break;
+            }
+            Common.NotificationCenter.trigger('edit:complete');
         },
 
         onUsersChanged: function(users, currentUserId){

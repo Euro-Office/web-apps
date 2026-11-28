@@ -419,12 +419,29 @@ define([
             if ( $panelUsers ) {
                 onResetUsers(storeUsers);
 
+                // the controller that has the api answers whether the editor can move to the cursor of a user
+                var canMoveToUserCursor = function () {
+                    var state = {result: false};
+                    Common.NotificationCenter.trigger('user:canmovetocursor', state);
+                    return state.result;
+                };
+
                 $panelUsers.on('shown.bs.dropdown', function () {
+                    // the class changes the height of the items: set it before the scroller measures them
+                    $userList.toggleClass('move-to-cursor', canMoveToUserCursor());
                     $userList.scroller && $userList.scroller.update({minScrollbarLength: 40, alwaysVisibleY: true});
                 });
 
                 $panelUsers.find('.cousers-menu')
-                    .on('click', function(e) { return false; });
+                    .on('click', function(e) {
+                        var user = storeUsers.findWhere({iid: $(e.target).closest('li').attr('id')});
+                        if (user && canMoveToUserCursor()) {
+                            // the menu closes as on any click outside it
+                            Common.NotificationCenter.trigger('user:movetocursor', user.get('idOriginal'));
+                            return;
+                        }
+                        return false;
+                    });
 
                 var editingUsers = storeUsers.getVisibleEditingCount();
                 $btnUsers.tooltip({
